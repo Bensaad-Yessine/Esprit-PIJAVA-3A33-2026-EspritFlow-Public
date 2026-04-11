@@ -1,0 +1,164 @@
+/* ============================================================
+   SIDEBAR STYLES – Matches the red theme of dashboard.css
+   ============================================================ */
+
+/* ── SIDEBAR CONTAINER ───────────────────────────────────── */
+.sidebar {
+
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 2, 0);
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 0 1 0 0;
+    -fx-pref-width: 280;
+}
+
+/* ── LOGO & BRAND ────────────────────────────────────────── */
+.logo-container {
+    -fx-padding: 20 16 20 16;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 0 0 1 0;
+}
+
+.logo-title {
+    -fx-text-fill: #E63946;      /* primary red */
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-font-family: 'Segoe UI';
+}
+
+.logo-subtitle {
+    -fx-text-fill: #6c757d;
+    -fx-font-size: 11px;
+    -fx-padding: 4 0 0 0;
+}
+
+/* ── PROFILE SECTION ─────────────────────────────────────── */
+.profile-container {
+    -fx-padding: 24 16 24 16;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 0 0 1 0;
+}
+
+.profile-avatar {
+    -fx-fill: #f1f3f5;
+    -fx-stroke: #E63946;
+    -fx-stroke-width: 2;
+}
+
+.profile-name {
+    -fx-text-fill: #212529;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.profile-role {
+    -fx-text-fill: #E63946;
+    -fx-font-size: 11px;
+}
+
+/* ── NAVIGATION MENU ─────────────────────────────────────── */
+.nav-menu {
+    -fx-padding: 24 16 16 16;
+}
+
+.nav-section-title {
+    -fx-text-fill: #adb5bd;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 8 8;
+}
+
+/* Base menu button */
+.menu-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #495057;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 0 0 16;
+    -fx-pref-width: 248;    /* was 228, now fits 280 - 32 padding */
+    -fx-max-width: 248;
+    -fx-pref-height: 44;
+    -fx-effect: none;
+    -fx-transition: all 0.2s ease;  /* for reference only, JavaFX ignores */
+}
+
+/* Hover effect – just a light red background, no scaling */
+.menu-item:hover {
+    -fx-background-color: #FEE2E4;   /* very light red */
+    -fx-text-fill: #C1121F;          /* dark red text */
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.15), 4, 0, 0, 1);
+    /* no scale-x/scale-y */
+}
+
+/* Active (selected) menu item – dark red background, white text, left border */
+.menu-item-active {
+    -fx-background-color: #C1121F;   /* solid dark red */
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-border-color: #E63946;       /* brighter red left border */
+    -fx-border-width: 0 0 0 3;
+    -fx-border-radius: 8 0 0 8;
+    -fx-background-radius: 8 0 0 8;
+    -fx-effect: dropshadow(gaussian, rgba(234, 60, 73, 0.87), 6, 0, 0, 2);
+}
+/* ── LOGOUT BUTTON ───────────────────────────────────────── */
+.logout-container {
+    -fx-padding: 16 16 24 16;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1 0 0 0;
+}
+
+.logout-btn {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #E63946, #C1121F);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 0 0 16;
+    -fx-pref-width: 248;
+    -fx-max-width: 248;
+    -fx-pref-height: 40;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.5), 14, 0, 0, 4);
+}
+
+.logout-btn:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #FF4D5A, #E63946);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.5), 14, 0, 0, 4);
+}
+
+.logout-btn:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.sidebar-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.sidebar-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Optional: style the scrollbar to match your theme */
+.sidebar-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-padding: 0 2 0 0;
+}
+
+.sidebar-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 6;
+}
+
+.sidebar-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #94a3b8;
+}

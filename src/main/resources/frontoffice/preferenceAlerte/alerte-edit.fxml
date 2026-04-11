@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="piJava.Controllers.frontoffice.preferencealerte.AlerteEditController"
+      stylesheets="@alerte-edit.css"
+      styleClass="root-bg" prefWidth="1100" prefHeight="800">
+
+    <ScrollPane fitToWidth="true" styleClass="page-scroll" HBox.hgrow="ALWAYS">
+        <VBox spacing="26" styleClass="main-container">
+
+            <!-- HEADER -->
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <VBox HBox.hgrow="ALWAYS" spacing="6">
+                    <Label text="✏️ Modifier la préférence" styleClass="title"/>
+                    <Label text="EspritFlow · Modifier une préférence d'alerte" styleClass="subtitle"/>
+                </VBox>
+            </HBox>
+
+            <!-- FORM CARD -->
+            <VBox spacing="20" styleClass="form-card">
+
+                <VBox spacing="8">
+                    <Label text="Nom *" styleClass="field-label"/>
+                    <TextField fx:id="txtNom" promptText="Nom de la préférence" styleClass="form-field"/>
+                </VBox>
+
+                <HBox spacing="20">
+                    <CheckBox fx:id="chkActive"  text="Active"           styleClass="form-check"/>
+                    <CheckBox fx:id="chkDefault" text="Par défaut"       styleClass="form-check"/>
+                    <CheckBox fx:id="chkEmail"   text="📧 Email"         styleClass="form-check"/>
+                    <CheckBox fx:id="chkPush"    text="🔔 Push"          styleClass="form-check"/>
+                    <CheckBox fx:id="chkSite"    text="🌐 Site"          styleClass="form-check"/>
+                </HBox>
+
+                <HBox spacing="20">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Délai de rappel (min)" styleClass="field-label"/>
+                        <TextField fx:id="txtDelai" promptText="ex: 15" styleClass="form-field"/>
+                    </VBox>
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Début silence (HH:mm)" styleClass="field-label"/>
+                        <TextField fx:id="txtSilenceDebut" promptText="22:00" styleClass="form-field"/>
+                    </VBox>
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Fin silence (HH:mm)" styleClass="field-label"/>
+                        <TextField fx:id="txtSilenceFin" promptText="08:00" styleClass="form-field"/>
+                    </VBox>
+                </HBox>
+
+                <Label fx:id="lblNotification" styleClass="notification-label"/>
+
+                <HBox spacing="12" alignment="CENTER_RIGHT">
+                    <Button text="Annuler"     onAction="#handleCancel" styleClass="btn-secondary"/>
+                    <Button text="Enregistrer" onAction="#handleSave"   styleClass="btn-primary"/>
+                </HBox>
+
+            </VBox>
+        </VBox>
+    </ScrollPane>
+</HBox>

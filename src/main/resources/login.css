@@ -1,0 +1,241 @@
+/* ════════════════════════════════════════════════════════
+   login.css  —  EspritFlow Login Page
+   Place in src/main/resources/ alongside login.fxml
+   ════════════════════════════════════════════════════════ */
+
+/* ── Root background ───────────────────────────────────── */
+.root-pane {
+    -fx-background-color: #0d0f1a;
+}
+
+/* ── Left branding panel ───────────────────────────────── */
+.brand-panel {
+    -fx-background-color: transparent;
+}
+
+/* ── Logo ──────────────────────────────────────────────── */
+.logo-box {
+    -fx-background-color: linear-gradient(to bottom right, #3b82f6, #6366f1);
+    -fx-background-radius: 12;
+}
+.logo-letter {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+.logo-name {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+/* ── Brand text ────────────────────────────────────────── */
+.headline {
+    -fx-text-fill: white;
+    -fx-font-size: 38px;
+    -fx-font-weight: bold;
+    -fx-wrap-text: true;
+}
+.subheadline {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 15px;
+    -fx-wrap-text: true;
+}
+
+/* ── Feature list ──────────────────────────────────────── */
+.feature-icon {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 8;
+}
+.feature-icon-blue   { -fx-text-fill: #3b82f6; -fx-font-size: 13px; }
+.feature-icon-indigo { -fx-text-fill: #6366f1; -fx-font-size: 13px; }
+.feature-icon-red    { -fx-text-fill: #e94560; -fx-font-size: 13px; }
+.feature-text {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 13px;
+}
+
+/* ── Divider ───────────────────────────────────────────── */
+.divider {
+    -fx-background-color: #1e293b;
+}
+
+/* ── Login card ────────────────────────────────────────── */
+.login-card {
+    -fx-background-color: #111827;
+    -fx-background-radius: 20;
+    -fx-border-color: #1e293b;
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    -fx-padding: 40;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 40, 0, 0, 10);
+}
+
+/* ── Card typography ───────────────────────────────────── */
+.card-title {
+    -fx-text-fill: #f1f5f9;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+.card-subtitle {
+    -fx-text-fill: #475569;
+    -fx-font-size: 12px;
+}
+.field-label {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* ── Input fields ──────────────────────────────────────── */
+.input-field {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 10;
+    -fx-border-color: #334155;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 13 14 13 14;
+    -fx-font-size: 13px;
+    -fx-text-fill: #e2e8f0;
+    -fx-prompt-text-fill: #334155;
+}
+.input-field:focused {
+    -fx-border-color: #3b82f6;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 12, 0, 0, 0);
+}
+.input-field:hover {
+    -fx-border-color: #475569;
+}
+
+/* ── Remember me checkbox ──────────────────────────────── */
+.remember-check {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+}
+.remember-check .box {
+    -fx-background-color: #1e293b;
+    -fx-border-color: #334155;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+.remember-check:selected .box {
+    -fx-background-color: #3b82f6;
+    -fx-border-color: #3b82f6;
+}
+.remember-check:selected .mark {
+    -fx-background-color: white;
+}
+
+/* ── Hyperlinks ────────────────────────────────────────── */
+.link-blue {
+    -fx-text-fill: #3b82f6;
+    -fx-font-size: 12px;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+.link-blue:hover {
+    -fx-text-fill: #60a5fa;
+    -fx-underline: true;
+}
+.link-blue:visited { -fx-text-fill: #3b82f6; }
+
+.link-blue-bold {
+    -fx-text-fill: #3b82f6;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+.link-blue-bold:hover {
+    -fx-text-fill: #60a5fa;
+    -fx-underline: true;
+}
+.link-blue-bold:visited { -fx-text-fill: #3b82f6; }
+
+/* ── Primary button ────────────────────────────────────── */
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #3b82f6, #6366f1);
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 14;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.4), 14, 0, 0, 4);
+}
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #2563eb, #4f46e5);
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.6), 22, 0, 0, 6);
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
+}
+.btn-primary:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.3), 8, 0, 0, 2);
+}
+
+/* ── Outline button (Gmail) ────────────────────────────── */
+.btn-outline {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 13;
+    -fx-border-color: #334155;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+.btn-outline:hover {
+    -fx-background-color: #1e293b;
+    -fx-border-color: #475569;
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
+}
+.btn-outline:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* ── Ghost button (FaceID) ─────────────────────────────── */
+.btn-ghost {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-text-fill: #64748b;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 13;
+    -fx-border-color: #1e293b;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+.btn-ghost:hover {
+    -fx-background-color: #0f172a;
+    -fx-text-fill: #94a3b8;
+    -fx-border-color: #334155;
+}
+.btn-ghost:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* ── Separator ─────────────────────────────────────────── */
+.sep .line {
+    -fx-border-color: #1e293b;
+    -fx-border-width: 0.5;
+}
+.sep-label {
+    -fx-text-fill: #334155;
+    -fx-font-size: 12px;
+}
+
+/* ── Muted text ────────────────────────────────────────── */
+.muted-text {
+    -fx-text-fill: #475569;
+    -fx-font-size: 13px;
+}

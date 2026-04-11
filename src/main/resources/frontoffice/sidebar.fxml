@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="piJava.Controllers.frontoffice.FrontSidebarController"
+            styleClass="sidebar"
+            minWidth="280" prefWidth="280" maxWidth="280"
+            stylesheets="@sidebar.css">
+
+    <!-- TOP: Logo + Profile (fixed) -->
+    <top>
+        <VBox styleClass="sidebar-top">
+            <!-- Logo / Brand -->
+            <VBox alignment="CENTER" styleClass="logo-container">
+                <Label text="ESPRIT FLOW" styleClass="logo-title"/>
+                <Label text="Front Office" styleClass="logo-subtitle"/>
+            </VBox>
+
+            <!-- Profile Section — populated from SessionManager in FrontSidebarController -->
+            <VBox alignment="CENTER" spacing="8" styleClass="profile-container">
+                <Circle radius="32" styleClass="profile-avatar"/>
+                <Label fx:id="lblProfileName" text="" styleClass="profile-name"/>
+                <Label fx:id="lblProfileRole" text="" styleClass="profile-role"/>
+            </VBox>
+        </VBox>
+    </top>
+
+    <!-- CENTER: Scrollable Navigation Menu -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="sidebar-scroll" VBox.vgrow="ALWAYS">
+            <VBox spacing="2" styleClass="nav-menu">
+                <Label text="MENU PRINCIPAL" styleClass="nav-section-title"/>
+
+                <Button fx:id="dashboardBtn" text="📊 Tableau de bord"
+                        onAction="#goToDashboard" styleClass="menu-item"/>
+
+                <Button fx:id="tachesBtn" text="👥 Taches"
+                        onAction="#goToTaches" styleClass="menu-item"/>
+
+                <Button fx:id="classesBtn" text="📚 Groupes et Classes"
+                        onAction="#goToClasses" styleClass="menu-item"/>
+
+                <Button fx:id="matieresBtn" text="📖 Cours et Programmes"
+                        onAction="#goToMatieres" styleClass="menu-item"/>
+
+                <Button fx:id="enseignantsBtn" text="👨‍🏫 Intervenants"
+                        onAction="#goToEnseignants" styleClass="menu-item"/>
+
+                <Label text="GESTION DES OPÉRATIONS" styleClass="nav-section-title"/>
+
+                <Button fx:id="emploiBtn" text="📅 Planning général"
+                        onAction="#goToEmploi" styleClass="menu-item"/>
+
+                <Button fx:id="notesBtn" text="📊 Évaluations"
+                        onAction="#goToNotes" styleClass="menu-item"/>
+
+                <Label text="COMMUNICATION" styleClass="nav-section-title"/>
+
+                <Button fx:id="notificationsBtn" text="🔔 Notifications And Alertes"
+                        onAction="#goToNotifications" styleClass="menu-item"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- BOTTOM: Logout Button (fixed) -->
+    <bottom>
+        <VBox styleClass="logout-container">
+            <Button fx:id="logoutBtn" text="🚪 Déconnexion"
+                    onAction="#logout" styleClass="logout-btn"/>
+        </VBox>
+    </bottom>
+
+</BorderPane>

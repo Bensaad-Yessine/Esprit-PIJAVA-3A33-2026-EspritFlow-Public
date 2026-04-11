@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.shape.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="piJava.Controllers.backoffice.SidebarController"
+      styleClass="backoffice-sidebar"
+      minWidth="280" prefWidth="280" maxWidth="280"
+      spacing="0"
+      stylesheets="@sidebar.css">
+
+    <!-- Logo -->
+    <VBox alignment="CENTER" styleClass="logo-container">
+        <Label text="ESPRIT FLOW" styleClass="logo-title"/>
+        <Label text="Back Office Administrateur" styleClass="logo-subtitle"/>
+    </VBox>
+
+    <!-- Profile -->
+    <VBox alignment="CENTER" spacing="8" styleClass="profile-container">
+        <Circle radius="32" styleClass="profile-avatar"/>
+        <Label text="Admin ESPRIT" styleClass="profile-name"/>
+        <Label text="Directeur des études" styleClass="profile-role"/>
+    </VBox>
+
+    <!-- Navigation Menu -->
+    <VBox spacing="2" styleClass="nav-menu" VBox.vgrow="ALWAYS">
+        <Label text="MENU PRINCIPAL" styleClass="nav-section-title"/>
+
+        <Button fx:id="dashboardBtn" text="📊 Tableau de bord"
+                onAction="#goToDashboard" styleClass="menu-item"/>
+
+        <Button fx:id="tachesBtn" text="👥 Taches"
+                onAction="#goToTaches" styleClass="menu-item"/>
+
+        <Button fx:id="classesBtn" text="📚 Classes"
+                onAction="#goToClasses" styleClass="menu-item"/>
+
+        <Button fx:id="matieresBtn" text="📖 Matières"
+                onAction="#goToMatieres" styleClass="menu-item"/>
+
+        <Button fx:id="enseignantsBtn" text="👨‍🏫 Enseignants"
+                onAction="#goToEnseignants" styleClass="menu-item"/>
+
+        <Label text="GESTION ACADÉMIQUE" styleClass="nav-section-title"/>
+
+        <Button fx:id="emploiBtn" text="📅 Emploi du temps"
+                onAction="#goToEmploi" styleClass="menu-item"/>
+
+        <Button fx:id="notesBtn" text="📝 Notes"
+                onAction="#goToNotes" styleClass="menu-item"/>
+
+        <Label text="COMMUNICATION" styleClass="nav-section-title"/>
+
+        <Button fx:id="notificationsBtn" text="🔔 Notifications"
+                onAction="#goToNotifications" styleClass="menu-item"/>
+    </VBox>
+
+    <!-- Logout Button -->
+    <VBox styleClass="logout-container">
+        <Button fx:id="logoutBtn" text="🚪 Déconnexion"
+                onAction="#logout" styleClass="logout-btn"/>
+    </VBox>
+
+</VBox>

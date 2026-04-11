@@ -1,0 +1,178 @@
+/* ============================================================
+   alerte-details.css / alerte-edit.css / alerte-new.css
+   Shared styles — import alerte.css theme
+   ============================================================ */
+
+.root-bg {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F5F5F6, rgba(253,120,120,0.94));
+}
+
+.main-container {
+    -fx-padding: 32;
+    -fx-background-color: transparent;
+}
+
+.page-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.page-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Typography */
+.title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #18181B;
+}
+.subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #71717A;
+}
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #18181B;
+    -fx-border-color: transparent transparent #F0F0F1 transparent;
+    -fx-border-width: 0 0 1.5 0;
+    -fx-padding: 0 0 10 0;
+}
+.field-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #71717A;
+}
+.field-value {
+    -fx-font-size: 15px;
+    -fx-text-fill: #3F3F46;
+}
+
+/* Info card */
+.info-card {
+    -fx-background-color: rgba(255,255,255,0.95);
+    -fx-background-radius: 24;
+    -fx-border-color: rgba(255,255,255,0.6);
+    -fx-border-radius: 24;
+    -fx-border-width: 1;
+    -fx-padding: 28;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 16, 0, 0, 6);
+}
+
+/* Form card */
+.form-card {
+    -fx-background-color: rgba(255,255,255,0.95);
+    -fx-background-radius: 24;
+    -fx-border-color: rgba(255,255,255,0.6);
+    -fx-border-radius: 24;
+    -fx-border-width: 1;
+    -fx-padding: 32;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 8);
+}
+
+/* Badge */
+.badge {
+    -fx-background-radius: 20;
+    -fx-padding: 6 16;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Form fields */
+.form-field {
+    -fx-background-color: #F9FAFB;
+    -fx-background-radius: 12;
+    -fx-border-color: #E4E4E7;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 11 14;
+    -fx-font-size: 14px;
+    -fx-text-fill: #18181B;
+    -fx-prompt-text-fill: #A1A1AA;
+}
+.form-field:focused {
+    -fx-border-color: #E63946;
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.2), 10, 0, 0, 2);
+}
+.form-check {
+    -fx-font-size: 13px;
+    -fx-text-fill: #52525B;
+}
+
+/* Buttons */
+.btn-back {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #71717A;
+    -fx-background-radius: 24;
+    -fx-padding: 8 20;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: #E4E4E7;
+    -fx-border-radius: 24;
+    -fx-border-width: 1;
+}
+.btn-back:hover {
+    -fx-background-color: #F4F4F5;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #E63946, #C1121F);
+    -fx-text-fill: white;
+    -fx-background-radius: 24;
+    -fx-padding: 11 26;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.4), 14, 0, 0, 5);
+}
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #FF4D5A, #E63946);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+.btn-primary:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.btn-secondary {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #71717A;
+    -fx-background-radius: 24;
+    -fx-padding: 11 26;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-border-color: #E4E4E7;
+    -fx-border-radius: 24;
+    -fx-border-width: 1;
+}
+.btn-secondary:hover {
+    -fx-background-color: #F4F4F5;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* Notification */
+.notification-label {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 10 20;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+    -fx-opacity: 0;
+}
+
+/* Scrollbars */
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #FECDD3;
+    -fx-background-radius: 8;
+}
+.scroll-bar .track, .scroll-bar .increment-button, .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
