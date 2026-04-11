@@ -7,7 +7,7 @@
 
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.controllers.backoffice.DashboardController"
+      fx:controller="piJava.Controllers.backoffice.DashboardController"
       styleClass="dashboard-root"
       prefWidth="1400" prefHeight="800"
       stylesheets="@dashboard.css">

@@ -6,13 +6,15 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="piJava.Controllers.backoffice.MainController"
       prefWidth="1400" prefHeight="800"
-      style="-fx-background-color: #212121;">
+      stylesheets="@sidebar.css">
 
-    <!-- Sidebar included once, reused on every page -->
+    <!--
+        fx:id="sidebar"  →  JavaFX auto-injects "sidebarController" in MainController
+        source path starts from resources/ root, matches your sidebar.fxml location
+    -->
     <fx:include fx:id="sidebar" source="sidebar.fxml"/>
 
-    <!-- This StackPane swaps content on navigation -->
-    <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS"
-               style="-fx-background-color: #212121;"/>
+    <!-- Content area: pages are swapped into here by SidebarController -->
+    <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS"/>
 
 </HBox>
