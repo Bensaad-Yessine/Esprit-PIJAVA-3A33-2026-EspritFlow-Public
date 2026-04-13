@@ -139,11 +139,9 @@ public class MatiereService implements ICrud<Matiere> {
     // Fetches all Classe records linked to a given matiereId
     private List<Classe> getClassesForMatiere(int matiereId) throws SQLException {
         List<Classe> classes = new ArrayList<>();
-        String query = """
-                SELECT c.* FROM classe c
-                JOIN matiere_classe_classe mcc ON c.id = mcc.classe_id
-                WHERE mcc.matiere_classe_id = ?
-                """;
+        String query = "SELECT c.* FROM classe c " +
+                "JOIN matiere_classe_classe mcc ON c.id = mcc.classe_id " +
+                "WHERE mcc.matiere_classe_id = ?";
 
         try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, matiereId);

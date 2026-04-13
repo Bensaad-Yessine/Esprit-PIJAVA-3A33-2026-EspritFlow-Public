@@ -9,6 +9,8 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import piJava.Controllers.backoffice.objectifsante.AfficherObjectifsController;
+import piJava.Controllers.backoffice.suivibienetre.AfficherSuivisController;
 
 public class SidebarController {
 
@@ -16,6 +18,7 @@ public class SidebarController {
     @FXML private Button tachesBtn;
     @FXML private Button classesBtn;
     @FXML private Button matieresBtn;
+    @FXML private Button objectifSanteBtn;
     @FXML private Button enseignantsBtn;
     @FXML private Button emploiBtn;
     @FXML private Button notesBtn;
@@ -29,7 +32,7 @@ public class SidebarController {
     }
 
     public void setActivePage(String page) {
-        Button[] all = { dashboardBtn, tachesBtn, classesBtn, matieresBtn,
+        Button[] all = { dashboardBtn, tachesBtn, classesBtn, objectifSanteBtn,  matieresBtn,
                          enseignantsBtn, emploiBtn, notesBtn, notificationsBtn };
         for (Button b : all) b.getStyleClass().remove("menu-item-active");
 
@@ -38,6 +41,7 @@ public class SidebarController {
             case "taches"        -> tachesBtn.getStyleClass().add("menu-item-active");
             case "classes"       -> classesBtn.getStyleClass().add("menu-item-active");
             case "matieres"      -> matieresBtn.getStyleClass().add("menu-item-active");
+            case "objectifSante" -> objectifSanteBtn.getStyleClass().add("menu-item-active");
             case "enseignants"   -> enseignantsBtn.getStyleClass().add("menu-item-active");
             case "emploi"        -> emploiBtn.getStyleClass().add("menu-item-active");
             case "notes"         -> notesBtn.getStyleClass().add("menu-item-active");
@@ -50,8 +54,22 @@ public class SidebarController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent page = loader.load();
+
+            Object controller = loader.getController();
+
+            if (controller instanceof AfficherObjectifsController objectifsController) {
+                objectifsController.setSidebarController(this);
+                objectifsController.setContentArea(contentArea);
+            }
+
+            if (controller instanceof AfficherSuivisController suivisController) {
+                suivisController.setSidebarController(this);
+                suivisController.setContentArea(contentArea);
+            }
+
             contentArea.getChildren().setAll(page);
             setActivePage(activePage);
+
         } catch (Exception e) {
             System.err.println("Failed to load: " + fxmlPath);
             e.printStackTrace();
@@ -64,7 +82,8 @@ public class SidebarController {
 
     // ↓ This path must match where ClassesContent.fxml sits in your resources folder
     @FXML public void goToClasses()     { loadPage("/backoffice/Classe/ClassesContent.fxml",       "classes"); }
-
+    @FXML
+    public void goToObjectifsSante()     { loadPage("/backoffice/objectifsante/AfficherObjectifs.fxml", "objectifSante");}
     @FXML public void goToMatieres()    { loadPage("/backoffice/Matiere/MatiereContent.fxml",            "matieres"); }
     @FXML public void goToEnseignants() { loadPage("/backoffice/enseignants-content.fxml",         "enseignants"); }
     @FXML public void goToEmploi()      { loadPage("/backoffice/emploi-content.fxml",              "emploi"); }

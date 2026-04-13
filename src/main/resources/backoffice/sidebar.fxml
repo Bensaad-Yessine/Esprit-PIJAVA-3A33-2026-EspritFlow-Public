@@ -38,6 +38,9 @@
         <Button fx:id="classesBtn" text="📚 Classes"
                 onAction="#goToClasses" styleClass="menu-item"/>
 
+        <Button fx:id="objectifsSanteBtn" text="💚 Objectif Santé"
+                onAction="#goToObjectifsSante" styleClass="menu-item"/>
+
         <Button fx:id="matieresBtn" text="📖 Matières"
                 onAction="#goToMatieres" styleClass="menu-item"/>
 

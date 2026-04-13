@@ -44,6 +44,10 @@
                 <Button fx:id="classesBtn" text="📚 Groupes et Classes"
                         onAction="#goToClasses" styleClass="menu-item"/>
 
+                <Button fx:id="objectifsBtn" text="🎯 Objectifs" onAction="#goToObjectifs" styleClass="menu-item"/>
+
+
+
                 <Button fx:id="matieresBtn" text="📖 Cours et Programmes"
                         onAction="#goToMatieres" styleClass="menu-item"/>
 

@@ -27,7 +27,7 @@ public class user {
                 String profile_pic, String created_at, int is_banned,
                 String ban_reason, String banned_at,
                 String verification_token, Integer classe_id) {
-
+        this.id = id;
         this.email = email;
         this.roles = roles;
         this.password = password;
