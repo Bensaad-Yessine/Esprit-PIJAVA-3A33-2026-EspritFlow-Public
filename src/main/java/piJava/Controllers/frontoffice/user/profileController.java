@@ -1,4 +1,4 @@
 package piJava.Controllers.frontoffice.user;
 
-public class profile {
+public class profileController {
 }
