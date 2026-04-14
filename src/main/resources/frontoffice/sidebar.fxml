@@ -27,7 +27,7 @@
     <!-- ═══ PROFILE / SESSION ═══ -->
     <VBox styleClass="f-profile-section" spacing="8">
 
-        <HBox alignment="CENTER_LEFT" spacing="12">
+        <HBox alignment="CENTER_LEFT" spacing="12" onMouseClicked="#goToProfile">
             <StackPane fx:id="avatarStack" minWidth="48" minHeight="48"
                        maxWidth="48" maxHeight="48" >
                 <Circle fx:id="avatarCircle" radius="24" styleClass="f-avatar-circle"

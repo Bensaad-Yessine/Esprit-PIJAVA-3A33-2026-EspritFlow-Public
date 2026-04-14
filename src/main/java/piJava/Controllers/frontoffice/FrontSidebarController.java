@@ -177,13 +177,16 @@ public class FrontSidebarController implements Initializable {
     @FXML
     public void goToNotes() {
         setActiveButton(notesBtn);
-        loadView("/piJava/Views/frontoffice/notes/notes-content.fxml");
+        loadView("/frontoffice/notes/notes-content.fxml");
     }
 
     @FXML
     public void goToNotifications() {
         setActiveButton(notificationsBtn);
-        loadView("/piJava/Views/frontoffice/notifications/notif-content.fxml");
+        loadView("/frontoffice/notifications/notif-content.fxml");
+    }
+    public void goToProfile(){
+        loadView("/frontoffice/user/profile.fxml");
     }
 
     @FXML
