@@ -210,8 +210,7 @@ public class TachesController implements Initializable {
             controller.setTask(t);
             controller.setSidebarController(sidebarController);
 
-            sidebarController.getContentArea().getChildren().setAll(r);
-            sidebarController.setActivePage("taches");
+
 
         } catch (IOException ex) {
             showError("Erreur de navigation", ex.getMessage());
@@ -239,9 +238,6 @@ public class TachesController implements Initializable {
                 controller.setTask(t);
                 controller.setSidebarController(sidebarController);
 
-                sidebarController.getContentArea().getChildren().setAll(r);
-                sidebarController.setActivePage("taches");
-
             } catch (IOException ex) {
                 showError("Erreur de navigation", ex.getMessage());
             }
@@ -258,8 +254,6 @@ public class TachesController implements Initializable {
             TacheNewController controller = loader.getController();
             controller.setSidebarController(sidebarController);
 
-            sidebarController.getContentArea().getChildren().setAll(r);
-            sidebarController.setActivePage("taches");
 
         } catch (IOException ex) {
             showError("Erreur de navigation", ex.getMessage());

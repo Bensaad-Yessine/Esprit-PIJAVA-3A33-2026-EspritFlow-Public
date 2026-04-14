@@ -127,10 +127,7 @@ public class TacheEditController {
 
             lblNotification.setText("✅ Tâche modifiée avec succès !");
 
-            // Go back to list
-            if (sidebarController != null) {
-                sidebarController.loadPage("/frontoffice/taches/taches-content.fxml", "taches");
-            }
+
 
         } catch (NumberFormatException e) {
             lblNotification.setText("⚠ La durée doit être un nombre entier.");
@@ -145,8 +142,6 @@ public class TacheEditController {
 
     @FXML
     private void handleCancel() {
-        if (sidebarController != null) {
-            sidebarController.loadPage("/frontoffice/taches/taches-content.fxml", "taches");
-        }
+
     }
 }

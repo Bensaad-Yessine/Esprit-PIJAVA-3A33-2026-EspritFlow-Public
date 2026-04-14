@@ -76,9 +76,6 @@ public class AlerteEditController {
 
             lblNotification.setText("✅ Préférence modifiée avec succès !");
 
-            if (sidebarController != null) {
-                sidebarController.loadPage("/frontoffice/preferenceAlerte/alertes-content.fxml", "alertes");
-            }
 
         } catch (NumberFormatException e) {
             lblNotification.setText("⚠ Le délai doit être un nombre entier.");
@@ -90,9 +87,7 @@ public class AlerteEditController {
 
     @FXML
     private void handleCancel() {
-        if (sidebarController != null) {
-            sidebarController.loadPage("/frontoffice/preferenceAlerte/alertes-content.fxml", "alertes");
-        }
+
     }
 
     private void setText(TextField f, String v)  { if (f != null) f.setText(v != null ? v : ""); }
