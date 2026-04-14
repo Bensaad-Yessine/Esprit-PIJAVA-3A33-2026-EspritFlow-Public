@@ -202,4 +202,128 @@ public class ObjectifSanteService {
         o.setUserPrenom(rs.getString("user_prenom"));
         return o;
     }
+    public List<ObjectifSante> rechercherEtTrierBack(String recherche, String categorie, String tri) throws SQLException {
+        List<ObjectifSante> objectifs = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT o.id, o.titre, o.type, o.valeur_cible, o.date_debut, o.date_fin, " +
+                        "o.priorite, o.statut, o.user_id, u.nom AS user_nom, u.prenom AS user_prenom " +
+                        "FROM objectif_sante o " +
+                        "LEFT JOIN user u ON o.user_id = u.id " +
+                        "WHERE 1=1 "
+        );
+
+        boolean hasRecherche = recherche != null && !recherche.trim().isEmpty();
+        boolean hasCategorie = categorie != null && !categorie.trim().isEmpty() && !categorie.equals("Toutes");
+
+        if (hasRecherche) {
+            sql.append("AND (");
+            sql.append("LOWER(o.titre) LIKE ? ");
+            sql.append("OR LOWER(u.nom) LIKE ? ");
+
+            if (recherche.matches("\\d+")) {
+                sql.append("OR o.user_id = ? OR o.id = ? ");
+            }
+
+            sql.append(") ");
+        }
+
+        if (hasCategorie) {
+            sql.append("AND o.type = ? ");
+        }
+
+        if ("date_debut".equals(tri)) {
+            sql.append("ORDER BY o.date_debut DESC ");
+        } else if ("priorite".equals(tri)) {
+            sql.append("ORDER BY CASE ")
+                    .append("WHEN o.priorite = 'HAUTE' THEN 1 ")
+                    .append("WHEN o.priorite = 'MOYENNE' THEN 2 ")
+                    .append("WHEN o.priorite = 'BASSE' THEN 3 ")
+                    .append("ELSE 4 END, o.date_debut DESC ");
+        } else {
+            sql.append("ORDER BY o.id DESC ");
+        }
+
+        PreparedStatement ps = cnx.prepareStatement(sql.toString());
+
+        int index = 1;
+
+        if (hasRecherche) {
+            String keyword = "%" + recherche.trim().toLowerCase() + "%";
+            ps.setString(index++, keyword);
+            ps.setString(index++, keyword);
+
+            if (recherche.matches("\\d+")) {
+                int value = Integer.parseInt(recherche.trim());
+                ps.setInt(index++, value);
+                ps.setInt(index++, value);
+            }
+        }
+
+        if (hasCategorie) {
+            ps.setString(index++, categorie);
+        }
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            objectifs.add(mapResultSetToObjectif(rs));
+        }
+
+        return objectifs;
+    }
+    public List<ObjectifSante> rechercherEtTrierFront(int userId, String recherche, String categorie, String tri) throws SQLException {
+        List<ObjectifSante> objectifs = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT o.id, o.titre, o.type, o.valeur_cible, o.date_debut, o.date_fin, " +
+                        "o.priorite, o.statut, o.user_id, u.nom AS user_nom, u.prenom AS user_prenom " +
+                        "FROM objectif_sante o " +
+                        "LEFT JOIN user u ON o.user_id = u.id " +
+                        "WHERE o.user_id = ? "
+        );
+
+        boolean hasRecherche = recherche != null && !recherche.trim().isEmpty();
+        boolean hasCategorie = categorie != null && !categorie.trim().isEmpty() && !categorie.equals("Toutes");
+
+        if (hasRecherche) {
+            sql.append("AND LOWER(o.titre) LIKE ? ");
+        }
+
+        if (hasCategorie) {
+            sql.append("AND o.type = ? ");
+        }
+
+        if ("date_debut".equals(tri)) {
+            sql.append("ORDER BY o.date_debut DESC ");
+        } else if ("priorite".equals(tri)) {
+            sql.append("ORDER BY CASE ")
+                    .append("WHEN o.priorite = 'HAUTE' THEN 1 ")
+                    .append("WHEN o.priorite = 'MOYENNE' THEN 2 ")
+                    .append("WHEN o.priorite = 'BASSE' THEN 3 ")
+                    .append("ELSE 4 END, o.date_debut DESC ");
+        } else {
+            sql.append("ORDER BY o.id DESC ");
+        }
+
+        PreparedStatement ps = cnx.prepareStatement(sql.toString());
+        int index = 1;
+        ps.setInt(index++, userId);
+
+        if (hasRecherche) {
+            ps.setString(index++, "%" + recherche.trim().toLowerCase() + "%");
+        }
+
+        if (hasCategorie) {
+            ps.setString(index++, categorie);
+        }
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            objectifs.add(mapResultSetToObjectif(rs));
+        }
+
+        return objectifs;
+    }
 }

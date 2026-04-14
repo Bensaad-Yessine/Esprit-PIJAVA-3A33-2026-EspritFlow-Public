@@ -23,8 +23,7 @@ public class AfficherSuivisController {
     @FXML
     private TableView<SuiviBienEtre> tableSuivis;
 
-    @FXML
-    private TableColumn<SuiviBienEtre, Integer> colId;
+
 
     @FXML
     private TableColumn<SuiviBienEtre, Date> colDateSaisie;
@@ -47,8 +46,10 @@ public class AfficherSuivisController {
     @FXML
     private TableColumn<SuiviBienEtre, Double> colScore;
 
+
+
     @FXML
-    private TableColumn<SuiviBienEtre, Integer> colObjectifId;
+    private ComboBox<String> cbTri;
 
     private int objectifId;
     private FrontSidebarController sidebarController;
@@ -64,7 +65,7 @@ public class AfficherSuivisController {
 
     @FXML
     public void initialize() {
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+
         colDateSaisie.setCellValueFactory(new PropertyValueFactory<>("dateSaisie"));
         colHumeur.setCellValueFactory(new PropertyValueFactory<>("humeur"));
         colQualiteSommeil.setCellValueFactory(new PropertyValueFactory<>("qualiteSommeil"));
@@ -72,55 +73,22 @@ public class AfficherSuivisController {
         colNiveauStress.setCellValueFactory(new PropertyValueFactory<>("niveauStress"));
         colQualiteAlimentation.setCellValueFactory(new PropertyValueFactory<>("qualiteAlimentation"));
         colScore.setCellValueFactory(new PropertyValueFactory<>("score"));
-        colObjectifId.setCellValueFactory(new PropertyValueFactory<>("objectifId"));
 
         appliquerStylesColonnes();
+
+        cbTri.getItems().addAll(
+                "Par défaut",
+                "Date",
+                "Score",
+                "Humeur"
+        );
+        cbTri.setValue("Par défaut");
+
+        cbTri.valueProperty().addListener((obs, oldVal, newVal) -> appliquerTri());
     }
 
     private void appliquerStylesColonnes() {
-        colId.setCellFactory(column -> new TableCell<SuiviBienEtre, Integer>() {
-            private final Label badge = new Label();
 
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty || item == null) {
-                    setGraphic(null);
-                    setText(null);
-                    return;
-                }
-
-                badge.setText(String.valueOf(item));
-                badge.getStyleClass().setAll("mini-badge-dark");
-
-                setGraphic(badge);
-                setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            }
-        });
-
-        colObjectifId.setCellFactory(column -> new TableCell<SuiviBienEtre, Integer>() {
-            private final Label badge = new Label();
-
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty || item == null) {
-                    setGraphic(null);
-                    setText(null);
-                    return;
-                }
-
-                badge.setText("OBJ-" + item);
-                badge.getStyleClass().setAll("mini-badge-steel");
-
-                setGraphic(badge);
-                setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            }
-        });
 
         colDateSaisie.setCellFactory(column -> new TableCell<SuiviBienEtre, Date>() {
             private final Label badge = new Label();
@@ -262,6 +230,45 @@ public class AfficherSuivisController {
     }
 
     @FXML
+    public void appliquerTri() {
+        SuiviBienEtreService service = new SuiviBienEtreService();
+
+        try {
+            user currentUser = SessionManager.getInstance().getCurrentUser();
+
+            if (currentUser == null) {
+                tableSuivis.setItems(FXCollections.observableArrayList());
+                return;
+            }
+
+            String triSelection = cbTri.getValue();
+            String tri = null;
+
+            if ("Date".equals(triSelection)) {
+                tri = "date";
+            } else if ("Score".equals(triSelection)) {
+                tri = "score";
+            } else if ("Humeur".equals(triSelection)) {
+                tri = "humeur";
+            }
+
+            ObservableList<SuiviBienEtre> suivis = FXCollections.observableArrayList();
+            suivis.addAll(service.recupererParObjectifEtUserAvecTri(objectifId, currentUser.getId(), tri));
+            tableSuivis.setItems(suivis);
+
+        } catch (SQLException e) {
+            System.out.println("Erreur lors du tri des suivis FRONT : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void reinitialiserTri() {
+        cbTri.setValue("Par défaut");
+        chargerSuivisParObjectif();
+    }
+
+    @FXML
     public void ouvrirAjouterSuivi() {
         try {
             user currentUser = SessionManager.getInstance().getCurrentUser();
@@ -336,8 +343,6 @@ public class AfficherSuivisController {
             e.printStackTrace();
         }
     }
-
-
 
     @FXML
     public void ouvrirObjectifs() {

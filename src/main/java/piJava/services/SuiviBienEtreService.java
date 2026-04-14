@@ -205,4 +205,77 @@ public class SuiviBienEtreService {
         s.setObjectifId(rs.getInt("objectif_id"));
         return s;
     }
+    public List<SuiviBienEtre> recupererParObjectifAvecTri(int objectifId, String tri) throws SQLException {
+        List<SuiviBienEtre> suivis = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT id, date_saisie, humeur, qualite_sommeil, niveau_energie, niveau_stress, " +
+                        "qualite_alimentation, notes_libres, score, objectif_id " +
+                        "FROM suivi_bien_etre WHERE objectif_id = ? "
+        );
+
+        if ("date".equals(tri)) {
+            sql.append("ORDER BY date_saisie DESC ");
+        } else if ("score".equals(tri)) {
+            sql.append("ORDER BY score DESC ");
+        } else if ("humeur".equals(tri)) {
+            sql.append("ORDER BY CASE ")
+                    .append("WHEN humeur = 'EXCELLENT' THEN 1 ")
+                    .append("WHEN humeur = 'BIEN' THEN 2 ")
+                    .append("WHEN humeur = 'MOYEN' THEN 3 ")
+                    .append("WHEN humeur = 'MAUVAIS' THEN 4 ")
+                    .append("ELSE 5 END ");
+        } else {
+            sql.append("ORDER BY id DESC ");
+        }
+
+        PreparedStatement ps = cnx.prepareStatement(sql.toString());
+        ps.setInt(1, objectifId);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            suivis.add(mapResultSetToSuivi(rs));
+        }
+
+        return suivis;
+    }
+    public List<SuiviBienEtre> recupererParObjectifEtUserAvecTri(int objectifId, int userId, String tri) throws SQLException {
+        List<SuiviBienEtre> suivis = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT s.id, s.date_saisie, s.humeur, s.qualite_sommeil, s.niveau_energie, " +
+                        "s.niveau_stress, s.qualite_alimentation, s.notes_libres, s.score, s.objectif_id " +
+                        "FROM suivi_bien_etre s " +
+                        "INNER JOIN objectif_sante o ON s.objectif_id = o.id " +
+                        "WHERE s.objectif_id = ? AND o.user_id = ? "
+        );
+
+        if ("date".equals(tri)) {
+            sql.append("ORDER BY s.date_saisie DESC ");
+        } else if ("score".equals(tri)) {
+            sql.append("ORDER BY s.score DESC ");
+        } else if ("humeur".equals(tri)) {
+            sql.append("ORDER BY CASE ")
+                    .append("WHEN s.humeur = 'EXCELLENT' THEN 1 ")
+                    .append("WHEN s.humeur = 'BIEN' THEN 2 ")
+                    .append("WHEN s.humeur = 'MOYEN' THEN 3 ")
+                    .append("WHEN s.humeur = 'MAUVAIS' THEN 4 ")
+                    .append("ELSE 5 END ");
+        } else {
+            sql.append("ORDER BY s.id DESC ");
+        }
+
+        PreparedStatement ps = cnx.prepareStatement(sql.toString());
+        ps.setInt(1, objectifId);
+        ps.setInt(2, userId);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            suivis.add(mapResultSetToSuivi(rs));
+        }
+
+        return suivis;
+    }
 }

@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ComboBox?>
 <BorderPane prefHeight="760.0" prefWidth="1250.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml"
@@ -97,6 +98,15 @@
                         </VBox>
                     </children>
                 </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <children>
+                        <ComboBox fx:id="cbTri" prefWidth="180.0"/>
+
+                        <Button text="Réinitialiser"
+                                styleClass="secondary-button"
+                                onAction="#reinitialiserTri"/>
+                    </children>
+                </HBox>
 
                 <!-- TABLE CARD -->
                 <VBox styleClass="card" spacing="14" VBox.vgrow="ALWAYS">
@@ -111,7 +121,7 @@
 
                         <TableView fx:id="tableSuivis" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="colId" prefWidth="90" text="ID"/>
+
                                 <TableColumn fx:id="colDateSaisie" prefWidth="120.0" text="Date saisie"/>
                                 <TableColumn fx:id="colHumeur" prefWidth="130.0" text="Humeur"/>
                                 <TableColumn fx:id="colQualiteSommeil" prefWidth="120.0" text="Sommeil"/>
@@ -119,7 +129,7 @@
                                 <TableColumn fx:id="colNiveauStress" prefWidth="120.0" text="Stress"/>
                                 <TableColumn fx:id="colQualiteAlimentation" prefWidth="145.0" text="Alimentation"/>
                                 <TableColumn fx:id="colScore" prefWidth="110.0" text="Score"/>
-                                <TableColumn fx:id="colObjectifId" prefWidth="120.0" text="Objectif ID"/>
+
                             </columns>
                         </TableView>
                     </children>

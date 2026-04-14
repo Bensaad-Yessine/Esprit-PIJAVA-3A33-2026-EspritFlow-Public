@@ -10,7 +10,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
 <BorderPane prefHeight="760.0" prefWidth="1250.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml"
@@ -66,6 +67,7 @@
                             </children>
                         </HBox>
 
+
                         <HBox spacing="16">
                             <children>
                                 <VBox spacing="6" styleClass="stat-card" HBox.hgrow="ALWAYS">
@@ -100,11 +102,24 @@
                                         <Label text="Actifs" styleClass="badge-blue"/>
                                     </children>
                                 </HBox>
+                                <HBox alignment="CENTER_LEFT" spacing="12">
+                                    <children>
+                                        <TextField fx:id="txtRecherche"
+                                                   promptText="Rechercher par titre de l'objectif"
+                                                   prefWidth="280.0"/>
 
+                                        <ComboBox fx:id="cbCategorie" prefWidth="170.0"/>
+
+                                        <ComboBox fx:id="cbTri" prefWidth="170.0"/>
+
+                                        <Button text="Réinitialiser"
+                                                styleClass="secondary-button"
+                                                onAction="#reinitialiserFiltres"/>
+                                    </children>
+                                </HBox>
                                 <TableView fx:id="tableObjectifs" VBox.vgrow="ALWAYS">
                                     <columns>
-                                        <TableColumn fx:id="colId" prefWidth="90.0" text="#"/>
-                                        <TableColumn fx:id="colUserId" prefWidth="110.0" text="ID Utilisateur"/>
+
 
                                         <TableColumn fx:id="colTitre" prefWidth="220.0" text="Objectif"/>
                                         <TableColumn fx:id="colType" prefWidth="140.0" text="Catégorie"/>

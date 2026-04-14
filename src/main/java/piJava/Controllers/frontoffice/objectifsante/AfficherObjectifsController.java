@@ -22,11 +22,7 @@ public class AfficherObjectifsController {
     @FXML
     private TableView<ObjectifSante> tableObjectifs;
 
-    @FXML
-    private TableColumn<ObjectifSante, Integer> colId;
 
-    @FXML
-    private TableColumn<ObjectifSante, Integer> colUserId;
 
     @FXML
     private TableColumn<ObjectifSante, String> colTitre;
@@ -49,6 +45,15 @@ public class AfficherObjectifsController {
     @FXML
     private TableColumn<ObjectifSante, String> colStatut;
 
+    @FXML
+    private TextField txtRecherche;
+
+    @FXML
+    private ComboBox<String> cbCategorie;
+
+    @FXML
+    private ComboBox<String> cbTri;
+
     private FrontSidebarController sidebarController;
     private StackPane contentArea;
 
@@ -64,8 +69,7 @@ public class AfficherObjectifsController {
     public void initialize() {
         System.out.println("AfficherObjectifsController FRONT chargé avec succès !");
 
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
+
         colTitre.setCellValueFactory(new PropertyValueFactory<>("titre"));
         colType.setCellValueFactory(new PropertyValueFactory<>("type"));
         colValeurCible.setCellValueFactory(new PropertyValueFactory<>("valeurCible"));
@@ -76,6 +80,26 @@ public class AfficherObjectifsController {
 
         appliquerBadges();
         appliquerStylesColonnes();
+
+        cbCategorie.getItems().addAll(
+                "Toutes",
+                "SOMMEIL",
+                "SPORT",
+                "ALIMENTATION"
+        );
+        cbCategorie.setValue("Toutes");
+
+        cbTri.getItems().addAll(
+                "Par défaut",
+                "Priorité",
+                "Date début"
+        );
+        cbTri.setValue("Par défaut");
+
+        txtRecherche.textProperty().addListener((obs, oldVal, newVal) -> appliquerRechercheEtTri());
+        cbCategorie.valueProperty().addListener((obs, oldVal, newVal) -> appliquerRechercheEtTri());
+        cbTri.valueProperty().addListener((obs, oldVal, newVal) -> appliquerRechercheEtTri());
+
         chargerObjectifs();
     }
 
@@ -169,43 +193,7 @@ public class AfficherObjectifsController {
     }
 
     private void appliquerStylesColonnes() {
-        colId.setCellFactory(column -> new TableCell<>() {
-            private final Label badge = new Label();
 
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setGraphic(null);
-                    setText(null);
-                    return;
-                }
-                badge.setText("#" + item);
-                badge.getStyleClass().setAll("mini-badge-dark");
-                setGraphic(badge);
-                setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            }
-        });
-
-        colUserId.setCellFactory(column -> new TableCell<>() {
-            private final Label badge = new Label();
-
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setGraphic(null);
-                    setText(null);
-                    return;
-                }
-                badge.setText("U-" + item);
-                badge.getStyleClass().setAll("mini-badge-steel");
-                setGraphic(badge);
-                setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            }
-        });
 
         colTitre.setCellFactory(column -> new TableCell<>() {
             private final Label label = new Label();
@@ -419,6 +407,47 @@ public class AfficherObjectifsController {
             System.out.println("Erreur lors de l'ouverture des suivis : " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void appliquerRechercheEtTri() {
+        ObjectifSanteService service = new ObjectifSanteService();
+
+        try {
+            user currentUser = SessionManager.getInstance().getCurrentUser();
+
+            if (currentUser == null) {
+                tableObjectifs.setItems(FXCollections.observableArrayList());
+                return;
+            }
+
+            String recherche = txtRecherche.getText();
+            String categorie = cbCategorie.getValue();
+            String triSelection = cbTri.getValue();
+
+            String tri = null;
+            if ("Priorité".equals(triSelection)) {
+                tri = "priorite";
+            } else if ("Date début".equals(triSelection)) {
+                tri = "date_debut";
+            }
+
+            ObservableList<ObjectifSante> objectifs = FXCollections.observableArrayList();
+            objectifs.addAll(service.rechercherEtTrierFront(currentUser.getId(), recherche, categorie, tri));
+            tableObjectifs.setItems(objectifs);
+
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la recherche / tri des objectifs FRONT : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void reinitialiserFiltres() {
+        txtRecherche.clear();
+        cbCategorie.setValue("Toutes");
+        cbTri.setValue("Par défaut");
+        chargerObjectifs();
     }
 
     public void chargerObjectifs() {

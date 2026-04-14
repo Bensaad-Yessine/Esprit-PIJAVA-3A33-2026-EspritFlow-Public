@@ -5,11 +5,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import piJava.Controllers.backoffice.SidebarController;
@@ -57,6 +59,15 @@ public class AfficherObjectifsController {
     @FXML
     private TableColumn<ObjectifSante, String> colStatut;
 
+    @FXML
+    private TextField txtRecherche;
+
+    @FXML
+    private ComboBox<String> cbTri;
+
+    @FXML
+    private ComboBox<String> cbCategorie;
+
     private SidebarController sidebarController;
     private StackPane contentArea;
 
@@ -86,6 +97,25 @@ public class AfficherObjectifsController {
 
         appliquerBadges();
         appliquerStylesColonnes();
+
+        cbTri.getItems().addAll(
+                "Par défaut",
+                "Date début",
+                "Priorité"
+        );
+        cbTri.setValue("Par défaut");
+
+        cbCategorie.getItems().addAll(
+                "Toutes",
+                "SOMMEIL",
+                "SPORT",
+                "ALIMENTATION"
+        );
+        cbCategorie.setValue("Toutes");
+
+        txtRecherche.textProperty().addListener((obs, oldVal, newVal) -> appliquerRechercheEtTri());
+        cbTri.valueProperty().addListener((obs, oldVal, newVal) -> appliquerRechercheEtTri());
+        cbCategorie.valueProperty().addListener((obs, oldVal, newVal) -> appliquerRechercheEtTri());
 
         chargerObjectifs();
     }
@@ -430,6 +460,40 @@ public class AfficherObjectifsController {
             System.out.println("Erreur lors de l'ouverture des suivis : " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void appliquerRechercheEtTri() {
+        ObjectifSanteService service = new ObjectifSanteService();
+
+        try {
+            String recherche = txtRecherche.getText();
+            String categorie = cbCategorie.getValue();
+            String triSelection = cbTri.getValue();
+
+            String tri = null;
+            if ("Date début".equals(triSelection)) {
+                tri = "date_debut";
+            } else if ("Priorité".equals(triSelection)) {
+                tri = "priorite";
+            }
+
+            ObservableList<ObjectifSante> objectifs = FXCollections.observableArrayList();
+            objectifs.addAll(service.rechercherEtTrierBack(recherche, categorie, tri));
+            tableObjectifs.setItems(objectifs);
+
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la recherche / tri des objectifs : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void reinitialiserFiltres() {
+        txtRecherche.clear();
+        cbCategorie.setValue("Toutes");
+        cbTri.setValue("Par défaut");
+        chargerObjectifs();
     }
 
     public void chargerObjectifs() {
