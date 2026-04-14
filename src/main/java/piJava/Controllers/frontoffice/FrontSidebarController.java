@@ -49,7 +49,7 @@ public class FrontSidebarController implements Initializable {
     @FXML private HBox matieresBtn;
     @FXML private HBox enseignantsBtn;
     @FXML private HBox emploiBtn;
-    @FXML private HBox notesBtn;
+    @FXML private HBox ObjectifsSante;
     @FXML private HBox notificationsBtn;
     @FXML private HBox logoutBtn;
 
@@ -68,7 +68,7 @@ public class FrontSidebarController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         allNavButtons = Arrays.asList(
                 dashboardBtn, tachesBtn, classesBtn, matieresBtn,
-                enseignantsBtn, emploiBtn, notesBtn, notificationsBtn
+                enseignantsBtn, emploiBtn, ObjectifsSante, notificationsBtn
         );
         bindSessionData();
         // contentArea is null here — navigation is triggered after setContentArea()
@@ -175,9 +175,14 @@ public class FrontSidebarController implements Initializable {
     }
 
     @FXML
-    public void goToNotes() {
-        setActiveButton(notesBtn);
-        loadView("/frontoffice/notes/notes-content.fxml");
+    public void goToObjectifsSante() {
+        setActiveButton(ObjectifsSante);
+        loadView("/frontoffice/objectifsante/AfficherObjectifs.fxml");
+    }
+
+    @FXML
+    public void goToObjectifs() {
+        goToObjectifsSante();
     }
 
     @FXML
@@ -206,18 +211,55 @@ public class FrontSidebarController implements Initializable {
     // ─── Content loader ───────────────────────────────────────────────────────
     private void loadView(String fxmlPath) {
         if (contentArea == null) {
-            System.err.println("FrontSidebarController: contentArea is null — " +
-                    "call setContentArea() before navigating.");
+            System.err.println("FrontSidebarController: contentArea is null — call setContentArea() before navigating.");
             return;
         }
+
         try {
             URL resource = getClass().getResource(fxmlPath);
             if (resource == null) {
                 System.err.println("FXML not found: " + fxmlPath);
                 return;
             }
-            Parent view = FXMLLoader.load(resource);
+
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent view = loader.load();
+            Object controller = loader.getController();
+
+            // Injection pour Objectifs santé
+            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.AfficherObjectifsController c) {
+                c.setSidebarController(this);
+                c.setContentArea(contentArea);
+            }
+
+            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.AjouterObjectifController c) {
+                c.setSidebarController(this);
+                c.setContentArea(contentArea);
+            }
+
+            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.ModifierObjectifController c) {
+                c.setSidebarController(this);
+                c.setContentArea(contentArea);
+            }
+
+            // Injection pour Suivis bien-être
+            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AfficherSuivisController c) {
+                c.setSidebarController(this);
+                c.setContentArea(contentArea);
+            }
+
+            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AjouterSuiviController c) {
+                c.setSidebarController(this);
+                c.setContentArea(contentArea);
+            }
+
+            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.ModifierSuiviController c) {
+                c.setSidebarController(this);
+                c.setContentArea(contentArea);
+            }
+
             contentArea.getChildren().setAll(view);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

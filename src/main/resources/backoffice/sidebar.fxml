@@ -150,8 +150,8 @@
                 <Label text="Emploi du temps" styleClass="nav-item-label" HBox.hgrow="ALWAYS"/>
             </HBox>
 
-            <HBox fx:id="notesBtn" styleClass="nav-item" alignment="CENTER_LEFT"
-                  spacing="9" onMouseClicked="#goToNotes">
+            <HBox fx:id="objectfiSanteBtn" styleClass="nav-item" alignment="CENTER_LEFT"
+                  spacing="9" onMouseClicked="#goToObjectifsSante">
                 <StackPane styleClass="nav-icon-wrap">
                     <Label styleClass="nav-icon-label" text="&#128221;"/>
                 </StackPane>
