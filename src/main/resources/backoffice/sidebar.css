@@ -1,151 +1,286 @@
-/* ============================================================
-   BACKOFFICE SIDEBAR – Dark theme with blue accent
-   ============================================================ */
+/* ═══════════════════════════════════════════════════════════════
+   ESPRIT FLOW — Front Office Sidebar (Teal accent theme)
+   ═══════════════════════════════════════════════════════════════ */
 
-/* ── SIDEBAR CONTAINER ───────────────────────────────────── */
-.backoffice-sidebar {
-    -fx-background-color: #1F2937;      /* dark gray-blue */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 4, 0);
-    -fx-border-color: #2D3A46;
-    -fx-border-width: 0 1 0 0;
-    -fx-min-width: 280;
-    -fx-pref-width: 280;
-    -fx-max-width: 280;
+/* ─── Root ───────────────────────────────────────────────────── */
+.front-sidebar {
+    -fx-background-color: #0c1219;
+    -fx-pref-width: 270px;
+    -fx-min-width: 270px;
+    -fx-max-width: 270px;
 }
 
-/* ── LOGO & BRAND ────────────────────────────────────────── */
-.logo-container {
-    -fx-padding: 20 16 20 16;
-    -fx-background-color: #1F2937;
-    -fx-border-color: #2D3A46;
+/* ─── Logo ───────────────────────────────────────────────────── */
+.f-logo-container {
+    -fx-background-color: #0c1219;
+    -fx-padding: 18 18 16 18;
+    -fx-border-color: transparent transparent rgba(255,255,255,0.06) transparent;
     -fx-border-width: 0 0 1 0;
 }
 
-.logo-title {
-    -fx-text-fill: #3B82F6;             /* bright blue */
-    -fx-font-size: 24px;
+.f-logo-mark {
+    -fx-background-color: #0d7f6e;
+    -fx-background-radius: 9;
+    -fx-min-width: 34;
+    -fx-min-height: 34;
+    -fx-max-width: 34;
+    -fx-max-height: 34;
+}
+
+.f-logo-mark-text {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
-    -fx-font-family: 'Segoe UI';
 }
 
-.logo-subtitle {
-    -fx-text-fill: #9CA3AF;
-    -fx-font-size: 11px;
-    -fx-padding: 4 0 0 0;
+.f-logo-title {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
 }
 
-/* ── PROFILE SECTION ─────────────────────────────────────── */
-.profile-container {
-    -fx-padding: 24 16 24 16;
-    -fx-border-color: #2D3A46;
+.f-logo-subtitle {
+    -fx-text-fill: rgba(255,255,255,0.3);
+    -fx-font-size: 10px;
+}
+
+/* ─── Profile Section ────────────────────────────────────────── */
+.f-profile-section {
+    -fx-background-color: #0c1219;
+    -fx-padding: 14 14 14 14;
+    -fx-border-color: transparent transparent rgba(255,255,255,0.06) transparent;
     -fx-border-width: 0 0 1 0;
 }
 
-.profile-avatar {
-    -fx-fill: #374151;
-    -fx-stroke: #3B82F6;
+.f-avatar-circle {
+    -fx-fill: #0d7f6e;
+    -fx-stroke: rgba(13,127,110,0.5);
     -fx-stroke-width: 2;
 }
 
-.profile-name {
-    -fx-text-fill: #F3F4F6;
+.f-avatar-initials {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.f-online-dot {
+    -fx-fill: #22c55e;
+    -fx-stroke: #0c1219;
+    -fx-stroke-width: 2;
+}
+
+.f-profile-name {
+    -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
 
-.profile-role {
-    -fx-text-fill: #3B82F6;
+/* Role badge — teal variant */
+.f-role-badge {
+    -fx-background-color: rgba(13,127,110,0.22);
+    -fx-border-color: rgba(20,180,157,0.4);
+    -fx-border-width: 0.5;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 3 7 3 7;
+}
+
+.f-badge-dot {
+    -fx-fill: #14b49d;
+}
+
+.f-badge-text {
+    -fx-text-fill: #5fe3d0;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+/* Info cells */
+.f-info-cell {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-border-color: rgba(255,255,255,0.07);
+    -fx-border-width: 0.5;
+    -fx-border-radius: 7;
+    -fx-background-radius: 7;
+    -fx-padding: 6 9 6 9;
+    -fx-spacing: 2;
+}
+
+.f-info-label {
+    -fx-text-fill: rgba(255,255,255,0.3);
+    -fx-font-size: 9px;
+}
+
+.f-info-value {
+    -fx-text-fill: rgba(255,255,255,0.75);
     -fx-font-size: 11px;
 }
 
-/* ── NAVIGATION MENU ─────────────────────────────────────── */
-.nav-menu {
-    -fx-padding: 24 16 16 16;
+.f-info-value-green {
+    -fx-text-fill: #86efac;
+    -fx-font-size: 11px;
 }
 
-.nav-section-title {
-    -fx-text-fill: #9CA3AF;
-    -fx-font-size: 10px;
-    -fx-font-weight: bold;
-    -fx-padding: 0 0 8 8;
+.f-session-live-dot {
+    -fx-fill: #22c55e;
 }
 
-/* Base menu button */
-.menu-item {
-    -fx-pref-width: 248;
-    -fx-max-width: 248;
-    -fx-min-width: 248;
+/* ─── Navigation scroll pane ─────────────────────────────────── */
+.f-nav-scroll {
     -fx-background-color: transparent;
-    -fx-text-fill: #E5E7EB;
-    -fx-font-size: 13px;
-    -fx-font-weight: 500;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.f-nav-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.f-nav-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 4;
+}
+
+.f-nav-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-background-radius: 2;
+}
+
+.f-nav-scroll .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.f-nav-scroll .increment-button,
+.f-nav-scroll .decrement-button {
+    -fx-background-color: transparent;
+    -fx-pref-height: 0;
+}
+
+/* ─── Nav container ──────────────────────────────────────────── */
+.f-nav-container {
+    -fx-background-color: #0c1219;
+    -fx-padding: 8 10 8 10;
+}
+
+.f-nav-section-title {
+    -fx-text-fill: rgba(255,255,255,0.2);
+    -fx-font-size: 9px;
+    -fx-padding: 8 8 4 8;
+}
+
+/* ─── Nav items ──────────────────────────────────────────────── */
+.f-nav-item {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0.5;
+    -fx-border-radius: 8;
     -fx-background-radius: 8;
+    -fx-padding: 6 10 6 6;
     -fx-cursor: hand;
-    -fx-alignment: CENTER_LEFT;
-    -fx-padding: 0 0 0 16;
-    -fx-pref-height: 44;
-    -fx-effect: none;
+    -fx-pref-height: 40;
+    -fx-min-height: 40;
 }
 
-/* Hover effect – subtle light background with blue tint */
-.menu-item:hover {
-    -fx-background-color: #374151;
-    -fx-text-fill: #3B82F6;
-    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.2), 6, 0, 0, 2);
+.f-nav-item:hover {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-border-color: rgba(255,255,255,0.07);
 }
 
-/* Active (selected) menu item – solid blue background, white text, left border */
-.menu-item-active {
-    -fx-background-color: #3B82F6;     /* solid blue */
-    -fx-text-fill: #FFFFFF;
+/* Active state — teal accent */
+.f-nav-item-active {
+    -fx-background-color: rgba(13,127,110,0.2);
+    -fx-border-color: rgba(20,180,157,0.35);
+}
+
+.f-nav-item-active .f-nav-item-label {
+    -fx-text-fill: #a7f3ec;
     -fx-font-weight: bold;
-    -fx-border-color: #60A5FA;         /* lighter blue left accent */
-    -fx-border-width: 0 0 0 3;
-    -fx-border-radius: 8 0 0 8;
-    -fx-background-radius: 8 0 0 8;
-    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.4), 8, 0, 0, 2);
 }
 
-/* Keep active style on hover (so it doesn't revert) */
-.menu-item-active:hover {
-    -fx-background-color: #2563EB;     /* slightly darker blue */
-    -fx-text-fill: #FFFFFF;
+.f-nav-item-active .f-nav-icon-wrap {
+    -fx-background-color: rgba(13,127,110,0.4);
 }
 
-/* ── LOGOUT BUTTON ───────────────────────────────────────── */
-.logout-container {
-    -fx-padding: 16 16 24 16;
-    -fx-border-color: #2D3A46;
+.f-nav-item-active .f-nav-icon-label {
+    -fx-text-fill: #5fe3d0;
+}
+
+/* Nav icon wrap */
+.f-nav-icon-wrap {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-background-radius: 7;
+    -fx-min-width: 28;
+    -fx-min-height: 28;
+    -fx-max-width: 28;
+    -fx-max-height: 28;
+}
+
+.f-nav-icon-label {
+    -fx-text-fill: rgba(255,255,255,0.45);
+    -fx-font-size: 13px;
+}
+
+.f-nav-item-label {
+    -fx-text-fill: rgba(255,255,255,0.55);
+    -fx-font-size: 12.5px;
+}
+
+/* Badges */
+.f-nav-badge {
+    -fx-background-color: rgba(13,127,110,0.25);
+    -fx-text-fill: #5fe3d0;
+    -fx-border-color: rgba(20,180,157,0.35);
+    -fx-border-width: 0.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 2 6 2 6;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+.f-nav-badge-red {
+    -fx-background-color: rgba(220,38,38,0.2);
+    -fx-text-fill: #fca5a5;
+    -fx-border-color: rgba(220,38,38,0.3);
+}
+
+/* ─── Logout ─────────────────────────────────────────────────── */
+.f-logout-section {
+    -fx-background-color: #0c1219;
+    -fx-padding: 10 10 12 10;
+    -fx-border-color: rgba(255,255,255,0.06) transparent transparent transparent;
     -fx-border-width: 1 0 0 0;
 }
 
-.logout-btn {
-    -fx-pref-width: 248;
-    -fx-max-width: 248;
-    -fx-min-width: 248;
-    -fx-pref-height: 40;
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #3B82F6, #2563EB);
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 13px;
-    -fx-font-weight: 600;
+.f-logout-item {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(255,255,255,0.07);
+    -fx-border-width: 0.5;
+    -fx-border-radius: 8;
     -fx-background-radius: 8;
+    -fx-padding: 6 10 6 6;
     -fx-cursor: hand;
-    -fx-alignment: CENTER_LEFT;
-    -fx-padding: 0 0 0 16;
-    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 10, 0, 0, 2);
+    -fx-pref-height: 40;
+    -fx-min-height: 40;
 }
 
-.logout-btn:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #60A5FA, #3B82F6);
-    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.5), 12, 0, 0, 4);
+.f-logout-item:hover {
+    -fx-background-color: rgba(239,68,68,0.1);
+    -fx-border-color: rgba(239,68,68,0.3);
 }
 
-.logout-btn:pressed {
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
+.f-logout-icon-wrap {
+    -fx-background-color: rgba(239,68,68,0.1);
 }
 
-/* Optional: scrollbar styling to match dark theme */
-.scroll-bar:vertical .thumb {
-    -fx-background-color: #3B82F6;
+.f-logout-icon-label {
+    -fx-text-fill: #f87171 !important;
+}
+
+.f-logout-label {
+    -fx-text-fill: #f87171;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
 }

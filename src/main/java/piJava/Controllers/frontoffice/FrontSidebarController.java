@@ -1,106 +1,255 @@
 package piJava.Controllers.frontoffice;
 
-import javafx.animation.ParallelTransition;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-
-import java.net.URL;
+import piJava.entities.user;
 import piJava.utils.SessionManager;
-public class FrontSidebarController {
 
-    @FXML private Button dashboardBtn;
-    @FXML private Button tachesBtn;
-    @FXML private Button classesBtn;
-    @FXML private Button matieresBtn;
-    @FXML private Button enseignantsBtn;
-    @FXML private Button emploiBtn;
-    @FXML private Button notesBtn;
-    @FXML private Button notificationsBtn;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ResourceBundle;
 
-    // Reference to the main content area (set by MainController)
+public class FrontSidebarController implements Initializable {
+
+    // ─── Profile FXML fields ─────────────────────────────────────────────────
+    @FXML private StackPane avatarStack;
+    @FXML private Circle    avatarCircle;
+    @FXML private ImageView avatarImage;
+    @FXML private Label     avatarInitials;
+    @FXML private Label     lblProfileName;
+    @FXML private Label     profilePrenom;
+    @FXML private Label     profileNom;
+    @FXML private Label     profileEmail;
+    @FXML private Label     lblProfileRole;
+    @FXML private Label     roleBadgeLabel;
+    @FXML private Label     sessionStatus;
+
+    // ─── Badge ───────────────────────────────────────────────────────────────
+    @FXML private Label notifBadge;
+
+    // ─── Nav items ────────────────────────────────────────────────────────────
+    @FXML private HBox dashboardBtn;
+    @FXML private HBox tachesBtn;
+    @FXML private HBox classesBtn;
+    @FXML private HBox matieresBtn;
+    @FXML private HBox enseignantsBtn;
+    @FXML private HBox emploiBtn;
+    @FXML private HBox notesBtn;
+    @FXML private HBox notificationsBtn;
+    @FXML private HBox logoutBtn;
+
+    // ─── Content area — injected by the parent layout controller ─────────────
     private StackPane contentArea;
 
+    // ─── Internal state ───────────────────────────────────────────────────────
+    private HBox       activeButton;
+    private List<HBox> allNavButtons;
 
+    private static final String UPLOAD_DIR =
+            "C:\\Users\\MSI\\Documents\\my_project_dev\\public\\uploads\\profile_pics\\";
+
+    // ─── Initializable ────────────────────────────────────────────────────────
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        allNavButtons = Arrays.asList(
+                dashboardBtn, tachesBtn, classesBtn, matieresBtn,
+                enseignantsBtn, emploiBtn, notesBtn, notificationsBtn
+        );
+        bindSessionData();
+        // contentArea is null here — navigation is triggered after setContentArea()
+    }
+
+    // ─── Called by parent layout controller after FXML injection ─────────────
     public void setContentArea(StackPane contentArea) {
         this.contentArea = contentArea;
     }
-    public StackPane getContentArea() {return contentArea;}
 
+    // ─── Session data binding ─────────────────────────────────────────────────
+    private void bindSessionData() {
+        SessionManager session = SessionManager.getInstance();
+        user u = session.getCurrentUser();
+        if (u == null) return;
 
-    public void setActivePage(String page) {
-        // Remove active class from all buttons
-        dashboardBtn.getStyleClass().remove("menu-item-active");
-        tachesBtn.getStyleClass().remove("menu-item-active");
-        classesBtn.getStyleClass().remove("menu-item-active");
-        matieresBtn.getStyleClass().remove("menu-item-active");
-        enseignantsBtn.getStyleClass().remove("menu-item-active");
-        emploiBtn.getStyleClass().remove("menu-item-active");
-        notesBtn.getStyleClass().remove("menu-item-active");
-        notificationsBtn.getStyleClass().remove("menu-item-active");
+        lblProfileName.setText(session.getFullName());
+        profilePrenom.setText(nvl(u.getPrenom(), "—"));
+        profileNom.setText(nvl(u.getNom(), "—"));
+        profileEmail.setText(nvl(u.getEmail(), "—"));
 
-        // Add active class to the selected button
-        switch (page) {
-            case "dashboard"      -> dashboardBtn.getStyleClass().add("menu-item-active");
-            case "taches"       -> tachesBtn.getStyleClass().add("menu-item-active");
-            case "classes"        -> classesBtn.getStyleClass().add("menu-item-active");
-            case "matieres"       -> matieresBtn.getStyleClass().add("menu-item-active");
-            case "enseignants"    -> enseignantsBtn.getStyleClass().add("menu-item-active");
-            case "emploi"         -> emploiBtn.getStyleClass().add("menu-item-active");
-            case "notes"          -> notesBtn.getStyleClass().add("menu-item-active");
-            case "alertes"  -> notificationsBtn.getStyleClass().add("menu-item-active");
-        }
+        String roleDisplay = buildRoleDisplay(u.getRoles());
+        lblProfileRole.setText(roleDisplay);
+        roleBadgeLabel.setText(buildRoleBadge(u.getRoles()));
+
+        avatarInitials.setText(buildInitials(u.getPrenom(), u.getNom()));
+        loadProfilePicture(session.getProfilePic());
+
+        String loginTime = LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("HH:mm"));
+        sessionStatus.setText("En ligne · " + loginTime);
     }
 
-    public void loadPage(String fxmlFile, String activePage) {
+    private void loadProfilePicture(String picPath) {
+        if (picPath == null || picPath.isBlank()) {
+            avatarImage.setVisible(false);
+            avatarInitials.setVisible(true);
+            return;
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-            Parent page = loader.load();
-
-            Object controller = loader.getController();
-
-            // 🔥 inject THIS sidebar into next controller
-            if (controller instanceof piJava.Controllers.frontoffice.taches.TachesController tc) {
-                tc.setSidebarController(this);
+            File f = new File(UPLOAD_DIR + picPath);
+            if (!f.exists()) f = new File(picPath); // fallback: treat as absolute path
+            if (f.exists()) {
+                Image img = new Image(new FileInputStream(f), 48, 48, true, true);
+                avatarImage.setImage(img);
+                Circle clip = new Circle(24, 24, 24);
+                avatarImage.setClip(clip);
+                avatarImage.setVisible(true);
+                avatarInitials.setVisible(false);
+            } else {
+                avatarImage.setVisible(false);
+                avatarInitials.setVisible(true);
             }
-            if (controller instanceof piJava.Controllers.frontoffice.preferencealerte.AlertesController ac) {
-                ac.setSidebarController(this);
-            }
-
-            contentArea.getChildren().setAll(page);
-            setActivePage(activePage);
-
         } catch (Exception e) {
-            e.printStackTrace();
+            avatarImage.setVisible(false);
+            avatarInitials.setVisible(true);
         }
     }
 
-    @FXML public void goToDashboard()    { loadPage("/frontoffice/dashboard/dashboard-content.fxml", "dashboard"); }
-    @FXML void goToTaches()            { loadPage("/frontoffice/taches/taches-content.fxml",  "taches"); }
-    @FXML void goToClasses()             { loadPage("/frontoffice/classes/classes-content.fxml",   "classes"); }
-    @FXML void goToMatieres()            { loadPage("/frontoffice/matieres/matieres-content.fxml",  "matieres"); }
-    @FXML void goToEnseignants()         { loadPage("/frontoffice/enseignants/enseignants-content.fxml","enseignants"); }
-    @FXML void goToEmploi()              { loadPage("/frontoffice/emploi/emploi-content.fxml",    "emploi"); }
-    @FXML void goToNotes()               { loadPage("/frontoffice/notes/notes-content.fxml",     "notes"); }
-    @FXML void goToNotifications()       { loadPage("/frontoffice/preferenceAlerte/alerte-content.fxml","alertes"); }
-    @FXML
-    public void logout(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/login/login.fxml"));
+    // ─── Active nav state ─────────────────────────────────────────────────────
+    private void setActiveButton(HBox btn) {
+        if (activeButton != null)
+            activeButton.getStyleClass().remove("f-nav-item-active");
+        if (btn != null && !btn.getStyleClass().contains("f-nav-item-active"))
+            btn.getStyleClass().add("f-nav-item-active");
+        activeButton = btn;
+    }
 
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    // ─── Navigation handlers ──────────────────────────────────────────────────
+    @FXML
+    public void goToDashboard() {
+        setActiveButton(dashboardBtn);
+        loadView("/frontoffice/dashboard/dashboard-content.fxml");
+    }
+
+    @FXML
+    public void goToTaches() {
+        setActiveButton(tachesBtn);
+        loadView("/frontoffice/taches/taches-content.fxml");
+    }
+
+    @FXML
+    public void goToClasses() {
+        setActiveButton(classesBtn);
+        loadView("/piJava/Views/frontoffice/classes/classes-content.fxml");
+    }
+
+    @FXML
+    public void goToMatieres() {
+        setActiveButton(matieresBtn);
+        loadView("/piJava/Views/frontoffice/matieres/matieres-content.fxml");
+    }
+
+    @FXML
+    public void goToEnseignants() {
+        setActiveButton(enseignantsBtn);
+        loadView("/piJava/Views/frontoffice/enseignants/enseignants-content.fxml");
+    }
+
+    @FXML
+    public void goToEmploi() {
+        setActiveButton(emploiBtn);
+        loadView("/piJava/Views/frontoffice/emploi/emploi-content.fxml");
+    }
+
+    @FXML
+    public void goToNotes() {
+        setActiveButton(notesBtn);
+        loadView("/piJava/Views/frontoffice/notes/notes-content.fxml");
+    }
+
+    @FXML
+    public void goToNotifications() {
+        setActiveButton(notificationsBtn);
+        loadView("/piJava/Views/frontoffice/notifications/notif-content.fxml");
+    }
+
+    @FXML
+    public void logout() {
+        SessionManager.getInstance().logout();
+        try {
+            Parent root = FXMLLoader.load(
+                    getClass().getResource("/login.fxml"));
+            Stage stage = (Stage) logoutBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    // ─── Content loader ───────────────────────────────────────────────────────
+    private void loadView(String fxmlPath) {
+        if (contentArea == null) {
+            System.err.println("FrontSidebarController: contentArea is null — " +
+                    "call setContentArea() before navigating.");
+            return;
+        }
+        try {
+            URL resource = getClass().getResource(fxmlPath);
+            if (resource == null) {
+                System.err.println("FXML not found: " + fxmlPath);
+                return;
+            }
+            Parent view = FXMLLoader.load(resource);
+            contentArea.getChildren().setAll(view);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ─── Public badge updater ─────────────────────────────────────────────────
+    public void setNotifBadge(int count) {
+        notifBadge.setText(String.valueOf(count));
+        notifBadge.setVisible(count > 0);
+    }
+
+    // ─── Utilities ────────────────────────────────────────────────────────────
+    private static String nvl(String s, String fallback) {
+        return (s != null && !s.isBlank()) ? s : fallback;
+    }
+
+    private static String buildInitials(String prenom, String nom) {
+        String p = (prenom != null && !prenom.isBlank()) ? prenom.substring(0, 1).toUpperCase() : "";
+        String n = (nom    != null && !nom.isBlank())    ? nom.substring(0, 1).toUpperCase()    : "";
+        return p + n;
+    }
+
+    private static String buildRoleDisplay(String roles) {
+        if (roles == null || roles.isBlank()) return "Utilisateur";
+        if (roles.contains("ROLE_ADMIN"))      return "Administrateur";
+        if (roles.contains("ROLE_ENSEIGNANT")) return "Enseignant";
+        if (roles.contains("ROLE_PROF"))       return "Professeur";
+        return "Étudiant";
+    }
+
+    private static String buildRoleBadge(String roles) {
+        if (roles == null || roles.isBlank()) return "ÉTUDIANT";
+        if (roles.contains("ROLE_ADMIN"))      return "ADMINISTRATEUR";
+        if (roles.contains("ROLE_ENSEIGNANT")) return "ENSEIGNANT";
+        if (roles.contains("ROLE_PROF"))       return "PROFESSEUR";
+        return "ÉTUDIANT";
+    }
 }

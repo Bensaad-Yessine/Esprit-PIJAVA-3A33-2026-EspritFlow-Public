@@ -16,144 +16,211 @@ public class UserServices implements ICrud<user> {
         con = MyDataBase.getInstance().getConnection();
     }
 
-    // ─── DISPLAY ALL USERS ───────────────────────────────
+    // ── SHOW ALL ──────────────────────────────────────────────
     @Override
     public List<user> show() {
         List<user> users = new ArrayList<>();
-        String sql = "SELECT * FROM `user`";
+        String sql = "SELECT * FROM `user` ORDER BY id";
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
-
-            while (rs.next()) {
-                user u = new user(
-                        rs.getInt("id"),
-                        rs.getString("email"),
-                        rs.getString("roles"),
-                        rs.getString("password"),
-                        rs.getInt("is_verified"),
-                        rs.getString("nom"),
-                        rs.getString("prenom"),
-                        rs.getString("num_tel"),
-                        rs.getString("date_de_naissance"),
-                        rs.getString("sexe"),
-                        rs.getString("profile_pic"),
-                        rs.getString("created_at"),
-                        rs.getInt("is_banned"),
-                        rs.getString("ban_reason"),
-                        rs.getString("banned_at"),
-                        rs.getString("verification_token"),
-                        (Integer) rs.getObject("classe_id")
-                );
-                users.add(u);
-            }
+            while (rs.next()) users.add(mapResultSet(rs));
         } catch (SQLException e) {
-            System.err.println("Error displaying users: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("❌ Error loading users: " + e.getMessage());
         }
         return users;
     }
 
-    // ─── ADD USER ───────────────────────────────────────
+    // ── ADD (uses full constructor — password hashed with BCrypt) ─
     @Override
     public void add(user u) {
-        String sql = "INSERT INTO `user` (email, roles, password, is_verified, nom, prenom, num_tel, date_de_naissance, sexe, created_at, is_banned) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setString(1, u.getEmail());
-            ps.setString(2, "[\"ROLE_USER\"]");  // JSON role
-            ps.setString(3, BCrypt.hashpw(u.getPassword(), BCrypt.gensalt())); // hash password
-            ps.setInt(4, 1); // verified by default
-            ps.setString(5, u.getNom());
-            ps.setString(6, u.getPrenom());
-            ps.setString(7, u.getNum_tel());
-            ps.setDate(8, Date.valueOf(u.getDate_de_naissance())); // yyyy-MM-dd
-            ps.setString(9, u.getSexe());
-            ps.setInt(10, 0); // not banned
+        String sql = "INSERT INTO `user` (email, roles, password, is_verified, nom, prenom, "
+                + "num_tel, date_de_naissance, sexe, profile_pic, created_at, "
+                + "is_banned, ban_reason, banned_at, verification_token, classe_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1,  u.getEmail());
+            ps.setString(2,  u.getRoles() != null ? u.getRoles() : "[\"ROLE_USER\"]");
+            ps.setString(3,  BCrypt.hashpw(u.getPassword(), BCrypt.gensalt())); // always hash
+            ps.setInt(4,     u.getIs_verified());
+            ps.setString(5,  u.getNom());
+            ps.setString(6,  u.getPrenom());
+            ps.setString(7,  u.getNum_tel());
+            // date_de_naissance is stored as String "yyyy-MM-dd" in your entity
+            if (u.getDate_de_naissance() != null && !u.getDate_de_naissance().isEmpty())
+                ps.setDate(8, Date.valueOf(u.getDate_de_naissance()));
+            else
+                ps.setNull(8, Types.DATE);
+            ps.setString(9,  u.getSexe());
+            ps.setString(10, u.getProfile_pic());       // profile_pic (nullable)
+            ps.setInt(11,    u.getIs_banned());
+            ps.setString(12, u.getBan_reason());        // ban_reason (nullable)
+            ps.setString(13, u.getBanned_at());         // banned_at (nullable)
+            ps.setString(14, u.getVerification_token());// token (nullable)
+            if (u.getClasse_id() != null) ps.setInt(15, u.getClasse_id());
+            else                          ps.setNull(15, Types.INTEGER);
 
             ps.executeUpdate();
-            System.out.println("✅ User ajouté avec succès");
+
+            // Set generated ID back on the object
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) u.setId(keys.getInt(1));
+            }
+            System.out.println("✅ User ajouté : " + u.getPrenom() + " " + u.getNom());
         } catch (SQLException e) {
             System.err.println("❌ Failed to add user: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    // ─── DELETE USER ────────────────────────────────────
+    // ── DELETE (cascades reset_password_request first) ────────
     @Override
     public void delete(int id) {
         try {
-            con.setAutoCommit(false); // transaction
+            con.setAutoCommit(false);
 
-            // 1. delete child first
-            String sql1 = "DELETE FROM reset_password_request WHERE user_id=?";
-            try (PreparedStatement ps1 = con.prepareStatement(sql1)) {
-                ps1.setInt(1, id);
-                ps1.executeUpdate();
+            // Remove FK-constrained child rows first
+            try (PreparedStatement ps = con.prepareStatement(
+                    "DELETE FROM reset_password_request WHERE user_id=?")) {
+                ps.setInt(1, id); ps.executeUpdate();
             }
-
-            // 2. delete user
-            String sql2 = "DELETE FROM `user` WHERE id=?";
-            try (PreparedStatement ps2 = con.prepareStatement(sql2)) {
-                ps2.setInt(1, id);
-                ps2.executeUpdate();
+            try (PreparedStatement ps = con.prepareStatement(
+                    "DELETE FROM `user` WHERE id=?")) {
+                ps.setInt(1, id); ps.executeUpdate();
             }
 
             con.commit();
-            System.out.println("✅ User supprimé avec succès");
-
+            System.out.println("✅ User supprimé (id=" + id + ")");
         } catch (SQLException e) {
             try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             System.err.println("❌ Failed to delete user: " + e.getMessage());
-            e.printStackTrace();
         } finally {
             try { con.setAutoCommit(true); } catch (SQLException ignored) {}
         }
     }
 
-    // ─── UPDATE USER ────────────────────────────────────
+    // ── EDIT ──────────────────────────────────────────────────
     @Override
     public void edit(user u) {
-        String sql = "UPDATE `user` SET email=?, nom=?, prenom=?, num_tel=?, date_de_naissance=?, sexe=? WHERE id=?";
+        String sql = "UPDATE `user` SET email=?, roles=?, nom=?, prenom=?, "
+                + "num_tel=?, date_de_naissance=?, sexe=?, classe_id=? WHERE id=?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, u.getEmail());
-            ps.setString(2, u.getNom());
-            ps.setString(3, u.getPrenom());
-            ps.setString(4, u.getNum_tel());
-            ps.setDate(5, Date.valueOf(u.getDate_de_naissance()));
-            ps.setString(6, u.getSexe());
-            ps.setInt(7, u.getId());
-
+            ps.setString(2, u.getRoles());
+            ps.setString(3, u.getNom());
+            ps.setString(4, u.getPrenom());
+            ps.setString(5, u.getNum_tel());
+            if (u.getDate_de_naissance() != null && !u.getDate_de_naissance().isEmpty())
+                ps.setDate(6, Date.valueOf(u.getDate_de_naissance()));
+            else
+                ps.setNull(6, Types.DATE);
+            ps.setString(7, u.getSexe());
+            if (u.getClasse_id() != null) ps.setInt(8, u.getClasse_id());
+            else                          ps.setNull(8, Types.INTEGER);
+            ps.setInt(9, u.getId());
             ps.executeUpdate();
-            System.out.println("✅ User modifié avec succès");
-
+            System.out.println("✅ User modifié : " + u.getPrenom() + " " + u.getNom());
         } catch (SQLException e) {
-            System.err.println("❌ Failed to update user: " + e.getMessage());
+            System.err.println("❌ Failed to edit user: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-    public void Register(user u) {
-        String sql = "INSERT INTO `user` (email, roles, password, is_verified, nom, prenom, num_tel, date_de_naissance, sexe, created_at, is_banned,classe_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?,?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
 
+        // Update password only if a new one was provided
+        if (u.getPassword() != null && !u.getPassword().isEmpty()) {
+            try (PreparedStatement ps = con.prepareStatement(
+                    "UPDATE `user` SET password=? WHERE id=?")) {
+                ps.setString(1, BCrypt.hashpw(u.getPassword(), BCrypt.gensalt()));
+                ps.setInt(2, u.getId());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println("❌ Failed to update password: " + e.getMessage());
+            }
+        }
+    }
+
+    // ── BAN ───────────────────────────────────────────────────
+    public void banUser(int id, String reason) {
+        String sql = "UPDATE `user` SET is_banned=1, ban_reason=?, banned_at=NOW() WHERE id=?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, reason);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            System.out.println("🚫 User banni (id=" + id + ")");
+        } catch (SQLException e) {
+            System.err.println("❌ Failed to ban user: " + e.getMessage());
+        }
+    }
+
+    // ── UNBAN ─────────────────────────────────────────────────
+    public void unbanUser(int id) {
+        String sql = "UPDATE `user` SET is_banned=0, ban_reason=NULL, banned_at=NULL WHERE id=?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            System.out.println("✅ User débanni (id=" + id + ")");
+        } catch (SQLException e) {
+            System.err.println("❌ Failed to unban user: " + e.getMessage());
+        }
+    }
+
+    // ── REGISTER (with classe_id) ─────────────────────────────
+    public void Register(user u) {
+        String sql = "INSERT INTO `user` (email, roles, password, is_verified, nom, prenom, "
+                + "num_tel, date_de_naissance, sexe, created_at, is_banned, classe_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, u.getEmail());
-            ps.setString(2, "[\"ROLE_USER\"]");  // JSON role
-            ps.setString(3, BCrypt.hashpw(u.getPassword(), BCrypt.gensalt())); // hash password
-            ps.setInt(4, 1); // verified by default
+            ps.setString(2, "[\"ROLE_USER\"]");
+            ps.setString(3, BCrypt.hashpw(u.getPassword(), BCrypt.gensalt()));
+            ps.setInt(4, 1);
             ps.setString(5, u.getNom());
             ps.setString(6, u.getPrenom());
             ps.setString(7, u.getNum_tel());
-            ps.setDate(8, Date.valueOf(u.getDate_de_naissance())); // yyyy-MM-dd
+            ps.setDate(8, Date.valueOf(u.getDate_de_naissance()));
             ps.setString(9, u.getSexe());
-            ps.setInt(10, 0); // not banned
+            ps.setInt(10, 0);
             ps.setInt(11, u.getClasse_id());
-
             ps.executeUpdate();
-            System.out.println("✅ User ajouté avec succès");
+            System.out.println("✅ Inscription réussie : " + u.getEmail());
         } catch (SQLException e) {
-            System.err.println("❌ Failed to add user: " + e.getMessage());
+            System.err.println("❌ Failed to register: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    // ── GET BY ID ─────────────────────────────────────────────
+    public user getById(int id) {
+        String sql = "SELECT * FROM `user` WHERE id=?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return mapResultSet(rs);
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ getById error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    // ── PRIVATE MAPPER ────────────────────────────────────────
+    private user mapResultSet(ResultSet rs) throws SQLException {
+        return new user(
+                rs.getInt("id"),
+                rs.getString("email"),
+                rs.getString("roles"),
+                rs.getString("password"),
+                rs.getInt("is_verified"),
+                rs.getString("nom"),
+                rs.getString("prenom"),
+                rs.getString("num_tel"),
+                rs.getString("date_de_naissance"),
+                rs.getString("sexe"),
+                rs.getString("profile_pic"),
+                rs.getString("created_at"),
+                rs.getInt("is_banned"),
+                rs.getString("ban_reason"),
+                rs.getString("banned_at"),
+                rs.getString("verification_token"),
+                (Integer) rs.getObject("classe_id")
+        );
     }
 }
