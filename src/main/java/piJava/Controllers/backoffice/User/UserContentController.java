@@ -50,12 +50,14 @@ public class UserContentController implements Initializable {
 
     // ── Table ──────────────────────────────────────────────────
     @FXML private TableView<user>            userTable;
-    @FXML private TableColumn<user, String>  idCol;
     @FXML private TableColumn<user, Void>    avatarCol;
     @FXML private TableColumn<user, String>  nomCol;
     @FXML private TableColumn<user, String>  emailCol;
+    @FXML private TableColumn<user, String>  telCol;
     @FXML private TableColumn<user, String>  roleCol;
-    @FXML private TableColumn<user, String>  sexeCol;
+    @FXML private TableColumn<user, String>  classeCol;
+    @FXML private TableColumn<user, String>  dobCol;
+    @FXML private TableColumn<user, String>  createdAtCol;
     @FXML private TableColumn<user, String>  verifiedCol;
     @FXML private TableColumn<user, String>  bannedCol;
     @FXML private TableColumn<user, Void>    actionsCol;
@@ -103,19 +105,7 @@ public class UserContentController implements Initializable {
     // ── Column Setup ───────────────────────────────────────────
     private void setupColumns() {
 
-        idCol.setCellValueFactory(d ->
-                new SimpleStringProperty(String.valueOf(d.getValue().getId())));
-        idCol.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setGraphic(null); return; }
-                Label l = new Label("#" + item);
-                l.setStyle("-fx-font-size:11px; -fx-text-fill:#3a4060; -fx-font-weight:700;");
-                setGraphic(l);
-            }
-        });
-
-        avatarCol.setCellFactory(col -> new TableCell<>() {
+        avatarCol.setCellFactory(col -> new TableCell<user, Void>() {
             @Override protected void updateItem(Void v, boolean empty) {
                 super.updateItem(v, empty);
                 if (empty) { setGraphic(null); return; }
@@ -154,7 +144,7 @@ public class UserContentController implements Initializable {
 
         nomCol.setCellValueFactory(d ->
                 new SimpleStringProperty(d.getValue().getPrenom() + " " + d.getValue().getNom()));
-        nomCol.setCellFactory(col -> new TableCell<>() {
+        nomCol.setCellFactory(col -> new TableCell<user, String>() {
             @Override protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) { setGraphic(null); return; }
@@ -165,7 +155,7 @@ public class UserContentController implements Initializable {
         });
 
         emailCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getEmail()));
-        emailCol.setCellFactory(col -> new TableCell<>() {
+        emailCol.setCellFactory(col -> new TableCell<user, String>() {
             @Override protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) { setGraphic(null); return; }
@@ -177,7 +167,7 @@ public class UserContentController implements Initializable {
 
         roleCol.setCellValueFactory(d ->
                 new SimpleStringProperty(formatRole(d.getValue().getRoles())));
-        roleCol.setCellFactory(col -> new TableCell<>() {
+        roleCol.setCellFactory(col -> new TableCell<user, String>() {
             @Override protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) { setGraphic(null); return; }
@@ -193,12 +183,72 @@ public class UserContentController implements Initializable {
             }
         });
 
-        sexeCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getSexe()));
-        sexeCol.setCellFactory(col -> badgeCell("#3b82f615", "#3b82f640", "#60a5fa"));
+        // Telephone
+        telCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNum_tel()));
+        telCol.setCellFactory(col -> new TableCell<user, String>() {
+            @Override protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) { setGraphic(null); return; }
+                Label l = new Label(item == null || item.isEmpty() ? "—" : item);
+                l.setStyle("-fx-font-size:12px; -fx-text-fill:#6b7394;");
+                setGraphic(l);
+            }
+        });
+
+        // Classe
+        classeCol.setCellValueFactory(d -> {
+            String className = "—";
+            if (d.getValue().getClasse_id() != null) {
+                try {
+                    Classe c = classeService.getById(d.getValue().getClasse_id());
+                    if (c != null && c.getNom() != null) className = c.getNom();
+                } catch(Exception ignored){}
+            }
+            return new SimpleStringProperty(className);
+        });
+        classeCol.setCellFactory(col -> new TableCell<user, String>() {
+            @Override protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) { setGraphic(null); return; }
+                Label l = new Label(item);
+                l.setStyle("-fx-font-size:12px; -fx-text-fill:#c8cfe8; -fx-font-weight:600;");
+                setGraphic(l);
+            }
+        });
+
+        // DOB
+        dobCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getDate_de_naissance()));
+        dobCol.setCellFactory(col -> new TableCell<user, String>() {
+            @Override protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) { setGraphic(null); return; }
+                Label l = new Label(item == null || item.isEmpty() ? "—" : item);
+                l.setStyle("-fx-font-size:12px; -fx-text-fill:#6b7394;");
+                setGraphic(l);
+            }
+        });
+
+        // Created At (Date d'inscription)
+        createdAtCol.setCellValueFactory(d -> {
+            String created = d.getValue().getCreated_at();
+            if (created != null && created.length() > 10) {
+                 created = created.substring(0, 10); // get purely YYYY-MM-DD
+            }
+            return new SimpleStringProperty(created);
+        });
+        createdAtCol.setCellFactory(col -> new TableCell<user, String>() {
+            @Override protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) { setGraphic(null); return; }
+                Label l = new Label(item == null || item.isEmpty() ? "—" : item);
+                l.setStyle("-fx-font-size:12px; -fx-text-fill:#6b7394;");
+                setGraphic(l);
+            }
+        });
 
         verifiedCol.setCellValueFactory(d ->
                 new SimpleStringProperty(d.getValue().getIs_verified() == 1 ? "✓ Vérifié" : "✗ Non vérifié"));
-        verifiedCol.setCellFactory(col -> new TableCell<>() {
+        verifiedCol.setCellFactory(col -> new TableCell<user, String>() {
             @Override protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) { setGraphic(null); return; }
@@ -218,7 +268,7 @@ public class UserContentController implements Initializable {
 
         bannedCol.setCellValueFactory(d ->
                 new SimpleStringProperty(d.getValue().getIs_banned() == 1 ? "Banni" : "Actif"));
-        bannedCol.setCellFactory(col -> new TableCell<>() {
+        bannedCol.setCellFactory(col -> new TableCell<user, String>() {
             @Override protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) { setGraphic(null); return; }
@@ -236,15 +286,17 @@ public class UserContentController implements Initializable {
             }
         });
 
-        actionsCol.setCellFactory(col -> new TableCell<>() {
-            final Button editBtn   = actionBtn("✏",           "btn-edit");
-            final Button deleteBtn = actionBtn("🗑",           "btn-delete");
-            final Button banBtn    = actionBtn("🚫 Bannir",   "btn-ban");
-            final Button unbanBtn  = actionBtn("✅ Débannir", "btn-unban");
-            final HBox   box       = new HBox(6, editBtn, deleteBtn, banBtn, unbanBtn);
+        actionsCol.setCellFactory(col -> new TableCell<user, Void>() {
+            final Button viewBtn   = createStyledActionButton("🔍", "#3b82f6", "#60a5fa", "Voir les détails");
+            final Button editBtn   = createStyledActionButton("✏️", "#eab308", "#facc15", "Modifier l'utilisateur");
+            final Button deleteBtn = createStyledActionButton("🗑️", "#ef4444", "#f87171", "Supprimer définitivement");
+            final Button banBtn    = createStyledActionButton("🚫", "#f97316", "#fb923c", "Bannir cet utilisateur");
+            final Button unbanBtn  = createStyledActionButton("✅", "#10b981", "#34d399", "Débannir l'utilisateur");
+            final HBox   box       = new HBox(4, viewBtn, editBtn, deleteBtn, banBtn, unbanBtn);
             {
                 box.setAlignment(Pos.CENTER_LEFT);
                 box.setPadding(new Insets(0, 4, 0, 4));
+                viewBtn.setOnAction(e   -> handleView(getTableView().getItems().get(getIndex())));
                 editBtn.setOnAction(e   -> handleEdit(getTableView().getItems().get(getIndex())));
                 deleteBtn.setOnAction(e -> handleDelete(getTableView().getItems().get(getIndex())));
                 banBtn.setOnAction(e    -> handleBan(getTableView().getItems().get(getIndex())));
@@ -259,6 +311,16 @@ public class UserContentController implements Initializable {
                 unbanBtn.setVisible(isBanned); unbanBtn.setManaged(isBanned);
                 setGraphic(box);
             }
+        });
+
+        // Global Sorting for Paginated List
+        userTable.sortPolicyProperty().set(t -> {
+            Comparator<user> comparator = (Comparator<user>) t.getComparator();
+            if (comparator != null) {
+                FXCollections.sort(filtered, comparator);
+                refreshPage();
+            }
+            return true;
         });
     }
 
@@ -370,6 +432,7 @@ public class UserContentController implements Initializable {
 
     // ── CRUD ───────────────────────────────────────────────────
     @FXML private void handleAdd()  { showUserDialog(null); }
+    private void handleView(user u) { showUserInfoDialog(u); }
     private void handleEdit(user u) { showUserDialog(u); }
 
     private void handleDelete(user u) {
@@ -507,7 +570,13 @@ public class UserContentController implements Initializable {
         TextField     prenomField = dialogField("ex: Mohamed");
         TextField     emailField  = dialogField("ex: m.ayari@esprit.tn");
         TextField     telField    = dialogField("ex: 0612345678");
-        TextField     dateField   = dialogField("yyyy-MM-dd  ex: 2003-05-14");
+        
+        DatePicker dateField = new DatePicker();
+        dateField.setPromptText("Sélectionner une date");
+        dateField.setPrefWidth(260);
+        dateField.getEditor().setStyle("-fx-background-color:#161921; -fx-text-fill:#c8cfe8; -fx-prompt-text-fill:#3a4060; -fx-font-size:13px;");
+        dateField.setStyle("-fx-background-color:#161921; -fx-border-color:#1e2130; -fx-border-width:1; -fx-border-radius:8; -fx-background-radius:8;");
+
         ComboBox<String> sexeCombo  = dialogCombo("Homme", "Femme");
         ComboBox<String> roleCombo  = dialogCombo("ROLE_USER", "ROLE_PROF", "ROLE_ADMIN");
         PasswordField passField   = new PasswordField();
@@ -523,7 +592,7 @@ public class UserContentController implements Initializable {
         classeCombo.getItems().addAll(classeList);
 
         // Display class name in dropdown
-        classeCombo.setCellFactory(lv -> new ListCell<>() {
+        classeCombo.setCellFactory(lv -> new ListCell<Classe>() {
             @Override protected void updateItem(Classe item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) { setText(null); return; }
@@ -531,7 +600,7 @@ public class UserContentController implements Initializable {
                 setStyle("-fx-background-color:#161921; -fx-text-fill:#c8cfe8; -fx-font-size:13px;");
             }
         });
-        classeCombo.setButtonCell(new ListCell<>() {
+        classeCombo.setButtonCell(new ListCell<Classe>() {
             @Override protected void updateItem(Classe item, boolean empty) {
                 super.updateItem(item, empty);
                 setStyle(dialogFieldStyle());
@@ -546,7 +615,13 @@ public class UserContentController implements Initializable {
             prenomField.setText(existing.getPrenom());
             emailField.setText(existing.getEmail());
             telField.setText(existing.getNum_tel());
-            dateField.setText(existing.getDate_de_naissance());
+            
+            if (existing.getDate_de_naissance() != null && !existing.getDate_de_naissance().isEmpty()) {
+                try {
+                    dateField.setValue(java.time.LocalDate.parse(existing.getDate_de_naissance()));
+                } catch (Exception ex) { /* in case of malformed date */ }
+            }
+            
             sexeCombo.setValue(existing.getSexe());
             roleCombo.setValue(
                     existing.getRoles() != null
@@ -562,7 +637,7 @@ public class UserContentController implements Initializable {
             }
         }
 
-        // ── Grid layout ───────────────────────────────────────
+        // ── Grid layout & Individual Error Labels ──────────────
         GridPane grid = new GridPane();
         grid.setHgap(16); grid.setVgap(12);
         grid.setPadding(new Insets(20, 28, 16, 28));
@@ -570,23 +645,92 @@ public class UserContentController implements Initializable {
 
         // Left: avatar section
         grid.add(avatarSection, 0, 0, 1, 9);
+        
+        // Helper to create hidden error labels
+        java.util.function.Supplier<Label> createErr = () -> {
+            Label l = new Label();
+            l.setStyle("-fx-text-fill:#ff4d6d; -fx-font-size:11px;");
+            l.setVisible(false); l.setManaged(false);
+            return l;
+        };
+
+        Label nomErr = createErr.get();
+        Label prenomErr = createErr.get();
+        Label emailErr = createErr.get();
+        Label dateErr = createErr.get();
+        Label passErr = createErr.get();
+
+        VBox nomBox = new VBox(2, nomField, nomErr);
+        VBox prenomBox = new VBox(2, prenomField, prenomErr);
+        VBox emailBox = new VBox(2, emailField, emailErr);
+        VBox telBox = new VBox(2, telField);
+        VBox dateBox = new VBox(2, dateField, dateErr);
+        VBox passBox = new VBox(2, passField, passErr);
 
         // Right: form fields
         GridPane form = new GridPane();
-        form.setHgap(12); form.setVgap(10);
-        form.add(dialogLabel("Nom *"),            0, 0); form.add(nomField,    1, 0);
-        form.add(dialogLabel("Prénom *"),         0, 1); form.add(prenomField, 1, 1);
-        form.add(dialogLabel("Email *"),          0, 2); form.add(emailField,  1, 2);
-        form.add(dialogLabel("Téléphone"),        0, 3); form.add(telField,    1, 3);
-        form.add(dialogLabel("Date naissance *"), 0, 4); form.add(dateField,   1, 4);
+        form.setHgap(12); form.setVgap(8);
+        form.add(dialogLabel("Nom *"),            0, 0); form.add(nomBox,      1, 0);
+        form.add(dialogLabel("Prénom *"),         0, 1); form.add(prenomBox,   1, 1);
+        form.add(dialogLabel("Email *"),          0, 2); form.add(emailBox,    1, 2);
+        form.add(dialogLabel("Téléphone"),        0, 3); form.add(telBox,      1, 3);
+        form.add(dialogLabel("Date *"),           0, 4); form.add(dateBox,     1, 4);
         form.add(dialogLabel("Sexe *"),           0, 5); form.add(sexeCombo,   1, 5);
         form.add(dialogLabel("Rôle *"),           0, 6); form.add(roleCombo,   1, 6);
         form.add(dialogLabel("Classe"),           0, 7); form.add(classeCombo, 1, 7);
-        form.add(dialogLabel("Mot de passe"),     0, 8); form.add(passField,   1, 8);
+        form.add(dialogLabel("Mot de passe"),     0, 8); form.add(passBox,     1, 8);
         form.setStyle("-fx-background-color:#111318;");
+
+        // ── Validation logic (Contrôle de saisie live) ────────
+        Runnable validate = () -> {
+            boolean hasError = false;
+            String n  = nomField.getText().trim();
+            String p  = prenomField.getText().trim();
+            String e  = emailField.getText().trim();
+            String d  = dateField.getValue() != null ? dateField.getValue().toString() : "";
+            String pw = passField.getText();
+
+            String styleErr = dialogFieldStyle() + " -fx-border-color:#ff4d6d; -fx-effect:dropshadow(two-pass-box, #ff4d6d40, 6, 0,0,0);";
+            String styleOk  = dialogFieldStyle() + " -fx-border-color:#34d399; -fx-effect:dropshadow(two-pass-box, #34d39920, 6, 0,0,0);";
+            
+            String dateStyleErr = "-fx-background-color:#161921; -fx-border-radius:8; -fx-background-radius:8; -fx-border-color:#ff4d6d; -fx-effect:dropshadow(two-pass-box, #ff4d6d40, 6, 0,0,0);";
+            String dateStyleOk = "-fx-background-color:#161921; -fx-border-radius:8; -fx-background-radius:8; -fx-border-color:#34d399; -fx-effect:dropshadow(two-pass-box, #34d39920, 6, 0,0,0);";
+
+            if (n.isEmpty() || !n.matches("[a-zA-ZÀ-ÿ\\s\\-]{2,}")) { nomField.setStyle(styleErr); nomErr.setText("Nom (lettres uniquement, min 2)"); nomErr.setVisible(true); nomErr.setManaged(true); hasError = true; }
+            else { nomField.setStyle(styleOk); nomErr.setVisible(false); nomErr.setManaged(false); }
+
+            if (p.isEmpty() || !p.matches("[a-zA-ZÀ-ÿ\\s\\-]{2,}")) { prenomField.setStyle(styleErr); prenomErr.setText("Prénom (lettres uniquement, min 2)"); prenomErr.setVisible(true); prenomErr.setManaged(true); hasError = true; }
+            else { prenomField.setStyle(styleOk); prenomErr.setVisible(false); prenomErr.setManaged(false); }
+
+            if (e.isEmpty() || !e.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { emailField.setStyle(styleErr); emailErr.setText("Veuillez saisir un email valide"); emailErr.setVisible(true); emailErr.setManaged(true); hasError = true; }
+            else { emailField.setStyle(styleOk); emailErr.setVisible(false); emailErr.setManaged(false); }
+
+            if (d.isEmpty()) { dateField.setStyle(dateStyleErr); dateErr.setText("Sélectionnez votre date"); dateErr.setVisible(true); dateErr.setManaged(true); hasError = true; }
+            else { dateField.setStyle(dateStyleOk); dateErr.setVisible(false); dateErr.setManaged(false); }
+
+            if (!isEdit && pw.isEmpty()) { passField.setStyle(styleErr); passErr.setText("Mot de passe obligatoire"); passErr.setVisible(true); passErr.setManaged(true); hasError = true; }
+            else if (!pw.isEmpty() && pw.length() < 6) { passField.setStyle(styleErr); passErr.setText("Trop court (6 car. minimum)"); passErr.setVisible(true); passErr.setManaged(true); hasError = true; }
+            else { passField.setStyle(pw.isEmpty() ? dialogFieldStyle() : styleOk); passErr.setVisible(false); passErr.setManaged(false); }
+
+            okBtn.setDisable(hasError);
+
+            if (!hasError) {
+                okBtn.setStyle("-fx-background-color:#34d399; -fx-text-fill:#0d0f14; -fx-font-weight:700; -fx-background-radius:8; -fx-padding:8 20; -fx-effect:dropshadow(two-pass-box, #34d39960, 8, 0,0,0);");
+            } else {
+                okBtn.setStyle("-fx-background-color:#1e2130; -fx-text-fill:#6b7394; -fx-font-weight:700; -fx-background-radius:8; -fx-padding:8 20;");
+            }
+        };
+
+        nomField.textProperty().addListener((obs, old, nv) -> validate.run());
+        prenomField.textProperty().addListener((obs, old, nv) -> validate.run());
+        emailField.textProperty().addListener((obs, old, nv) -> validate.run());
+        dateField.valueProperty().addListener((obs, old, nv) -> validate.run()); // for DatePicker
+        passField.textProperty().addListener((obs, old, nv) -> validate.run());
 
         grid.add(form, 1, 0);
         pane.setContent(grid);
+        
+        validate.run(); // Lancement pour afficher les états dès l'ouverture
 
         // ── Result converter ──────────────────────────────────
         dialog.setResultConverter(btn -> {
@@ -595,23 +739,12 @@ public class UserContentController implements Initializable {
             String nom    = nomField.getText().trim();
             String prenom = prenomField.getText().trim();
             String email  = emailField.getText().trim();
-            String date   = dateField.getText().trim();
+            String date   = dateField.getValue() != null ? dateField.getValue().toString() : "";
             String sexe   = sexeCombo.getValue();
             String role   = roleCombo.getValue() != null
                     ? "[\"" + roleCombo.getValue() + "\"]" : "[\"ROLE_USER\"]";
             String tel    = telField.getText().trim();
             String pass   = passField.getText();
-
-            if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || date.isEmpty()) {
-                showAlert(Alert.AlertType.WARNING, "Champs requis",
-                        "Nom, Prénom, Email et Date de naissance sont obligatoires.");
-                return null;
-            }
-            if (!isEdit && pass.isEmpty()) {
-                showAlert(Alert.AlertType.WARNING, "Mot de passe requis",
-                        "Le mot de passe est obligatoire pour la création.");
-                return null;
-            }
 
             Classe selectedClasse = classeCombo.getValue();
             Integer classeId = (selectedClasse != null) ? selectedClasse.getId() : null;
@@ -670,6 +803,113 @@ public class UserContentController implements Initializable {
         }
     }
 
+    // ── View User Info Dialog ───────────────────────────────────
+    private void showUserInfoDialog(user u) {
+        Dialog<Void> infoDialog = new Dialog<>();
+        infoDialog.setTitle("Détails Utilisateur : " + u.getPrenom() + " " + u.getNom());
+        infoDialog.setHeaderText(null);
+
+        DialogPane pane = infoDialog.getDialogPane();
+        pane.setStyle("-fx-background-color:#111318; -fx-border-color:#1e2130; -fx-border-width:1;");
+        pane.setPrefWidth(500);
+        pane.getButtonTypes().add(ButtonType.CLOSE);
+
+        Button closeBtn = (Button) pane.lookupButton(ButtonType.CLOSE);
+        if (closeBtn != null) {
+            closeBtn.setStyle("-fx-background-color:#1e2130; -fx-text-fill:#6b7394; "
+                    + "-fx-background-radius:8; -fx-border-color:#272c3d; -fx-border-width:1; -fx-padding:8 20;");
+        }
+
+        // Profile Picture
+        StackPane avatarBox = new StackPane();
+        avatarBox.setAlignment(Pos.CENTER);
+        avatarBox.setPadding(new Insets(10, 0, 20, 0));
+
+        Label initialsLbl = new Label(initials(u.getPrenom(), u.getNom()));
+        initialsLbl.setStyle("-fx-background-color:#3b2fc9; -fx-text-fill:white; "
+                + "-fx-background-radius:40; -fx-min-width:80; -fx-min-height:80; "
+                + "-fx-max-width:80; -fx-max-height:80; "
+                + "-fx-font-size:26px; -fx-font-weight:700; -fx-alignment:CENTER;");
+
+        ImageView picPreview = new ImageView();
+        picPreview.setFitWidth(80); picPreview.setFitHeight(80);
+        picPreview.setPreserveRatio(true);
+        Circle clip = new Circle(40, 40, 40);
+        picPreview.setClip(clip);
+
+        boolean hasPic = false;
+        if (u.getProfile_pic() != null && !u.getProfile_pic().isBlank()) {
+            File f = new File(UPLOAD_DIR + u.getProfile_pic());
+            if (f.exists()) {
+                picPreview.setImage(new Image(f.toURI().toString(), false));
+                hasPic = true;
+            } else {
+                try {
+                    picPreview.setImage(new Image("file:///" + UPLOAD_DIR.replace("\\", "/") + u.getProfile_pic(), false));
+                    hasPic = true;
+                } catch (Exception ignored) {}
+            }
+        }
+        picPreview.setVisible(hasPic);
+        initialsLbl.setVisible(!hasPic);
+        avatarBox.getChildren().addAll(initialsLbl, picPreview);
+
+        // Details Grid
+        GridPane grid = new GridPane();
+        grid.setHgap(20); grid.setVgap(12);
+        grid.setPadding(new Insets(20));
+        grid.setStyle("-fx-background-color:#161921; -fx-background-radius:8;");
+
+        int row = 0;
+        grid.add(infoLabel("ID :"), 0, row); grid.add(infoValue("#" + u.getId()), 1, row++);
+        grid.add(infoLabel("Prénom & Nom :"), 0, row); grid.add(infoValue(u.getPrenom() + " " + u.getNom()), 1, row++);
+        grid.add(infoLabel("Email :"), 0, row); grid.add(infoValue(u.getEmail()), 1, row++);
+        grid.add(infoLabel("Téléphone :"), 0, row); grid.add(infoValue(u.getNum_tel() == null || u.getNum_tel().isEmpty() ? "Non renseigné" : u.getNum_tel()), 1, row++);
+        grid.add(infoLabel("Date de naissance :"), 0, row); grid.add(infoValue(u.getDate_de_naissance() == null ? "Non renseignée" : u.getDate_de_naissance()), 1, row++);
+        grid.add(infoLabel("Sexe :"), 0, row); grid.add(infoValue(u.getSexe() == null ? "Non renseigné" : u.getSexe()), 1, row++);
+
+        String className = "—";
+        if (u.getClasse_id() != null) {
+            try {
+                Classe c = classeService.getById(u.getClasse_id());
+                if (c != null && c.getNom() != null) className = c.getNom();
+            } catch (Exception ignored) {}
+        }
+        grid.add(infoLabel("Classe :"), 0, row); grid.add(infoValue(className), 1, row++);
+        grid.add(infoLabel("Rôles :"), 0, row); grid.add(infoValue(formatRole(u.getRoles())), 1, row++);
+        grid.add(infoLabel("Vérifié :"), 0, row); grid.add(infoValue(u.getIs_verified() == 1 ? "Oui ✅" : "Non ❌"), 1, row++);
+        
+        grid.add(infoLabel("Statut :"), 0, row);
+        if (u.getIs_banned() == 1) {
+            Label bannedLbl = infoValue("Banni 🚫 (" + u.getBan_reason() + ")");
+            bannedLbl.setStyle("-fx-text-fill: #ff4d6d; -fx-font-size: 13px; -fx-font-weight: bold;");
+            grid.add(bannedLbl, 1, row++);
+        } else {
+            Label activeLbl = infoValue("Actif ✅");
+            activeLbl.setStyle("-fx-text-fill: #34d399; -fx-font-size: 13px; -fx-font-weight: bold;");
+            grid.add(activeLbl, 1, row++);
+        }
+        grid.add(infoLabel("Date Inscription :"), 0, row); grid.add(infoValue(u.getCreated_at() == null ? "N/A" : u.getCreated_at()), 1, row++);
+
+        VBox content = new VBox(avatarBox, grid);
+        content.setPadding(new Insets(10));
+        pane.setContent(content);
+
+        infoDialog.showAndWait();
+    }
+
+    private Label infoLabel(String text) {
+        Label l = new Label(text);
+        l.setStyle("-fx-text-fill: #6b7394; -fx-font-size: 13px; -fx-font-weight: 700;");
+        return l;
+    }
+
+    private Label infoValue(String text) {
+        Label l = new Label(text);
+        l.setStyle("-fx-text-fill: #c8cfe8; -fx-font-size: 13px;");
+        return l;
+    }
+
     // ── Animations ─────────────────────────────────────────────
     private void animateEntrance() {
         userTable.setOpacity(0);
@@ -719,7 +959,7 @@ public class UserContentController implements Initializable {
     }
 
     private TableCell<user, String> badgeCell(String bg, String border, String fg) {
-        return new TableCell<>() {
+        return new TableCell<user, String>() {
             @Override protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null || item.isBlank()) { setGraphic(null); return; }
@@ -735,9 +975,31 @@ public class UserContentController implements Initializable {
         };
     }
 
-    private Button actionBtn(String text, String styleClass) {
-        Button b = new Button(text);
-        b.getStyleClass().add(styleClass);
+    private Button createStyledActionButton(String icon, String colorHex, String hoverHex, String tooltipText) {
+        Button b = new Button(icon);
+        String baseStyle = "-fx-background-color:" + colorHex + "20; "
+                + "-fx-text-fill:" + colorHex + "; "
+                + "-fx-border-color:" + colorHex + "40; "
+                + "-fx-border-width:1; -fx-border-radius:6; -fx-background-radius:6; "
+                + "-fx-font-size:14px; -fx-font-family: 'Segoe UI Emoji', sans-serif; "
+                + "-fx-padding:4 6; -fx-cursor:hand;";
+        String hoverStyle = "-fx-background-color:" + colorHex + "40; "
+                + "-fx-text-fill:" + hoverHex + "; "
+                + "-fx-border-color:" + colorHex + "80; "
+                + "-fx-border-width:1; -fx-border-radius:6; -fx-background-radius:6; "
+                + "-fx-font-size:14px; -fx-font-family: 'Segoe UI Emoji', sans-serif; "
+                + "-fx-padding:4 6; -fx-cursor:hand;";
+        
+        b.setStyle(baseStyle);
+        b.setMinSize(32, 28);
+        b.setMaxSize(32, 28);
+        b.setOnMouseEntered(e -> b.setStyle(hoverStyle));
+        b.setOnMouseExited(e -> b.setStyle(baseStyle));
+
+        Tooltip tip = new Tooltip(tooltipText);
+        tip.setStyle("-fx-font-size: 12px; -fx-background-color: #1e2130; -fx-text-fill: #c8cfe8;");
+        b.setTooltip(tip);
+
         return b;
     }
 

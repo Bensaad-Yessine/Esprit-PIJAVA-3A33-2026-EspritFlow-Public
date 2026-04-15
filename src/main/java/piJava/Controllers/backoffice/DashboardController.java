@@ -8,41 +8,113 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import piJava.entities.user;
+import piJava.entities.Classe;
+import piJava.services.UserServices;
+import piJava.services.ClasseService;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+
 public class DashboardController implements Initializable {
+
+    // Stats
+    @FXML private Label totalStudentsLbl;
+    @FXML private Label activeClassesLbl;
+    @FXML private Label teachersLbl;
+    @FXML private Label bannedUsersLbl;
 
     // Chart
     @FXML private BarChart<String, Number> enrollmentChart;
 
     // Table
-    @FXML private TableView<?> studentsTable;
-    @FXML private TableColumn<?, ?> nameCol;
-    @FXML private TableColumn<?, ?> gradeCol;
-    @FXML private TableColumn<?, ?> courseCol;
-    @FXML private TableColumn<?, ?> attendanceCol;
-    @FXML private TableColumn<?, ?> statusCol;
+    @FXML private TableView<user> studentsTable;
+    @FXML private TableColumn<user, String> nameCol;
+    @FXML private TableColumn<user, String> gradeCol;
+    @FXML private TableColumn<user, String> courseCol;
+    @FXML private TableColumn<user, String> attendanceCol;
+    @FXML private TableColumn<user, String> statusCol;
 
     // Only buttons that exist in dashboard-content.fxml
     @FXML private Button newStudentBtn;
     @FXML private Button viewAllBtn;
+    
+    private final UserServices userServices = new UserServices();
+    private final ClasseService classeService = new ClasseService();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setupEnrollmentChart();
         setupHoverEffects();
+        loadRealData();
     }
 
-    private void setupEnrollmentChart() {
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Inscriptions 2024");
+    private void loadRealData() {
+        try {
+            List<user> users = userServices.show();
+            
+            // Stats
+            long etudiants = users.stream().filter(u -> u.getRoles() != null && u.getRoles().contains("ROLE_USER") && !u.getRoles().contains("ROLE_ADMIN")).count();
+            long profs = users.stream().filter(u -> u.getRoles() != null && u.getRoles().contains("ROLE_PROF")).count();
+            long bannis = users.stream().filter(u -> u.getIs_banned() == 1).count();
+            long classes = classeService.show().size();
+            
+            if (totalStudentsLbl != null) totalStudentsLbl.setText(String.valueOf(etudiants));
+            if (teachersLbl != null) teachersLbl.setText(String.valueOf(profs));
+            if (bannedUsersLbl != null) bannedUsersLbl.setText(String.valueOf(bannis));
+            if (activeClassesLbl != null) activeClassesLbl.setText(String.valueOf(classes));
+            
+            // Setup Table
+            setupTable(users);
+            
+            // Setup Chart
+            setupEnrollmentChart(users);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void setupTable(List<user> users) {
+        if (studentsTable == null) return;
+        
+        nameCol.setCellValueFactory(d -> new SimpleStringProperty("#" + d.getValue().getId() + " - " + d.getValue().getPrenom() + " " + d.getValue().getNom()));
+        gradeCol.setCellValueFactory(d -> {
+            String r = d.getValue().getRoles();
+            if (r == null) return new SimpleStringProperty("Étudiant");
+            if (r.contains("ROLE_ADMIN")) return new SimpleStringProperty("Admin");
+            if (r.contains("ROLE_PROF")) return new SimpleStringProperty("Professeur");
+            return new SimpleStringProperty("Étudiant");
+        });
+        courseCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getEmail()));
+        attendanceCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNum_tel()));
+        statusCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getIs_banned() == 1 ? "Banni 🚫" : (d.getValue().getIs_verified() == 1 ? "Vérifié ✅" : "Non vérifié ❌")));
+        
+        // Get 10 recent
+        List<user> recent = users.stream()
+                .sorted((a, b) -> Integer.compare(b.getId(), a.getId()))
+                .limit(10)
+                .collect(Collectors.toList());
+        studentsTable.setItems(FXCollections.observableArrayList(recent));
+    }
 
-        series.getData().add(new XYChart.Data<>("Sept", 65));
-        series.getData().add(new XYChart.Data<>("Oct",  78));
-        series.getData().add(new XYChart.Data<>("Nov",  82));
-        series.getData().add(new XYChart.Data<>("Déc",  70));
-        series.getData().add(new XYChart.Data<>("Jan",  85));
-        series.getData().add(new XYChart.Data<>("Fév",  92));
-        series.getData().add(new XYChart.Data<>("Mar",  88));
-        series.getData().add(new XYChart.Data<>("Avr",  94));
+    private void setupEnrollmentChart(List<user> users) {
+        if (enrollmentChart == null) return;
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Inscriptions Récentes");
+
+        // Group by creation month from created_at
+        Map<String, Long> byMonth = users.stream()
+                .filter(u -> u.getCreated_at() != null && u.getCreated_at().length() >= 7)
+                .collect(Collectors.groupingBy(
+                        u -> u.getCreated_at().substring(0, 7), // "YYYY-MM"
+                        Collectors.counting()
+                ));
+        
+        byMonth.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(e -> series.getData().add(new XYChart.Data<>(e.getKey(), e.getValue())));
 
         enrollmentChart.getData().clear();
         enrollmentChart.getData().add(series);
