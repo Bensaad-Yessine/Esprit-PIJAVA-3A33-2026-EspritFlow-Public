@@ -47,9 +47,11 @@ public class FrontSidebarController implements Initializable {
     @FXML private HBox dashboardBtn;
     @FXML private HBox tachesBtn;
     @FXML private HBox classesBtn;
+    @FXML private HBox groupBtn;
     @FXML private HBox matieresBtn;
     @FXML private HBox enseignantsBtn;
     @FXML private HBox emploiBtn;
+    @FXML private HBox sallesBtn;
     @FXML private HBox ObjectifsSante;
     @FXML private HBox notificationsBtn;
     @FXML private HBox logoutBtn;
@@ -68,8 +70,8 @@ public class FrontSidebarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         allNavButtons = Arrays.asList(
-                dashboardBtn, tachesBtn, classesBtn, matieresBtn,
-                enseignantsBtn, emploiBtn, ObjectifsSante, notificationsBtn
+                dashboardBtn, tachesBtn, classesBtn, groupBtn, matieresBtn,
+                enseignantsBtn, emploiBtn, sallesBtn, ObjectifsSante, notificationsBtn
         );
         bindSessionData();
         // contentArea is null here — navigation is triggered after setContentArea()
@@ -162,6 +164,12 @@ public class FrontSidebarController implements Initializable {
     }
 
     @FXML
+    public void goToGroup() {
+        setActiveButton(groupBtn);
+        loadView("/frontoffice/group/group-content.fxml");
+    }
+
+    @FXML
     public void goToMatieres() {
         setActiveButton(matieresBtn);
         loadView("/frontoffice/matieres/matieres-content.fxml");
@@ -176,7 +184,13 @@ public class FrontSidebarController implements Initializable {
     @FXML
     public void goToEmploi() {
         setActiveButton(emploiBtn);
-        loadView("/piJava/Views/frontoffice/emploi/emploi-content.fxml");
+        loadView("/frontoffice/emploi/EmploiContent.fxml");
+    }
+
+    @FXML
+    public void goToSalles() {
+        setActiveButton(sallesBtn);
+        loadView("/frontoffice/salle/FrontSallesContent.fxml");
     }
 
     @FXML

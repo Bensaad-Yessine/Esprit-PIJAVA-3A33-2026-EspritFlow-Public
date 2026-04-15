@@ -53,10 +53,8 @@
             <VBox spacing="14" styleClass="panel">
                 <HBox alignment="CENTER_LEFT" spacing="12">
                     <Label text="Liste des matières" styleClass="panel-title" HBox.hgrow="ALWAYS"/>
-$source = "C:\Users\islem\Downloads\Esprit-PIJAVA-3A33-2026-EspritFlow-Public-master\Esprit-PIJAVA-3A33-2026-EspritFlow-Public-master"
-$destRoot = "C:\Users\islem\IdeaProjects"
-if (-not (Test-Path $destRoot)) { New-Item -ItemType Directory -Path $destRoot | Out-Null }
-Move-Item -Path $source -Destination $destRoot                    <TextField fx:id="txtSearch"
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="txtSearch"
                                promptText="Rechercher une matière..."
                                prefWidth="300"
                                styleClass="search-field"/>
