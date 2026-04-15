@@ -175,6 +175,16 @@ public class FrontSidebarController implements Initializable {
             if (controller instanceof profileController c) {
                 c.setSidebarController(this);
             }
+            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.AfficherObjectifsController c) {
+                c.setSidebarController(this);
+                c.setContentArea(contentArea);
+            }
+
+            // Injection pour Suivis bien-être
+            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AfficherSuivisController c) {
+                c.setSidebarController(this);
+                c.setContentArea(contentArea);
+            }
 
             // Removed nonexistent frontoffice controller casting to resolve compilation errors
 
