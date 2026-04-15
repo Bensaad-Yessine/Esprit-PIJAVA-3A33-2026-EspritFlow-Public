@@ -157,12 +157,20 @@
 
             <Label text="GESTION ACADÉMIQUE" styleClass="nav-section-title"/>
 
-            <HBox fx:id="emploiBtn" styleClass="nav-item" alignment="CENTER_LEFT"
-                  spacing="9" onMouseClicked="#goToEmploi">
+            <HBox fx:id="sallesBtn" styleClass="nav-item" alignment="CENTER_LEFT"
+                  spacing="9" onMouseClicked="#goToSalles">
+                <StackPane styleClass="nav-icon-wrap">
+                    <Label styleClass="nav-icon-label" text="&#127970;"/>
+                </StackPane>
+                <Label text="Salles" styleClass="nav-item-label" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <HBox fx:id="seancesBtn" styleClass="nav-item" alignment="CENTER_LEFT"
+                  spacing="9" onMouseClicked="#goToSeances">
                 <StackPane styleClass="nav-icon-wrap">
                     <Label styleClass="nav-icon-label" text="&#128197;"/>
                 </StackPane>
-                <Label text="Emploi du temps" styleClass="nav-item-label" HBox.hgrow="ALWAYS"/>
+                <Label text="Séances" styleClass="nav-item-label" HBox.hgrow="ALWAYS"/>
             </HBox>
 
 
