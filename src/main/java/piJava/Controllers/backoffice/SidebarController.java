@@ -26,28 +26,26 @@ import java.util.ResourceBundle;
 
 public class SidebarController implements Initializable {
 
-    // ─── Profile FXML fields ─────────────────────────────────────────────────
     @FXML private StackPane avatarStack;
-    @FXML private Circle    avatarCircle;
+    @FXML private Circle avatarCircle;
     @FXML private ImageView avatarImage;
-    @FXML private Label     avatarInitials;
-    @FXML private Label     profileName;
-    @FXML private Label     profilePrenom;
-    @FXML private Label     profileNom;
-    @FXML private Label     profileEmail;
-    @FXML private Label     profileRole;
-    @FXML private Label     roleBadgeLabel;
-    @FXML private Label     sessionStatus;
+    @FXML private Label avatarInitials;
+    @FXML private Label profileName;
+    @FXML private Label profilePrenom;
+    @FXML private Label profileNom;
+    @FXML private Label profileEmail;
+    @FXML private Label profileRole;
+    @FXML private Label roleBadgeLabel;
+    @FXML private Label sessionStatus;
 
-    // ─── Badges ──────────────────────────────────────────────────────────────
     @FXML private Label tachesBadge;
     @FXML private Label notifBadge;
 
-    // ─── Nav items ────────────────────────────────────────────────────────────
     @FXML private HBox dashboardBtn;
     @FXML private HBox utilisateursBtn;
     @FXML private HBox tachesBtn;
     @FXML private HBox classesBtn;
+    @FXML private HBox groupBtn;
     @FXML private HBox matieresBtn;
     @FXML private HBox enseignantsBtn;
     @FXML private HBox emploiBtn;
@@ -55,36 +53,31 @@ public class SidebarController implements Initializable {
     @FXML private HBox notificationsBtn;
     @FXML private HBox logoutBtn;
 
-    // ─── Content area injected by MainController ──────────────────────────────
-    // MainController calls setContentArea(contentArea) right after load
     private StackPane contentArea;
-
-    // ─── Internal state ───────────────────────────────────────────────────────
-    private HBox       activeButton = null;
+    private HBox activeButton = null;
     private List<HBox> allNavButtons;
 
-    // ─── Initializable ────────────────────────────────────────────────────────
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         allNavButtons = Arrays.asList(
-                dashboardBtn, utilisateursBtn, tachesBtn, classesBtn,
-                matieresBtn, enseignantsBtn, emploiBtn, objectfiSanteBtn, notificationsBtn
+                dashboardBtn,
+                utilisateursBtn,
+                tachesBtn,
+                classesBtn,
+                groupBtn,
+                matieresBtn,
+                enseignantsBtn,
+                objectfiSanteBtn,
+                emploiBtn,
+                notificationsBtn
         );
         bindSessionData();
-        // Note: do NOT call goToDashboard() here — contentArea is null at this point.
-        // MainController calls setContentArea() first, then goToDashboard().
     }
 
-    // ─── Called by MainController after FXML injection ────────────────────────
-    /**
-     * Gives the sidebar a reference to the main content StackPane.
-     * Must be called BEFORE goToDashboard() or any navigation.
-     */
     public void setContentArea(StackPane contentArea) {
         this.contentArea = contentArea;
     }
 
-    // ─── Session data binding ─────────────────────────────────────────────────
     private void bindSessionData() {
         SessionManager session = SessionManager.getInstance();
         user u = session.getCurrentUser();
@@ -99,8 +92,7 @@ public class SidebarController implements Initializable {
         avatarInitials.setText(buildInitials(u.getPrenom(), u.getNom()));
         loadProfilePicture(session.getProfilePic());
 
-        String loginTime = LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("HH:mm"));
+        String loginTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
         sessionStatus.setText("En ligne · " + loginTime);
     }
 
@@ -131,16 +123,16 @@ public class SidebarController implements Initializable {
         }
     }
 
-    // ─── Active nav state ─────────────────────────────────────────────────────
     private void setActiveButton(HBox btn) {
-        if (activeButton != null)
+        if (activeButton != null) {
             activeButton.getStyleClass().remove("nav-item-active");
-        if (btn != null && !btn.getStyleClass().contains("nav-item-active"))
+        }
+        if (btn != null && !btn.getStyleClass().contains("nav-item-active")) {
             btn.getStyleClass().add("nav-item-active");
+        }
         activeButton = btn;
     }
 
-    // ─── Navigation handlers (FXML + public so MainController can call them) ──
     @FXML
     public void goToDashboard() {
         setActiveButton(dashboardBtn);
@@ -163,6 +155,12 @@ public class SidebarController implements Initializable {
     public void goToClasses() {
         setActiveButton(classesBtn);
         loadView("/backoffice/Classe/ClassesContent.fxml");
+    }
+
+    @FXML
+    public void goToGroup() {
+        setActiveButton(groupBtn);
+        loadView("/backoffice/group/GroupContent.fxml");
     }
 
     @FXML
@@ -204,8 +202,7 @@ public class SidebarController implements Initializable {
     public void logout() {
         SessionManager.getInstance().logout();
         try {
-            Parent root = FXMLLoader.load(
-                    getClass().getResource("/login.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
             Stage stage = (Stage) logoutBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -214,7 +211,6 @@ public class SidebarController implements Initializable {
         }
     }
 
-    // ─── Content loader ───────────────────────────────────────────────────────
     private void loadView(String fxmlPath) {
         if (contentArea == null) {
             System.err.println("SidebarController: contentArea is null — call setContentArea() before navigating.");
@@ -231,35 +227,16 @@ public class SidebarController implements Initializable {
             FXMLLoader loader = new FXMLLoader(resource);
             Parent view = loader.load();
             Object controller = loader.getController();
-
-            // Injection pour Objectifs santé
+            if (controller instanceof piJava.Controllers.backoffice.group.GroupContentController c) {
+                c.setSidebarController(this);
+                c.setContentArea(contentArea);
+            }
             if (controller instanceof piJava.Controllers.backoffice.objectifsante.AfficherObjectifsController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
             }
 
-            if (controller instanceof piJava.Controllers.backoffice.objectifsante.AjouterObjectifController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
-
-            if (controller instanceof piJava.Controllers.backoffice.objectifsante.ModifierObjectifController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
-
-            // Injection pour Suivis bien-être
             if (controller instanceof piJava.Controllers.backoffice.suivibienetre.AfficherSuivisController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
-
-            if (controller instanceof piJava.Controllers.backoffice.suivibienetre.AjouterSuiviController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
-
-            if (controller instanceof piJava.Controllers.backoffice.suivibienetre.ModifierSuiviController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
             }
@@ -271,7 +248,6 @@ public class SidebarController implements Initializable {
         }
     }
 
-    // ─── Public badge updaters ────────────────────────────────────────────────
     public void setTachesBadge(int count) {
         tachesBadge.setText(String.valueOf(count));
         tachesBadge.setVisible(count > 0);
@@ -282,22 +258,21 @@ public class SidebarController implements Initializable {
         notifBadge.setVisible(count > 0);
     }
 
-    // ─── Utilities ────────────────────────────────────────────────────────────
     private static String nvl(String s, String fallback) {
         return (s != null && !s.isBlank()) ? s : fallback;
     }
 
     private static String buildInitials(String prenom, String nom) {
         String p = (prenom != null && !prenom.isBlank()) ? prenom.substring(0, 1).toUpperCase() : "";
-        String n = (nom    != null && !nom.isBlank())    ? nom.substring(0, 1).toUpperCase()    : "";
+        String n = (nom != null && !nom.isBlank()) ? nom.substring(0, 1).toUpperCase() : "";
         return p + n;
     }
 
     private static String buildRoleDisplay(String roles) {
         if (roles == null || roles.isBlank()) return "Utilisateur";
-        if (roles.contains("ROLE_ADMIN"))      return "Administrateur";
+        if (roles.contains("ROLE_ADMIN")) return "Administrateur";
         if (roles.contains("ROLE_ENSEIGNANT")) return "Enseignant";
-        if (roles.contains("ROLE_ETUDIANT"))   return "Étudiant";
+        if (roles.contains("ROLE_ETUDIANT")) return "Étudiant";
         return "Utilisateur";
     }
 }
