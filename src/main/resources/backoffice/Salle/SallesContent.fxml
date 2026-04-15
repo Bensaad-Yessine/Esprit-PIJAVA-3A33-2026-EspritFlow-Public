@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="piJava.Controllers.backoffice.Salle.SallesContentController"
+      styleClass="main-content"
+      spacing="24"
+      stylesheets="@salles.css">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="16" styleClass="page-header">
+        <VBox HBox.hgrow="ALWAYS" spacing="4">
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="Backoffice" styleClass="breadcrumb-inactive"/>
+                <Label text="›" styleClass="breadcrumb-sep"/>
+                <Label text="Gestion des Salles" styleClass="breadcrumb-active"/>
+            </HBox>
+            <Label text="Gestion des Salles" styleClass="page-title"/>
+        </VBox>
+    </HBox>
+
+    <!-- Top Stats Panel (Cards) -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <!-- Title left -->
+        <HBox alignment="CENTER_LEFT" spacing="10" prefWidth="250">
+            <Label text="🏢" styleClass="icon-text" style="-fx-background-color: #312e81; -fx-padding: 8; -fx-background-radius: 5;"/>
+            <Label text="Gestion des Salles" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <!-- Stats -->
+        <HBox spacing="15" HBox.hgrow="ALWAYS">
+            <!-- Total Salles -->
+            <VBox styleClass="stat-card-total" prefWidth="180" spacing="15">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label fx:id="lblTotalCount" text="0" styleClass="stat-number"/>
+                    <Label text="+8%" styleClass="stat-percent"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="🏢" styleClass="icon-text" style="-fx-background-color: #8b5cf6; -fx-padding: 10; -fx-background-radius: 8;"/>
+                </HBox>
+                <Label text="TOTAL SALLES" styleClass="stat-label"/>
+            </VBox>
+
+            <!-- Bloc A -->
+            <VBox styleClass="stat-card-a" prefWidth="180" spacing="15">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label fx:id="lblBlocACount" text="0" styleClass="stat-number"/>
+                    <Label text="+2%" styleClass="stat-percent"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="A" styleClass="icon-text" style="-fx-background-color: #ec4899; -fx-padding: 10 15; -fx-background-radius: 8;"/>
+                </HBox>
+                <Label text="BLOC A" styleClass="stat-label"/>
+            </VBox>
+
+            <!-- Bloc B -->
+            <VBox styleClass="stat-card-b" prefWidth="180" spacing="15">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label fx:id="lblBlocBCount" text="0" styleClass="stat-number"/>
+                    <Label text="+3%" styleClass="stat-percent"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="B" styleClass="icon-text" style="-fx-background-color: #06b6d4; -fx-padding: 10 15; -fx-background-radius: 8;"/>
+                </HBox>
+                <Label text="BLOC B" styleClass="stat-label"/>
+            </VBox>
+
+            <!-- Autres -->
+            <VBox styleClass="stat-card-other" prefWidth="180" spacing="15">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label fx:id="lblAutresCount" text="0" styleClass="stat-number"/>
+                    <Label text="+5%" styleClass="stat-percent"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="🏢" styleClass="icon-text" style="-fx-background-color: #10b981; -fx-padding: 10; -fx-background-radius: 8;"/>
+                </HBox>
+                <Label text="AUTRES BLOCS" styleClass="stat-label"/>
+            </VBox>
+        </HBox>
+    </HBox>
+
+    <!-- Table Panel -->
+    <VBox styleClass="table-panel" VBox.vgrow="ALWAYS" spacing="15">
+        
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT">
+            <Label text="📚 Liste Des Salles" styleClass="panel-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="+ Ajouter une salle" styleClass="add-btn" onAction="#handleAdd"/>
+        </HBox>
+
+        <!-- Filter Area -->
+        <VBox styleClass="filter-container" spacing="10">
+            <Label text="🔍 Filtrer Et Rechercher" styleClass="filter-title"/>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Recherche" styleClass="filter-label"/>
+                    <TextField fx:id="searchField" promptText="Nom de salle..." styleClass="search-field"/>
+                </VBox>
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Bloc" styleClass="filter-label"/>
+                    <ComboBox fx:id="comboBloc" promptText="-- Tous les blocs --" styleClass="combo-box" maxWidth="Infinity"/>
+                </VBox>
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Capacité Max" styleClass="filter-label"/>
+                    <TextField fx:id="txtCapaciteMax" promptText="Ex: 50" styleClass="search-field"/>
+                </VBox>
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Trier par" styleClass="filter-label"/>
+                    <ComboBox fx:id="comboTri" promptText="ID (croissant)" styleClass="combo-box" maxWidth="Infinity"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Table View -->
+        <TableView fx:id="salleTable" styleClass="table-view" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                <TableColumn fx:id="colSalle" text="Salle" prefWidth="200"/>
+                <TableColumn fx:id="colBloc" text="Bloc" prefWidth="120"/>
+                <TableColumn fx:id="colEtage" text="Étage" prefWidth="120"/>
+                <TableColumn fx:id="colCapacite" text="Capacité" prefWidth="120"/>
+                <TableColumn fx:id="colActions" text="Actions" prefWidth="150" styleClass="table-cell-actions"/>
+            </columns>
+            <placeholder>
+                <Label text="Aucune salle trouvée." style="-fx-text-fill: #9ca3af; -fx-font-size: 14px;"/>
+            </placeholder>
+        </TableView>
+
+    </VBox>
+
+</VBox>
