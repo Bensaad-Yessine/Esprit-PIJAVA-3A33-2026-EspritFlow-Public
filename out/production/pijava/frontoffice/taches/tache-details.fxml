@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<HBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      stylesheets="@tache-details.css"
+      fx:controller="piJava.Controllers.frontoffice.taches.TachesDetailsController"
+      styleClass="root-bg" prefWidth="1200" prefHeight="800">
+    <ScrollPane fitToWidth="true" styleClass="page-scroll" HBox.hgrow="ALWAYS">
+        <VBox spacing="26" styleClass="main-container">
+
+            <!-- HEADER with Back Button and Title -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Button fx:id="btnBack" text="← Retour" onAction="#handleBack" styleClass="btn-back"/>
+                <VBox HBox.hgrow="ALWAYS" spacing="6">
+                    <Label text="Détails de la tâche" styleClass="title"/>
+                    <Label text="ESPRIT Flow · Informations complètes" styleClass="subtitle"/>
+                </VBox>
+            </HBox>
+
+            <!-- Main Content -->
+            <ScrollPane fitToWidth="true" styleClass="content-scroll" VBox.vgrow="ALWAYS">
+                <VBox spacing="25" styleClass="details-container">
+
+                    <!-- General Information Card with Action Buttons -->
+                    <HBox spacing="20" styleClass="info-card">
+                        <!-- Left side - General Information -->
+                        <VBox spacing="15" HBox.hgrow="ALWAYS">
+                            <Label text="Informations générales" styleClass="section-title"/>
+
+                            <VBox spacing="8">
+                                <Label text="Titre" styleClass="field-label"/>
+                                <Label fx:id="lblTitle" wrapText="true" styleClass="field-value title-value"/>
+                            </VBox>
+
+                            <VBox spacing="8">
+                                <Label text="Description" styleClass="field-label"/>
+                                <Label fx:id="lblDescription" wrapText="true" styleClass="field-value description-value"/>
+                            </VBox>
+                        </VBox>
+
+                        <!-- Right side - Action Buttons -->
+                        <VBox spacing="10" styleClass="action-buttons-container" alignment="CENTER">
+                            <!-- Start Button -->
+                            <Button fx:id="btnStart"
+                                    text="Démarrer"
+                                    styleClass="action-btn, start-btn"
+                                    onAction="#handleStartAction"
+                                    managed="false"
+                                    visible="false"
+                                    maxWidth="Infinity">
+                                <graphic>
+                                    <Label text="▶" styleClass="button-icon"/>
+                                </graphic>
+                            </Button>
+
+                            <!-- Pause Button -->
+                            <Button fx:id="btnPause"
+                                    text="Pause"
+                                    styleClass="action-btn, pause-btn"
+                                    onAction="#handlePauseAction"
+                                    managed="false"
+                                    visible="false"
+                                    maxWidth="Infinity">
+                                <graphic>
+                                    <Label text="⏸" styleClass="button-icon"/>
+                                </graphic>
+                            </Button>
+
+                            <!-- Finish Button -->
+                            <Button fx:id="btnFinish"
+                                    text="Terminer"
+                                    styleClass="action-btn, finish-btn"
+                                    onAction="#handleFinishAction"
+                                    managed="false"
+                                    visible="false"
+                                    maxWidth="Infinity">
+                                <graphic>
+                                    <Label text="✓" styleClass="button-icon"/>
+                                </graphic>
+                            </Button>
+
+                            <!-- Abandon Button -->
+                            <Button fx:id="btnAbandon"
+                                    text="Abandonner"
+                                    styleClass="action-btn, abandon-btn"
+                                    onAction="#handleAbandonAction"
+                                    managed="false"
+                                    visible="false"
+                                    maxWidth="Infinity">
+                                <graphic>
+                                    <Label text="✕" styleClass="button-icon"/>
+                                </graphic>
+                            </Button>
+
+                            <!-- No Actions Message -->
+                            <Button fx:id="btnNoActions"
+                                    text="Actions terminées"
+                                    styleClass="action-btn, no-action-btn"
+                                    disable="true"
+                                    managed="false"
+                                    visible="false"
+                                    maxWidth="Infinity">
+                                <graphic>
+                                    <Label text="🔒" styleClass="button-icon"/>
+                                </graphic>
+                            </Button>
+                        </VBox>
+                    </HBox>
+                    <!-- Status & Priority Card (2 cols) -->
+                    <GridPane hgap="20" vgap="15" styleClass="info-card">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Type" styleClass="field-label"/>
+                            <Label fx:id="lblType" styleClass="badge"/>
+                        </VBox>
+
+                        <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Statut" styleClass="field-label"/>
+                            <Label fx:id="lblStatus" styleClass="badge"/>
+                        </VBox>
+
+                        <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <Label text="Priorité" styleClass="field-label"/>
+                            <Label fx:id="lblPriority" styleClass="badge"/>
+                        </VBox>
+
+                        <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label text="Prédiction de réussite" styleClass="field-label"/>
+                            <HBox spacing="12" alignment="CENTER_LEFT">
+                                <ProgressBar fx:id="progressPrediction" prefWidth="180" prefHeight="12"/>
+                                <Label fx:id="lblPrediction" styleClass="field-value prediction-text"/>
+                            </HBox>
+                        </VBox>
+                    </GridPane>
+
+                    <!-- Dates Card -->
+                    <GridPane hgap="20" vgap="15" styleClass="info-card">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="📅 Date de début" styleClass="field-label"/>
+                            <Label fx:id="lblDateDebut" styleClass="field-value"/>
+                        </VBox>
+
+                        <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="📅 Date de fin" styleClass="field-label"/>
+                            <Label fx:id="lblDateFin" styleClass="field-value"/>
+                        </VBox>
+
+                        <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <Label text="⏰ Date d'échéance" styleClass="field-label"/>
+                            <Label fx:id="lblDateEcheance" styleClass="field-value"/>
+                        </VBox>
+
+                        <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label text="⏱ Durée estimée" styleClass="field-label"/>
+                            <Label fx:id="lblDureeEstimee" styleClass="field-value"/>
+                        </VBox>
+                    </GridPane>
+
+                    <!-- History Card -->
+                    <VBox spacing="15" styleClass="info-card">
+                        <Label text="📜 Historique des modifications" styleClass="section-title"/>
+                        <ListView fx:id="lvHistory" prefHeight="200" styleClass="history-list"/>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </ScrollPane>
+</HBox>
