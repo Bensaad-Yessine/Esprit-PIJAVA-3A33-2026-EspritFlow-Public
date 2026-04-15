@@ -6,16 +6,21 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
-import piJava.entities.user;
-import piJava.services.UserServices;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.image.Image;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
-import piJava.utils.SessionManager;
 import piJava.entities.user;
+import piJava.entities.Classe;
+import piJava.services.UserServices;
+import piJava.services.ClasseService;
+import piJava.utils.SessionManager;
 public class profileController implements Initializable {
 
     // ── Header / Avatar ──────────────────────────────────────────
@@ -70,12 +75,16 @@ public class profileController implements Initializable {
         cbSexe.getItems().addAll("Homme", "Femme", "Autre");
 
         // Hover effects for buttons
-        addHoverEffect(btnSave, "#3949AB", "#7986CB");
-        addHoverEffect(btnReset, "transparent", "#E8EAF6");
-    }
-    @FXML
-    public void initialize() {
-        loadUserData();
+        addHoverEffect(btnSave, "#C62828", "#EF5350");
+        addHoverEffect(btnReset, "transparent", "#FFEBEE");
+
+        SessionManager session = SessionManager.getInstance();
+        if (session.isLoggedIn()) {
+            this.currentUser = session.getCurrentUser();
+            populateView(this.currentUser);
+        } else {
+            System.out.println("No user logged in!");
+        }
     }
     // ════════════════════════════════════════════════════════════
     //  Public: load a user into the view
@@ -84,55 +93,7 @@ public class profileController implements Initializable {
         this.currentUser = u;
         populateView(u);
     }
-    private void loadUserData() {
-        SessionManager session = SessionManager.getInstance();
 
-        if (!session.isLoggedIn()) {
-            System.out.println("No user logged in!");
-            return;
-        }
-
-        user u = session.getCurrentUser();
-
-        // 🔹 Header
-        lblFullName.setText(u.getPrenom() + " " + u.getNom());
-        lblRole.setText(session.isAdmin() ? "ADMIN" : "UTILISATEUR");
-
-        lblVerified.setVisible(u.getIs_verified() == 1);
-
-        // 🔹 Avatar initials
-        String initials = (u.getPrenom().charAt(0) + "" + u.getNom().charAt(0)).toUpperCase();
-        avatarInitials.setText(initials);
-
-        // 🔹 Stats
-        if (u.getCreated_at() != null && u.getCreated_at().length() >= 4) {
-            lblJoinYear.setText(u.getCreated_at().substring(0, 4));
-        }
-
-        lblClasseStat.setText(u.getClasse_id() != null ? u.getClasse_id().toString() : "—");
-
-        // 🔹 Small info
-        lblEmailSmall.setText(u.getEmail());
-        lblTelSmall.setText(u.getNum_tel() != null ? u.getNum_tel() : "—");
-        lblDobSmall.setText(u.getDate_de_naissance() != null ? u.getDate_de_naissance() : "—");
-        lblSexeSmall.setText(u.getSexe() != null ? u.getSexe() : "—");
-
-        // 🔹 Form fields
-        tfPrenom.setText(u.getPrenom());
-        tfNom.setText(u.getNom());
-        tfEmail.setText(u.getEmail());
-        tfTel.setText(u.getNum_tel());
-        tfClasse.setText(u.getClasse_id() != null ? u.getClasse_id().toString() : "");
-
-        // 🔹 Ban status
-        if (u.getIs_banned() == 1) {
-            banBadge.setStyle("-fx-background-color: #B71C1C; -fx-padding: 8;");
-            banBadge.setVisible(true);
-            lblBanReason.setText(u.getBan_reason());
-        } else {
-            banBadge.setVisible(false);
-        }
-    }
     // ════════════════════════════════════════════════════════════
     //  Populate all UI elements from the user object
     // ════════════════════════════════════════════════════════════
@@ -143,6 +104,7 @@ public class profileController implements Initializable {
         // ── Avatar initials ──────────────────────────────────
         String initials = initials(prenom, nom);
         avatarInitials.setText(initials);
+        showAvatar(u.getProfile_pic());
 
         // ── Header ───────────────────────────────────────────
         lblFullName.setText(prenom + " " + nom);
@@ -166,7 +128,21 @@ public class profileController implements Initializable {
         // ── Sidebar stats ─────────────────────────────────────
         String createdAt = nvl(u.getCreated_at(), "");
         lblJoinYear.setText(createdAt.length() >= 4 ? createdAt.substring(0, 4) : "—");
-        lblClasseStat.setText(u.getClasse_id() != null ? String.valueOf(u.getClasse_id()) : "—");
+
+        String className = "—";
+        if (u.getClasse_id() != null) {
+            ClasseService classeService = new ClasseService();
+            try {
+                Classe c = classeService.getById(u.getClasse_id());
+                if (c != null && c.getNom() != null) {
+                    className = c.getNom();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        lblClasseStat.setText(className);
+
         lblEmailSmall.setText(nvl(u.getEmail(), "—"));
         lblTelSmall.setText(nvl(u.getNum_tel(), "—"));
         lblDobSmall.setText(nvl(u.getDate_de_naissance(), "—"));
@@ -177,7 +153,7 @@ public class profileController implements Initializable {
         tfNom.setText(nom);
         tfEmail.setText(nvl(u.getEmail()));
         tfTel.setText(nvl(u.getNum_tel()));
-        tfClasse.setText(u.getClasse_id() != null ? String.valueOf(u.getClasse_id()) : "");
+        tfClasse.setText(className);
         cbSexe.setValue(nvl(u.getSexe()));
 
         if (u.getDate_de_naissance() != null && !u.getDate_de_naissance().isEmpty()) {
@@ -224,17 +200,6 @@ public class profileController implements Initializable {
             currentUser.setDate_de_naissance(dpDateNaissance.getValue().toString());
         }
 
-        String classeText = tfClasse.getText().trim();
-        if (!classeText.isEmpty()) {
-            try { currentUser.setClasse_id(Integer.parseInt(classeText)); }
-            catch (NumberFormatException e) {
-                showMsg(lblFormMsg, "❌ Classe ID doit être un nombre.", false);
-                return;
-            }
-        } else {
-            currentUser.setClasse_id(null);
-        }
-
         // ── Persist ──────────────────────────────────────────
         userServices.edit(currentUser);
         showMsg(lblFormMsg, "✅ Profil mis à jour avec succès !", true);
@@ -252,6 +217,28 @@ public class profileController implements Initializable {
             populateView(currentUser);
         }
         showMsg(lblFormMsg, "", true);
+    }
+
+    // ════════════════════════════════════════════════════════════
+    //  FXML Handler: Edit Avatar
+    // ════════════════════════════════════════════════════════════
+    @FXML
+    private void handleEditAvatar() {
+        if (currentUser == null) return;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir une photo de profil");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+        File file = fileChooser.showOpenDialog(avatarCircle.getScene().getWindow());
+        if (file != null) {
+            String path = file.toURI().toString();
+            currentUser.setProfile_pic(path);
+            showAvatar(path);
+            userServices.edit(currentUser); // Save automatically or user can click Enregistrer
+            showMsg(lblFormMsg, "✅ Avatar mis à jour avec succès !", true);
+        }
     }
 
     // ════════════════════════════════════════════════════════════
@@ -297,8 +284,34 @@ public class profileController implements Initializable {
         lblTelSmall.setText(nvl(currentUser.getNum_tel(), "—"));
         lblDobSmall.setText(nvl(currentUser.getDate_de_naissance(), "—"));
         lblSexeSmall.setText(nvl(currentUser.getSexe(), "—"));
-        lblClasseStat.setText(currentUser.getClasse_id() != null
-                ? String.valueOf(currentUser.getClasse_id()) : "—");
+
+        String className = "—";
+        if (currentUser.getClasse_id() != null) {
+            ClasseService classeService = new ClasseService();
+            try {
+                Classe c = classeService.getById(currentUser.getClasse_id());
+                if (c != null && c.getNom() != null) {
+                    className = c.getNom();
+                }
+            } catch (Exception e) {}
+        }
+        lblClasseStat.setText(className);
+    }
+
+    private void showAvatar(String url) {
+        if (url == null || url.isEmpty()) {
+            avatarCircle.setFill(Color.WHITE);
+            avatarInitials.setVisible(true);
+        } else {
+            try {
+                Image img = new Image(url, true);
+                avatarCircle.setFill(new ImagePattern(img));
+                avatarInitials.setVisible(false);
+            } catch (Exception e) {
+                avatarCircle.setFill(Color.WHITE);
+                avatarInitials.setVisible(true);
+            }
+        }
     }
 
     private static String initials(String prenom, String nom) {
