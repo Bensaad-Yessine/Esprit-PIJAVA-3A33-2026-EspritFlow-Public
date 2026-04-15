@@ -88,15 +88,17 @@
 
         <TableView fx:id="userTable" styleClass="user-table" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="idCol"       text="#"           prefWidth="55"/>
-                <TableColumn fx:id="avatarCol"   text=""            prefWidth="50"/>
-                <TableColumn fx:id="nomCol"      text="NOM COMPLET" prefWidth="180"/>
-                <TableColumn fx:id="emailCol"    text="EMAIL"       prefWidth="220"/>
-                <TableColumn fx:id="roleCol"     text="RÔLE"        prefWidth="120"/>
-                <TableColumn fx:id="sexeCol"     text="SEXE"        prefWidth="90"/>
-                <TableColumn fx:id="verifiedCol" text="VÉRIFIÉ"     prefWidth="90"/>
-                <TableColumn fx:id="bannedCol"   text="STATUT"      prefWidth="100"/>
-                <TableColumn fx:id="actionsCol"  text="ACTIONS"     prefWidth="200"/>
+                <TableColumn fx:id="avatarCol"    text=""            prefWidth="50"  sortable="false"/>
+                <TableColumn fx:id="nomCol"       text="NOM COMPLET" prefWidth="150" sortable="true"/>
+                <TableColumn fx:id="emailCol"     text="EMAIL"       prefWidth="190" sortable="true"/>
+                <TableColumn fx:id="telCol"       text="TÉLÉPHONE"   prefWidth="110" sortable="true"/>
+                <TableColumn fx:id="roleCol"      text="RÔLE"        prefWidth="100" sortable="true"/>
+                <TableColumn fx:id="classeCol"    text="CLASSE"      prefWidth="100" sortable="true"/>
+                <TableColumn fx:id="dobCol"       text="NAISSANCE"   prefWidth="100" sortable="true"/>
+                <TableColumn fx:id="createdAtCol" text="INSCRIT LE"  prefWidth="100" sortable="true"/>
+                <TableColumn fx:id="verifiedCol"  text="VÉRIFIÉ"     prefWidth="90"  sortable="true"/>
+                <TableColumn fx:id="bannedCol"    text="STATUT"      prefWidth="80"  sortable="true"/>
+                <TableColumn fx:id="actionsCol"   text="ACTIONS"     prefWidth="190" sortable="false"/>
             </columns>
             <placeholder>
                 <VBox alignment="CENTER" spacing="12" styleClass="empty-state">

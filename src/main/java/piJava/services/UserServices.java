@@ -102,7 +102,7 @@ public class UserServices implements ICrud<user> {
     @Override
     public void edit(user u) {
         String sql = "UPDATE `user` SET email=?, roles=?, nom=?, prenom=?, "
-                + "num_tel=?, date_de_naissance=?, sexe=?, classe_id=? WHERE id=?";
+                + "num_tel=?, date_de_naissance=?, sexe=?, classe_id=?, profile_pic=? WHERE id=?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, u.getEmail());
             ps.setString(2, u.getRoles());
@@ -116,7 +116,8 @@ public class UserServices implements ICrud<user> {
             ps.setString(7, u.getSexe());
             if (u.getClasse_id() != null) ps.setInt(8, u.getClasse_id());
             else                          ps.setNull(8, Types.INTEGER);
-            ps.setInt(9, u.getId());
+            ps.setString(9, u.getProfile_pic());
+            ps.setInt(10, u.getId());
             ps.executeUpdate();
             System.out.println("✅ User modifié : " + u.getPrenom() + " " + u.getNom());
         } catch (SQLException e) {
@@ -124,15 +125,19 @@ public class UserServices implements ICrud<user> {
             e.printStackTrace();
         }
 
-        // Update password only if a new one was provided
+        // Update password only if a new one was provided AND it's not already a BCrypt hash
         if (u.getPassword() != null && !u.getPassword().isEmpty()) {
-            try (PreparedStatement ps = con.prepareStatement(
-                    "UPDATE `user` SET password=? WHERE id=?")) {
-                ps.setString(1, BCrypt.hashpw(u.getPassword(), BCrypt.gensalt()));
-                ps.setInt(2, u.getId());
-                ps.executeUpdate();
-            } catch (SQLException e) {
-                System.err.println("❌ Failed to update password: " + e.getMessage());
+            // BCrypt hashes from jBCrypt/PHP start with $2a$, $2y$, or $2b$
+            String pwd = u.getPassword();
+            if (!pwd.startsWith("$2a$") && !pwd.startsWith("$2y$") && !pwd.startsWith("$2b$")) {
+                try (PreparedStatement ps = con.prepareStatement(
+                        "UPDATE `user` SET password=? WHERE id=?")) {
+                    ps.setString(1, BCrypt.hashpw(u.getPassword(), BCrypt.gensalt()));
+                    ps.setInt(2, u.getId());
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println("❌ Failed to update password: " + e.getMessage());
+                }
             }
         }
     }

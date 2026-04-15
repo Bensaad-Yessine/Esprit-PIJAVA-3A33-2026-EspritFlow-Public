@@ -28,25 +28,25 @@
         <HBox spacing="16" styleClass="stats-row">
             <VBox styleClass="stat-card" fx:id="totalStudentsCard">
                 <Label text="👥 Total Étudiants" styleClass="stat-label"/>
-                <Label text="1,284" styleClass="stat-number"/>
+                <Label fx:id="totalStudentsLbl" text="0" styleClass="stat-number"/>
                 <Label text="+24 ce mois-ci" styleClass="stat-trend"/>
             </VBox>
 
             <VBox styleClass="stat-card">
                 <Label text="📚 Classes actives" styleClass="stat-label"/>
-                <Label text="24" styleClass="stat-number"/>
+                <Label fx:id="activeClassesLbl" text="0" styleClass="stat-number"/>
                 <Label text="+3 cette semaine" styleClass="stat-trend"/>
             </VBox>
 
             <VBox styleClass="stat-card">
                 <Label text="👨‍🏫 Enseignants" styleClass="stat-label"/>
-                <Label text="86" styleClass="stat-number"/>
+                <Label fx:id="teachersLbl" text="0" styleClass="stat-number"/>
                 <Label text="Permanents" styleClass="stat-sub"/>
             </VBox>
 
             <VBox styleClass="stat-card">
-                <Label text="📖 Matières" styleClass="stat-label"/>
-                <Label text="32" styleClass="stat-number"/>
+                <Label text="🚫 Utilisateurs Bannis" styleClass="stat-label"/>
+                <Label fx:id="bannedUsersLbl" text="0" styleClass="stat-number"/>
                 <Label text="Programmes" styleClass="stat-sub"/>
             </VBox>
         </HBox>
@@ -112,11 +112,11 @@
             </HBox>
             <TableView fx:id="studentsTable" styleClass="custom-table">
                 <columns>
-                    <TableColumn fx:id="nameCol" text="Nom et Prénom" prefWidth="220"/>
-                    <TableColumn fx:id="gradeCol" text="Classe" prefWidth="100"/>
-                    <TableColumn fx:id="courseCol" text="Filière" prefWidth="150"/>
-                    <TableColumn fx:id="attendanceCol" text="Présence" prefWidth="120"/>
-                    <TableColumn fx:id="statusCol" text="Statut" prefWidth="120"/>
+                    <TableColumn fx:id="nameCol" text="ID # Nom Complet" prefWidth="250"/>
+                    <TableColumn fx:id="gradeCol" text="Rôle" prefWidth="120"/>
+                    <TableColumn fx:id="courseCol" text="Email" prefWidth="150"/>
+                    <TableColumn fx:id="attendanceCol" text="Téléphone" prefWidth="120"/>
+                    <TableColumn fx:id="statusCol" text="Statut" prefWidth="100"/>
                 </columns>
             </TableView>
         </VBox>
