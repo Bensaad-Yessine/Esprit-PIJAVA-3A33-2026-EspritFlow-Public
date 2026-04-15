@@ -5,13 +5,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import piJava.Controllers.frontoffice.FrontSidebarController;
 import piJava.Controllers.frontoffice.suivibienetre.AfficherSuivisController;
 import piJava.entities.ObjectifSante;
@@ -25,6 +21,8 @@ public class AfficherObjectifsController {
 
     @FXML
     private TableView<ObjectifSante> tableObjectifs;
+
+
 
     @FXML
     private TableColumn<ObjectifSante, String> colTitre;
@@ -48,9 +46,6 @@ public class AfficherObjectifsController {
     private TableColumn<ObjectifSante, String> colStatut;
 
     @FXML
-    private TableColumn<ObjectifSante, Void> colActions;
-
-    @FXML
     private TextField txtRecherche;
 
     @FXML
@@ -72,6 +67,9 @@ public class AfficherObjectifsController {
 
     @FXML
     public void initialize() {
+        System.out.println("AfficherObjectifsController FRONT chargé avec succès !");
+
+
         colTitre.setCellValueFactory(new PropertyValueFactory<>("titre"));
         colType.setCellValueFactory(new PropertyValueFactory<>("type"));
         colValeurCible.setCellValueFactory(new PropertyValueFactory<>("valeurCible"));
@@ -82,12 +80,20 @@ public class AfficherObjectifsController {
 
         appliquerBadges();
         appliquerStylesColonnes();
-        ajouterColonneActions();
 
-        cbCategorie.getItems().addAll("Toutes", "SOMMEIL", "SPORT", "ALIMENTATION");
+        cbCategorie.getItems().addAll(
+                "Toutes",
+                "SOMMEIL",
+                "SPORT",
+                "ALIMENTATION"
+        );
         cbCategorie.setValue("Toutes");
 
-        cbTri.getItems().addAll("Par défaut", "Priorité", "Date début");
+        cbTri.getItems().addAll(
+                "Par défaut",
+                "Priorité",
+                "Date début"
+        );
         cbTri.setValue("Par défaut");
 
         txtRecherche.textProperty().addListener((obs, oldVal, newVal) -> appliquerRechercheEtTri());
@@ -187,6 +193,8 @@ public class AfficherObjectifsController {
     }
 
     private void appliquerStylesColonnes() {
+
+
         colTitre.setCellFactory(column -> new TableCell<>() {
             private final Label label = new Label();
 
@@ -264,63 +272,6 @@ public class AfficherObjectifsController {
         });
     }
 
-    private void ajouterColonneActions() {
-        colActions.setCellFactory(param -> new TableCell<>() {
-
-            private final Button btnVoirSuivis = new Button("👁");
-            private final Button btnModifier = new Button("✎");
-            private final Button btnSupprimer = new Button("✖");
-
-            private final HBox container = new HBox(8, btnVoirSuivis, btnModifier, btnSupprimer);
-
-            {
-                btnVoirSuivis.getStyleClass().add("secondary-button");
-                btnModifier.getStyleClass().add("primary-button");
-                btnSupprimer.getStyleClass().add("danger-button");
-
-                btnVoirSuivis.setMinWidth(45);
-                btnModifier.setMinWidth(45);
-                btnSupprimer.setMinWidth(45);
-
-                btnVoirSuivis.setPrefWidth(45);
-                btnModifier.setPrefWidth(45);
-                btnSupprimer.setPrefWidth(45);
-
-                btnVoirSuivis.setMaxWidth(45);
-                btnModifier.setMaxWidth(45);
-                btnSupprimer.setMaxWidth(45);
-
-                btnVoirSuivis.setStyle("-fx-font-size: 16px; -fx-padding: 4;");
-                btnModifier.setStyle("-fx-font-size: 16px; -fx-padding: 4;");
-                btnSupprimer.setStyle("-fx-font-size: 16px; -fx-padding: 4;");
-
-                container.setPrefWidth(160);
-                container.setMinWidth(160);
-
-                btnVoirSuivis.setOnAction(event -> {
-                    ObjectifSante objectif = getTableView().getItems().get(getIndex());
-                    ouvrirAfficherSuivisDepuisLigne(objectif);
-                });
-
-                btnModifier.setOnAction(event -> {
-                    ObjectifSante objectif = getTableView().getItems().get(getIndex());
-                    ouvrirModifierObjectifDepuisLigne(objectif);
-                });
-
-                btnSupprimer.setOnAction(event -> {
-                    ObjectifSante objectif = getTableView().getItems().get(getIndex());
-                    supprimerObjectifDepuisLigne(objectif);
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(empty ? null : container);
-            }
-        });
-    }
-
     @FXML
     public void ouvrirAjouterObjectif() {
         try {
@@ -328,20 +279,16 @@ public class AfficherObjectifsController {
             Parent root = loader.load();
 
             AjouterObjectifController controller = loader.getController();
+            controller.setSidebarController(sidebarController);
             controller.setAfficherObjectifsController(this);
+            controller.setContentArea(contentArea);
 
-            Stage stage = new Stage();
-            stage.setTitle("Nouvel objectif");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.sizeToScene();
-            stage.showAndWait();
-
-            chargerObjectifs();
+            if (contentArea != null) {
+                contentArea.getChildren().setAll(root);
+            }
 
         } catch (Exception e) {
-            System.out.println("Erreur lors de l'ouverture de la fenêtre d'ajout : " + e.getMessage());
+            System.out.println("Erreur lors de l'ouverture de la page d'ajout : " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -406,20 +353,16 @@ public class AfficherObjectifsController {
 
             ModifierObjectifController controller = loader.getController();
             controller.setObjectif(objectifSecure);
+            controller.setSidebarController(sidebarController);
             controller.setAfficherObjectifsController(this);
+            controller.setContentArea(contentArea);
 
-            Stage stage = new Stage();
-            stage.setTitle("Modifier objectif");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.sizeToScene();
-            stage.showAndWait();
-
-            chargerObjectifs();
+            if (contentArea != null) {
+                contentArea.getChildren().setAll(root);
+            }
 
         } catch (Exception e) {
-            System.out.println("Erreur lors de l'ouverture de la fenêtre de modification : " + e.getMessage());
+            System.out.println("Erreur lors de l'ouverture de la page de modification : " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -462,114 +405,6 @@ public class AfficherObjectifsController {
 
         } catch (Exception e) {
             System.out.println("Erreur lors de l'ouverture des suivis : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void ouvrirAfficherSuivisDepuisLigne(ObjectifSante objectifSelectionne) {
-        try {
-            if (objectifSelectionne == null) {
-                return;
-            }
-
-            user currentUser = SessionManager.getInstance().getCurrentUser();
-            if (currentUser == null) {
-                System.out.println("Aucun utilisateur connecté.");
-                return;
-            }
-
-            ObjectifSanteService service = new ObjectifSanteService();
-            ObjectifSante objectifSecure = service.recupererParIdEtUser(objectifSelectionne.getId(), currentUser.getId());
-
-            if (objectifSecure == null) {
-                System.out.println("Accès refusé à cet objectif.");
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/frontoffice/suivibienetre/AfficherSuivis.fxml"));
-            Parent root = loader.load();
-
-            AfficherSuivisController controller = loader.getController();
-            controller.setObjectifId(objectifSecure.getId());
-            controller.setSidebarController(sidebarController);
-            controller.setContentArea(contentArea);
-
-            if (contentArea != null) {
-                contentArea.getChildren().setAll(root);
-            }
-
-        } catch (Exception e) {
-            System.out.println("Erreur lors de l'ouverture des suivis : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void ouvrirModifierObjectifDepuisLigne(ObjectifSante objectifSelectionne) {
-        try {
-            if (objectifSelectionne == null) {
-                return;
-            }
-
-            user currentUser = SessionManager.getInstance().getCurrentUser();
-            if (currentUser == null) {
-                System.out.println("Aucun utilisateur connecté.");
-                return;
-            }
-
-            ObjectifSanteService service = new ObjectifSanteService();
-            ObjectifSante objectifSecure = service.recupererParIdEtUser(objectifSelectionne.getId(), currentUser.getId());
-
-            if (objectifSecure == null) {
-                System.out.println("Accès refusé à cet objectif.");
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/frontoffice/objectifsante/ModifierObjectif.fxml"));
-            Parent root = loader.load();
-
-            ModifierObjectifController controller = loader.getController();
-            controller.setObjectif(objectifSecure);
-            controller.setAfficherObjectifsController(this);
-
-            Stage stage = new Stage();
-            stage.setTitle("Modifier objectif");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.sizeToScene();
-            stage.showAndWait();
-
-            chargerObjectifs();
-
-        } catch (Exception e) {
-            System.out.println("Erreur lors de l'ouverture de la fenêtre de modification : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void supprimerObjectifDepuisLigne(ObjectifSante objectifSelectionne) {
-        try {
-            if (objectifSelectionne == null) {
-                return;
-            }
-
-            user currentUser = SessionManager.getInstance().getCurrentUser();
-            if (currentUser == null) {
-                System.out.println("Aucun utilisateur connecté.");
-                return;
-            }
-
-            ObjectifSanteService service = new ObjectifSanteService();
-            boolean success = service.supprimerParUser(objectifSelectionne.getId(), currentUser.getId());
-
-            if (success) {
-                chargerObjectifs();
-            } else {
-                System.out.println("Suppression refusée.");
-            }
-
-        } catch (Exception e) {
-            System.out.println("Erreur lors de la suppression : " + e.getMessage());
             e.printStackTrace();
         }
     }

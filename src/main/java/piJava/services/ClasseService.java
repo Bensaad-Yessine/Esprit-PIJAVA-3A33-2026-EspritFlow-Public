@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ClasseService implements ICrud<Classe> {
 
-    private Connection con = MyDataBase.getInstance().getConnection();
+    private final Connection con = MyDataBase.getInstance().getConnection();
 
     // ─── SHOW (SELECT ALL) ───────────────────────────────────────
     @Override
@@ -19,11 +19,6 @@ public class ClasseService implements ICrud<Classe> {
 
     public List<Classe> getAllClasses() {
         List<Classe> list = new ArrayList<>();
-        con = MyDataBase.getInstance().getConnection();
-        if (con == null) {
-            System.out.println("Erreur getAllClasses: database connection unavailable");
-            return list;
-        }
         String sql = "SELECT * FROM classe";
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
@@ -41,7 +36,7 @@ public class ClasseService implements ICrud<Classe> {
     public void add(Classe classe) throws SQLException {
         String sql = "INSERT INTO classe (nom, niveau, anneeuniversitaire, description, filiere, user_id) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement ps = requireConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, classe.getNom());
             ps.setString(2, classe.getNiveau());
             ps.setString(3, classe.getAnneeUniversitaire());
@@ -69,13 +64,13 @@ public class ClasseService implements ICrud<Classe> {
     public void delete(int id) throws SQLException {
         // Remove join table entries first (FK constraint)
         String deleteLinks = "DELETE FROM matiere_classe_classe WHERE classe_id = ?";
-        try (PreparedStatement ps = requireConnection().prepareStatement(deleteLinks)) {
+        try (PreparedStatement ps = con.prepareStatement(deleteLinks)) {
             ps.setInt(1, id);
             ps.executeUpdate();
         }
 
         String sql = "DELETE FROM classe WHERE id = ?";
-        try (PreparedStatement ps = requireConnection().prepareStatement(sql)) {
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();
         }
@@ -86,7 +81,7 @@ public class ClasseService implements ICrud<Classe> {
     public void edit(Classe classe) throws SQLException {
         String sql = "UPDATE classe SET nom = ?, niveau = ?, anneeuniversitaire = ?, description = ?, filiere = ?, user_id = ? WHERE id = ?";
 
-        try (PreparedStatement ps = requireConnection().prepareStatement(sql)) {
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, classe.getNom());
             ps.setString(2, classe.getNiveau());
             ps.setString(3, classe.getAnneeUniversitaire());
@@ -108,7 +103,7 @@ public class ClasseService implements ICrud<Classe> {
     public Classe getById(int id) throws SQLException {
         String sql = "SELECT * FROM classe WHERE id = ?";
 
-        try (PreparedStatement ps = requireConnection().prepareStatement(sql)) {
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -124,7 +119,7 @@ public class ClasseService implements ICrud<Classe> {
         List<Classe> list = new ArrayList<>();
         String sql = "SELECT * FROM classe WHERE nom LIKE ?";
 
-        try (PreparedStatement ps = requireConnection().prepareStatement(sql)) {
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, "%" + keyword + "%");
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -140,7 +135,7 @@ public class ClasseService implements ICrud<Classe> {
         List<Classe> list = new ArrayList<>();
         String sql = "SELECT * FROM classe WHERE niveau = ?";
 
-        try (PreparedStatement ps = requireConnection().prepareStatement(sql)) {
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, niveau);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -156,7 +151,7 @@ public class ClasseService implements ICrud<Classe> {
         List<Classe> list = new ArrayList<>();
         String sql = "SELECT * FROM classe WHERE filiere = ?";
 
-        try (PreparedStatement ps = requireConnection().prepareStatement(sql)) {
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, filiere);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -178,13 +173,5 @@ public class ClasseService implements ICrud<Classe> {
                 rs.getString("filiere"),
                 rs.getObject("user_id", Integer.class)
         );
-    }
-
-    private Connection requireConnection() throws SQLException {
-        con = MyDataBase.getInstance().getConnection();
-        if (con == null) {
-            throw new SQLException("Database connection unavailable. Verify MySQL is running and the 'pidev' database exists.");
-        }
-        return con;
     }
 }

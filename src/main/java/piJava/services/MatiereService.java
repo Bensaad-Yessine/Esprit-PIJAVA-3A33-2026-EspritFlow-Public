@@ -19,11 +19,10 @@ public class MatiereService implements ICrud<Matiere> {
     // ─── SHOW (SELECT ALL) ───────────────────────────────────────
     @Override
     public List<Matiere> show() throws SQLException {
-        Connection connection = requireConnection();
         List<Matiere> matieres = new ArrayList<>();
         String query = "SELECT * FROM matiere_classe";
 
-        try (Statement stmt = connection.createStatement();
+        try (Statement stmt = con.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
@@ -38,10 +37,9 @@ public class MatiereService implements ICrud<Matiere> {
     // ─── ADD (INSERT) ────────────────────────────────────────────
     @Override
     public void add(Matiere matiere) throws SQLException {
-        Connection connection = requireConnection();
         String query = "INSERT INTO matiere_classe (coefficient, chargehoraire, scorecomplexite, nom, description) VALUES (?, ?, ?, ?, ?)";
 
-        try (PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             ps.setDouble(1, matiere.getCoefficient());
             ps.setInt(2, matiere.getChargehoraire());
             ps.setInt(3, matiere.getScorecomplexite());
@@ -66,16 +64,15 @@ public class MatiereService implements ICrud<Matiere> {
     // ─── DELETE ──────────────────────────────────────────────────
     @Override
     public void delete(int id) throws SQLException {
-        Connection connection = requireConnection();
         // Remove join table entries first (FK constraint)
         String deleteLinks = "DELETE FROM matiere_classe_classe WHERE matiere_classe_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(deleteLinks)) {
+        try (PreparedStatement ps = con.prepareStatement(deleteLinks)) {
             ps.setInt(1, id);
             ps.executeUpdate();
         }
 
         String deleteMatiere = "DELETE FROM matiere_classe WHERE id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(deleteMatiere)) {
+        try (PreparedStatement ps = con.prepareStatement(deleteMatiere)) {
             ps.setInt(1, id);
             ps.executeUpdate();
         }
@@ -84,10 +81,9 @@ public class MatiereService implements ICrud<Matiere> {
     // ─── EDIT (UPDATE) ───────────────────────────────────────────
     @Override
     public void edit(Matiere matiere) throws SQLException {
-        Connection connection = requireConnection();
         String query = "UPDATE matiere_classe SET coefficient = ?, chargehoraire = ?, scorecomplexite = ?, nom = ?, description = ? WHERE id = ?";
 
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
+        try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setDouble(1, matiere.getCoefficient());
             ps.setInt(2, matiere.getChargehoraire());
             ps.setInt(3, matiere.getScorecomplexite());
@@ -99,7 +95,7 @@ public class MatiereService implements ICrud<Matiere> {
 
         // Refresh Many-to-Many links: delete old ones, insert new ones
         String deleteLinks = "DELETE FROM matiere_classe_classe WHERE matiere_classe_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(deleteLinks)) {
+        try (PreparedStatement ps = con.prepareStatement(deleteLinks)) {
             ps.setInt(1, matiere.getId());
             ps.executeUpdate();
         }
@@ -111,10 +107,9 @@ public class MatiereService implements ICrud<Matiere> {
 
     // ─── GET BY ID ───────────────────────────────────────────────
     public Matiere getById(int id) throws SQLException {
-        Connection connection = requireConnection();
         String query = "SELECT * FROM matiere_classe WHERE id = ?";
 
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
+        try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -125,6 +120,28 @@ public class MatiereService implements ICrud<Matiere> {
             }
         }
         return null;
+    }
+
+    // ─── GET MATIERES BY CLASSE ──────────────────────────────────────────────
+    public List<Matiere> getMatieresByClasseId(int classeId) throws SQLException {
+        List<Matiere> matieres = new ArrayList<>();
+        String query = """
+                SELECT DISTINCT m.*
+                FROM matiere_classe m
+                JOIN matiere_classe_classe mcc ON m.id = mcc.matiere_classe_id
+                WHERE mcc.classe_id = ?
+                ORDER BY m.nom
+                """;
+
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, classeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    matieres.add(mapResultSet(rs));
+                }
+            }
+        }
+        return matieres;
     }
 
     // ─── PRIVATE HELPERS ─────────────────────────────────────────
@@ -143,13 +160,14 @@ public class MatiereService implements ICrud<Matiere> {
 
     // Fetches all Classe records linked to a given matiereId
     private List<Classe> getClassesForMatiere(int matiereId) throws SQLException {
-        Connection connection = requireConnection();
         List<Classe> classes = new ArrayList<>();
-        String query = "SELECT c.* FROM classe c " +
-                "JOIN matiere_classe_classe mcc ON c.id = mcc.classe_id " +
-                "WHERE mcc.matiere_classe_id = ?";
+        String query = """
+                SELECT c.* FROM classe c
+                JOIN matiere_classe_classe mcc ON c.id = mcc.classe_id
+                WHERE mcc.matiere_classe_id = ?
+                """;
 
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
+        try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, matiereId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -170,10 +188,9 @@ public class MatiereService implements ICrud<Matiere> {
 
     // Inserts rows into the join table matiere_classe_classe
     private void insertClasseLinks(int matiereId, List<Classe> classes) throws SQLException {
-        Connection connection = requireConnection();
         String query = "INSERT INTO matiere_classe_classe (matiere_classe_id, classe_id) VALUES (?, ?)";
 
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
+        try (PreparedStatement ps = con.prepareStatement(query)) {
             for (Classe c : classes) {
                 ps.setInt(1, matiereId);
                 ps.setInt(2, c.getId());
@@ -181,13 +198,5 @@ public class MatiereService implements ICrud<Matiere> {
             }
             ps.executeBatch();
         }
-    }
-
-    private Connection requireConnection() throws SQLException {
-        con = MyDataBase.getInstance().getConnection();
-        if (con == null) {
-            throw new SQLException("Database connection unavailable. Verify MySQL is running and the 'pidev' database exists.");
-        }
-        return con;
     }
 }

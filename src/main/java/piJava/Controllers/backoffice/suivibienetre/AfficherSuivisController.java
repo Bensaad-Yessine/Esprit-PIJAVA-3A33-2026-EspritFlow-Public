@@ -5,8 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -14,10 +12,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import piJava.Controllers.backoffice.SidebarController;
 import piJava.Controllers.backoffice.objectifsante.AfficherObjectifsController;
 import piJava.entities.SuiviBienEtre;
@@ -30,6 +25,8 @@ public class AfficherSuivisController {
 
     @FXML
     private TableView<SuiviBienEtre> tableSuivis;
+
+
 
     @FXML
     private TableColumn<SuiviBienEtre, Date> colDateSaisie;
@@ -52,8 +49,7 @@ public class AfficherSuivisController {
     @FXML
     private TableColumn<SuiviBienEtre, Double> colScore;
 
-    @FXML
-    private TableColumn<SuiviBienEtre, Void> colActions;
+
 
     @FXML
     private ComboBox<String> cbTri;
@@ -72,6 +68,7 @@ public class AfficherSuivisController {
 
     @FXML
     public void initialize() {
+
         colDateSaisie.setCellValueFactory(new PropertyValueFactory<>("dateSaisie"));
         colHumeur.setCellValueFactory(new PropertyValueFactory<>("humeur"));
         colQualiteSommeil.setCellValueFactory(new PropertyValueFactory<>("qualiteSommeil"));
@@ -80,15 +77,22 @@ public class AfficherSuivisController {
         colQualiteAlimentation.setCellValueFactory(new PropertyValueFactory<>("qualiteAlimentation"));
         colScore.setCellValueFactory(new PropertyValueFactory<>("score"));
 
-        appliquerStylesColonnes();
-        ajouterColonneActions();
 
-        cbTri.getItems().addAll("Par défaut", "Date", "Score", "Humeur");
+        appliquerStylesColonnes();
+
+        cbTri.getItems().addAll(
+                "Par défaut",
+                "Date",
+                "Score",
+                "Humeur"
+        );
         cbTri.setValue("Par défaut");
+
         cbTri.valueProperty().addListener((obs, oldVal, newVal) -> appliquerTri());
     }
 
     private void appliquerStylesColonnes() {
+
         colDateSaisie.setCellFactory(column -> new TableCell<SuiviBienEtre, Date>() {
             private final Label badge = new Label();
 
@@ -201,42 +205,6 @@ public class AfficherSuivisController {
         };
     }
 
-    private void ajouterColonneActions() {
-        colActions.setCellFactory(param -> new TableCell<>() {
-
-            private final Button btnModifier = new Button("✎");
-            private final Button btnSupprimer = new Button("✖");
-            private final HBox container = new HBox(8, btnModifier, btnSupprimer);
-
-            {
-                btnModifier.getStyleClass().add("primary-button");
-                btnSupprimer.getStyleClass().add("danger-button");
-
-                btnModifier.setPrefWidth(45);
-                btnSupprimer.setPrefWidth(45);
-
-                btnModifier.setStyle("-fx-font-size: 16px; -fx-padding: 4;");
-                btnSupprimer.setStyle("-fx-font-size: 16px; -fx-padding: 4;");
-
-                btnModifier.setOnAction(event -> {
-                    SuiviBienEtre suivi = getTableView().getItems().get(getIndex());
-                    ouvrirModifierSuiviDepuisLigne(suivi);
-                });
-
-                btnSupprimer.setOnAction(event -> {
-                    SuiviBienEtre suivi = getTableView().getItems().get(getIndex());
-                    supprimerSuiviDepuisLigne(suivi);
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(empty ? null : container);
-            }
-        });
-    }
-
     public void setObjectifId(int objectifId) {
         this.objectifId = objectifId;
         chargerSuivisParObjectif();
@@ -296,19 +264,15 @@ public class AfficherSuivisController {
             AjouterSuiviController controller = loader.getController();
             controller.setAfficherSuivisController(this);
             controller.setObjectifId(objectifId);
+            controller.setSidebarController(sidebarController);
+            controller.setContentArea(contentArea);
 
-            Stage stage = new Stage();
-            stage.setTitle("Nouveau suivi");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.sizeToScene();
-            stage.showAndWait();
-
-            chargerSuivisParObjectif();
+            if (contentArea != null) {
+                contentArea.getChildren().setAll(root);
+            }
 
         } catch (Exception e) {
-            System.out.println("Erreur lors de l'ouverture de la fenêtre d'ajout : " + e.getMessage());
+            System.out.println("Erreur lors de l'ouverture de la page d'ajout : " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -329,48 +293,15 @@ public class AfficherSuivisController {
             ModifierSuiviController controller = loader.getController();
             controller.setSuivi(suiviSelectionne);
             controller.setAfficherSuivisController(this);
+            controller.setSidebarController(sidebarController);
+            controller.setContentArea(contentArea);
 
-            Stage stage = new Stage();
-            stage.setTitle("Modifier suivi");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.sizeToScene();
-            stage.showAndWait();
-
-            chargerSuivisParObjectif();
-
-        } catch (Exception e) {
-            System.out.println("Erreur lors de l'ouverture de la fenêtre de modification : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void ouvrirModifierSuiviDepuisLigne(SuiviBienEtre suiviSelectionne) {
-        try {
-            if (suiviSelectionne == null) {
-                return;
+            if (contentArea != null) {
+                contentArea.getChildren().setAll(root);
             }
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/backoffice/suivibienetre/ModifierSuivi.fxml"));
-            Parent root = loader.load();
-
-            ModifierSuiviController controller = loader.getController();
-            controller.setSuivi(suiviSelectionne);
-            controller.setAfficherSuivisController(this);
-
-            Stage stage = new Stage();
-            stage.setTitle("Modifier suivi");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.sizeToScene();
-            stage.showAndWait();
-
-            chargerSuivisParObjectif();
-
         } catch (Exception e) {
-            System.out.println("Erreur lors de l'ouverture de la fenêtre de modification : " + e.getMessage());
+            System.out.println("Erreur lors de l'ouverture de la page de modification : " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -387,22 +318,7 @@ public class AfficherSuivisController {
 
             SuiviBienEtreService service = new SuiviBienEtreService();
             service.supprimer(suiviSelectionne.getId());
-            chargerSuivisParObjectif();
 
-        } catch (Exception e) {
-            System.out.println("Erreur lors de la suppression : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void supprimerSuiviDepuisLigne(SuiviBienEtre suiviSelectionne) {
-        try {
-            if (suiviSelectionne == null) {
-                return;
-            }
-
-            SuiviBienEtreService service = new SuiviBienEtreService();
-            service.supprimer(suiviSelectionne.getId());
             chargerSuivisParObjectif();
 
         } catch (Exception e) {

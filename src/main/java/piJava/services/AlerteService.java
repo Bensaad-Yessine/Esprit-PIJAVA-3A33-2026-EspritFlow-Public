@@ -25,9 +25,8 @@ public class AlerteService implements ICrud<preferenceAlerte> {
 
     @Override
     public void add(preferenceAlerte p) throws SQLException {
-        Connection connection = requireConnection();
         String sql = "INSERT INTO preference_alerte (nom, is_active, is_default, email_actif, push_actif, site_notif_active, delai_rappel_min, heure_silence_debut, heure_silence_fin, date_creation, date_mise_ajour, etudiant_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement ps = connection.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql);
         ps.setString(1, p.getNom());
         ps.setBoolean(2, p.getIs_active());
         ps.setBoolean(3, p.getIs_default());
@@ -46,9 +45,8 @@ public class AlerteService implements ICrud<preferenceAlerte> {
 
     @Override
     public void delete(int id) throws SQLException {
-        Connection connection = requireConnection();
         String sql = "DELETE FROM preference_alerte WHERE id = ?";
-        PreparedStatement ps = connection.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, id);
         ps.executeUpdate();
         ps.close();
@@ -57,9 +55,8 @@ public class AlerteService implements ICrud<preferenceAlerte> {
     /** ✅ edit(T t) — id comes from p.getId() */
     @Override
     public void edit(preferenceAlerte p) throws SQLException {
-        Connection connection = requireConnection();
         String sql = "UPDATE preference_alerte SET nom=?, is_active=?, is_default=?, email_actif=?, push_actif=?, site_notif_active=?, delai_rappel_min=?, heure_silence_debut=?, heure_silence_fin=?, date_mise_ajour=?, etudiant_id=? WHERE id=?";
-        PreparedStatement ps = connection.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql);
         ps.setString(1, p.getNom());
         ps.setBoolean(2, p.getIs_active());
         ps.setBoolean(3, p.getIs_default());
@@ -77,10 +74,9 @@ public class AlerteService implements ICrud<preferenceAlerte> {
     }
 
     public List<preferenceAlerte> showUserAlertes(int userId) throws SQLException {
-        Connection connection = requireConnection();
         List<preferenceAlerte> alertes = new ArrayList<>();
         String sql = "SELECT * FROM preference_alerte WHERE etudiant_id = ?";
-        PreparedStatement ps = connection.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, userId);
         ResultSet rs = ps.executeQuery();
 
@@ -114,13 +110,5 @@ public class AlerteService implements ICrud<preferenceAlerte> {
         }
         ps.close();
         return alertes;
-    }
-
-    private Connection requireConnection() throws SQLException {
-        con = MyDataBase.getInstance().getConnection();
-        if (con == null) {
-            throw new SQLException("Database connection unavailable. Verify MySQL is running and the 'pidev' database exists.");
-        }
-        return con;
     }
 }

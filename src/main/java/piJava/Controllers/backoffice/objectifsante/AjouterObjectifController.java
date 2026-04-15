@@ -1,23 +1,19 @@
 package piJava.Controllers.backoffice.objectifsante;
 
+
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import javafx.scene.layout.StackPane;
+import piJava.Controllers.backoffice.SidebarController;
 import piJava.entities.ObjectifSante;
-import piJava.entities.user;
 import piJava.services.ObjectifSanteService;
-import piJava.services.UserServices;
-
+import piJava.utils.SessionManager;
 import java.sql.Date;
-import java.util.List;
 
 public class AjouterObjectifController {
-
-    @FXML
-    private ComboBox<Integer> cbUserId;
 
     @FXML
     private TextField txtTitre;
@@ -41,9 +37,6 @@ public class AjouterObjectifController {
     private Label lblUnite;
 
     @FXML
-    private Label errUserId;
-
-    @FXML
     private Label errTitre;
 
     @FXML
@@ -62,36 +55,37 @@ public class AjouterObjectifController {
     private Label errPriorite;
 
     private AfficherObjectifsController afficherObjectifsController;
+    private SidebarController sidebarController;
+    private StackPane contentArea;
 
     public void setAfficherObjectifsController(AfficherObjectifsController afficherObjectifsController) {
         this.afficherObjectifsController = afficherObjectifsController;
+    }
+
+    public void setSidebarController(SidebarController sidebarController) {
+        this.sidebarController = sidebarController;
+    }
+
+    public void setContentArea(StackPane contentArea) {
+        this.contentArea = contentArea;
     }
 
     @FXML
     public void initialize() {
         limiterChampNumerique(txtValeurCible);
         cbType.valueProperty().addListener((obs, oldValue, newValue) -> mettreAJourUnite(newValue));
-        chargerUserIds();
-    }
-
-    private void chargerUserIds() {
-        try {
-            UserServices userServices = new UserServices();
-            List<user> users = userServices.show();
-
-            cbUserId.getItems().clear();
-            for (user u : users) {
-                cbUserId.getItems().add(u.getId());
-            }
-        } catch (Exception e) {
-            errUserId.setText("Impossible de charger les utilisateurs.");
-            e.printStackTrace();
-        }
     }
 
     @FXML
     public void retourObjectifs() {
-        fermerFenetre();
+        try {
+            if (sidebarController != null) {
+                sidebarController.goToObjectifsSante();
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur lors du retour vers les objectifs : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -101,7 +95,6 @@ public class AjouterObjectifController {
         }
 
         try {
-            int selectedUserId = cbUserId.getValue();
             String titre = txtTitre.getText().trim();
             String type = cbType.getValue();
             int valeurCible = Integer.parseInt(txtValeurCible.getText().trim());
@@ -109,6 +102,13 @@ public class AjouterObjectifController {
             Date dateFin = Date.valueOf(dpDateFin.getValue());
             String priorite = cbPriorite.getValue();
             String statut = "EN_COURS";
+
+            if (SessionManager.getInstance().getCurrentUser() == null) {
+                errTitre.setText("Aucun utilisateur connecté.");
+                return;
+            }
+
+            int currentUserId = SessionManager.getInstance().getCurrentUser().getId();
 
             ObjectifSante objectif = new ObjectifSante(
                     titre,
@@ -118,7 +118,7 @@ public class AjouterObjectifController {
                     dateFin,
                     priorite,
                     statut,
-                    selectedUserId
+                    currentUserId
             );
 
             ObjectifSanteService service = new ObjectifSanteService();
@@ -128,17 +128,14 @@ public class AjouterObjectifController {
                 afficherObjectifsController.chargerObjectifs();
             }
 
-            fermerFenetre();
+            if (sidebarController != null) {
+                sidebarController.goToObjectifsSante();
+            }
 
         } catch (Exception e) {
             errTitre.setText("Erreur lors de l'ajout.");
             e.printStackTrace();
         }
-    }
-
-    private void fermerFenetre() {
-        Stage stage = (Stage) txtTitre.getScene().getWindow();
-        stage.close();
     }
 
     private void mettreAJourUnite(String type) {
@@ -175,12 +172,6 @@ public class AjouterObjectifController {
         String titre = txtTitre.getText() == null ? "" : txtTitre.getText().trim();
         String type = cbType.getValue();
         String valeurText = txtValeurCible.getText() == null ? "" : txtValeurCible.getText().trim();
-
-        if (cbUserId.getValue() == null) {
-            errUserId.setText("Veuillez sélectionner un utilisateur.");
-            ajouterStyleErreur(cbUserId);
-            valide = false;
-        }
 
         if (titre.isEmpty()) {
             errTitre.setText("Le titre est obligatoire.");
@@ -261,7 +252,6 @@ public class AjouterObjectifController {
     }
 
     private void viderErreurs() {
-        errUserId.setText("");
         errTitre.setText("");
         errType.setText("");
         errValeurCible.setText("");
@@ -269,7 +259,6 @@ public class AjouterObjectifController {
         errDateFin.setText("");
         errPriorite.setText("");
 
-        retirerStyleErreur(cbUserId);
         retirerStyleErreur(txtTitre);
         retirerStyleErreur(cbType);
         retirerStyleErreur(txtValeurCible);
