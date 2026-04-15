@@ -32,32 +32,34 @@ import java.util.stream.Collectors;
 public class UserContentController implements Initializable {
 
     // ── Header ─────────────────────────────────────────────────
-    @FXML private TextField searchField;
+    @FXML private Button    filterBtn;
     @FXML private Button    addUserBtn;
+    @FXML private Label     currentUserLabel;
 
-    // ── Mini Stats ─────────────────────────────────────────────
+    // ── Stat Cards ─────────────────────────────────────────────
     @FXML private Label totalUsersLabel;
     @FXML private Label etudiantsLabel;
-    @FXML private Label profsLabel;
-    @FXML private Label bannedLabel;
+    @FXML private Label adminsLabel;
+    @FXML private Label verifiesLabel;
 
-    // ── Filters ────────────────────────────────────────────────
-    @FXML private ComboBox<String> roleFilter;
-    @FXML private ComboBox<String> sexeFilter;
-    @FXML private ComboBox<String> statusFilter;
-    @FXML private Button           resetFilterBtn;
+    // ── Filters & Search ───────────────────────────────────────
+    @FXML private VBox             filterBox;
+    @FXML private TextField        searchField;
     @FXML private Label            resultCountLabel;
+    @FXML private ComboBox<String> roleFilter;
+    @FXML private ComboBox<String> statusFilter;
+    @FXML private ComboBox<String> sortFilter;
+    @FXML private ComboBox<String> orderFilter;
 
     // ── Table ──────────────────────────────────────────────────
     @FXML private TableView<user>            userTable;
-    @FXML private TableColumn<user, Void>    avatarCol;
-    @FXML private TableColumn<user, String>  nomCol;
+    @FXML private TableColumn<user, user>    userCol;
     @FXML private TableColumn<user, String>  emailCol;
-    @FXML private TableColumn<user, String>  telCol;
-    @FXML private TableColumn<user, String>  roleCol;
-    @FXML private TableColumn<user, String>  classeCol;
     @FXML private TableColumn<user, String>  dobCol;
-    @FXML private TableColumn<user, String>  createdAtCol;
+    @FXML private TableColumn<user, String>  classeCol;
+    @FXML private TableColumn<user, String>  telCol;
+    @FXML private TableColumn<user, String>  sexeCol;
+    @FXML private TableColumn<user, String>  roleCol;
     @FXML private TableColumn<user, String>  verifiedCol;
     @FXML private TableColumn<user, String>  bannedCol;
     @FXML private TableColumn<user, Void>    actionsCol;
@@ -88,7 +90,6 @@ public class UserContentController implements Initializable {
         loadClasses();
         setupColumns();
         setupFilters();
-        setupSearch();
         loadData();
         animateEntrance();
     }
@@ -104,53 +105,50 @@ public class UserContentController implements Initializable {
 
     // ── Column Setup ───────────────────────────────────────────
     private void setupColumns() {
-
-        avatarCol.setCellFactory(col -> new TableCell<user, Void>() {
-            @Override protected void updateItem(Void v, boolean empty) {
-                super.updateItem(v, empty);
-                if (empty) { setGraphic(null); return; }
-                user u = getTableView().getItems().get(getIndex());
-
-                // Try to show profile pic if available
+        userCol.setCellValueFactory(d -> new javafx.beans.property.SimpleObjectProperty<>(d.getValue()));
+        userCol.setCellFactory(col -> new TableCell<user, user>() {
+            @Override protected void updateItem(user u, boolean empty) {
+                super.updateItem(u, empty);
+                if (empty || u == null) { setGraphic(null); return; }
+                
+                StackPane avatar = new StackPane();
                 String pic = u.getProfile_pic();
+                boolean usePic = false;
                 if (pic != null && !pic.isBlank()) {
                     File imgFile = new File(UPLOAD_DIR + pic);
                     if (imgFile.exists()) {
                         try {
                             ImageView iv = new ImageView(new Image(imgFile.toURI().toString(), 36, 36, true, true));
-                            Circle clip = new Circle(18, 18, 18);
-                            iv.setClip(clip);
-                            setGraphic(iv);
-                            return;
+                            iv.setClip(new Circle(18, 18, 18));
+                            avatar.getChildren().add(iv);
+                            usePic = true;
                         } catch (Exception ignored) {}
                     }
                 }
+                if (!usePic) {
+                    Label initials = new Label(initials(u.getPrenom(), u.getNom()));
+                    initials.getStyleClass().add("avatar-circle");
+                    String[] colors = avatarColor(u.getRoles());
+                    initials.setStyle("-fx-background-color:" + colors[0] + "; -fx-text-fill:" + colors[1] + ";");
+                    avatar.getChildren().add(initials);
+                }
 
-                // Fallback: initials circle
-                String initials = initials(u.getPrenom(), u.getNom());
-                String[] colors = avatarColor(u.getRoles());
-                Label circle = new Label(initials);
-                circle.setStyle(
-                        "-fx-background-color:" + colors[0] + "; "
-                                + "-fx-text-fill:" + colors[1] + "; "
-                                + "-fx-background-radius:18; "
-                                + "-fx-min-width:36px; -fx-min-height:36px; "
-                                + "-fx-max-width:36px; -fx-max-height:36px; "
-                                + "-fx-font-size:12px; -fx-font-weight:700; -fx-alignment:CENTER;"
-                );
-                setGraphic(circle);
-            }
-        });
+                VBox text = new VBox(2);
+                Label name = new Label(u.getPrenom() + " " + u.getNom());
+                name.setStyle("-fx-text-fill: #ffffff; -fx-font-weight: 700; -fx-font-size: 13px;");
+                Label emailSub = new Label(u.getEmail());
+                emailSub.setStyle("-fx-text-fill: #7f8fa6; -fx-font-size: 11px;");
+                text.getChildren().addAll(name, emailSub);
 
-        nomCol.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().getPrenom() + " " + d.getValue().getNom()));
-        nomCol.setCellFactory(col -> new TableCell<user, String>() {
-            @Override protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setGraphic(null); return; }
-                Label l = new Label(item);
-                l.setStyle("-fx-font-size:13px; -fx-font-weight:600; -fx-text-fill:#eef0f8;");
-                setGraphic(l);
+                if (u.getId() == 1) { // Indicate current user visually for demo
+                    Label isYou = new Label("✔ C'est vous");
+                    isYou.setStyle("-fx-text-fill: #3b82f6; -fx-font-weight: 600; -fx-font-size: 10px;");
+                    text.getChildren().add(isYou);
+                }
+
+                HBox root = new HBox(12, avatar, text);
+                root.setAlignment(Pos.CENTER_LEFT);
+                setGraphic(root);
             }
         });
 
@@ -160,42 +158,22 @@ public class UserContentController implements Initializable {
                 super.updateItem(item, empty);
                 if (empty || item == null) { setGraphic(null); return; }
                 Label l = new Label(item);
-                l.setStyle("-fx-font-size:12px; -fx-text-fill:#6b7394;");
+                l.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 13px;");
                 setGraphic(l);
             }
         });
 
-        roleCol.setCellValueFactory(d ->
-                new SimpleStringProperty(formatRole(d.getValue().getRoles())));
-        roleCol.setCellFactory(col -> new TableCell<user, String>() {
-            @Override protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setGraphic(null); return; }
-                String[] s = roleBadgeStyle(item);
-                Label badge = new Label(item);
-                badge.setStyle(
-                        "-fx-background-color:" + s[0] + "; -fx-border-color:" + s[1] + "; "
-                                + "-fx-border-width:1; -fx-border-radius:6; -fx-background-radius:6; "
-                                + "-fx-text-fill:" + s[2] + "; "
-                                + "-fx-font-size:11px; -fx-font-weight:700; -fx-padding:3 10;"
-                );
-                setGraphic(badge);
-            }
-        });
-
-        // Telephone
-        telCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNum_tel()));
-        telCol.setCellFactory(col -> new TableCell<user, String>() {
+        dobCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getDate_de_naissance()));
+        dobCol.setCellFactory(col -> new TableCell<user, String>() {
             @Override protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) { setGraphic(null); return; }
                 Label l = new Label(item == null || item.isEmpty() ? "—" : item);
-                l.setStyle("-fx-font-size:12px; -fx-text-fill:#6b7394;");
+                l.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 13px;");
                 setGraphic(l);
             }
         });
 
-        // Classe
         classeCol.setCellValueFactory(d -> {
             String className = "—";
             if (d.getValue().getClasse_id() != null) {
@@ -206,114 +184,98 @@ public class UserContentController implements Initializable {
             }
             return new SimpleStringProperty(className);
         });
-        classeCol.setCellFactory(col -> new TableCell<user, String>() {
+        classeCol.setCellFactory(col -> badgeCell("#ff4d4d", "#ff4d4d", "#ffffff"));
+
+        telCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNum_tel()));
+        telCol.setCellFactory(col -> badgeCell("#8e44ad", "#8e44ad", "#ffffff"));
+
+        sexeCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getSexe()));
+        sexeCol.setCellFactory(col -> new TableCell<user, String>() {
             @Override protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) { setGraphic(null); return; }
+                if (empty || item == null) { setGraphic(null); return; }
                 Label l = new Label(item);
-                l.setStyle("-fx-font-size:12px; -fx-text-fill:#c8cfe8; -fx-font-weight:600;");
+                if ("Homme".equalsIgnoreCase(item)) {
+                    l.setStyle("-fx-background-color:#0984e3; -fx-text-fill:#ffffff; -fx-padding:4 10; -fx-background-radius:6; -fx-font-weight:700; -fx-font-size:11px;");
+                } else {
+                    l.setStyle("-fx-text-fill:#ffffff; -fx-font-weight:600; -fx-font-size:12px;");
+                }
                 setGraphic(l);
             }
         });
 
-        // DOB
-        dobCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getDate_de_naissance()));
-        dobCol.setCellFactory(col -> new TableCell<user, String>() {
+        roleCol.setCellValueFactory(d -> new SimpleStringProperty(formatRole(d.getValue().getRoles())));
+        roleCol.setCellFactory(col -> new TableCell<user, String>() {
             @Override protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) { setGraphic(null); return; }
-                Label l = new Label(item == null || item.isEmpty() ? "—" : item);
-                l.setStyle("-fx-font-size:12px; -fx-text-fill:#6b7394;");
+                if (empty || item == null) { setGraphic(null); return; }
+                String bg = "Admin".equals(item) ? "#9b59b6" : ("Professeur".equals(item) ? "#a78bfa" : "#00cec9");
+                Label l = new Label("Admin".equals(item) ? "Administrateur" : item);
+                l.setStyle("-fx-background-color:" + bg + "; -fx-text-fill:#ffffff; -fx-padding:4 10; -fx-background-radius:6; -fx-font-weight:700; -fx-font-size:11px;");
                 setGraphic(l);
             }
         });
 
-        // Created At (Date d'inscription)
-        createdAtCol.setCellValueFactory(d -> {
-            String created = d.getValue().getCreated_at();
-            if (created != null && created.length() > 10) {
-                 created = created.substring(0, 10); // get purely YYYY-MM-DD
-            }
-            return new SimpleStringProperty(created);
-        });
-        createdAtCol.setCellFactory(col -> new TableCell<user, String>() {
-            @Override protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) { setGraphic(null); return; }
-                Label l = new Label(item == null || item.isEmpty() ? "—" : item);
-                l.setStyle("-fx-font-size:12px; -fx-text-fill:#6b7394;");
-                setGraphic(l);
-            }
-        });
-
-        verifiedCol.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().getIs_verified() == 1 ? "✓ Vérifié" : "✗ Non vérifié"));
+        verifiedCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getIs_verified() == 1 ? "Vérifié" : "Non vérifié"));
         verifiedCol.setCellFactory(col -> new TableCell<user, String>() {
             @Override protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) { setGraphic(null); return; }
-                boolean ok = item.startsWith("✓");
+                String bg = "Vérifié".equals(item) ? "#00b894" : "#fdcb6e";
+                String fg = "Vérifié".equals(item) ? "#ffffff" : "#000000";
                 Label l = new Label(item);
-                l.setStyle(ok
-                        ? "-fx-background-color:#34d39915; -fx-border-color:#34d39940; -fx-border-width:1; "
-                        + "-fx-border-radius:6; -fx-background-radius:6; -fx-text-fill:#34d399; "
-                        + "-fx-font-size:11px; -fx-font-weight:700; -fx-padding:3 10;"
-                        : "-fx-background-color:#ff4d6d15; -fx-border-color:#ff4d6d40; -fx-border-width:1; "
-                        + "-fx-border-radius:6; -fx-background-radius:6; -fx-text-fill:#ff4d6d; "
-                        + "-fx-font-size:11px; -fx-font-weight:700; -fx-padding:3 10;"
-                );
+                l.setStyle("-fx-background-color:" + bg + "; -fx-text-fill:" + fg + "; -fx-padding:4 10; -fx-background-radius:6; -fx-font-weight:700; -fx-font-size:11px;");
                 setGraphic(l);
             }
         });
 
-        bannedCol.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().getIs_banned() == 1 ? "Banni" : "Actif"));
+        bannedCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getIs_banned() == 1 ? "Banni" : "Actif"));
         bannedCol.setCellFactory(col -> new TableCell<user, String>() {
             @Override protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) { setGraphic(null); return; }
-                boolean banned = "Banni".equals(item);
-                Label l = new Label(banned ? "🚫 Banni" : "✅ Actif");
-                l.setStyle(banned
-                        ? "-fx-background-color:#ff4d6d15; -fx-border-color:#ff4d6d40; -fx-border-width:1; "
-                        + "-fx-border-radius:6; -fx-background-radius:6; -fx-text-fill:#ff4d6d; "
-                        + "-fx-font-size:11px; -fx-font-weight:700; -fx-padding:3 10;"
-                        : "-fx-background-color:#34d39915; -fx-border-color:#34d39940; -fx-border-width:1; "
-                        + "-fx-border-radius:6; -fx-background-radius:6; -fx-text-fill:#34d399; "
-                        + "-fx-font-size:11px; -fx-font-weight:700; -fx-padding:3 10;"
-                );
+                String bg = "Actif".equals(item) ? "#6c5ce7" : "#e74c3c";
+                Label l = new Label(item);
+                l.setStyle("-fx-background-color:" + bg + "; -fx-text-fill:#ffffff; -fx-padding:4 10; -fx-background-radius:6; -fx-font-weight:700; -fx-font-size:11px;");
                 setGraphic(l);
             }
         });
 
         actionsCol.setCellFactory(col -> new TableCell<user, Void>() {
-            final Button viewBtn   = createStyledActionButton("🔍", "#3b82f6", "#60a5fa", "Voir les détails");
-            final Button editBtn   = createStyledActionButton("✏️", "#eab308", "#facc15", "Modifier l'utilisateur");
-            final Button deleteBtn = createStyledActionButton("🗑️", "#ef4444", "#f87171", "Supprimer définitivement");
-            final Button banBtn    = createStyledActionButton("🚫", "#f97316", "#fb923c", "Bannir cet utilisateur");
-            final Button unbanBtn  = createStyledActionButton("✅", "#10b981", "#34d399", "Débannir l'utilisateur");
-            final HBox   box       = new HBox(4, viewBtn, editBtn, deleteBtn, banBtn, unbanBtn);
+            final Button viewBtn   = createSolidIconButton("🔍", "#8e44ad", "#ffffff");
+            final Button editBtn   = createSolidIconButton("✏️", "#f1c40f", "#ffffff");
+            final Button deleteBtn = createSolidIconButton("🗑", "#e74c3c", "#ffffff");
+            final Button banBtn    = createSolidIconButton("Ø", "#ffffff", "#000000");
+
+            final Button vousBtn   = new Button("Vous");
+            final HBox box = new HBox(6);
             {
                 box.setAlignment(Pos.CENTER_LEFT);
-                box.setPadding(new Insets(0, 4, 0, 4));
                 viewBtn.setOnAction(e   -> handleView(getTableView().getItems().get(getIndex())));
                 editBtn.setOnAction(e   -> handleEdit(getTableView().getItems().get(getIndex())));
                 deleteBtn.setOnAction(e -> handleDelete(getTableView().getItems().get(getIndex())));
-                banBtn.setOnAction(e    -> handleBan(getTableView().getItems().get(getIndex())));
-                unbanBtn.setOnAction(e  -> handleUnban(getTableView().getItems().get(getIndex())));
+                banBtn.setOnAction(e    -> {
+                    user u = getTableView().getItems().get(getIndex());
+                    if (u.getIs_banned() == 1) handleUnban(u); else handleBan(u);
+                });
+                vousBtn.setStyle("-fx-background-color:#ffffff; -fx-text-fill:#7f8fa6; -fx-font-weight:700; -fx-background-radius:6; -fx-padding:4 12;");
+                vousBtn.setDisable(true);
             }
+
             @Override protected void updateItem(Void v, boolean empty) {
                 super.updateItem(v, empty);
                 if (empty) { setGraphic(null); return; }
                 user u = getTableView().getItems().get(getIndex());
-                boolean isBanned = u.getIs_banned() == 1;
-                banBtn.setVisible(!isBanned);  banBtn.setManaged(!isBanned);
-                unbanBtn.setVisible(isBanned); unbanBtn.setManaged(isBanned);
+                box.getChildren().clear();
+                if (u.getId() == 1) {
+                    box.getChildren().addAll(viewBtn, editBtn, vousBtn);
+                } else {
+                    box.getChildren().addAll(viewBtn, editBtn, banBtn, deleteBtn);
+                }
                 setGraphic(box);
             }
         });
 
-        // Global Sorting for Paginated List
         userTable.sortPolicyProperty().set(t -> {
             Comparator<user> comparator = (Comparator<user>) t.getComparator();
             if (comparator != null) {
@@ -341,32 +303,59 @@ public class UserContentController implements Initializable {
                 .filter(u -> u.getRoles() != null && u.getRoles().contains("ROLE_USER")
                         && !u.getRoles().contains("ROLE_ADMIN")).count();
         etudiantsLabel.setText(String.valueOf(etudiants));
-        long profs = allUsers.stream()
-                .filter(u -> u.getRoles() != null && u.getRoles().contains("ROLE_PROF")).count();
-        profsLabel.setText(String.valueOf(profs));
-        long banned = allUsers.stream().filter(u -> u.getIs_banned() == 1).count();
-        bannedLabel.setText(String.valueOf(banned));
-        animateCounter(totalUsersLabel, 0, allUsers.size());
+        long admins = allUsers.stream()
+                .filter(u -> u.getRoles() != null && u.getRoles().contains("ROLE_ADMIN")).count();
+        adminsLabel.setText(String.valueOf(admins));
+        long verifies = allUsers.stream()
+                .filter(u -> u.getIs_verified() == 1).count();
+        verifiesLabel.setText(String.valueOf(verifies));
     }
 
     // ── Filters ────────────────────────────────────────────────
     private void setupFilters() {
-        roleFilter.getItems().setAll("Administrateur", "Professeur", "Étudiant");
-        sexeFilter.getItems().setAll("Homme", "Femme");
-        statusFilter.getItems().setAll("Actif", "Banni", "Non vérifié");
-        roleFilter.valueProperty().addListener((o, ov, nv)   -> { currentPage = 1; applyFilters(); });
-        sexeFilter.valueProperty().addListener((o, ov, nv)   -> { currentPage = 1; applyFilters(); });
-        statusFilter.valueProperty().addListener((o, ov, nv) -> { currentPage = 1; applyFilters(); });
+        roleFilter.getItems().setAll("Tous les rôles", "Administrateur", "Professeur", "Étudiant");
+        roleFilter.setValue("Tous les rôles");
+
+        statusFilter.getItems().setAll("Tous", "Actif", "Banni", "Non vérifié");
+        statusFilter.setValue("Tous");
+
+        sortFilter.getItems().setAll("ID", "Nom", "Email", "Date de naissance");
+        sortFilter.setValue("ID");
+
+        orderFilter.getItems().setAll("A-Z", "Z-A");
+        orderFilter.setValue("A-Z");
+
+        // React immediately on input changes
+        searchField.textProperty().addListener((o, ov, nv) -> handleApplyFilters());
+        roleFilter.valueProperty().addListener((o, ov, nv) -> handleApplyFilters());
+        statusFilter.valueProperty().addListener((o, ov, nv) -> handleApplyFilters());
+        sortFilter.valueProperty().addListener((o, ov, nv) -> handleApplyFilters());
+        orderFilter.valueProperty().addListener((o, ov, nv) -> handleApplyFilters());
     }
 
-    private void setupSearch() {
-        searchField.textProperty().addListener((o, ov, nv) -> { currentPage = 1; applyFilters(); });
+    @FXML private void toggleFilters() {
+        filterBox.setVisible(!filterBox.isVisible());
+        filterBox.setManaged(filterBox.isVisible());
+    }
+
+    @FXML private void handleApplyFilters() {
+        currentPage = 1;
+        applyFilters();
+    }
+
+    @FXML private void handleResetFilters() {
+        searchField.clear();
+        roleFilter.setValue("Tous les rôles");
+        statusFilter.setValue("Tous");
+        sortFilter.setValue("ID");
+        orderFilter.setValue("A-Z");
+        currentPage = 1;
+        applyFilters();
     }
 
     private void applyFilters() {
         String search = searchField.getText() == null ? "" : searchField.getText().toLowerCase().trim();
         String role   = roleFilter.getValue();
-        String sexe   = sexeFilter.getValue();
         String status = statusFilter.getValue();
 
         List<user> result = allUsers.stream()
@@ -374,13 +363,26 @@ public class UserContentController implements Initializable {
                         || (u.getNom()    != null && u.getNom().toLowerCase().contains(search))
                         || (u.getPrenom() != null && u.getPrenom().toLowerCase().contains(search))
                         || (u.getEmail()  != null && u.getEmail().toLowerCase().contains(search)))
-                .filter(u -> role   == null || matchRole(u.getRoles(), role))
-                .filter(u -> sexe   == null || sexe.equalsIgnoreCase(u.getSexe()))
-                .filter(u -> status == null || matchStatus(u, status))
+                .filter(u -> role == null || "Tous les rôles".equals(role) || matchRole(u.getRoles(), role))
+                .filter(u -> status == null || "Tous".equals(status) || matchStatus(u, status))
                 .collect(Collectors.toList());
 
+        // Sort
+        String sortOpt = sortFilter.getValue();
+        String ordOpt = orderFilter.getValue();
+        if (sortOpt != null && ordOpt != null) {
+            Comparator<user> c = switch (sortOpt) {
+                case "Nom" -> Comparator.comparing(u -> (u.getPrenom() + " " + u.getNom()).toLowerCase());
+                case "Email" -> Comparator.comparing(user::getEmail, Comparator.nullsLast(String::compareToIgnoreCase));
+                case "Date de naissance" -> Comparator.comparing(user::getDate_de_naissance, Comparator.nullsLast(String::compareTo));
+                default -> Comparator.comparing(user::getId);
+            };
+            if ("Z-A".equals(ordOpt)) c = c.reversed();
+            result.sort(c);
+        }
+
         filtered.setAll(result);
-        resultCountLabel.setText(result.size() + " résultat(s)");
+        resultCountLabel.setText(result.size() + " utilisateur(s) trouvé(s)");
         refreshPage();
     }
 
@@ -403,14 +405,6 @@ public class UserContentController implements Initializable {
         };
     }
 
-    @FXML private void handleResetFilters() {
-        roleFilter.setValue(null);
-        sexeFilter.setValue(null);
-        statusFilter.setValue(null);
-        searchField.clear();
-        currentPage = 1;
-        applyFilters();
-    }
 
     // ── Pagination ─────────────────────────────────────────────
     private void refreshPage() {
@@ -912,11 +906,20 @@ public class UserContentController implements Initializable {
 
     // ── Animations ─────────────────────────────────────────────
     private void animateEntrance() {
+        if (userTable == null) return;
+        userTable.setTranslateY(30);
         userTable.setOpacity(0);
-        FadeTransition ft = new FadeTransition(Duration.millis(600), userTable);
-        ft.setFromValue(0); ft.setToValue(1);
-        ft.setDelay(Duration.millis(200));
-        ft.play();
+        
+        javafx.animation.TranslateTransition tt = new javafx.animation.TranslateTransition(javafx.util.Duration.millis(500), userTable);
+        tt.setToY(0);
+        tt.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
+        
+        javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(javafx.util.Duration.millis(500), userTable);
+        ft.setFromValue(0);
+        ft.setToValue(1);
+        
+        javafx.animation.ParallelTransition pt = new javafx.animation.ParallelTransition(tt, ft);
+        pt.play();
     }
 
     private void animateCounter(Label label, int from, int to) {
@@ -975,31 +978,11 @@ public class UserContentController implements Initializable {
         };
     }
 
-    private Button createStyledActionButton(String icon, String colorHex, String hoverHex, String tooltipText) {
-        Button b = new Button(icon);
-        String baseStyle = "-fx-background-color:" + colorHex + "20; "
-                + "-fx-text-fill:" + colorHex + "; "
-                + "-fx-border-color:" + colorHex + "40; "
-                + "-fx-border-width:1; -fx-border-radius:6; -fx-background-radius:6; "
-                + "-fx-font-size:14px; -fx-font-family: 'Segoe UI Emoji', sans-serif; "
-                + "-fx-padding:4 6; -fx-cursor:hand;";
-        String hoverStyle = "-fx-background-color:" + colorHex + "40; "
-                + "-fx-text-fill:" + hoverHex + "; "
-                + "-fx-border-color:" + colorHex + "80; "
-                + "-fx-border-width:1; -fx-border-radius:6; -fx-background-radius:6; "
-                + "-fx-font-size:14px; -fx-font-family: 'Segoe UI Emoji', sans-serif; "
-                + "-fx-padding:4 6; -fx-cursor:hand;";
-        
-        b.setStyle(baseStyle);
-        b.setMinSize(32, 28);
-        b.setMaxSize(32, 28);
-        b.setOnMouseEntered(e -> b.setStyle(hoverStyle));
-        b.setOnMouseExited(e -> b.setStyle(baseStyle));
-
-        Tooltip tip = new Tooltip(tooltipText);
-        tip.setStyle("-fx-font-size: 12px; -fx-background-color: #1e2130; -fx-text-fill: #c8cfe8;");
-        b.setTooltip(tip);
-
+    private Button createSolidIconButton(String text, String bgHex, String fgHex) {
+        Button b = new Button(text);
+        b.setStyle("-fx-background-color:" + bgHex + "; -fx-text-fill:" + fgHex + "; "
+                + "-fx-background-radius:6; -fx-font-size:14px; -fx-padding:4 8; -fx-cursor:hand;");
+        b.setMinSize(30, 28);
         return b;
     }
 

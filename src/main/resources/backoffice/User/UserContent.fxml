@@ -11,101 +11,142 @@
       spacing="24"
       stylesheets="@users.css">
 
-    <!-- ── Header ─────────────────────────────────────────── -->
-    <HBox alignment="CENTER_LEFT" spacing="16" styleClass="page-header">
-        <VBox HBox.hgrow="ALWAYS" spacing="4">
-            <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label text="Backoffice" styleClass="breadcrumb-inactive"/>
-                <Label text="›" styleClass="breadcrumb-sep"/>
-                <Label text="Gestion des Utilisateurs" styleClass="breadcrumb-active"/>
-            </HBox>
-            <Label text="Gestion des Utilisateurs" styleClass="page-title"/>
-        </VBox>
-        <TextField fx:id="searchField"
-                   promptText="🔍  Rechercher un utilisateur..."
-                   styleClass="search-bar"/>
-        <Button fx:id="addUserBtn" text="＋  Nouvel Utilisateur"
-                styleClass="btn-add" onAction="#handleAdd"/>
-    </HBox>
-
-    <!-- ── Mini Stats ─────────────────────────────────────── -->
-    <HBox spacing="16" styleClass="mini-stats" alignment="CENTER_LEFT">
-
-        <HBox styleClass="mini-stat" spacing="10" alignment="CENTER_LEFT">
-            <Label text="👥" styleClass="mini-stat-icon"/>
-            <VBox spacing="2">
-                <Label fx:id="totalUsersLabel" text="—" styleClass="mini-stat-number"/>
-                <Label text="Total Utilisateurs" styleClass="mini-stat-label"/>
-            </VBox>
-        </HBox>
-
-        <Region styleClass="mini-stat-divider" prefWidth="1" prefHeight="40"/>
-
-        <HBox styleClass="mini-stat" spacing="10" alignment="CENTER_LEFT">
-            <Label text="🎓" styleClass="mini-stat-icon"/>
-            <VBox spacing="2">
-                <Label fx:id="etudiantsLabel" text="—" styleClass="mini-stat-number"/>
-                <Label text="Étudiants" styleClass="mini-stat-label"/>
-            </VBox>
-        </HBox>
-
-        <Region styleClass="mini-stat-divider" prefWidth="1" prefHeight="40"/>
-
-        <HBox styleClass="mini-stat" spacing="10" alignment="CENTER_LEFT">
-            <Label text="👨‍🏫" styleClass="mini-stat-icon"/>
-            <VBox spacing="2">
-                <Label fx:id="profsLabel" text="—" styleClass="mini-stat-number"/>
-                <Label text="Professeurs" styleClass="mini-stat-label"/>
-            </VBox>
-        </HBox>
-
-        <Region styleClass="mini-stat-divider" prefWidth="1" prefHeight="40"/>
-
-        <HBox styleClass="mini-stat" spacing="10" alignment="CENTER_LEFT">
-            <Label text="🚫" styleClass="mini-stat-icon"/>
-            <VBox spacing="2">
-                <Label fx:id="bannedLabel" text="—" styleClass="mini-stat-number"/>
-                <Label text="Bannis" styleClass="mini-stat-label"/>
-            </VBox>
-        </HBox>
-
-    </HBox>
-
-    <!-- ── Filter Bar ─────────────────────────────────────── -->
-    <HBox spacing="10" styleClass="filter-bar" alignment="CENTER_LEFT">
-        <Label text="Filtrer :" styleClass="filter-label"/>
-        <ComboBox fx:id="roleFilter"   promptText="Rôle"    styleClass="filter-combo"/>
-        <ComboBox fx:id="sexeFilter"   promptText="Sexe"    styleClass="filter-combo"/>
-        <ComboBox fx:id="statusFilter" promptText="Statut"  styleClass="filter-combo"/>
-        <Button fx:id="resetFilterBtn" text="✕  Réinitialiser"
-                styleClass="btn-reset" onAction="#handleResetFilters"/>
+    <!-- ── Header Info ─────────────────────────────────────────── -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <Label text="👥 Gestion des Utilisateurs" styleClass="page-main-title"/>
+        <Label text="Liste complète des utilisateurs ESPRIT" styleClass="page-subtitle"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Label fx:id="resultCountLabel" text="0 résultats" styleClass="result-count"/>
+        <Label fx:id="currentUserLabel" text="👤 Connecté en tant que: Admin" styleClass="current-user-info"/>
     </HBox>
 
-    <!-- ── Table Panel ────────────────────────────────────── -->
-    <VBox styleClass="table-panel" VBox.vgrow="ALWAYS">
+    <!-- ── Stat Cards ─────────────────────────────────────────── -->
+    <HBox spacing="20">
+        <!-- Card 1 -->
+        <HBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+           <VBox alignment="CENTER_LEFT" spacing="4">
+               <HBox alignment="BOTTOM_LEFT" spacing="8">
+                   <Label fx:id="totalUsersLabel" text="—" styleClass="stat-value"/>
+                   <Label text="+12%" styleClass="stat-trend-up"/>
+               </HBox>
+               <Label text="TOTAL UTILISATEURS" styleClass="stat-label"/>
+           </VBox>
+           <Region HBox.hgrow="ALWAYS"/>
+           <StackPane styleClass="stat-icon-wrapper-1">
+               <Label text="👥" styleClass="stat-icon"/>
+           </StackPane>
+        </HBox>
+        
+        <!-- Card 2 -->
+        <HBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+           <VBox alignment="CENTER_LEFT" spacing="4">
+               <HBox alignment="BOTTOM_LEFT" spacing="8">
+                   <Label fx:id="etudiantsLabel" text="—" styleClass="stat-value"/>
+                   <Label text="+5%" styleClass="stat-trend-up"/>
+               </HBox>
+               <Label text="ÉTUDIANTS" styleClass="stat-label"/>
+           </VBox>
+           <Region HBox.hgrow="ALWAYS"/>
+           <StackPane styleClass="stat-icon-wrapper-2">
+               <Label text="🎓" styleClass="stat-icon"/>
+           </StackPane>
+        </HBox>
+
+        <!-- Card 3 -->
+        <HBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+           <VBox alignment="CENTER_LEFT" spacing="4">
+               <HBox alignment="BOTTOM_LEFT" spacing="8">
+                   <Label fx:id="adminsLabel" text="—" styleClass="stat-value"/>
+                   <Label text="+0%" styleClass="stat-trend-up"/>
+               </HBox>
+               <Label text="ADMINISTRATEURS" styleClass="stat-label"/>
+           </VBox>
+           <Region HBox.hgrow="ALWAYS"/>
+           <StackPane styleClass="stat-icon-wrapper-3">
+               <Label text="🛡" styleClass="stat-icon"/>
+           </StackPane>
+        </HBox>
+
+        <!-- Card 4 -->
+        <HBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+           <VBox alignment="CENTER_LEFT" spacing="4">
+               <HBox alignment="BOTTOM_LEFT" spacing="8">
+                   <Label fx:id="verifiesLabel" text="—" styleClass="stat-value"/>
+                   <Label text="+3%" styleClass="stat-trend-up"/>
+               </HBox>
+               <Label text="VÉRIFIÉS" styleClass="stat-label"/>
+           </VBox>
+           <Region HBox.hgrow="ALWAYS"/>
+           <StackPane styleClass="stat-icon-wrapper-4">
+               <Label text="✓" styleClass="stat-icon"/>
+           </StackPane>
+        </HBox>
+    </HBox>
+
+    <!-- ── Table Section ────────────────────────────────────── -->
+    <VBox styleClass="table-container" VBox.vgrow="ALWAYS" spacing="16">
+        
+        <!-- Table Header -->
+        <HBox alignment="CENTER_LEFT">
+             <Label text="👥 Liste Des Utilisateurs" styleClass="table-title"/>
+             <Region HBox.hgrow="ALWAYS"/>
+             <HBox spacing="12">
+                 <Button fx:id="filterBtn" text="  Filtres" styleClass="btn-filter" onAction="#toggleFilters"/>
+                 <Button fx:id="addUserBtn" text="＋ Ajouter un utilisateur" styleClass="btn-add-text" onAction="#handleAdd"/>
+             </HBox>
+        </HBox>
+
+        <!-- White Filter Box -->
+        <VBox fx:id="filterBox" styleClass="filter-box" spacing="12">
+            <HBox spacing="20">
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label text="🔍 Recherche" styleClass="filter-lbl"/>
+                    <TextField fx:id="searchField" promptText="Nom, prénom, email..." styleClass="filter-input"/>
+                    <Label fx:id="resultCountLabel" text="0 utilisateur(s) trouvé(s)" styleClass="filter-hints"/>
+                </VBox>
+                <VBox spacing="6">
+                    <Label text="💼 Rôle" styleClass="filter-lbl"/>
+                    <ComboBox fx:id="roleFilter" promptText="Tous les rôles" styleClass="filter-combo"/>
+                </VBox>
+                <VBox spacing="6">
+                    <Label text="✓ Statut" styleClass="filter-lbl"/>
+                    <ComboBox fx:id="statusFilter" promptText="Tous" styleClass="filter-combo"/>
+                </VBox>
+                <VBox spacing="6">
+                    <Label text="↕ Trier par" styleClass="filter-lbl"/>
+                    <ComboBox fx:id="sortFilter" promptText="ID" styleClass="filter-combo"/>
+                </VBox>
+                <VBox spacing="6">
+                    <Label text="↕ Ordre" styleClass="filter-lbl"/>
+                    <ComboBox fx:id="orderFilter" promptText="A-Z" styleClass="filter-combo"/>
+                </VBox>
+                <VBox spacing="6" alignment="BOTTOM_RIGHT">
+                    <HBox spacing="8" alignment="BOTTOM_RIGHT">
+                        <padding><Insets bottom="20"/></padding>
+                        <Button text="✔ Appliquer" styleClass="btn-apply" onAction="#handleApplyFilters"/>
+                        <Button text="↻ Réinitialiser" styleClass="btn-reset" onAction="#handleResetFilters"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+        </VBox>
 
         <TableView fx:id="userTable" styleClass="user-table" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="avatarCol"    text=""            prefWidth="50"  sortable="false"/>
-                <TableColumn fx:id="nomCol"       text="NOM COMPLET" prefWidth="150" sortable="true"/>
-                <TableColumn fx:id="emailCol"     text="EMAIL"       prefWidth="190" sortable="true"/>
-                <TableColumn fx:id="telCol"       text="TÉLÉPHONE"   prefWidth="110" sortable="true"/>
-                <TableColumn fx:id="roleCol"      text="RÔLE"        prefWidth="100" sortable="true"/>
-                <TableColumn fx:id="classeCol"    text="CLASSE"      prefWidth="100" sortable="true"/>
-                <TableColumn fx:id="dobCol"       text="NAISSANCE"   prefWidth="100" sortable="true"/>
-                <TableColumn fx:id="createdAtCol" text="INSCRIT LE"  prefWidth="100" sortable="true"/>
-                <TableColumn fx:id="verifiedCol"  text="VÉRIFIÉ"     prefWidth="90"  sortable="true"/>
-                <TableColumn fx:id="bannedCol"    text="STATUT"      prefWidth="80"  sortable="true"/>
-                <TableColumn fx:id="actionsCol"   text="ACTIONS"     prefWidth="190" sortable="false"/>
+                <TableColumn fx:id="userCol"      text="Utilisateur"       prefWidth="250" sortable="true"/>
+                <TableColumn fx:id="emailCol"     text="Email"             prefWidth="200" sortable="true"/>
+                <TableColumn fx:id="dobCol"       text="Date de naissance" prefWidth="130" sortable="true"/>
+                <TableColumn fx:id="classeCol"    text="Classe"            prefWidth="80"  sortable="true"/>
+                <TableColumn fx:id="telCol"       text="Téléphone"         prefWidth="110" sortable="true"/>
+                <TableColumn fx:id="sexeCol"      text="Sexe"              prefWidth="70"  sortable="true"/>
+                <TableColumn fx:id="roleCol"      text="Rôle"              prefWidth="120" sortable="true"/>
+                <TableColumn fx:id="verifiedCol"  text="Status"            prefWidth="90"  sortable="true"/>
+                <TableColumn fx:id="bannedCol"    text="Ban Status"        prefWidth="80"  sortable="true"/>
+                <TableColumn fx:id="actionsCol"   text="Actions"           prefWidth="170" sortable="false"/>
             </columns>
             <placeholder>
                 <VBox alignment="CENTER" spacing="12" styleClass="empty-state">
                     <Label text="👥" styleClass="empty-icon"/>
                     <Label text="Aucun utilisateur trouvé" styleClass="empty-title"/>
-                    <Label text="Cliquez sur « Nouvel Utilisateur » pour commencer"
-                           styleClass="empty-sub"/>
+                    <Label text="Ajustez vos filtres ou ajoutez un utilisateur" styleClass="empty-sub"/>
                 </VBox>
             </placeholder>
         </TableView>

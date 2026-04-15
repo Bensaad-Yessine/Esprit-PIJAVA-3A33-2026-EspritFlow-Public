@@ -104,6 +104,8 @@ public class SidebarController implements Initializable {
         sessionStatus.setText("En ligne · " + loginTime);
     }
 
+    private static final String UPLOAD_DIR = "C:\\Users\\MSI\\Documents\\my_project_dev\\public\\uploads\\profile_pics\\";
+
     private void loadProfilePicture(String picPath) {
         if (picPath == null || picPath.isBlank()) {
             avatarImage.setVisible(false);
@@ -111,9 +113,9 @@ public class SidebarController implements Initializable {
             return;
         }
         try {
-            File f = new File(picPath);
+            File f = new File(UPLOAD_DIR + picPath);
             if (f.exists()) {
-                Image img = new Image(new FileInputStream(f), 48, 48, true, true);
+                Image img = new Image(new java.io.FileInputStream(f), 48, 48, true, true);
                 avatarImage.setImage(img);
                 Circle clip = new Circle(24, 24, 24);
                 avatarImage.setClip(clip);
