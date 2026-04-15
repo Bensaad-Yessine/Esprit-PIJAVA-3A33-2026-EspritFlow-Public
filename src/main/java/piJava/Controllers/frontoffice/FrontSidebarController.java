@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import piJava.Controllers.frontoffice.user.profileController;
 import piJava.entities.user;
 import piJava.utils.SessionManager;
 
@@ -26,26 +27,23 @@ import java.util.ResourceBundle;
 
 public class FrontSidebarController implements Initializable {
 
-    // ─── Profile FXML fields ─────────────────────────────────────────────────
     @FXML private StackPane avatarStack;
-    @FXML private Circle    avatarCircle;
+    @FXML private Circle avatarCircle;
     @FXML private ImageView avatarImage;
-    @FXML private Label     avatarInitials;
-    @FXML private Label     lblProfileName;
-    @FXML private Label     profilePrenom;
-    @FXML private Label     profileNom;
-    @FXML private Label     profileEmail;
-    @FXML private Label     lblProfileRole;
-    @FXML private Label     roleBadgeLabel;
-    @FXML private Label     sessionStatus;
-
-    // ─── Badge ───────────────────────────────────────────────────────────────
+    @FXML private Label avatarInitials;
+    @FXML private Label lblProfileName;
+    @FXML private Label profilePrenom;
+    @FXML private Label profileNom;
+    @FXML private Label profileEmail;
+    @FXML private Label lblProfileRole;
+    @FXML private Label roleBadgeLabel;
+    @FXML private Label sessionStatus;
     @FXML private Label notifBadge;
 
-    // ─── Nav items ────────────────────────────────────────────────────────────
     @FXML private HBox dashboardBtn;
     @FXML private HBox tachesBtn;
     @FXML private HBox classesBtn;
+    @FXML private HBox groupBtn;
     @FXML private HBox matieresBtn;
     @FXML private HBox enseignantsBtn;
     @FXML private HBox emploiBtn;
@@ -53,33 +51,37 @@ public class FrontSidebarController implements Initializable {
     @FXML private HBox notificationsBtn;
     @FXML private HBox logoutBtn;
 
-    // ─── Content area — injected by the parent layout controller ─────────────
     private StackPane contentArea;
-
-    // ─── Internal state ───────────────────────────────────────────────────────
-    private HBox       activeButton;
+    private HBox activeButton;
     private List<HBox> allNavButtons;
 
     private static final String UPLOAD_DIR =
             "C:\\Users\\MSI\\Documents\\my_project_dev\\public\\uploads\\profile_pics\\";
 
-    // ─── Initializable ────────────────────────────────────────────────────────
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         allNavButtons = Arrays.asList(
-                dashboardBtn, tachesBtn, classesBtn, matieresBtn,
-                enseignantsBtn, emploiBtn, ObjectifsSante, notificationsBtn
+                dashboardBtn,
+                tachesBtn,
+                classesBtn,
+                groupBtn,
+                matieresBtn,
+                enseignantsBtn,
+                ObjectifsSante,
+                emploiBtn,
+                notificationsBtn
         );
         bindSessionData();
-        // contentArea is null here — navigation is triggered after setContentArea()
     }
 
-    // ─── Called by parent layout controller after FXML injection ─────────────
     public void setContentArea(StackPane contentArea) {
         this.contentArea = contentArea;
     }
 
-    // ─── Session data binding ─────────────────────────────────────────────────
+    public void refreshSessionData() {
+        bindSessionData();
+    }
+
     private void bindSessionData() {
         SessionManager session = SessionManager.getInstance();
         user u = session.getCurrentUser();
@@ -90,15 +92,13 @@ public class FrontSidebarController implements Initializable {
         profileNom.setText(nvl(u.getNom(), "—"));
         profileEmail.setText(nvl(u.getEmail(), "—"));
 
-        String roleDisplay = buildRoleDisplay(u.getRoles());
-        lblProfileRole.setText(roleDisplay);
+        lblProfileRole.setText(buildRoleDisplay(u.getRoles()));
         roleBadgeLabel.setText(buildRoleBadge(u.getRoles()));
 
         avatarInitials.setText(buildInitials(u.getPrenom(), u.getNom()));
-        loadProfilePicture(session.getProfilePic());
+        loadProfilePicture(u.getProfile_pic());
 
-        String loginTime = LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("HH:mm"));
+        String loginTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
         sessionStatus.setText("En ligne · " + loginTime);
     }
 
@@ -108,9 +108,13 @@ public class FrontSidebarController implements Initializable {
             avatarInitials.setVisible(true);
             return;
         }
+
         try {
             File f = new File(UPLOAD_DIR + picPath);
-            if (!f.exists()) f = new File(picPath); // fallback: treat as absolute path
+            if (!f.exists()) {
+                f = new File(picPath);
+            }
+
             if (f.exists()) {
                 Image img = new Image(new FileInputStream(f), 48, 48, true, true);
                 avatarImage.setImage(img);
@@ -128,34 +132,37 @@ public class FrontSidebarController implements Initializable {
         }
     }
 
-    // ─── Active nav state ─────────────────────────────────────────────────────
     private void setActiveButton(HBox btn) {
-        if (activeButton != null)
+        if (activeButton != null) {
             activeButton.getStyleClass().remove("f-nav-item-active");
-        if (btn != null && !btn.getStyleClass().contains("f-nav-item-active"))
+        }
+        if (btn != null && !btn.getStyleClass().contains("f-nav-item-active")) {
             btn.getStyleClass().add("f-nav-item-active");
+        }
         activeButton = btn;
     }
 
-    // ─── Navigation handlers ──────────────────────────────────────────────────
     @FXML
     public void goToDashboard() {
-        System.out.println("[DEBUG] goToDashboard called");
         setActiveButton(dashboardBtn);
         loadView("/frontoffice/dashboard/dashboard-content.fxml");
     }
 
     @FXML
     public void goToTaches() {
-        System.out.println("[DEBUG] goToTaches called");
         setActiveButton(tachesBtn);
         loadView("/frontoffice/taches/taches-content.fxml");
     }
 
     @FXML
     public void goToClasses() {
-        System.out.println("[DEBUG] goToClasses called");
         setActiveButton(classesBtn);
+        loadView("/frontoffice/classes/classes-content.fxml");
+    }
+
+    @FXML
+    public void goToGroup() {
+        setActiveButton(groupBtn);
         loadView("/frontoffice/group/group-content.fxml");
     }
 
@@ -193,7 +200,8 @@ public class FrontSidebarController implements Initializable {
         setActiveButton(notificationsBtn);
         loadView("/frontoffice/notifications/notif-content.fxml");
     }
-    public void goToProfile(){
+
+    public void goToProfile() {
         loadView("/frontoffice/user/profile.fxml");
     }
 
@@ -201,8 +209,7 @@ public class FrontSidebarController implements Initializable {
     public void logout() {
         SessionManager.getInstance().logout();
         try {
-            Parent root = FXMLLoader.load(
-                    getClass().getResource("/login.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
             Stage stage = (Stage) logoutBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -211,9 +218,7 @@ public class FrontSidebarController implements Initializable {
         }
     }
 
-    // ─── Content loader ───────────────────────────────────────────────────────
     private void loadView(String fxmlPath) {
-        System.out.println("[DEBUG] loadView called with: " + fxmlPath);
         if (contentArea == null) {
             System.err.println("FrontSidebarController: contentArea is null");
             return;
@@ -230,23 +235,20 @@ public class FrontSidebarController implements Initializable {
             Parent view = loader.load();
             Object controller = loader.getController();
 
-            // Injection pour Objectifs santé
+            if (controller instanceof profileController c) {
+                c.setSidebarController(this);
+            }
+
             if (controller instanceof piJava.Controllers.frontoffice.objectifsante.AfficherObjectifsController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
             }
 
-            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.AjouterObjectifController c) {
+            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AfficherSuivisController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
             }
 
-            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.ModifierObjectifController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
-
-            // Injection pour Groupes
             if (controller instanceof piJava.Controllers.frontoffice.group.GroupContentController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
@@ -259,36 +261,34 @@ public class FrontSidebarController implements Initializable {
         }
     }
 
-    // ─── Public badge updater ─────────────────────────────────────────────────
     public void setNotifBadge(int count) {
         notifBadge.setText(String.valueOf(count));
         notifBadge.setVisible(count > 0);
     }
 
-    // ─── Utilities ────────────────────────────────────────────────────────────
     private static String nvl(String s, String fallback) {
         return (s != null && !s.isBlank()) ? s : fallback;
     }
 
     private static String buildInitials(String prenom, String nom) {
         String p = (prenom != null && !prenom.isBlank()) ? prenom.substring(0, 1).toUpperCase() : "";
-        String n = (nom    != null && !nom.isBlank())    ? nom.substring(0, 1).toUpperCase()    : "";
+        String n = (nom != null && !nom.isBlank()) ? nom.substring(0, 1).toUpperCase() : "";
         return p + n;
     }
 
     private static String buildRoleDisplay(String roles) {
         if (roles == null || roles.isBlank()) return "Utilisateur";
-        if (roles.contains("ROLE_ADMIN"))      return "Administrateur";
+        if (roles.contains("ROLE_ADMIN")) return "Administrateur";
         if (roles.contains("ROLE_ENSEIGNANT")) return "Enseignant";
-        if (roles.contains("ROLE_PROF"))       return "Professeur";
+        if (roles.contains("ROLE_PROF")) return "Professeur";
         return "Étudiant";
     }
 
     private static String buildRoleBadge(String roles) {
         if (roles == null || roles.isBlank()) return "ÉTUDIANT";
-        if (roles.contains("ROLE_ADMIN"))      return "ADMINISTRATEUR";
+        if (roles.contains("ROLE_ADMIN")) return "ADMINISTRATEUR";
         if (roles.contains("ROLE_ENSEIGNANT")) return "ENSEIGNANT";
-        if (roles.contains("ROLE_PROF"))       return "PROFESSEUR";
+        if (roles.contains("ROLE_PROF")) return "PROFESSEUR";
         return "ÉTUDIANT";
     }
 }

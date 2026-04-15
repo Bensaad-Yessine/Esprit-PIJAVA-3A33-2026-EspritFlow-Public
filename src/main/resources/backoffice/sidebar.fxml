@@ -124,12 +124,12 @@
                 <Label text="Classes" styleClass="nav-item-label" HBox.hgrow="ALWAYS"/>
             </HBox>
 
-            <HBox fx:id="groupesBtn" styleClass="nav-item" alignment="CENTER_LEFT"
-                  spacing="9" onMouseClicked="#goToGroupes">
+            <HBox fx:id="groupBtn" styleClass="nav-item" alignment="CENTER_LEFT"
+                  spacing="9" onMouseClicked="#goToGroup">
                 <StackPane styleClass="nav-icon-wrap">
-                    <Label styleClass="nav-icon-label" text="&#128100;&#128100;"/>
+                    <Label styleClass="nav-icon-label" text="&#128101;"/>
                 </StackPane>
-                <Label text="Groupes" styleClass="nav-item-label" HBox.hgrow="ALWAYS"/>
+                <Label text="Group" styleClass="nav-item-label" HBox.hgrow="ALWAYS"/>
             </HBox>
 
             <HBox fx:id="matieresBtn" styleClass="nav-item" alignment="CENTER_LEFT"

@@ -18,7 +18,7 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="piJava.Controllers.backoffice.suivibienetre.AjouterSuiviController"
             stylesheets="@style.css"
-            style="-fx-background-color: #0b1220;">
+            style="-fx-background-color: #0d0f14;">
 
     <top>
         <HBox styleClass="top-bar" spacing="12">
