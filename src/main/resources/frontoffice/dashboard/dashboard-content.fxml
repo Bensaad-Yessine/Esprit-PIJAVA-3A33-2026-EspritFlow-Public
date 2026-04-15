@@ -6,7 +6,7 @@
 
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.controllers.frontoffice.FrontDashboardController"
+      fx:controller="piJava.Controllers.frontoffice.FrontDashboardController"
       stylesheets="@dashboard.css"
       prefWidth="1400" prefHeight="860"
       styleClass="root-bg">

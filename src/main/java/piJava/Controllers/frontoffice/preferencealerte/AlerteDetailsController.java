@@ -54,7 +54,7 @@ public class AlerteDetailsController {
     private void handleBack() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/frontoffice/preferenceAlerte/alertes-content.fxml"));
+                    getClass().getResource("/frontoffice/preferenceAlerte/alerte-content.fxml"));
             Parent r = loader.load();
             AlertesController ctrl = loader.getController();
             ctrl.setSidebarController(sidebarController);

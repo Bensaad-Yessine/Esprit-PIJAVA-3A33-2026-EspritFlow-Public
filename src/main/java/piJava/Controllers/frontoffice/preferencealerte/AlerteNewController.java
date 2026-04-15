@@ -67,7 +67,7 @@ public class AlerteNewController {
             lblNotification.setText("✅ Préférence ajoutée avec succès !");
 
             if (sidebarController != null) {
-                sidebarController.loadPage("/frontoffice/preferenceAlerte/alertes-content.fxml", "alertes");
+                sidebarController.loadPage("/frontoffice/preferenceAlerte/alerte-content.fxml", "alertes");
             }
 
         } catch (NumberFormatException e) {
@@ -81,7 +81,7 @@ public class AlerteNewController {
     @FXML
     private void handleCancel() {
         if (sidebarController != null) {
-            sidebarController.loadPage("/frontoffice/preferenceAlerte/alertes-content.fxml", "alertes");
+            sidebarController.loadPage("/frontoffice/preferenceAlerte/alerte-content.fxml", "alertes");
         }
     }
 }

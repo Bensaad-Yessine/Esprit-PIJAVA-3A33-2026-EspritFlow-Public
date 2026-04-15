@@ -20,9 +20,10 @@ public class TacheService implements ICrud<tache> {
 
     @Override
     public void add(tache t) throws SQLException {
+        Connection connection = requireConnection();
         String sql = "INSERT INTO tache (titre, type, date_debut, date_fin, priorite, statut, user_id, created_at, date_echeance, description, duree_estimee, updated_at, prediction) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, t.getTitre());
         ps.setString(2, t.getType());
         ps.setTimestamp(3, new Timestamp(t.getDate_debut().getTime()));
@@ -49,16 +50,17 @@ public class TacheService implements ICrud<tache> {
 
     @Override
     public void delete(int id) throws SQLException {
+        Connection connection = requireConnection();
         // 1. Delete related suivi_tache first (foreign key constraint)
         String sqlChild = "DELETE FROM suivi_tache WHERE tache_id = ?";
-        PreparedStatement psChild = con.prepareStatement(sqlChild);
+        PreparedStatement psChild = connection.prepareStatement(sqlChild);
         psChild.setInt(1, id);
         psChild.executeUpdate();
         psChild.close();
 
         // 2. Delete the tache
         String sqlParent = "DELETE FROM tache WHERE id = ?";
-        PreparedStatement psParent = con.prepareStatement(sqlParent);
+        PreparedStatement psParent = connection.prepareStatement(sqlParent);
         psParent.setInt(1, id);
         psParent.executeUpdate();
         psParent.close();
@@ -66,9 +68,10 @@ public class TacheService implements ICrud<tache> {
 
     @Override
     public List<tache> show() throws SQLException {
+        Connection connection = requireConnection();
         List<tache> taches = new ArrayList<>();
         String sql = "SELECT * FROM tache";
-        Statement st = con.createStatement();
+        Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(sql);
 
         while (rs.next()) {
@@ -83,8 +86,9 @@ public class TacheService implements ICrud<tache> {
      */
     @Override
     public void edit(tache t) throws SQLException {
+        Connection connection = requireConnection();
         String sql = "UPDATE tache SET titre=?, type=?, date_debut=?, date_fin=?, priorite=?, statut=?, user_id=?, date_echeance=?, description=?, duree_estimee=?, updated_at=?, prediction=? WHERE id=?";
-        PreparedStatement ps = con.prepareStatement(sql);
+        PreparedStatement ps = connection.prepareStatement(sql);
 
         ps.setString(1,  t.getTitre()       != null ? t.getTitre()       : null);
         ps.setString(2,  t.getType()        != null ? t.getType()        : null);
@@ -107,9 +111,10 @@ public class TacheService implements ICrud<tache> {
     // ── Frontend-specific ──────────────────────────────────────────────────────
 
     public List<tache> showUserTasks(int userId) throws SQLException {
+        Connection connection = requireConnection();
         List<tache> taches = new ArrayList<>();
         String sql = "SELECT * FROM tache WHERE user_id = ?";
-        PreparedStatement ps = con.prepareStatement(sql);
+        PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, userId);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
@@ -136,5 +141,13 @@ public class TacheService implements ICrud<tache> {
         t.setDuree_estimee(rs.getInt("duree_estimee"));
         t.setPrediction(rs.getDouble("prediction"));
         return t;
+    }
+
+    private Connection requireConnection() throws SQLException {
+        con = MyDataBase.getInstance().getConnection();
+        if (con == null) {
+            throw new SQLException("Database connection unavailable. Verify MySQL is running and the 'pidev' database exists.");
+        }
+        return con;
     }
 }

@@ -22,8 +22,9 @@ public class SuiviTacheService implements ICrud<suiviTache> {
 
     @Override
     public void add(suiviTache s) throws SQLException {
+        Connection connection = requireConnection();
         String sql = "INSERT INTO suivi_tache (tache_id, date_action, ancien_statut, nouveau_statut, commentaire) VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement ps = con.prepareStatement(sql);
+        PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, s.getTache().getId());
         ps.setTimestamp(2, new Timestamp(s.getDateAction().getTime()));
         ps.setString(3, s.getAncienStatut());
@@ -35,8 +36,9 @@ public class SuiviTacheService implements ICrud<suiviTache> {
 
     @Override
     public void delete(int id) throws SQLException {
+        Connection connection = requireConnection();
         String sql = "DELETE FROM suivi_tache WHERE id = ?";
-        PreparedStatement ps = con.prepareStatement(sql);
+        PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
         ps.executeUpdate();
         ps.close();
@@ -45,8 +47,9 @@ public class SuiviTacheService implements ICrud<suiviTache> {
     /** ✅ Required by ICrud — id comes from s.getId() */
     @Override
     public void edit(suiviTache s) throws SQLException {
+        Connection connection = requireConnection();
         String sql = "UPDATE suivi_tache SET date_action=?, ancien_statut=?, nouveau_statut=?, commentaire=? WHERE id=?";
-        PreparedStatement ps = con.prepareStatement(sql);
+        PreparedStatement ps = connection.prepareStatement(sql);
         ps.setTimestamp(1, new Timestamp(s.getDateAction().getTime()));
         ps.setString(2, s.getAncienStatut());
         ps.setString(3, s.getNouveauStatut());
@@ -57,9 +60,10 @@ public class SuiviTacheService implements ICrud<suiviTache> {
     }
 
     public List<suiviTache> showByTask(int taskId) throws SQLException {
+        Connection connection = requireConnection();
         List<suiviTache> list = new ArrayList<>();
         String sql = "SELECT * FROM suivi_tache WHERE tache_id = ? ORDER BY date_action DESC";
-        PreparedStatement ps = con.prepareStatement(sql);
+        PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, taskId);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
@@ -73,5 +77,13 @@ public class SuiviTacheService implements ICrud<suiviTache> {
         }
         ps.close();
         return list;
+    }
+
+    private Connection requireConnection() throws SQLException {
+        con = MyDataBase.getInstance().getConnection();
+        if (con == null) {
+            throw new SQLException("Database connection unavailable. Verify MySQL is running and the 'pidev' database exists.");
+        }
+        return con;
     }
 }

@@ -12,6 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import javafx.scene.control.Alert;
 import piJava.utils.SessionManager;
 public class FrontSidebarController {
 
@@ -60,7 +61,18 @@ public class FrontSidebarController {
 
     public void loadPage(String fxmlFile, String activePage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            if (contentArea == null) {
+                showNavigationError("La zone de contenu principale n'est pas initialisee.");
+                return;
+            }
+
+            URL resource = getClass().getResource(fxmlFile);
+            if (resource == null) {
+                showNavigationError("Page indisponible: " + fxmlFile);
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource);
             Parent page = loader.load();
 
             Object controller = loader.getController();
@@ -78,21 +90,22 @@ public class FrontSidebarController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            showNavigationError("Impossible de charger la page demandee.");
         }
     }
 
     @FXML public void goToDashboard()    { loadPage("/frontoffice/dashboard/dashboard-content.fxml", "dashboard"); }
     @FXML void goToTaches()            { loadPage("/frontoffice/taches/taches-content.fxml",  "taches"); }
-    @FXML void goToClasses()             { loadPage("/frontoffice/classes/classes-content.fxml",   "classes"); }
-    @FXML void goToMatieres()            { loadPage("/frontoffice/matieres/matieres-content.fxml",  "matieres"); }
-    @FXML void goToEnseignants()         { loadPage("/frontoffice/enseignants/enseignants-content.fxml","enseignants"); }
-    @FXML void goToEmploi()              { loadPage("/frontoffice/emploi/emploi-content.fxml",    "emploi"); }
-    @FXML void goToNotes()               { loadPage("/frontoffice/notes/notes-content.fxml",     "notes"); }
+    @FXML void goToClasses()             { showNotImplemented("Groupes et Classes"); }
+    @FXML void goToMatieres()            { showNotImplemented("Cours et Programmes"); }
+    @FXML void goToEnseignants()         { showNotImplemented("Intervenants"); }
+    @FXML void goToEmploi()              { loadPage("/frontoffice/emploi/EmploiContent.fxml", "emploi"); }
+    @FXML void goToNotes()               { showNotImplemented("Evaluations"); }
     @FXML void goToNotifications()       { loadPage("/frontoffice/preferenceAlerte/alerte-content.fxml","alertes"); }
     @FXML
     public void logout(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/login/login.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -100,7 +113,24 @@ public class FrontSidebarController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            showNavigationError("Impossible de revenir a l'ecran de connexion.");
         }
+    }
+
+    private void showNotImplemented(String pageName) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Module indisponible");
+        alert.setHeaderText(null);
+        alert.setContentText(pageName + " n'est pas encore implemente dans ce projet.");
+        alert.showAndWait();
+    }
+
+    private void showNavigationError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur de navigation");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 }

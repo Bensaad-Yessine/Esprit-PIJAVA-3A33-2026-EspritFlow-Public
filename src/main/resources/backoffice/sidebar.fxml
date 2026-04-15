@@ -41,6 +41,12 @@
         <Button fx:id="matieresBtn" text="📖 Matières"
                 onAction="#goToMatieres" styleClass="menu-item"/>
 
+        <Button fx:id="sallesBtn" text="🏢 Salles"
+                onAction="#goToSalles" styleClass="menu-item"/>
+
+        <Button fx:id="seancesBtn" text="🗓️ Séances"
+                onAction="#goToSeances" styleClass="menu-item"/>
+
         <Button fx:id="enseignantsBtn" text="👨‍🏫 Enseignants"
                 onAction="#goToEnseignants" styleClass="menu-item"/>
 

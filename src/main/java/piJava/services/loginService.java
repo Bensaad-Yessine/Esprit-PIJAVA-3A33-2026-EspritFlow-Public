@@ -18,9 +18,10 @@ public class loginService {
     }
 
     public user login(String email, String rawPassword) {
+        String normalizedEmail = email == null ? "" : email.trim().toLowerCase();
         String sql = "SELECT * FROM `user` WHERE email=?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, email);
+        try (PreparedStatement ps = requireConnection().prepareStatement(sql)) {
+            ps.setString(1, normalizedEmail);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -74,5 +75,13 @@ public class loginService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private Connection requireConnection() throws SQLException {
+        con = MyDataBase.getInstance().getConnection();
+        if (con == null) {
+            throw new SQLException("Database connection unavailable. Verify MySQL is running and the 'pidev' database exists.");
+        }
+        return con;
     }
 }
