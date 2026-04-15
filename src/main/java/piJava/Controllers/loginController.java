@@ -118,7 +118,10 @@ public class loginController {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(AlertType.ERROR, "Navigation Error", "Could not load the next screen.");
+            showAlert(AlertType.ERROR, "Navigation Error", "Could not load the next screen: " + fxmlPath + "\nCause: " + e.getCause() + "\nMessage: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(AlertType.ERROR, "Navigation Error", "Unexpected error: \nCause: " + e.getCause() + "\nMessage: " + e.getMessage());
         }
     }
 

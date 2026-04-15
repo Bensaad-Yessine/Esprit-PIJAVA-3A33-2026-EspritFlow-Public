@@ -52,6 +52,7 @@ public class SidebarController implements Initializable {
     @FXML private HBox enseignantsBtn;
     @FXML private HBox sallesBtn;
     @FXML private HBox seancesBtn;
+    @FXML private HBox groupBtn;
     @FXML private HBox objectfiSanteBtn;
     @FXML private HBox notificationsBtn;
     @FXML private HBox logoutBtn;
@@ -69,7 +70,7 @@ public class SidebarController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         allNavButtons = Arrays.asList(
                 dashboardBtn, utilisateursBtn, tachesBtn, classesBtn,
-                matieresBtn, enseignantsBtn, sallesBtn, seancesBtn, objectfiSanteBtn, notificationsBtn
+                matieresBtn, enseignantsBtn, sallesBtn, seancesBtn, groupBtn, objectfiSanteBtn, notificationsBtn
         );
         bindSessionData();
         // Note: do NOT call goToDashboard() here — contentArea is null at this point.
@@ -206,6 +207,14 @@ public class SidebarController implements Initializable {
     }
 
     @FXML
+    public void goToGroup() {
+        setActiveButton(groupBtn);
+        loadView("/backoffice/group/GroupContent.fxml");
+    }
+
+
+
+    @FXML
     public void logout() {
         SessionManager.getInstance().logout();
         try {
@@ -243,28 +252,8 @@ public class SidebarController implements Initializable {
                 c.setContentArea(contentArea);
             }
 
-            if (controller instanceof piJava.Controllers.backoffice.objectifsante.AjouterObjectifController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
-
-            if (controller instanceof piJava.Controllers.backoffice.objectifsante.ModifierObjectifController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
-
             // Injection pour Suivis bien-être
             if (controller instanceof piJava.Controllers.backoffice.suivibienetre.AfficherSuivisController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
-
-            if (controller instanceof piJava.Controllers.backoffice.suivibienetre.AjouterSuiviController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
-
-            if (controller instanceof piJava.Controllers.backoffice.suivibienetre.ModifierSuiviController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
             }

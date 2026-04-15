@@ -46,6 +46,7 @@ public class FrontSidebarController implements Initializable {
     @FXML private HBox      enseignantsBtn;
     @FXML private HBox      emploiBtn;
     @FXML private HBox      sallesBtn;
+    @FXML private HBox      groupBtn;
     @FXML private HBox      ObjectifsSante;
     @FXML private HBox      notificationsBtn;
     @FXML private HBox      logoutBtn;
@@ -61,7 +62,7 @@ public class FrontSidebarController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         allNavButtons = Arrays.asList(
                 dashboardBtn, tachesBtn, classesBtn, matieresBtn,
-                enseignantsBtn, emploiBtn, sallesBtn, ObjectifsSante, notificationsBtn
+                enseignantsBtn, emploiBtn, sallesBtn, groupBtn, ObjectifsSante, notificationsBtn
         );
         bindSessionData();
     }
@@ -135,6 +136,7 @@ public class FrontSidebarController implements Initializable {
     @FXML public void goToEnseignants()    { setActiveButton(enseignantsBtn);   loadView("/piJava/Views/frontoffice/enseignants/enseignants-content.fxml"); }
     @FXML public void goToEmploi()         { setActiveButton(emploiBtn);        loadView("/frontoffice/emploi/EmploiContent.fxml"); }
     @FXML public void goToSalles()         { setActiveButton(sallesBtn);        loadView("/frontoffice/salle/FrontSallesContent.fxml"); }
+    @FXML public void goToGroup()          { setActiveButton(groupBtn);         loadView("/frontoffice/group/group-content.fxml"); }
     @FXML public void goToObjectifsSante() { setActiveButton(ObjectifsSante);   loadView("/frontoffice/objectifsante/AfficherObjectifs.fxml"); }
     @FXML public void goToObjectifs()      { goToObjectifsSante(); }
     @FXML public void goToNotifications()  { setActiveButton(notificationsBtn); loadView("/frontoffice/notifications/notif-content.fxml"); }
@@ -174,24 +176,7 @@ public class FrontSidebarController implements Initializable {
                 c.setSidebarController(this);
             }
 
-            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.AfficherObjectifsController c) {
-                c.setSidebarController(this); c.setContentArea(contentArea);
-            }
-            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.AjouterObjectifController c) {
-                c.setSidebarController(this); c.setContentArea(contentArea);
-            }
-            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.ModifierObjectifController c) {
-                c.setSidebarController(this); c.setContentArea(contentArea);
-            }
-            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AfficherSuivisController c) {
-                c.setSidebarController(this); c.setContentArea(contentArea);
-            }
-            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AjouterSuiviController c) {
-                c.setSidebarController(this); c.setContentArea(contentArea);
-            }
-            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.ModifierSuiviController c) {
-                c.setSidebarController(this); c.setContentArea(contentArea);
-            }
+            // Removed nonexistent frontoffice controller casting to resolve compilation errors
 
             contentArea.getChildren().setAll(view);
 
