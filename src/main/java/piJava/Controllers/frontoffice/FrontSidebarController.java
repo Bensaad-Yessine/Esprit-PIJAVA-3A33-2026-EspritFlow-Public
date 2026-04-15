@@ -175,21 +175,11 @@ public class FrontSidebarController implements Initializable {
             if (controller instanceof piJava.Controllers.frontoffice.objectifsante.AfficherObjectifsController c) {
                 c.setSidebarController(this); c.setContentArea(contentArea);
             }
-            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.AjouterObjectifController c) {
-                c.setSidebarController(this); c.setContentArea(contentArea);
-            }
-            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.ModifierObjectifController c) {
-                c.setSidebarController(this); c.setContentArea(contentArea);
-            }
+
             if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AfficherSuivisController c) {
                 c.setSidebarController(this); c.setContentArea(contentArea);
             }
-            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AjouterSuiviController c) {
-                c.setSidebarController(this); c.setContentArea(contentArea);
-            }
-            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.ModifierSuiviController c) {
-                c.setSidebarController(this); c.setContentArea(contentArea);
-            }
+
 
             contentArea.getChildren().setAll(view);
 
