@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="piJava.Controllers.frontoffice.matieres.MatieresContentController"
+      stylesheets="/frontoffice/classe/classe.css"
+      prefWidth="1500" prefHeight="900"
+      styleClass="root-bg">
+
+    <ScrollPane fitToWidth="true" styleClass="page-scroll" HBox.hgrow="ALWAYS">
+        <VBox spacing="26" styleClass="main-container">
+
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <VBox HBox.hgrow="ALWAYS" spacing="6">
+                    <Label text="Mes matières" styleClass="title"/>
+                    <Label text="ESPRIT Flow · Matières liées à votre classe" styleClass="subtitle"/>
+                </VBox>
+                <Button text="↻ Rafraîchir" onAction="#handleRefresh" styleClass="btn-primary"/>
+            </HBox>
+
+            <HBox spacing="20" styleClass="hero-card">
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <Label text="Matières de votre classe" styleClass="hero-title"/>
+                    <Label text="Consultez ici les matières associées à votre classe, avec leurs coefficients, charges horaires et niveaux de complexité."
+                           wrapText="true" styleClass="hero-subtitle"/>
+                </VBox>
+                <Label text="📚" styleClass="hero-sticker"/>
+            </HBox>
+
+            <HBox spacing="20">
+                <VBox HBox.hgrow="ALWAYS" prefHeight="130" spacing="6" alignment="TOP_LEFT" styleClass="red-card">
+                    <Label text="Classe" styleClass="card-label"/>
+                    <Label fx:id="lblClassName" text="—" styleClass="card-number"/>
+                    <Label fx:id="lblClassLevel" text="Niveau" styleClass="card-sub"/>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS" prefHeight="130" spacing="6" alignment="TOP_LEFT" styleClass="red-card-light">
+                    <Label text="Année universitaire" styleClass="card-label"/>
+                    <Label fx:id="lblClassYear" text="—" styleClass="card-number"/>
+                    <Label text="Année en cours" styleClass="card-sub"/>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS" prefHeight="130" spacing="6" alignment="TOP_LEFT" styleClass="red-card-mid">
+                    <Label text="Nombre de matières" styleClass="card-label"/>
+                    <Label fx:id="lblMatieresCount" text="0" styleClass="card-number"/>
+                    <Label text="Toutes les matières de votre classe" styleClass="card-sub"/>
+                </VBox>
+            </HBox>
+
+            <VBox spacing="14" styleClass="panel">
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Liste des matières" styleClass="panel-title" HBox.hgrow="ALWAYS"/>
+$source = "C:\Users\islem\Downloads\Esprit-PIJAVA-3A33-2026-EspritFlow-Public-master\Esprit-PIJAVA-3A33-2026-EspritFlow-Public-master"
+$destRoot = "C:\Users\islem\IdeaProjects"
+if (-not (Test-Path $destRoot)) { New-Item -ItemType Directory -Path $destRoot | Out-Null }
+Move-Item -Path $source -Destination $destRoot                    <TextField fx:id="txtSearch"
+                               promptText="Rechercher une matière..."
+                               prefWidth="300"
+                               styleClass="search-field"/>
+                    <Label fx:id="lblStatusMessage" styleClass="badge-blue"/>
+                </HBox>
+
+                <TableView fx:id="matiereTable" prefHeight="520">
+                    <columns>
+                        <TableColumn fx:id="nomCol" text="Nom" prefWidth="250.0"/>
+                        <TableColumn fx:id="coeffCol" text="Coefficient" prefWidth="130.0"/>
+                        <TableColumn fx:id="heuresCol" text="Charge horaire" prefWidth="140.0"/>
+                        <TableColumn fx:id="complexiteCol" text="Complexité" prefWidth="130.0"/>
+                        <TableColumn fx:id="descCol" text="Description" prefWidth="430.0"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+</HBox>
+
+
