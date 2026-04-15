@@ -97,9 +97,7 @@ public class TacheNewController {
             lblNotification.setText("✅ Tâche ajoutée avec succès !");
 
             // ── Go back to tasks list ───────────────────────────────────────
-            if (sidebarController != null) {
-                sidebarController.loadPage("/frontoffice/taches/taches-content.fxml", "taches");
-            }
+
 
         } catch (NumberFormatException e) {
             lblNotification.setText("⚠ La durée doit être un nombre entier.");

@@ -58,8 +58,7 @@ public class AlerteDetailsController {
             Parent r = loader.load();
             AlertesController ctrl = loader.getController();
             ctrl.setSidebarController(sidebarController);
-            sidebarController.getContentArea().getChildren().setAll(r);
-            sidebarController.setActivePage("alertes");
+
         } catch (IOException e) {
             e.printStackTrace();
         }

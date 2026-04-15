@@ -150,10 +150,7 @@ public class TachesDetailsController {
             TachesController controller = loader.getController();
             controller.setSidebarController(sidebarController);
 
-            if (sidebarController != null) {
-                sidebarController.getContentArea().getChildren().setAll(tasksPage);
-                sidebarController.setActivePage("taches");
-            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

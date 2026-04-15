@@ -158,8 +158,7 @@ public class AlertesController implements Initializable {
             AlerteDetailsController ctrl = loader.getController();
             ctrl.setAlerte(alerte);
             ctrl.setSidebarController(sidebarController);
-            sidebarController.getContentArea().getChildren().setAll(r);
-            sidebarController.setActivePage("alertes");
+
         } catch (IOException e) {
             showNotification("❌ Erreur ouverture détails");
         }
@@ -173,8 +172,7 @@ public class AlertesController implements Initializable {
             AlerteEditController ctrl = loader.getController();
             ctrl.setAlerte(alerte);
             ctrl.setSidebarController(sidebarController);
-            sidebarController.getContentArea().getChildren().setAll(r);
-            sidebarController.setActivePage("alertes");
+
         } catch (IOException e) {
             showNotification("❌ Erreur lors de l'ouverture de l'éditeur");
         }
@@ -188,8 +186,7 @@ public class AlertesController implements Initializable {
             Parent r = loader.load();
             AlerteNewController ctrl = loader.getController();
             ctrl.setSidebarController(sidebarController);
-            sidebarController.getContentArea().getChildren().setAll(r);
-            sidebarController.setActivePage("alertes");
+
         } catch (IOException e) {
             showNotification("❌ Erreur lors de l'ouverture du formulaire");
         }

@@ -66,9 +66,6 @@ public class AlerteNewController {
             new AlerteService().add(p);
             lblNotification.setText("✅ Préférence ajoutée avec succès !");
 
-            if (sidebarController != null) {
-                sidebarController.loadPage("/frontoffice/preferenceAlerte/alertes-content.fxml", "alertes");
-            }
 
         } catch (NumberFormatException e) {
             lblNotification.setText("⚠ Le délai doit être un nombre entier.");
@@ -80,8 +77,6 @@ public class AlerteNewController {
 
     @FXML
     private void handleCancel() {
-        if (sidebarController != null) {
-            sidebarController.loadPage("/frontoffice/preferenceAlerte/alertes-content.fxml", "alertes");
-        }
+
     }
 }

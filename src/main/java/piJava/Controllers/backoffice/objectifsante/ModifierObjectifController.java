@@ -5,6 +5,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import piJava.Controllers.backoffice.SidebarController;
 import piJava.entities.ObjectifSante;
 import piJava.services.ObjectifSanteService;
@@ -275,5 +276,8 @@ public class ModifierObjectifController {
 
     private void retirerStyleErreur(javafx.scene.control.Control control) {
         control.getStyleClass().remove("field-error");
+    }
+
+    public void setContentArea(StackPane contentArea) {
     }
 }
