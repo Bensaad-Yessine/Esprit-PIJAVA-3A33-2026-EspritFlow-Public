@@ -137,6 +137,7 @@
                                         <TableColumn fx:id="colDateFin" prefWidth="130.0" text="Fin"/>
                                         <TableColumn fx:id="colPriorite" prefWidth="120.0" text="Priorité"/>
                                         <TableColumn fx:id="colStatut" prefWidth="130.0" text="Statut"/>
+                                        <TableColumn fx:id="colActions" prefWidth="260.0" text="Actions"/>
                                     </columns>
                                 </TableView>
                             </children>

@@ -139,6 +139,13 @@
                 </StackPane>
                 <Label text="Enseignants" styleClass="nav-item-label" HBox.hgrow="ALWAYS"/>
             </HBox>
+            <HBox fx:id="objectfiSanteBtn" styleClass="nav-item" alignment="CENTER_LEFT"
+                  spacing="9" onMouseClicked="#goToObjectifsSante">
+                <StackPane styleClass="nav-icon-wrap">
+                    <Label styleClass="f-nav-icon-label" text="❤"/>
+                </StackPane>
+                <Label text="Objectifs" styleClass="nav-item-label" HBox.hgrow="ALWAYS"/>
+            </HBox>
 
             <Label text="GESTION ACADÉMIQUE" styleClass="nav-section-title"/>
 
@@ -150,13 +157,7 @@
                 <Label text="Emploi du temps" styleClass="nav-item-label" HBox.hgrow="ALWAYS"/>
             </HBox>
 
-            <HBox fx:id="objectfiSanteBtn" styleClass="nav-item" alignment="CENTER_LEFT"
-                  spacing="9" onMouseClicked="#goToObjectifsSante">
-                <StackPane styleClass="nav-icon-wrap">
-                    <Label styleClass="nav-icon-label" text="&#128221;"/>
-                </StackPane>
-                <Label text="Notes" styleClass="nav-item-label" HBox.hgrow="ALWAYS"/>
-            </HBox>
+
 
             <Label text="COMMUNICATION" styleClass="nav-section-title"/>
 

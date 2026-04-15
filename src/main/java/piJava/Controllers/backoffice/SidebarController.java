@@ -236,15 +236,7 @@ public class SidebarController implements Initializable {
                 c.setContentArea(contentArea);
             }
 
-            if (controller instanceof piJava.Controllers.backoffice.objectifsante.AjouterObjectifController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
 
-            if (controller instanceof piJava.Controllers.backoffice.objectifsante.ModifierObjectifController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
 
             // Injection pour Suivis bien-être
             if (controller instanceof piJava.Controllers.backoffice.suivibienetre.AfficherSuivisController c) {
@@ -252,15 +244,7 @@ public class SidebarController implements Initializable {
                 c.setContentArea(contentArea);
             }
 
-            if (controller instanceof piJava.Controllers.backoffice.suivibienetre.AjouterSuiviController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
 
-            if (controller instanceof piJava.Controllers.backoffice.suivibienetre.ModifierSuiviController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
 
             contentArea.getChildren().setAll(view);
 

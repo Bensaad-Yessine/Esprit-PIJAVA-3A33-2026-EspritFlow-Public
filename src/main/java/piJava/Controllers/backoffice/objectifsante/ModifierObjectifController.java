@@ -5,8 +5,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
-import piJava.Controllers.backoffice.SidebarController;
+import javafx.stage.Stage;
 import piJava.entities.ObjectifSante;
 import piJava.services.ObjectifSanteService;
 
@@ -55,14 +54,9 @@ public class ModifierObjectifController {
 
     private ObjectifSante objectif;
     private AfficherObjectifsController afficherObjectifsController;
-    private SidebarController sidebarController;
 
     public void setAfficherObjectifsController(AfficherObjectifsController afficherObjectifsController) {
         this.afficherObjectifsController = afficherObjectifsController;
-    }
-
-    public void setSidebarController(SidebarController sidebarController) {
-        this.sidebarController = sidebarController;
     }
 
     public void setObjectif(ObjectifSante objectif) {
@@ -81,10 +75,7 @@ public class ModifierObjectifController {
     @FXML
     public void initialize() {
         limiterChampNumerique(txtValeurCible);
-
-        cbType.valueProperty().addListener((obs, oldValue, newValue) -> {
-            mettreAJourUnite(newValue);
-        });
+        cbType.valueProperty().addListener((obs, oldValue, newValue) -> mettreAJourUnite(newValue));
     }
 
     @FXML
@@ -109,9 +100,7 @@ public class ModifierObjectifController {
                 afficherObjectifsController.chargerObjectifs();
             }
 
-            if (sidebarController != null) {
-                sidebarController.goToObjectifsSante();
-            }
+            fermerFenetre();
 
         } catch (Exception e) {
             errTitre.setText("Erreur lors de la modification.");
@@ -121,14 +110,12 @@ public class ModifierObjectifController {
 
     @FXML
     public void retourObjectifs() {
-        try {
-            if (sidebarController != null) {
-                sidebarController.goToObjectifsSante();
-            }
-        } catch (Exception e) {
-            System.out.println("Erreur lors du retour vers les objectifs : " + e.getMessage());
-            e.printStackTrace();
-        }
+        fermerFenetre();
+    }
+
+    private void fermerFenetre() {
+        Stage stage = (Stage) txtTitre.getScene().getWindow();
+        stage.close();
     }
 
     private void mettreAJourUnite(String type) {
@@ -276,8 +263,5 @@ public class ModifierObjectifController {
 
     private void retirerStyleErreur(javafx.scene.control.Control control) {
         control.getStyleClass().remove("field-error");
-    }
-
-    public void setContentArea(StackPane contentArea) {
     }
 }

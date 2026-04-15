@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="720.0" prefWidth="900.0"
+<BorderPane prefHeight="720.0" prefWidth="640.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="piJava.Controllers.backoffice.objectifsante.AjouterObjectifController"
@@ -52,7 +52,7 @@
                                 <VBox spacing="8" HBox.hgrow="ALWAYS">
                                     <children>
                                         <Label text="💙 Créer un nouvel objectif santé" styleClass="hero-title"/>
-                                        <Label text="Définissez un objectif clair avec un type, une période et une priorité pour mieux suivre le bien-être."
+                                        <Label text="Définissez un objectif clair avec un type, une période, une priorité et un utilisateur pour mieux suivre le bien-être."
                                                wrapText="true"
                                                styleClass="hero-subtitle"/>
                                     </children>
@@ -76,16 +76,24 @@
                                         <Insets top="10" right="10" bottom="10" left="10"/>
                                     </padding>
 
-                                    <Label text="Titre :" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <Label text="ID Utilisateur :" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                                     <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                                        <children>
+                                            <ComboBox fx:id="cbUserId" prefWidth="300.0" promptText="Sélectionner l'ID utilisateur"/>
+                                            <Label fx:id="errUserId" styleClass="error-label"/>
+                                        </children>
+                                    </VBox>
+
+                                    <Label text="Titre :" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                    <VBox spacing="4" GridPane.rowIndex="1" GridPane.columnIndex="1">
                                         <children>
                                             <TextField fx:id="txtTitre" promptText="Entrer le titre de l'objectif"/>
                                             <Label fx:id="errTitre" styleClass="error-label"/>
                                         </children>
                                     </VBox>
 
-                                    <Label text="Type :" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                    <VBox spacing="4" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                                    <Label text="Type :" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                    <VBox spacing="4" GridPane.rowIndex="2" GridPane.columnIndex="1">
                                         <children>
                                             <ComboBox fx:id="cbType" prefWidth="300.0">
                                                 <items>
@@ -100,8 +108,8 @@
                                         </children>
                                     </VBox>
 
-                                    <Label text="Valeur cible :" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                                    <VBox spacing="4" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                                    <Label text="Valeur cible :" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                    <VBox spacing="4" GridPane.rowIndex="3" GridPane.columnIndex="1">
                                         <children>
                                             <HBox spacing="10">
                                                 <children>
@@ -113,24 +121,24 @@
                                         </children>
                                     </VBox>
 
-                                    <Label text="Date début :" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                                    <VBox spacing="4" GridPane.rowIndex="3" GridPane.columnIndex="1">
+                                    <Label text="Date début :" styleClass="form-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                                    <VBox spacing="4" GridPane.rowIndex="4" GridPane.columnIndex="1">
                                         <children>
                                             <DatePicker fx:id="dpDateDebut" prefWidth="300.0"/>
                                             <Label fx:id="errDateDebut" styleClass="error-label"/>
                                         </children>
                                     </VBox>
 
-                                    <Label text="Date fin :" styleClass="form-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                                    <VBox spacing="4" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                                    <Label text="Date fin :" styleClass="form-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                                    <VBox spacing="4" GridPane.rowIndex="5" GridPane.columnIndex="1">
                                         <children>
                                             <DatePicker fx:id="dpDateFin" prefWidth="300.0"/>
                                             <Label fx:id="errDateFin" styleClass="error-label"/>
                                         </children>
                                     </VBox>
 
-                                    <Label text="Priorité :" styleClass="form-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                                    <VBox spacing="4" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                                    <Label text="Priorité :" styleClass="form-label" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                                    <VBox spacing="4" GridPane.rowIndex="6" GridPane.columnIndex="1">
                                         <children>
                                             <ComboBox fx:id="cbPriorite" prefWidth="300.0">
                                                 <items>

@@ -126,6 +126,13 @@
                 </StackPane>
                 <Label text="Intervenants" styleClass="f-nav-item-label" HBox.hgrow="ALWAYS"/>
             </HBox>
+            <HBox fx:id="ObjectifsSante" styleClass="f-nav-item" alignment="CENTER_LEFT"
+                  spacing="9" onMouseClicked="#goToObjectifsSante">
+                <StackPane styleClass="f-nav-icon-wrap">
+                    <Label styleClass="f-nav-icon-label" text="❤"/>
+                </StackPane>
+                <Label text="Objectifs" styleClass="f-nav-item-label" HBox.hgrow="ALWAYS"/>
+            </HBox>
 
             <Label text="GESTION DES OPÉRATIONS" styleClass="f-nav-section-title"/>
 
@@ -137,13 +144,6 @@
                 <Label text="Planning général" styleClass="f-nav-item-label" HBox.hgrow="ALWAYS"/>
             </HBox>
 
-            <HBox fx:id="ObjectifsSante" styleClass="f-nav-item" alignment="CENTER_LEFT"
-                  spacing="9" onMouseClicked="#goToObjectifsSante">
-                <StackPane styleClass="f-nav-icon-wrap">
-                    <Label styleClass="f-nav-icon-label" text="&#128221;"/>
-                </StackPane>
-                <Label text="Évaluations" styleClass="f-nav-item-label" HBox.hgrow="ALWAYS"/>
-            </HBox>
 
             <Label text="COMMUNICATION" styleClass="f-nav-section-title"/>
 
