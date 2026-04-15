@@ -140,20 +140,23 @@ public class FrontSidebarController implements Initializable {
     // ─── Navigation handlers ──────────────────────────────────────────────────
     @FXML
     public void goToDashboard() {
+        System.out.println("[DEBUG] goToDashboard called");
         setActiveButton(dashboardBtn);
         loadView("/frontoffice/dashboard/dashboard-content.fxml");
     }
 
     @FXML
     public void goToTaches() {
+        System.out.println("[DEBUG] goToTaches called");
         setActiveButton(tachesBtn);
         loadView("/frontoffice/taches/taches-content.fxml");
     }
 
     @FXML
     public void goToClasses() {
+        System.out.println("[DEBUG] goToClasses called");
         setActiveButton(classesBtn);
-        loadView("/piJava/Views/frontoffice/classes/classes-content.fxml");
+        loadView("/frontoffice/group/group-content.fxml");
     }
 
     @FXML
@@ -210,8 +213,9 @@ public class FrontSidebarController implements Initializable {
 
     // ─── Content loader ───────────────────────────────────────────────────────
     private void loadView(String fxmlPath) {
+        System.out.println("[DEBUG] loadView called with: " + fxmlPath);
         if (contentArea == null) {
-            System.err.println("FrontSidebarController: contentArea is null — call setContentArea() before navigating.");
+            System.err.println("FrontSidebarController: contentArea is null");
             return;
         }
 
@@ -242,18 +246,8 @@ public class FrontSidebarController implements Initializable {
                 c.setContentArea(contentArea);
             }
 
-            // Injection pour Suivis bien-être
-            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AfficherSuivisController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
-
-            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AjouterSuiviController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
-
-            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.ModifierSuiviController c) {
+            // Injection pour Groupes
+            if (controller instanceof piJava.Controllers.frontoffice.group.GroupContentController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
             }
