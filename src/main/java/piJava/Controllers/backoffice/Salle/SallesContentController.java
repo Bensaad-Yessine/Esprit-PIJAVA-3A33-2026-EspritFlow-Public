@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.util.Duration;
 
 public class SallesContentController implements Initializable {
@@ -430,7 +431,7 @@ public class SallesContentController implements Initializable {
         btnM.addEventFilter(javafx.event.ActionEvent.ACTION, e -> {
             e.consume();
             dialog.close();
-            handleEdit(salle);
+            Platform.runLater(() -> handleEdit(salle));
         });
 
         Button btnS = (Button) pane.lookupButton(btnSupprimer);
@@ -438,7 +439,7 @@ public class SallesContentController implements Initializable {
         btnS.addEventFilter(javafx.event.ActionEvent.ACTION, e -> {
             e.consume();
             dialog.close();
-            handleDelete(salle);
+            Platform.runLater(() -> handleDelete(salle));
         });
 
         Button btnR = (Button) pane.lookupButton(btnRetour);

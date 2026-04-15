@@ -58,6 +58,7 @@ public class EmploiContentController implements Initializable {
     @FXML private BarChart<String, Number> barChartStats;
     @FXML private VBox calendarContainer;
     @FXML private Label lblSemaineRange;
+    @FXML private Label lblSemaineBadge;
     @FXML private GridPane timetableGrid;
 
     private SeanceService seanceService;
@@ -66,6 +67,8 @@ public class EmploiContentController implements Initializable {
     private SalleService salleService;
 
     private List<Seance> seances = new ArrayList<>();
+    private List<Seance> allClassSeances = new ArrayList<>();
+    private LocalDate currentWeekStart = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
     private Map<Integer, String> matiereMap = new HashMap<>();
     private Map<Integer, String> salleMap = new HashMap<>();
     
@@ -82,9 +85,6 @@ public class EmploiContentController implements Initializable {
 
         loadMappings();
         loadDataForUser();
-        
-        setupDateRange();
-        drawTimetableGrid();
     }
 
     private void loadMappings() {
@@ -109,7 +109,7 @@ public class EmploiContentController implements Initializable {
             }
 
             final int cid = targetClassId;
-            seances = toutes.stream().filter(s -> s.getClasseId() == cid).toList();
+            allClassSeances = toutes.stream().filter(s -> s.getClasseId() == cid).toList();
 
             // Set Header Badges
             Classe c = classeService.getAllClasses().stream().filter(cl -> cl.getId() == cid).findFirst().orElse(null);
@@ -118,15 +118,68 @@ public class EmploiContentController implements Initializable {
             } else {
                 lblClasseBadge.setText("SANS CLASSE");
             }
-            lblInfos.setText(seances.size() + " séances programmées");
-
-            updateKPIs();
-            updateChargeJour();
-            updateBarChart();
+            
+            refreshViewForCurrentWeek();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML private void handlePrevWeek() {
+        currentWeekStart = currentWeekStart.minusDays(7);
+        refreshViewForCurrentWeek();
+    }
+    
+    @FXML private void handleNextWeek() {
+        currentWeekStart = currentWeekStart.plusDays(7);
+        refreshViewForCurrentWeek();
+    }
+    
+    @FXML private void handleToday() {
+        currentWeekStart = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        refreshViewForCurrentWeek();
+    }
+
+    private void refreshViewForCurrentWeek() {
+        LocalDate currentWeekEnd = currentWeekStart.plusDays(6); // Sunday
+        
+        seances = allClassSeances.stream().filter(s -> {
+            if (s.getHeureDebut() == null) return false;
+            LocalDate sd = s.getHeureDebut().toLocalDateTime().toLocalDate();
+            return !sd.isBefore(currentWeekStart) && !sd.isAfter(currentWeekEnd);
+        }).toList();
+
+        lblInfos.setText(seances.size() + " séances programmées (Semaine ciblée)");
+
+        LocalDate todayMon = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        if (currentWeekStart.isEqual(todayMon)) {
+            if(lblSemaineBadge != null) {
+                lblSemaineBadge.setText("Cette semaine");
+                lblSemaineBadge.setStyle("-fx-background-color: #fee2e2; -fx-text-fill: #ef4444; -fx-padding: 3 8; -fx-background-radius: 10; -fx-font-size: 12px;");
+            }
+        } else if (currentWeekStart.isEqual(todayMon.plusDays(7))) {
+            if(lblSemaineBadge != null) {
+                lblSemaineBadge.setText("Semaine prochaine");
+                lblSemaineBadge.setStyle("-fx-background-color: #e0e7ff; -fx-text-fill: #4f46e5; -fx-padding: 3 8; -fx-background-radius: 10; -fx-font-size: 12px;");
+            }
+        } else if (currentWeekStart.isEqual(todayMon.minusDays(7))) {
+            if(lblSemaineBadge != null) {
+                lblSemaineBadge.setText("Semaine passée");
+                lblSemaineBadge.setStyle("-fx-background-color: #f3f4f6; -fx-text-fill: #4b5563; -fx-padding: 3 8; -fx-background-radius: 10; -fx-font-size: 12px;");
+            }
+        } else {
+            if(lblSemaineBadge != null) {
+                lblSemaineBadge.setText("Autre semaine");
+                lblSemaineBadge.setStyle("-fx-background-color: #f3f4f6; -fx-text-fill: #4b5563; -fx-padding: 3 8; -fx-background-radius: 10; -fx-font-size: 12px;");
+            }
+        }
+
+        setupDateRange();
+        drawTimetableGrid();
+        updateKPIs();
+        updateChargeJour();
+        updateBarChart();
     }
 
     private void updateKPIs() {
@@ -207,11 +260,9 @@ public class EmploiContentController implements Initializable {
     }
 
     private void setupDateRange() {
-        LocalDate now = LocalDate.now();
-        LocalDate monday = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        LocalDate saturday = monday.plusDays(5);
+        LocalDate saturday = currentWeekStart.plusDays(5);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        lblSemaineRange.setText("Semaine du " + monday.format(dtf) + " au " + saturday.format(dtf));
+        lblSemaineRange.setText("Semaine du " + currentWeekStart.format(dtf) + " au " + saturday.format(dtf));
     }
 
     private void drawTimetableGrid() {
@@ -242,7 +293,6 @@ public class EmploiContentController implements Initializable {
         timetableGrid.add(lblH, 0, 0);
         GridPane.setHalignment(lblH, HPos.CENTER);
 
-        LocalDate monday = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM");
 
         for(int i = 0; i < 6; i++) {
@@ -253,7 +303,7 @@ public class EmploiContentController implements Initializable {
             
             Label lJour = new Label(jFull[i]); 
             lJour.setStyle("-fx-font-weight: bold; -fx-text-fill: #1e293b;");
-            Label lDate = new Label(monday.plusDays(i).format(df)); 
+            Label lDate = new Label(currentWeekStart.plusDays(i).format(df)); 
             lDate.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 11px;");
             
             headerCell.getChildren().addAll(lJour, lDate);

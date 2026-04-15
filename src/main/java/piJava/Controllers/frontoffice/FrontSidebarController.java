@@ -45,6 +45,7 @@ public class FrontSidebarController implements Initializable {
     @FXML private HBox      matieresBtn;
     @FXML private HBox      enseignantsBtn;
     @FXML private HBox      emploiBtn;
+    @FXML private HBox      sallesBtn;
     @FXML private HBox      ObjectifsSante;
     @FXML private HBox      notificationsBtn;
     @FXML private HBox      logoutBtn;
@@ -60,7 +61,7 @@ public class FrontSidebarController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         allNavButtons = Arrays.asList(
                 dashboardBtn, tachesBtn, classesBtn, matieresBtn,
-                enseignantsBtn, emploiBtn, ObjectifsSante, notificationsBtn
+                enseignantsBtn, emploiBtn, sallesBtn, ObjectifsSante, notificationsBtn
         );
         bindSessionData();
     }
@@ -132,7 +133,8 @@ public class FrontSidebarController implements Initializable {
     @FXML public void goToClasses()        { setActiveButton(classesBtn);       loadView("/piJava/Views/frontoffice/classes/classes-content.fxml"); }
     @FXML public void goToMatieres()       { setActiveButton(matieresBtn);      loadView("/piJava/Views/frontoffice/matieres/matieres-content.fxml"); }
     @FXML public void goToEnseignants()    { setActiveButton(enseignantsBtn);   loadView("/piJava/Views/frontoffice/enseignants/enseignants-content.fxml"); }
-    @FXML public void goToEmploi()         { setActiveButton(emploiBtn);        loadView("/piJava/Views/frontoffice/emploi/emploi-content.fxml"); }
+    @FXML public void goToEmploi()         { setActiveButton(emploiBtn);        loadView("/frontoffice/emploi/EmploiContent.fxml"); }
+    @FXML public void goToSalles()         { setActiveButton(sallesBtn);        loadView("/frontoffice/salle/FrontSallesContent.fxml"); }
     @FXML public void goToObjectifsSante() { setActiveButton(ObjectifsSante);   loadView("/frontoffice/objectifsante/AfficherObjectifs.fxml"); }
     @FXML public void goToObjectifs()      { goToObjectifsSante(); }
     @FXML public void goToNotifications()  { setActiveButton(notificationsBtn); loadView("/frontoffice/notifications/notif-content.fxml"); }

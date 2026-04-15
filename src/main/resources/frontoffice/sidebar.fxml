@@ -134,7 +134,15 @@
                 <StackPane styleClass="f-nav-icon-wrap">
                     <Label styleClass="f-nav-icon-label" text="&#128197;"/>
                 </StackPane>
-                <Label text="Planning général" styleClass="f-nav-item-label" HBox.hgrow="ALWAYS"/>
+                <Label text="Séances" styleClass="f-nav-item-label" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <HBox fx:id="sallesBtn" styleClass="f-nav-item" alignment="CENTER_LEFT"
+                  spacing="9" onMouseClicked="#goToSalles">
+                <StackPane styleClass="f-nav-icon-wrap">
+                    <Label styleClass="f-nav-icon-label" text="&#127970;"/>
+                </StackPane>
+                <Label text="Salles" styleClass="f-nav-item-label" HBox.hgrow="ALWAYS"/>
             </HBox>
 
             <HBox fx:id="ObjectifsSante" styleClass="f-nav-item" alignment="CENTER_LEFT"

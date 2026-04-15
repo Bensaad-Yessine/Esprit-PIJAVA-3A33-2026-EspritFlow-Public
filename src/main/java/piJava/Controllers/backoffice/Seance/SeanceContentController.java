@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.util.Duration;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -598,7 +599,7 @@ public class SeanceContentController implements Initializable {
         bModif.addEventFilter(javafx.event.ActionEvent.ACTION, e -> {
             e.consume();
             dialog.close();
-            handleEdit(seance);
+            Platform.runLater(() -> handleEdit(seance));
         });
 
         Button bSuppr = (Button) pane.lookupButton(btnSupprimer);
@@ -606,7 +607,7 @@ public class SeanceContentController implements Initializable {
         bSuppr.addEventFilter(javafx.event.ActionEvent.ACTION, e -> {
             e.consume();
             dialog.close();
-            handleDelete(seance);
+            Platform.runLater(() -> handleDelete(seance));
         });
 
         // Layout de la vue

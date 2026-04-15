@@ -50,7 +50,8 @@ public class SidebarController implements Initializable {
     @FXML private HBox classesBtn;
     @FXML private HBox matieresBtn;
     @FXML private HBox enseignantsBtn;
-    @FXML private HBox emploiBtn;
+    @FXML private HBox sallesBtn;
+    @FXML private HBox seancesBtn;
     @FXML private HBox objectfiSanteBtn;
     @FXML private HBox notificationsBtn;
     @FXML private HBox logoutBtn;
@@ -68,7 +69,7 @@ public class SidebarController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         allNavButtons = Arrays.asList(
                 dashboardBtn, utilisateursBtn, tachesBtn, classesBtn,
-                matieresBtn, enseignantsBtn, emploiBtn, objectfiSanteBtn, notificationsBtn
+                matieresBtn, enseignantsBtn, sallesBtn, seancesBtn, objectfiSanteBtn, notificationsBtn
         );
         bindSessionData();
         // Note: do NOT call goToDashboard() here — contentArea is null at this point.
@@ -176,9 +177,15 @@ public class SidebarController implements Initializable {
     }
 
     @FXML
-    public void goToEmploi() {
-        setActiveButton(emploiBtn);
-        loadView("/piJava/Views/backoffice/emploi/emploi-content.fxml");
+    public void goToSalles() {
+        setActiveButton(sallesBtn);
+        loadView("/backoffice/Salle/SallesContent.fxml");
+    }
+
+    @FXML
+    public void goToSeances() {
+        setActiveButton(seancesBtn);
+        loadView("/backoffice/Seance/SeanceContent.fxml");
     }
 
     @FXML
