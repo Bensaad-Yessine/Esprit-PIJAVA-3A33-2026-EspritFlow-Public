@@ -30,13 +30,13 @@ public class GroupContentController implements Initializable {
     // ── Mini stats ─────────────────────────────────────────────
     @FXML private Label totalGroupsLabel;
     @FXML private Label activeGroupsLabel;
-    @FXML private Label avgMembersLabel;
-    @FXML private Label resultCountLabel;
+    @FXML private Label totalMembersLabel;
+    @FXML private Label coveredSubjectsLabel;
 
     // ── Filters ────────────────────────────────────────────────
     @FXML private ComboBox<String> statusFilter;
     @FXML private Button           resetFilterBtn;
-    @FXML private Label            footerCountLabel;
+    @FXML private Label           resultCountLabel;
 
     // ── Table ──────────────────────────────────────────────────
     @FXML private TableView<Groupe>            groupTable;
@@ -59,7 +59,7 @@ public class GroupContentController implements Initializable {
     private ObservableList<Groupe> allGroups = FXCollections.observableArrayList();
     private ObservableList<Groupe> filtered    = FXCollections.observableArrayList();
 
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 8;
     private int currentPage = 1;
 
     // ── Injected dependencies ──────────────────────────────────
@@ -316,6 +316,7 @@ public class GroupContentController implements Initializable {
             
             controller.setCurrentGroupe(groupe);
             controller.setParentController(this);
+            controller.setContentArea(contentArea);
             
             if (contentArea != null) {
                 contentArea.getChildren().setAll(view);

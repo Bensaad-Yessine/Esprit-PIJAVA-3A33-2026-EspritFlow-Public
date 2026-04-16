@@ -4,16 +4,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.*?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="piJava.Controllers.backoffice.group.PropositionReunionController"
-      styleClass="main-content"
-      spacing="24"
-      stylesheets="@group.css">
+<ScrollPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="piJava.Controllers.backoffice.group.PropositionReunionController"
+          fitToWidth="true"
+          fitToHeight="true"
+          styleClass="groups-scroll"
+          stylesheets="@group.css">
 
-    <!-- ── Header ─────────────────────────────────────────── -->
-    <HBox alignment="CENTER_LEFT" spacing="16" styleClass="page-header">
-        <VBox HBox.hgrow="ALWAYS" spacing="4">
+    <VBox spacing="16" styleClass="main-content">
+        
+        <VBox spacing="8">
             <HBox alignment="CENTER_LEFT" spacing="8">
                 <Label text="Backoffice" styleClass="breadcrumb-inactive"/>
                 <Label text="›" styleClass="breadcrumb-sep"/>
@@ -21,74 +22,47 @@
                 <Label text="›" styleClass="breadcrumb-sep"/>
                 <Label fx:id="groupNameBreadcrumb" text="Propositions" styleClass="breadcrumb-active"/>
             </HBox>
-            <Label fx:id="pageTitle" text="Propositions Réunion" styleClass="page-title"/>
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <Label fx:id="pageTitle" text="Propositions de Réunion" styleClass="page-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-bar"/>
+                <Button fx:id="addPropositionBtn" text="+ Nouvelle" styleClass="btn-add" onAction="#handleAdd"/>
+            </HBox>
         </VBox>
-        <TextField fx:id="searchField"
-                   promptText="🔍  Rechercher une proposition..."
-                   styleClass="search-bar"/>
-        <Button fx:id="addPropositionBtn" text="＋  Nouvelle Proposition"
-                styleClass="btn-add" onAction="#handleAdd"/>
-    </HBox>
 
-    <!-- ── Mini Stats ─────────────────────────────────────── -->
-    <HBox spacing="16" styleClass="mini-stats" alignment="CENTER_LEFT">
-        <HBox styleClass="mini-stat" spacing="10" alignment="CENTER_LEFT">
-            <Label text="📋" styleClass="mini-stat-icon"/>
-            <VBox spacing="2">
-                <Label fx:id="totalPropositionsLabel" text="—" styleClass="mini-stat-number"/>
-                <Label text="Total Propositions" styleClass="mini-stat-label"/>
-            </VBox>
-        </HBox>
-
-        <Region styleClass="mini-stat-divider" prefWidth="1" prefHeight="40"/>
-
-        <HBox styleClass="mini-stat" spacing="10" alignment="CENTER_LEFT">
-            <Label text="✓" styleClass="mini-stat-icon"/>
-            <VBox spacing="2">
-                <Label fx:id="acceptedPropositionsLabel" text="—" styleClass="mini-stat-number"/>
-                <Label text="Acceptées" styleClass="mini-stat-label"/>
-            </VBox>
-        </HBox>
-
-        <Region styleClass="mini-stat-divider" prefWidth="1" prefHeight="40"/>
-
-        <HBox styleClass="mini-stat" spacing="10" alignment="CENTER_LEFT">
-            <Label text="⏳" styleClass="mini-stat-icon"/>
-            <VBox spacing="2">
-                <Label fx:id="pendingPropositionsLabel" text="—" styleClass="mini-stat-number"/>
-                <Label text="En attente" styleClass="mini-stat-label"/>
-            </VBox>
-        </HBox>
-    </HBox>
-
-    <!-- ── Table Panel ────────────────────────────────────── -->
-    <VBox styleClass="table-panel" VBox.vgrow="ALWAYS">
-        <TableView fx:id="propositionTable" styleClass="group-table" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="idCol"         text="#"              prefWidth="50"/>
-                <TableColumn fx:id="dateCol"       text="DATE"           prefWidth="130"/>
-                <TableColumn fx:id="heureCol"      text="HEURE"         prefWidth="100"/>
-                <TableColumn fx:id="lieuCol"       text="LIEU"           prefWidth="130"/>
-                <TableColumn fx:id="statusCol"     text="STATUT"         prefWidth="100"/>
-                <TableColumn fx:id="descCol"       text="DESCRIPTION"    prefWidth="200"/>
-                <TableColumn fx:id="actionsCol"    text="ACTIONS"        prefWidth="100"/>
-            </columns>
-            <placeholder>
-                <VBox alignment="CENTER" spacing="12" styleClass="empty-state">
-                    <Label text="📋" styleClass="empty-icon"/>
-                    <Label text="Aucune proposition trouvée" styleClass="empty-title"/>
-                    <Label text="Cliquez sur « Nouvelle Proposition » pour commencer"
-                           styleClass="empty-sub"/>
+        <HBox spacing="16" styleClass="stats-row">
+            <HBox spacing="10" styleClass="stat-card">
+                <VBox spacing="2">
+                    <Label fx:id="totalPropositionsLabel" text="0" styleClass="stat-number"/>
+                    <Label text="Total" styleClass="stat-label"/>
                 </VBox>
-            </placeholder>
-        </TableView>
+            </HBox>
 
-        <!-- Footer -->
-        <HBox styleClass="table-footer" alignment="CENTER_LEFT" spacing="16">
-            <Label fx:id="footerLabel" text="Affichage de 0 entrées" styleClass="footer-text"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="backBtn" text="← Retour aux groupes" styleClass="page-btn" onAction="#handleBack"/>
+            <HBox spacing="10" styleClass="stat-card">
+                <VBox spacing="2">
+                    <Label fx:id="acceptedPropositionsLabel" text="0" styleClass="stat-number"/>
+                    <Label text="Acceptées" styleClass="stat-label"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="10" styleClass="stat-card">
+                <VBox spacing="2">
+                    <Label fx:id="pendingPropositionsLabel" text="0" styleClass="stat-number"/>
+                    <Label text="En attente" styleClass="stat-label"/>
+                </VBox>
+            </HBox>
         </HBox>
-    </VBox>
 
-</VBox>
+        <VBox spacing="16" styleClass="cards-section">
+            <Label text="Liste des Propositions" styleClass="section-title"/>
+            <FlowPane fx:id="propositionsContainer" styleClass="propositions-flow" hgap="16" vgap="16"/>
+        </VBox>
+
+        <HBox alignment="CENTER_LEFT">
+            <Label fx:id="footerLabel" text="Affichage de 0 propositions" styleClass="footer-text"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="backBtn" text="← Retour aux groupes" styleClass="btn-back" onAction="#handleBack"/>
+        </HBox>
+
+    </VBox>
+</ScrollPane>

@@ -30,18 +30,12 @@ public class PropositionReunionController implements Initializable {
     @FXML private Label acceptedPropositionsLabel;
     @FXML private Label pendingPropositionsLabel;
 
-    @FXML private TableView<PropositionReunion> propositionTable;
-    @FXML private TableColumn<PropositionReunion, String> idCol;
-    @FXML private TableColumn<PropositionReunion, String> dateCol;
-    @FXML private TableColumn<PropositionReunion, String> heureCol;
-    @FXML private TableColumn<PropositionReunion, String> lieuCol;
-    @FXML private TableColumn<PropositionReunion, String> statusCol;
-    @FXML private TableColumn<PropositionReunion, String> descCol;
-    @FXML private TableColumn<PropositionReunion, Void> actionsCol;
+    @FXML private FlowPane propositionsContainer;
 
     @FXML private Label footerLabel;
     @FXML private Button backBtn;
 
+    private StackPane contentArea;
     private Groupe currentGroupe;
     private final PropositionReunionService propositionService = new PropositionReunionService();
     private ObservableList<PropositionReunion> allPropositions = FXCollections.observableArrayList();
@@ -65,6 +59,10 @@ public class PropositionReunionController implements Initializable {
 
     public void setParentController(GroupContentController parent) {
         this.parentController = parent;
+    }
+    
+    public void setContentArea(StackPane contentArea) {
+        this.contentArea = contentArea;
     }
 
     // ── Column Setup ───────────────────────────────────────────
@@ -132,19 +130,16 @@ public class PropositionReunionController implements Initializable {
 
     // ── Data Loading ───────────────────────────────────────────
     private void loadData() {
-        // Safety check - ensure UI elements are initialized before loading data
-        if (propositionTable == null || footerLabel == null) {
-            System.err.println("[WARNING] UI elements not initialized yet, deferring loadData");
+        if (propositionsContainer == null || footerLabel == null) {
             return;
         }
         
         try {
             System.out.println("[DEBUG] Loading propositions for groupe: " + currentGroupe.getId());
-            allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
-            System.out.println("[DEBUG] Loaded " + allPropositions.size() + " propositions");
+allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
             filtered.setAll(allPropositions);
             updateStats();
-            updateTable();
+            updateDisplay();
         } catch (SQLException e) {
             System.err.println("[ERROR] SQL Error loading propositions: " + e.getMessage());
             e.printStackTrace();
@@ -170,9 +165,58 @@ public class PropositionReunionController implements Initializable {
         pendingPropositionsLabel.setText(String.valueOf(pending));
     }
 
-    private void updateTable() {
-        propositionTable.setItems(filtered);
-        footerLabel.setText(String.format("Affichage de %d proposition(s)", filtered.size()));
+    private void updateDisplay() {
+        propositionsContainer.getChildren().clear();
+        for (PropositionReunion prop : filtered) {
+            propositionsContainer.getChildren().add(createPropositionCard(prop));
+        }
+        footerLabel.setText("Affichage de " + filtered.size() + " proposition(s)");
+    }
+    
+    private VBox createPropositionCard(PropositionReunion prop) {
+        VBox card = new VBox();
+        card.setSpacing(12);
+        card.setPadding(new Insets(20));
+        card.setPrefWidth(320);
+        card.setStyle("-fx-background-color: #1e1e2d; -fx-background-radius: 12; -fx-border-color: #2a2a36; -fx-border-radius: 12; -fx-border-width: 1;");
+
+        Label titleLabel = new Label("Proposition #" + prop.getId());
+        titleLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: 700; -fx-text-fill: #ffffff;");
+
+        Label dateLabel = new Label("📅 " + (prop.getDateReunion() != null ? prop.getDateReunion() : "—"));
+        dateLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #7f8fa6;");
+
+        String timeRange = (prop.getHeureDebut() != null ? prop.getHeureDebut() : "") + 
+                         (prop.getHeureFin() != null ? " - " + prop.getHeureFin() : "");
+        Label timeLabel = new Label("🕐 " + (timeRange.isEmpty() ? "—" : timeRange));
+        timeLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #7f8fa6;");
+
+        Label lieuLabel = new Label("📍 " + (prop.getLieu() != null ? prop.getLieu() : "—"));
+        lieuLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #7f8fa6;");
+
+        String status = prop.getStatut() != null ? prop.getStatut() : "En attente";
+        Label statusBadge = new Label(status);
+        String statusColor = "En attente".equalsIgnoreCase(status) ? "#f59e0b" : 
+                          "Acceptée".equalsIgnoreCase(status) ? "#10b981" : "#ef4444";
+        statusBadge.setStyle("-fx-padding: 6 14; -fx-background-color: " + statusColor + "; -fx-text-fill: white; -fx-font-weight: 700; -fx-background-radius: 16; -fx-font-size: 12px;");
+
+        Label descLabel = new Label(prop.getDescription() != null ? prop.getDescription() : "Aucune description");
+        descLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #b8bcc8;");
+        descLabel.setWrapText(true);
+
+        HBox actions = new HBox(12);
+        Button editBtn = new Button("✎ Modifier");
+        editBtn.setStyle("-fx-background-color: #6c5ce7; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 16; -fx-background-radius: 6; -fx-cursor: hand;");
+        editBtn.setOnAction(e -> handleEdit(prop));
+
+        Button deleteBtn = new Button("✕ Supprimer");
+        deleteBtn.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 16; -fx-background-radius: 6; -fx-cursor: hand;");
+        deleteBtn.setOnAction(e -> handleDelete(prop));
+
+        actions.getChildren().addAll(editBtn, deleteBtn);
+
+        card.getChildren().addAll(titleLabel, dateLabel, timeLabel, lieuLabel, statusBadge, descLabel, actions);
+        return card;
     }
 
     // ── Search ─────────────────────────────────────────────────
@@ -181,12 +225,12 @@ public class PropositionReunionController implements Initializable {
     }
 
     private void applyFilters() {
-        String search = searchField.getText().toLowerCase();
+        String search = searchField.getText() != null ? searchField.getText().toLowerCase() : "";
         filtered.setAll(allPropositions.stream()
-                .filter(p -> p.getTitre().toLowerCase().contains(search) ||
-                            (p.getLieu() != null && p.getLieu().toLowerCase().contains(search)))
+                .filter(p -> (p.getDescription() != null && p.getDescription().toLowerCase().contains(search)) ||
+                            (p.getLieu() != null && p.getLieu().toLowerCase().contains(search))))
                 .collect(Collectors.toList()));
-        updateTable();
+        updateDisplay();
     }
 
     // ── Actions ────────────────────────────────────────────────
@@ -456,10 +500,18 @@ public class PropositionReunionController implements Initializable {
 
     @FXML
     private void handleBack() {
-        if (parentController != null) {
-            parentController.showGroupsView();
-        } else {
-            System.err.println("[WARNING] Parent controller not set - cannot navigate back");
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/backoffice/group/GroupContent.fxml")
+            );
+            javafx.scene.Parent view = loader.load();
+            
+            if (contentArea != null) {
+                contentArea.getChildren().setAll(view);
+            }
+        } catch (Exception e) {
+            System.err.println("[ERROR] Back navigation failed: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

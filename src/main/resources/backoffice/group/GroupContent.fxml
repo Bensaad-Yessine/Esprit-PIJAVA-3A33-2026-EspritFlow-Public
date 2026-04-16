@@ -1,118 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="piJava.Controllers.backoffice.group.GroupContentController"
-      styleClass="main-content"
-      spacing="24"
-      stylesheets="@group.css">
+<ScrollPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="piJava.Controllers.backoffice.group.GroupContentController"
+          fitToWidth="true"
+          fitToHeight="true"
+          styleClass="groups-scroll"
+          stylesheets="@group.css">
 
-    <!-- ── Header ─────────────────────────────────────────── -->
-    <HBox alignment="CENTER_LEFT" spacing="16" styleClass="page-header">
-        <VBox HBox.hgrow="ALWAYS" spacing="4">
-            <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label text="Backoffice" styleClass="breadcrumb-inactive"/>
-                <Label text="›" styleClass="breadcrumb-sep"/>
-                <Label text="Gestion des Groupes" styleClass="breadcrumb-active"/>
-            </HBox>
-            <Label text="Gestion des Groupes" styleClass="page-title"/>
-        </VBox>
-        <TextField fx:id="searchField"
-                   promptText="🔍  Rechercher un groupe..."
-                   styleClass="search-bar"/>
-        <Button fx:id="addGroupBtn" text="＋  Nouveau Groupe"
-                styleClass="btn-add" onAction="#handleAdd"/>
-    </HBox>
+    <VBox spacing="16" styleClass="groups-root">
+        <padding>
+            <Insets top="16" right="24" bottom="16" left="24"/>
+        </padding>
 
-    <!-- ── Mini Stats ─────────────────────────────────────── -->
-    <HBox spacing="16" styleClass="mini-stats" alignment="CENTER_LEFT">
-
-        <HBox styleClass="mini-stat" spacing="10" alignment="CENTER_LEFT">
-            <Label text="👥" styleClass="mini-stat-icon"/>
-            <VBox spacing="2">
-                <Label fx:id="totalGroupsLabel" text="—" styleClass="mini-stat-number"/>
-                <Label text="Total Groupes" styleClass="mini-stat-label"/>
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="page-header">
+            <VBox HBox.hgrow="ALWAYS" spacing="4">
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label text="Backoffice" styleClass="breadcrumb-inactive"/>
+                    <Label text="›" styleClass="breadcrumb-sep"/>
+                    <Label text="Groupes" styleClass="breadcrumb-active"/>
+                </HBox>
+                <Label text="Gestion des Groupes Projet" styleClass="page-title"/>
             </VBox>
+            <TextField fx:id="searchField"
+                       promptText="Rechercher..."
+                       styleClass="search-bar"/>
+            <Button fx:id="addGroupBtn" text="+ Nouveau Groupe"
+                    styleClass="btn-add" onAction="#handleAdd"/>
         </HBox>
 
-        <Region styleClass="mini-stat-divider" prefWidth="1" prefHeight="40"/>
-
-        <HBox styleClass="mini-stat" spacing="10" alignment="CENTER_LEFT">
-            <Label text="⚙️" styleClass="mini-stat-icon"/>
-            <VBox spacing="2">
-                <Label fx:id="activeGroupsLabel" text="—" styleClass="mini-stat-number"/>
-                <Label text="Groupes actifs" styleClass="mini-stat-label"/>
-            </VBox>
-        </HBox>
-
-        <Region styleClass="mini-stat-divider" prefWidth="1" prefHeight="40"/>
-
-        <HBox styleClass="mini-stat" spacing="10" alignment="CENTER_LEFT">
-            <Label text="📊" styleClass="mini-stat-icon"/>
-            <VBox spacing="2">
-                <Label fx:id="avgMembersLabel" text="—" styleClass="mini-stat-number"/>
-                <Label text="Membres moyen" styleClass="mini-stat-label"/>
-            </VBox>
-        </HBox>
-
-        <Region styleClass="mini-stat-divider" prefWidth="1" prefHeight="40"/>
-
-        <HBox styleClass="mini-stat" spacing="10" alignment="CENTER_LEFT">
-            <Label text="📌" styleClass="mini-stat-icon"/>
-            <VBox spacing="2">
-                <Label fx:id="resultCountLabel" text="0 résultat(s)" styleClass="mini-stat-number"/>
-                <Label text="Résultats" styleClass="mini-stat-label"/>
-            </VBox>
-        </HBox>
-
-    </HBox>
-
-    <!-- ── Filter Bar ─────────────────────────────────────── -->
-    <HBox spacing="10" styleClass="filter-bar" alignment="CENTER_LEFT">
-        <Label text="Filtrer :" styleClass="filter-label"/>
-        <ComboBox fx:id="statusFilter" promptText="Statut" styleClass="filter-combo"/>
-        <Button fx:id="resetFilterBtn" text="✕  Réinitialiser"
-                styleClass="btn-reset" onAction="#handleResetFilters"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label fx:id="footerCountLabel" text="" styleClass="result-count"/>
-    </HBox>
-
-    <!-- ── Table Panel ────────────────────────────────────── -->
-    <VBox styleClass="table-panel" VBox.vgrow="ALWAYS">
-
-        <TableView fx:id="groupTable" styleClass="group-table" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="idCol"      text="#"                 prefWidth="55"/>
-                <TableColumn fx:id="nameCol"    text="NOM DU GROUPE"      prefWidth="200"/>
-                <TableColumn fx:id="projectCol" text="PROJET"             prefWidth="170"/>
-                <TableColumn fx:id="membersCol" text="MEMBRES"            prefWidth="110"/>
-                <TableColumn fx:id="statusCol"  text="STATUT"             prefWidth="120"/>
-                <TableColumn fx:id="descCol"    text="DESCRIPTION"        prefWidth="240"/>
-                <TableColumn fx:id="actionsCol" text="ACTIONS"            prefWidth="180"/>
-            </columns>
-            <placeholder>
-                <VBox alignment="CENTER" spacing="12" styleClass="empty-state">
-                    <Label text="👥" styleClass="empty-icon"/>
-                    <Label text="Aucun groupe trouvé" styleClass="empty-title"/>
-                    <Label text="Cliquez sur « Nouveau Groupe » pour commencer"
-                           styleClass="empty-sub"/>
+        <HBox spacing="16" styleClass="stats-row">
+            <HBox spacing="10" styleClass="stat-card">
+                <VBox spacing="2">
+                    <Label fx:id="totalGroupsLabel" text="0" styleClass="stat-number"/>
+                    <Label text="Total Groupes" styleClass="stat-label"/>
                 </VBox>
-            </placeholder>
-        </TableView>
+            </HBox>
 
-        <!-- Footer -->
-        <HBox styleClass="table-footer" alignment="CENTER_LEFT" spacing="16">
-            <Label fx:id="footerLabel" text="Affichage de 0 entrées" styleClass="footer-text"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="prevBtn" text="‹" styleClass="page-btn" onAction="#handlePrev"/>
-            <Label fx:id="pageLabel" text="1" styleClass="page-current"/>
-            <Button fx:id="nextBtn" text="›" styleClass="page-btn" onAction="#handleNext"/>
+            <HBox spacing="10" styleClass="stat-card">
+                <VBox spacing="2">
+                    <Label fx:id="activeGroupsLabel" text="0" styleClass="stat-number"/>
+                    <Label text="Actifs" styleClass="stat-label"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="10" styleClass="stat-card">
+                <VBox spacing="2">
+                    <Label fx:id="totalMembersLabel" text="0" styleClass="stat-number"/>
+                    <Label text="Membres" styleClass="stat-label"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="10" styleClass="stat-card">
+                <VBox spacing="2">
+                    <Label fx:id="coveredSubjectsLabel" text="0" styleClass="stat-number"/>
+                    <Label text="Matières" styleClass="stat-label"/>
+                </VBox>
+            </HBox>
         </HBox>
+
+        <HBox spacing="10" styleClass="filter-bar">
+            <Label text="Filtrer :" styleClass="filter-label"/>
+            <ComboBox fx:id="statusFilter" promptText="Statut" styleClass="filter-combo"/>
+            <Button fx:id="resetFilterBtn" text="Reset"
+                    styleClass="btn-reset" onAction="#handleResetFilters"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="resultCountLabel" text="0 résultat(s)" styleClass="result-count"/>
+        </HBox>
+
+        <VBox styleClass="table-panel" VBox.vgrow="ALWAYS">
+            <TableView fx:id="groupTable" styleClass="group-table" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="idCol" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="nameCol" text="GROUPE" prefWidth="200"/>
+                    <TableColumn fx:id="projectCol" text="MATIÈRE" prefWidth="150"/>
+                    <TableColumn fx:id="membersCol" text="MEMBRES" prefWidth="100"/>
+                    <TableColumn fx:id="descCol" text="DESCRIPTION" prefWidth="200"/>
+                    <TableColumn fx:id="statusCol" text="STATUT" prefWidth="100"/>
+                    <TableColumn fx:id="actionsCol" text="ACTIONS" prefWidth="150"/>
+                </columns>
+                <placeholder>
+                    <VBox alignment="CENTER" spacing="12">
+                        <Label text="Aucun groupe trouvé" styleClass="empty-title"/>
+                    </VBox>
+                </placeholder>
+            </TableView>
+
+            <HBox styleClass="table-footer">
+                <Label fx:id="footerLabel" text="Affichage de 0 entrées" styleClass="footer-text"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="prevBtn" text="‹" styleClass="page-btn" onAction="#handlePrev"/>
+                <Label fx:id="pageLabel" text="1" styleClass="page-label"/>
+                <Button fx:id="nextBtn" text="›" styleClass="page-btn" onAction="#handleNext"/>
+            </HBox>
+        </VBox>
 
     </VBox>
-
-</VBox>
+</ScrollPane>
