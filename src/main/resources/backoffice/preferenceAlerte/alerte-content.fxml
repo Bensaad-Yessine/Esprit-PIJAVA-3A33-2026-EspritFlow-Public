@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="piJava.Controllers.backoffice.preferenceAlerte.AlertesController"
+            stylesheets="@alerte.css"
+            styleClass="dashboard-root">
+
+    <VBox styleClass="main-content"
+          spacing="24"
+          fillWidth="true"
+          AnchorPane.topAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0">
+
+        <!-- HEADER -->
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+
+            <VBox HBox.hgrow="ALWAYS" spacing="6">
+                <Label text="🔔 Gestion des Alertes" styleClass="page-title"/>
+                <Label text="Préférences d'alerte utilisateurs" styleClass="page-subtitle"/>
+            </VBox>
+
+            <Button text="➕ Nouvelle Alerte"
+                    onAction="#addAlerte"
+                    styleClass="btn-primary"/>
+        </HBox>
+
+        <!-- STATS -->
+        <HBox spacing="20" styleClass="stats-row" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="📋 Total" styleClass="stat-label"/>
+                <Label fx:id="lblAlertesCount" text="0" styleClass="stat-number"/>
+                <Label text="Préférences" styleClass="stat-sub"/>
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="✅ Actives" styleClass="stat-label"/>
+                <Label fx:id="lblActiveCount" text="--" styleClass="stat-number" style="-fx-text-fill: #10B981;"/>
+                <Label text="En cours" styleClass="stat-sub"/>
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="⏸ Inactives" styleClass="stat-label"/>
+                <Label fx:id="lblInactiveCount" text="--" styleClass="stat-number" style="-fx-text-fill: #EF4444;"/>
+                <Label text="Désactivées" styleClass="stat-sub"/>
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="⭐ Par défaut" styleClass="stat-label"/>
+                <Label fx:id="lblDefaultCount" text="--" styleClass="stat-number" style="-fx-text-fill: #F59E0B;"/>
+                <Label text="Préférées" styleClass="stat-sub"/>
+            </VBox>
+
+        </HBox>
+
+        <!-- LIST CONTAINER -->
+        <VBox VBox.vgrow="ALWAYS" spacing="12" styleClass="list-container" maxWidth="Infinity">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Liste des préférences d'alerte" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="txtSearch" promptText="🔍 Rechercher..."
+                           styleClass="search-field"/>
+                <ComboBox fx:id="statusFilter" promptText="Statut" styleClass="filter-combo"/>
+                <ComboBox fx:id="sortCombo" promptText="Trier par" styleClass="filter-combo"/>
+            </HBox>
+
+            <ListView fx:id="alertesListView"
+                      VBox.vgrow="ALWAYS"
+                      maxWidth="Infinity"
+                      maxHeight="Infinity"
+                      styleClass="alerte-list"/>
+
+        </VBox>
+
+    </VBox>
+
+</AnchorPane>

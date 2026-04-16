@@ -215,7 +215,7 @@ public class FrontSidebarController implements Initializable {
     @FXML
     public void goToNotifications() {
         setActiveButton(notificationsBtn);
-        loadView("/frontoffice/notifications/notif-content.fxml");
+        loadView("/frontoffice/preferencealerte/alerte-content.fxml");
     }
     public void goToProfile(){
         loadView("/frontoffice/user/profile.fxml");
