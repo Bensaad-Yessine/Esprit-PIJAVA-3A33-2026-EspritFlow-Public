@@ -5,8 +5,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
-import piJava.Controllers.backoffice.SidebarController;
+import javafx.stage.Stage;
 import piJava.entities.ObjectifSante;
 import piJava.entities.SuiviBienEtre;
 import piJava.services.ObjectifSanteService;
@@ -61,8 +60,6 @@ public class AjouterSuiviController {
 
     private int objectifId;
     private AfficherSuivisController afficherSuivisController;
-    private SidebarController sidebarController;
-    private StackPane contentArea;
 
     public void setObjectifId(int objectifId) {
         this.objectifId = objectifId;
@@ -70,14 +67,6 @@ public class AjouterSuiviController {
 
     public void setAfficherSuivisController(AfficherSuivisController afficherSuivisController) {
         this.afficherSuivisController = afficherSuivisController;
-    }
-
-    public void setSidebarController(SidebarController sidebarController) {
-        this.sidebarController = sidebarController;
-    }
-
-    public void setContentArea(StackPane contentArea) {
-        this.contentArea = contentArea;
     }
 
     @FXML
@@ -94,16 +83,11 @@ public class AjouterSuiviController {
         if (humeur == null) return 0;
 
         switch (humeur) {
-            case "EXCELLENT":
-                return 10;
-            case "BIEN":
-                return 8;
-            case "MOYEN":
-                return 5;
-            case "MAUVAIS":
-                return 2;
-            default:
-                return 0;
+            case "EXCELLENT": return 10;
+            case "BIEN": return 8;
+            case "MOYEN": return 5;
+            case "MAUVAIS": return 2;
+            default: return 0;
         }
     }
 
@@ -120,43 +104,35 @@ public class AjouterSuiviController {
 
         switch (typeObjectif) {
             case "SOMMEIL":
-                score = (
-                        qualiteSommeil * 0.50 +
-                                niveauEnergie * 0.15 +
-                                qualiteAlimentation * 0.15 +
-                                stressInverse * 0.15 +
-                                humeurNote * 0.05
-                ) * 10;
+                score = (qualiteSommeil * 0.50 +
+                        niveauEnergie * 0.15 +
+                        qualiteAlimentation * 0.15 +
+                        stressInverse * 0.15 +
+                        humeurNote * 0.05) * 10;
                 break;
 
             case "SPORT":
-                score = (
-                        niveauEnergie * 0.50 +
-                                qualiteSommeil * 0.15 +
-                                qualiteAlimentation * 0.15 +
-                                stressInverse * 0.15 +
-                                humeurNote * 0.05
-                ) * 10;
+                score = (niveauEnergie * 0.50 +
+                        qualiteSommeil * 0.15 +
+                        qualiteAlimentation * 0.15 +
+                        stressInverse * 0.15 +
+                        humeurNote * 0.05) * 10;
                 break;
 
             case "ALIMENTATION":
-                score = (
-                        qualiteAlimentation * 0.50 +
-                                qualiteSommeil * 0.15 +
-                                niveauEnergie * 0.15 +
-                                stressInverse * 0.15 +
-                                humeurNote * 0.05
-                ) * 10;
+                score = (qualiteAlimentation * 0.50 +
+                        qualiteSommeil * 0.15 +
+                        niveauEnergie * 0.15 +
+                        stressInverse * 0.15 +
+                        humeurNote * 0.05) * 10;
                 break;
 
             default:
-                score = (
-                        qualiteSommeil +
-                                niveauEnergie +
-                                stressInverse +
-                                qualiteAlimentation +
-                                humeurNote
-                ) / 5.0 * 10;
+                score = (qualiteSommeil +
+                        niveauEnergie +
+                        stressInverse +
+                        qualiteAlimentation +
+                        humeurNote) / 5.0 * 10;
                 break;
         }
 
@@ -211,9 +187,7 @@ public class AjouterSuiviController {
                 afficherSuivisController.chargerSuivisParObjectif();
             }
 
-            if (afficherSuivisController != null && sidebarController != null) {
-                afficherSuivisController.rechargerPageSuivis(objectifId, sidebarController);
-            }
+            fermerFenetre();
 
         } catch (Exception e) {
             errDateSaisie.setText("Erreur lors de l'ajout du suivi.");
@@ -223,14 +197,12 @@ public class AjouterSuiviController {
 
     @FXML
     public void retourSuivis() {
-        try {
-            if (afficherSuivisController != null && sidebarController != null) {
-                afficherSuivisController.rechargerPageSuivis(objectifId, sidebarController);
-            }
-        } catch (Exception e) {
-            System.out.println("Erreur lors du retour vers les suivis : " + e.getMessage());
-            e.printStackTrace();
-        }
+        fermerFenetre();
+    }
+
+    private void fermerFenetre() {
+        Stage stage = (Stage) dpDateSaisie.getScene().getWindow();
+        stage.close();
     }
 
     private boolean validerSaisieSuivi() {

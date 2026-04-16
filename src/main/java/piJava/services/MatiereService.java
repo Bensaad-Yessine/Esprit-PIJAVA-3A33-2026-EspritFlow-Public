@@ -122,6 +122,28 @@ public class MatiereService implements ICrud<Matiere> {
         return null;
     }
 
+    // ─── GET MATIERES BY CLASSE ──────────────────────────────────────────────
+    public List<Matiere> getMatieresByClasseId(int classeId) throws SQLException {
+        List<Matiere> matieres = new ArrayList<>();
+        String query = """
+                SELECT DISTINCT m.*
+                FROM matiere_classe m
+                JOIN matiere_classe_classe mcc ON m.id = mcc.matiere_classe_id
+                WHERE mcc.classe_id = ?
+                ORDER BY m.nom
+                """;
+
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, classeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    matieres.add(mapResultSet(rs));
+                }
+            }
+        }
+        return matieres;
+    }
+
     // ─── PRIVATE HELPERS ─────────────────────────────────────────
 
     // Maps a ResultSet row to a Matiere object

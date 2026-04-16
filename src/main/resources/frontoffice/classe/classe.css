@@ -1,0 +1,275 @@
+.root {
+    -fx-font-family: "Segoe UI", "Inter", "Poppins", sans-serif;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F5F5F6, rgba(253, 120, 120, 0.94));
+}
+
+.top-bar {
+    -fx-background-color: linear-gradient(to right, #ffffff, #f8f9fa);
+    -fx-border-color: transparent transparent #e9ecef transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);
+}
+
+.title {
+    -fx-text-fill: #212529;
+    -fx-font-size: 24px;
+    -fx-font-weight: 800;
+}
+
+.subtitle {
+    -fx-text-fill: #6c757d;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+}
+
+.hero-card {
+    -fx-background-color: linear-gradient(to right, #E63946, #C1121F);
+    -fx-background-radius: 24;
+    -fx-padding: 32;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.22), 20, 0.12, 0, 6);
+    -fx-border-color: rgba(193,18,31,0.18);
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+.hero-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 24px;
+    -fx-font-weight: 800;
+}
+
+.hero-subtitle {
+    -fx-text-fill: #ffe5e8;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+}
+
+.hero-sticker {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 38px;
+    -fx-font-weight: bold;
+}
+
+.main-container {
+    -fx-padding: 24;
+}
+
+.root-bg {
+    -fx-font-family: "Segoe UI", "Inter", "Poppins", sans-serif;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F5F5F6, rgba(253, 120, 120, 0.94));
+}
+
+.page-scroll {
+    -fx-background-color: transparent;
+}
+
+.page-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.panel {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 18, 0.08, 0, 4);
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+}
+
+.panel-title {
+    -fx-text-fill: #212529;
+    -fx-font-size: 24px;
+    -fx-font-weight: 800;
+}
+
+.info-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-padding: 18;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 12, 0.08, 0, 3);
+}
+
+.info-label {
+    -fx-text-fill: #6c757d;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
+.info-value {
+    -fx-text-fill: #C1121F;
+    -fx-font-size: 18px;
+    -fx-font-weight: 800;
+}
+
+.info-description {
+    -fx-text-fill: #495057;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+}
+
+.card-label {
+    -fx-text-fill: rgba(255,255,255,0.9);
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
+.card-number {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+}
+
+.card-sub {
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
+.red-card {
+    -fx-background-color: linear-gradient(to right, #E63946, #C1121F);
+    -fx-background-radius: 18;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.22), 18, 0.08, 0, 4);
+}
+
+.red-card-light {
+    -fx-background-color: linear-gradient(to right, #f05d67, #e63946);
+    -fx-background-radius: 18;
+    -fx-padding: 20;
+}
+
+.red-card-mid {
+    -fx-background-color: linear-gradient(to right, #f56f78, #d62f3f);
+    -fx-background-radius: 18;
+    -fx-padding: 20;
+}
+
+/* kept for compatibility with previous layouts */
+.red-card-soft {
+    -fx-background-color: linear-gradient(to right, #ff8a92, #f05d67);
+    -fx-background-radius: 18;
+    -fx-padding: 20;
+}
+
+.button {
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 12;
+    -fx-padding: 10 18 10 18;
+    -fx-border-radius: 12;
+}
+
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #E63946, #C1121F);
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+    -fx-background-radius: 14;
+    -fx-padding: 11 22 11 22;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.25), 12, 0.12, 0, 3);
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #FF4D5A, #E63946);
+}
+
+.badge-blue {
+    -fx-background-color: #FEE2E4;
+    -fx-text-fill: #C1121F;
+    -fx-background-radius: 20;
+    -fx-padding: 6 14 6 14;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-border-color: #f5b8bf;
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+}
+
+.search-field {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-border-color: #f3b4ba;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 10 12 10 12;
+    -fx-font-size: 13px;
+    -fx-text-fill: #2b2d42;
+    -fx-prompt-text-fill: #9aa0a6;
+}
+
+.search-field:focused {
+    -fx-border-color: #E63946;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.2), 10, 0.12, 0, 0);
+}
+
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #fff5f6;
+    -fx-background-radius: 16 16 0 0;
+    -fx-padding: 8 0 8 0;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-pref-height: 45;
+    -fx-min-height: 45;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #C1121F;
+    -fx-font-size: 12px;
+    -fx-font-weight: 800;
+}
+
+.table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #f1f3f5 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fcfcfd;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #fff5f6;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #FEE2E4;
+}
+
+.table-cell {
+    -fx-text-fill: #495057;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 12 12 12;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+

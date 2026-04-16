@@ -5,22 +5,17 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MyDataBase {
-    final String USERNAME = "root";
-    final String url = "jdbc:mysql://localhost:3306/pidev" ;
-    final String PASSWORD = "";
+    private static final String USERNAME = "root";
+    private static final String URL = "jdbc:mysql://localhost:3306/pidev";
+    private static final String PASSWORD = "";
 
-    Connection connection ;
+    private Connection connection;
+    private String lastErrorMessage;
     static  MyDataBase instance ;
 
     // constructeur
      private MyDataBase(){
-         try{
-         connection = DriverManager.getConnection(url,USERNAME,PASSWORD);
-             System.out.println("Connected to database successfully");
-     } catch (SQLException e) {
-             System.out.println(e.getMessage());
-         }
-
+         reconnect();
      }
      public static MyDataBase getInstance(){
          if(instance==null){
@@ -28,7 +23,31 @@ public class MyDataBase {
          }
          return instance ;
      }
-    public Connection getConnection() {
+    public synchronized Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                reconnect();
+            }
+        } catch (SQLException e) {
+            lastErrorMessage = e.getMessage();
+            connection = null;
+        }
         return connection;
+    }
+
+    public synchronized String getLastErrorMessage() {
+        return lastErrorMessage;
+    }
+
+    private void reconnect() {
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            lastErrorMessage = null;
+            System.out.println("Connected to database successfully");
+        } catch (SQLException e) {
+            connection = null;
+            lastErrorMessage = e.getMessage();
+            System.out.println("Database connection unavailable: " + e.getMessage());
+        }
     }
 }

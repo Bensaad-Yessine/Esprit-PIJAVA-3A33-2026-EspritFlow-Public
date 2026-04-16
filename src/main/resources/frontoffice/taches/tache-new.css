@@ -1,150 +1,210 @@
 /* ============================================================
-   ESPRIT FLOW — tache-new.css (Modern Form)
-   Create/Edit Task Page Styles
+   ESPRIT FLOW — tache-new.css (ULTRA MODERN 2-COLUMN VERSION)
    ============================================================ */
 
-/* ── ROOT & BACKGROUND ────────────────────────────────────── */
+/* ── ROOT & BACKGROUND ───────────────────────────────── */
 .root-bg {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F5F5F6, rgba(253, 120, 120, 0.94));
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,
+    #F8F9FA 0%,
+    #FFF5F5 25%,
+    #FFE5E5 50%,
+    rgba(253, 120, 120, 0.85) 75%,
+    rgba(220, 38, 38, 0.9) 100%);
 }
 
 .main-container {
-    -fx-padding: 32;
-    -fx-background-color: transparent;
+    -fx-padding: 40 50 50 50;
+    -fx-spacing: 30;
 }
 
 .page-scroll {
     -fx-background-color: transparent;
-    -fx-border-color: transparent;
 }
 
 .page-scroll .viewport {
     -fx-background-color: transparent;
 }
 
-/* ── TYPOGRAPHY ───────────────────────────────────────────── */
+/* ── HEADER SECTION ─────────────────────────────────── */
+.header-section {
+    -fx-padding: 0 0 10 0;
+    -fx-border-color: transparent transparent linear-gradient(to right, #E63946, transparent) transparent;
+    -fx-border-width: 0 0 3 0;
+}
+
 .title {
-    -fx-font-size: 28px;
+    -fx-font-size: 36px;
     -fx-font-weight: bold;
-    -fx-text-fill: #18181B;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 1);
+    -fx-text-fill: linear-gradient(to right, #1F2937, #DC2626);
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.2), 10, 0, 0, 2);
 }
 
 .subtitle {
-    -fx-font-size: 13px;
-    -fx-text-fill: #71717A;
-    -fx-font-weight: 500;
+    -fx-font-size: 14px;
+    -fx-text-fill: #6B7280;
+    -fx-font-style: italic;
 }
 
+/* ── FORM CARD ──────────────────────────────────────── */
+.form-card {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%,
+    rgba(248, 233, 233, 0.84) 0%,
+    rgba(236, 223, 223, 0.93) 100%);
+    -fx-background-radius: 32;
+    -fx-padding: 40;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.15), 30, 0, 0, 12),
+    dropshadow(gaussian, rgba(0, 0, 0, 0.08), 20, 0, 0, 4);
+    -fx-border-color: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(254, 202, 202, 0.4));
+    -fx-border-radius: 32;
+    -fx-border-width: 1;
+}
+
+/* ── FORM GRID ────────────────────────────────────────── */
+.form-grid {
+    -fx-padding: 0;
+}
+
+/* ── FIELD LABELS WITH ICONS ─────────────────────────── */
 .field-label {
     -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #52525B;
-    -fx-letter-spacing: 0.5px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #374151;
+    -fx-graphic-text-gap: 8;
 }
 
-/* ── NOTIFICATION (same as tasks page) ────────────────────── */
-.notification-label {
-    -fx-background-color: #4CAF50;
-    -fx-text-fill: white;
-    -fx-padding: 12 20;
-    -fx-font-weight: bold;
-    -fx-background-radius: 16;
-    -fx-alignment: center;
-    -fx-opacity: 0;
+.field-icon {
+    -fx-min-width: 16;
+    -fx-min-height: 16;
+    -fx-max-width: 16;
+    -fx-max-height: 16;
+    -fx-background-radius: 3;
 }
 
-/* ── FORM CARD (Glassmorphism) ────────────────────────────── */
-.form-card {
-    -fx-background-color: rgba(255, 255, 255, 0.95);
-    -fx-background-radius: 28;
-    -fx-border-color: rgba(255, 255, 255, 0.6);
-    -fx-border-radius: 28;
-    -fx-border-width: 1;
-    -fx-padding: 32;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 20, 0, 0, 8);
+.icon-title {
+    -fx-background-color: linear-gradient(to bottom right, #DC2626, #991B1B);
 }
 
-.form-grid {
-    -fx-vgap: 18;
-    -fx-hgap: 24;
+.icon-type {
+    -fx-background-color: linear-gradient(to bottom right, #7C3AED, #5B21B6);
 }
 
-/* ── FORM FIELDS ──────────────────────────────────────────── */
-.form-field, .date-picker, .form-combo {
+.icon-calendar {
+    -fx-background-color: linear-gradient(to bottom right, #059669, #047857);
+}
+
+.icon-clock {
+    -fx-background-color: linear-gradient(to bottom right, #D97706, #B45309);
+}
+
+.icon-priority {
+    -fx-background-color: linear-gradient(to bottom right, #DC2626, #EF4444);
+}
+
+.icon-status {
+    -fx-background-color: linear-gradient(to bottom right, #2563EB, #1D4ED8);
+}
+
+.icon-duration {
+    -fx-background-color: linear-gradient(to bottom right, #0891B2, #0E7490);
+}
+
+.icon-description {
+    -fx-background-color: linear-gradient(to bottom right, #4F46E5, #4338CA);
+}
+
+/* ── INPUT FIELDS ───────────────────────────────────── */
+TextField.form-field, .form-field,
+DatePicker.date-picker, .date-picker,
+ComboBox.combo-box, .combo-box {
     -fx-background-color: #F9FAFB;
     -fx-background-radius: 16;
-    -fx-border-color: #E4E4E7;
+    -fx-border-color: linear-gradient(to bottom, #E5E7EB, #D1D5DB);
     -fx-border-radius: 16;
-    -fx-border-width: 1;
+    -fx-border-width: 1.5;
     -fx-padding: 12 16;
+    -fx-text-fill: #1F2937;
     -fx-font-size: 14px;
-    -fx-text-fill: #18181B;
-    -fx-prompt-text-fill: #A1A1AA;
-    -fx-transition: all 0.2s;
+    -fx-prompt-text-fill: #9CA3AF;
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
-.form-field:focused, .date-picker:focused, .form-combo:focused {
-    -fx-border-color: #E63946;
+TextField.form-field:hover, .form-field:hover,
+DatePicker.date-picker:hover, .date-picker:hover,
+ComboBox.combo-box:hover, .combo-box:hover {
+    -fx-border-color: linear-gradient(to bottom, #FCA5A5, #FECACA);
     -fx-background-color: #FFFFFF;
-    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.2), 10, 0, 0, 2);
 }
 
-/* DatePicker specific */
-.date-picker .arrow-button {
+TextField.form-field:focused, .form-field:focused,
+DatePicker.date-picker:focused, .date-picker:focused,
+ComboBox.combo-box:focused, .combo-box:focused {
+    -fx-border-color: linear-gradient(to bottom, #DC2626, #EF4444);
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.2), 12, 0, 0, 0);
+}
+
+/* COMBOBOX SPECIFIC */
+.combo-box .arrow-button {
     -fx-background-color: transparent;
-    -fx-cursor: hand;
+    -fx-padding: 0 12 0 8;
 }
 
-.date-picker .arrow-button:hover {
-    -fx-background-color: #FEE2E4;
+.combo-box .arrow {
+    -fx-background-color: #DC2626;
+    -fx-shape: "M0,0 L8,0 L4,6 Z";
+    -fx-scale-shape: false;
 }
 
-.date-picker .cell {
-    -fx-background-color: white;
-    -fx-text-fill: #18181B;
+.combo-box-popup .list-view {
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #E5E7EB;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 5);
 }
 
-.date-picker .cell:hover {
-    -fx-background-color: #FEE2E4;
+.combo-box-popup .list-cell {
+    -fx-padding: 10 16;
+    -fx-background-color: transparent;
 }
 
-.date-picker .cell:focused {
-    -fx-background-color: #E63946;
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: linear-gradient(to right, #FEE2E2, #FECACA);
+    -fx-text-fill: #991B1B;
+}
+
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: linear-gradient(to right, #DC2626, #EF4444);
     -fx-text-fill: white;
 }
 
-/* ComboBox specific */
-.form-combo .list-cell {
-    -fx-background-color: transparent;
-    -fx-text-fill: #3F3F46;
-    -fx-padding: 10 14;
+/* DATE PICKER SPECIFIC */
+.date-picker .arrow-button {
+    -fx-background-color: linear-gradient(to bottom, #FEE2E2, #FECACA);
+    -fx-background-radius: 0 14 14 0;
 }
 
-.form-combo .list-cell:hover {
-    -fx-background-color: #FEE2E4;
+.date-picker .arrow-button .arrow {
+    -fx-background-color: #DC2626;
 }
 
-.form-combo .arrow-button {
-    -fx-background-color: transparent;
+.date-picker-popup {
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 8);
 }
 
-/* TextArea */
-.form-textarea {
+/* TEXTAREA */
+TextArea.form-textarea, .form-textarea {
     -fx-background-color: #F9FAFB;
     -fx-background-radius: 16;
-    -fx-border-color: #E4E4E7;
+    -fx-border-color: linear-gradient(to bottom, #E5E7EB, #D1D5DB);
     -fx-border-radius: 16;
-    -fx-border-width: 1;
+    -fx-border-width: 1.5;
+    -fx-padding: 12 16;
+    -fx-text-fill: #1F2937;
     -fx-font-size: 14px;
-    -fx-text-fill: #18181B;
-    -fx-prompt-text-fill: #A1A1AA;
-}
-
-.form-textarea:focused {
-    -fx-border-color: #E63946;
-    -fx-background-color: #FFFFFF;
-    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.2), 10, 0, 0, 2);
+    -fx-prompt-text-fill: #9CA3AF;
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
 .form-textarea .content {
@@ -152,79 +212,135 @@
     -fx-background-radius: 16;
 }
 
-/* ── BUTTONS ──────────────────────────────────────────────── */
-.btn-primary {
-    -fx-background-color: linear-gradient(to right, #E63946, #C1121F);
-    -fx-text-fill: white;
-    -fx-background-radius: 28;
-    -fx-padding: 12 28;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.4), 16, 0, 0, 6);
-    -fx-transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-    -fx-background-color: linear-gradient(to right, #FF4D5A, #E63946);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.6), 24, 0, 0, 8);
-}
-
-.btn-primary:pressed {
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
-.btn-secondary {
+TextArea.form-textarea:focused, .form-textarea:focused {
+    -fx-border-color: linear-gradient(to bottom, #DC2626, #EF4444);
     -fx-background-color: #FFFFFF;
-    -fx-text-fill: #71717A;
-    -fx-background-radius: 28;
-    -fx-padding: 12 28;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.2), 12, 0, 0, 0);
+}
+
+/* ── ERROR LABELS ────────────────────────────────────── */
+.error-label {
+    -fx-text-fill: #DC2626;
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-padding: 2 0 0 4;
+}
+
+/* ── NOTIFICATION ────────────────────────────────────── */
+.notification-label {
+    -fx-text-fill: #059669;
     -fx-font-size: 14px;
     -fx-font-weight: 600;
-    -fx-cursor: hand;
-    -fx-border-color: #E4E4E7;
-    -fx-border-radius: 28;
+    -fx-padding: 12 20;
+    -fx-background-color: linear-gradient(to right, #D1FAE5, #A7F3D0);
+    -fx-background-radius: 12;
+    -fx-border-color: #6EE7B7;
+    -fx-border-radius: 12;
     -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 4, 0, 0, 1);
 }
 
-.btn-secondary:hover {
-    -fx-background-color: #F4F4F5;
-    -fx-text-fill: #3F3F46;
-    -fx-border-color: #D4D4D8;
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
+/* ── DIVIDER ─────────────────────────────────────────── */
+.divider {
+    -fx-min-height: 2;
+    -fx-max-height: 2;
+    -fx-background-color: linear-gradient(to right, transparent, #E5E7EB, transparent);
+    -fx-margin: 20 0;
 }
 
-.btn-secondary:pressed {
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
+/* ── BUTTONS ─────────────────────────────────────────── */
 .action-buttons {
-    -fx-padding: 16 0 0 0;
-    -fx-border-color: transparent transparent transparent transparent;
+    -fx-padding: 10 0 0 0;
 }
 
-/* ── SCROLLBARS (global) ──────────────────────────────────── */
+Button.btn-primary, .btn-primary {
+    -fx-background-color: linear-gradient(to right, #DC2626, #EF4444, #DC2626);
+    -fx-background-size: 200% 100%;
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-font-size: 14px;
+    -fx-background-radius: 24;
+    -fx-padding: 14 32;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.4), 15, 0, 0, 6);
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
+}
+
+Button.btn-primary:hover, .btn-primary:hover {
+    -fx-background-position: 100% 0;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.5), 20, 0, 0, 8);
+}
+
+Button.btn-primary:pressed, .btn-primary:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.3), 10, 0, 0, 4);
+}
+
+Button.btn-secondary, .btn-secondary {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #4B5563;
+    -fx-font-weight: 600;
+    -fx-font-size: 14px;
+    -fx-background-radius: 24;
+    -fx-padding: 14 28;
+    -fx-cursor: hand;
+    -fx-border-color: linear-gradient(to bottom, #D1D5DB, #9CA3AF);
+    -fx-border-radius: 24;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
+}
+
+Button.btn-secondary:hover, .btn-secondary:hover {
+    -fx-background-color: linear-gradient(to bottom, #F9FAFB, #F3F4F6);
+    -fx-text-fill: #1F2937;
+    -fx-border-color: linear-gradient(to bottom, #9CA3AF, #6B7280);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 12, 0, 0, 4);
+}
+
+Button.btn-secondary:pressed, .btn-secondary:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-background-color: #E5E7EB;
+}
+
+/* ── SCROLLBAR ────────────────────────────────────────── */
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: rgba(229, 231, 235, 0.5);
+    -fx-background-radius: 6;
+}
+
 .scroll-bar:vertical .thumb {
-    -fx-background-color: #FECDD3;
-    -fx-background-radius: 8;
+    -fx-background-color: linear-gradient(to bottom, #FCA5A5, #F87171);
+    -fx-background-radius: 6;
 }
 
 .scroll-bar:vertical .thumb:hover {
-    -fx-background-color: #FDA4AF;
+    -fx-background-color: linear-gradient(to bottom, #F87171, #EF4444);
 }
 
-.scroll-bar .track {
-    -fx-background-color: transparent;
-}
-
-.scroll-bar .increment-button,
-.scroll-bar .decrement-button {
+.scroll-bar:vertical .increment-button,
+.scroll-bar:vertical .decrement-button {
     -fx-background-color: transparent;
     -fx-padding: 0;
+}
+
+/* ── RESPONSIVE ADJUSTMENTS ──────────────────────────── */
+@media screen and (max-width: 900px) {
+    .main-container {
+        -fx-padding: 20;
+    }
+
+    .form-card {
+        -fx-padding: 24;
+    }
 }

@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import piJava.Controllers.frontoffice.matieres.MatieresContentController;
 import piJava.entities.user;
 import piJava.utils.SessionManager;
 
@@ -23,6 +24,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import piJava.Controllers.frontoffice.taches.TachesController;
+import piJava.Controllers.frontoffice.taches.TachesDetailsController;
+import piJava.Controllers.frontoffice.taches.TacheEditController;
+import piJava.Controllers.frontoffice.taches.TacheNewController;
+import piJava.Controllers.frontoffice.preferencealerte.AlertesController;
+import piJava.Controllers.frontoffice.preferencealerte.AlerteDetailsController;
+import piJava.Controllers.frontoffice.preferencealerte.AlerteEditController;
+import piJava.Controllers.frontoffice.preferencealerte.AlerteNewController;
 
 public class FrontSidebarController implements Initializable {
 
@@ -46,9 +55,11 @@ public class FrontSidebarController implements Initializable {
     @FXML private HBox dashboardBtn;
     @FXML private HBox tachesBtn;
     @FXML private HBox classesBtn;
+    @FXML private HBox groupBtn;
     @FXML private HBox matieresBtn;
     @FXML private HBox enseignantsBtn;
     @FXML private HBox emploiBtn;
+    @FXML private HBox sallesBtn;
     @FXML private HBox ObjectifsSante;
     @FXML private HBox notificationsBtn;
     @FXML private HBox logoutBtn;
@@ -67,8 +78,8 @@ public class FrontSidebarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         allNavButtons = Arrays.asList(
-                dashboardBtn, tachesBtn, classesBtn, matieresBtn,
-                enseignantsBtn, emploiBtn, ObjectifsSante, notificationsBtn
+                dashboardBtn, tachesBtn, classesBtn, groupBtn, matieresBtn,
+                enseignantsBtn, emploiBtn, sallesBtn, ObjectifsSante, notificationsBtn
         );
         bindSessionData();
         // contentArea is null here — navigation is triggered after setContentArea()
@@ -77,6 +88,10 @@ public class FrontSidebarController implements Initializable {
     // ─── Called by parent layout controller after FXML injection ─────────────
     public void setContentArea(StackPane contentArea) {
         this.contentArea = contentArea;
+    }
+
+    public void refreshSessionData() {
+        bindSessionData();
     }
 
     // ─── Session data binding ─────────────────────────────────────────────────
@@ -95,7 +110,7 @@ public class FrontSidebarController implements Initializable {
         roleBadgeLabel.setText(buildRoleBadge(u.getRoles()));
 
         avatarInitials.setText(buildInitials(u.getPrenom(), u.getNom()));
-        loadProfilePicture(session.getProfilePic());
+        loadProfilePicture(u.getProfile_pic()); // using u instead of session.getProfilePic if it's updated
 
         String loginTime = LocalDateTime.now()
                 .format(DateTimeFormatter.ofPattern("HH:mm"));
@@ -140,29 +155,32 @@ public class FrontSidebarController implements Initializable {
     // ─── Navigation handlers ──────────────────────────────────────────────────
     @FXML
     public void goToDashboard() {
-        System.out.println("[DEBUG] goToDashboard called");
         setActiveButton(dashboardBtn);
         loadView("/frontoffice/dashboard/dashboard-content.fxml");
     }
 
     @FXML
     public void goToTaches() {
-        System.out.println("[DEBUG] goToTaches called");
         setActiveButton(tachesBtn);
         loadView("/frontoffice/taches/taches-content.fxml");
     }
 
     @FXML
     public void goToClasses() {
-        System.out.println("[DEBUG] goToClasses called");
         setActiveButton(classesBtn);
+        loadView("/frontoffice/classe/classe-content.fxml");
+    }
+
+    @FXML
+    public void goToGroup() {
+        setActiveButton(groupBtn);
         loadView("/frontoffice/group/group-content.fxml");
     }
 
     @FXML
     public void goToMatieres() {
         setActiveButton(matieresBtn);
-        loadView("/piJava/Views/frontoffice/matieres/matieres-content.fxml");
+        loadView("/frontoffice/matieres/matieres-content.fxml");
     }
 
     @FXML
@@ -174,7 +192,13 @@ public class FrontSidebarController implements Initializable {
     @FXML
     public void goToEmploi() {
         setActiveButton(emploiBtn);
-        loadView("/piJava/Views/frontoffice/emploi/emploi-content.fxml");
+        loadView("/frontoffice/emploi/EmploiContent.fxml");
+    }
+
+    @FXML
+    public void goToSalles() {
+        setActiveButton(sallesBtn);
+        loadView("/frontoffice/salle/FrontSallesContent.fxml");
     }
 
     @FXML
@@ -212,10 +236,9 @@ public class FrontSidebarController implements Initializable {
     }
 
     // ─── Content loader ───────────────────────────────────────────────────────
-    private void loadView(String fxmlPath) {
-        System.out.println("[DEBUG] loadView called with: " + fxmlPath);
+    public void loadView(String fxmlPath) {
         if (contentArea == null) {
-            System.err.println("FrontSidebarController: contentArea is null");
+            System.err.println("FrontSidebarController: contentArea is null — call setContentArea() before navigating.");
             return;
         }
 
@@ -236,20 +259,48 @@ public class FrontSidebarController implements Initializable {
                 c.setContentArea(contentArea);
             }
 
-            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.AjouterObjectifController c) {
+
+
+            // Injection pour Suivis bien-être
+            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AfficherSuivisController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
             }
 
-            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.ModifierObjectifController c) {
+
+
+            if (controller instanceof MatieresContentController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
             }
-
-            // Injection pour Groupes
-            if (controller instanceof piJava.Controllers.frontoffice.group.GroupContentController c) {
+            // ✅ Inject sidebar reference into taches controllers
+            if (controller instanceof TachesController c) {
                 c.setSidebarController(this);
-                c.setContentArea(contentArea);
+            }
+
+            // ✅ Inject sidebar reference into task detail/edit/new controllers
+            if (controller instanceof TachesDetailsController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof TacheEditController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof TacheNewController c) {
+                c.setSidebarController(this);
+            }
+
+            // ✅ Inject sidebar reference into alerte controllers
+            if (controller instanceof AlertesController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof AlerteDetailsController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof AlerteEditController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof AlerteNewController c) {
+                c.setSidebarController(this);
             }
 
             contentArea.getChildren().setAll(view);

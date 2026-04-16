@@ -3,158 +3,182 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
-
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
-<HBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.shape.Circle?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="piJava.Controllers.frontoffice.taches.TachesController"
       stylesheets="@taches.css"
       prefWidth="1500" prefHeight="900"
-      styleClass="root-bg">
-    <ScrollPane fitToWidth="true" styleClass="page-scroll" HBox.hgrow="ALWAYS">
-        <VBox spacing="26" styleClass="main-container">
+      styleClass="root-container">
 
-            <!-- HEADER -->
-            <HBox alignment="CENTER_LEFT" spacing="20">
+    <!-- HEADER -->
+    <HBox styleClass="app-header" alignment="CENTER_LEFT" spacing="20">
+        <HBox spacing="14" alignment="CENTER_LEFT">
+            <StackPane styleClass="logo-container">
+                <SVGPath content="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+                         styleClass="logo-icon"/>
+            </StackPane>
+            <HBox spacing="4" alignment="BASELINE_LEFT">
+                <Label text="ESPRIT" styleClass="logo-text-primary"/>
+                <Label text="Flow" styleClass="logo-text-secondary"/>
+            </HBox>
+        </HBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <HBox spacing="16" alignment="CENTER" styleClass="user-menu">
+            <StackPane styleClass="notification-btn">
+                <SVGPath content="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"
+                         styleClass="notification-icon"/>
+                <Circle radius="4" styleClass="notification-dot"/>
+            </StackPane>
+            <HBox styleClass="user-profile">
+                <StackPane styleClass="avatar-container">
+                    <Label text="👤" styleClass="avatar-icon"/>
+                </StackPane>
+                <Label text="Utilisateur" styleClass="username-label"/>
+            </HBox>
+        </HBox>
+    </HBox>
+
+    <!-- MAIN CONTENT -->
+    <HBox alignment="CENTER" VBox.vgrow="ALWAYS" styleClass="content-wrapper">
+        <VBox maxWidth="1400" HBox.hgrow="ALWAYS" spacing="24" styleClass="main-content">
+
+            <!-- TITLE SECTION -->
+            <HBox alignment="CENTER_LEFT" spacing="24" styleClass="page-header">
                 <VBox HBox.hgrow="ALWAYS" spacing="6">
-                    <Label text="Mes Tâches" styleClass="title"/>
-                    <Label text="ESPRIT Flow · Gestion de tâches académiques" styleClass="subtitle"/>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <StackPane styleClass="page-icon-container">
+                            <SVGPath content="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                                     styleClass="page-icon"/>
+                        </StackPane>
+                        <Label text="Mes Tâches" styleClass="page-title"/>
+                    </HBox>
+                    <Label text="Gestion de tâches académiques • ESPRIT Flow" styleClass="page-subtitle"/>
                 </VBox>
-                <Button fx:id="btnNewTask" text="＋ Nouvelle tâche" onAction="#addTask" styleClass="btn-primary"/>
-
+                <Button fx:id="btnNewTask" text="Nouvelle tâche" onAction="#addTask" styleClass="btn-primary">
+                    <graphic>
+                        <StackPane styleClass="btn-icon-container">
+                            <SVGPath content="M12 4v16m8-8H4" styleClass="btn-icon"/>
+                        </StackPane>
+                    </graphic>
+                </Button>
             </HBox>
 
-            <Label fx:id="notificationLabel" text="" styleClass="notification-label"/>
+            <ScrollPane fitToWidth="true" styleClass="custom-scroll" VBox.vgrow="ALWAYS">
+                <VBox spacing="28" styleClass="scroll-content">
 
-            <!-- 4 STAT CARDS -->
-            <HBox spacing="20">
+                    <!-- NOTIFICATION -->
+                    <StackPane styleClass="notification-area">
+                        <Label fx:id="notificationLabel" text="" styleClass="notification-toast" managed="false" visible="false"/>
+                    </StackPane>
 
-                <VBox HBox.hgrow="ALWAYS" prefHeight="140"
-                      spacing="8" alignment="TOP_LEFT"
-                      styleClass="red-card">
-                    <Label text="📋  Total Tâches" styleClass="card-label"/>
-                    <Label fx:id="lblTotalTasks" text="42" styleClass="card-number"/>
-                    <Label text="Toutes catégories" styleClass="card-sub"/>
+                    <!-- STAT CARDS -->
+                    <HBox spacing="16">
+                        <VBox HBox.hgrow="ALWAYS" prefHeight="130"
+                              spacing="6" alignment="TOP_LEFT"
+                              styleClass="red-card">
+                            <Label text="👥  Total Tâches" styleClass="card-label"/>
+                            <Label fx:id="lblTotalTasks" text="42" styleClass="card-number"/>
+                            <Label text="Toutes catégories" styleClass="card-sub"/>
+                        </VBox>
+
+                        <VBox HBox.hgrow="ALWAYS" prefHeight="130"
+                              spacing="6" alignment="TOP_LEFT"
+                              styleClass="red-card-light">
+                            <Label text="⏱️  En cours" styleClass="card-label"/>
+                            <Label fx:id="lblInProgress" text="18" styleClass="card-number"/>
+                            <Label text="À compléter" styleClass="card-sub"/>
+                        </VBox>
+
+                        <VBox HBox.hgrow="ALWAYS" prefHeight="130"
+                              spacing="6" alignment="TOP_LEFT"
+                              styleClass="red-card-mid">
+                            <Label text="✅  Terminées" styleClass="card-label"/>
+                            <Label fx:id="lblCompleted" text="20" styleClass="card-number"/>
+                            <Label text="Ce mois-ci" styleClass="card-sub"/>
+                        </VBox>
+
+                        <VBox HBox.hgrow="ALWAYS" prefHeight="130"
+                              spacing="6" alignment="TOP_LEFT"
+                              styleClass="red-card-soft">
+                            <Label text="⚠️  Urgentes" styleClass="card-label"/>
+                            <Label fx:id="lblUrgent" text="4" styleClass="card-number"/>
+                            <Label text="Échéance proche" styleClass="card-sub"/>
+                        </VBox>
+                    </HBox>
+                    <!-- FILTER BAR -->
+                    <HBox styleClass="filter-bar" spacing="16">
+                        <TextField fx:id="txtSearch" promptText="🔍 Rechercher une tâche..." HBox.hgrow="ALWAYS" styleClass="search-field"/>
+
+                        <HBox spacing="12" styleClass="filter-group">
+                            <ComboBox fx:id="cmbPriority" styleClass="filter-combo">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Toutes priorités"/>
+                                        <String fx:value="Haute"/>
+                                        <String fx:value="Moyenne"/>
+                                        <String fx:value="Basse"/>
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+
+                            <ComboBox fx:id="cmbSort" styleClass="filter-combo">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Date de création"/>
+                                        <String fx:value="Date d'échéance"/>
+                                        <String fx:value="Priorité"/>
+                                        <String fx:value="Nom (A-Z)"/>
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                        </HBox>
+
+                        <Button fx:id="btnResetFilters" text="Réinitialiser" styleClass="btn-secondary"/>
+                    </HBox>
+
+                    <!-- ACTIVE TASKS SECTION -->
+                    <VBox spacing="16" styleClass="tasks-section">
+                        <HBox styleClass="section-header" alignment="CENTER_LEFT">
+                            <StackPane styleClass="section-icon-container">
+                                <SVGPath content="M13 10V3L4 14h7v7l9-11h-7z" styleClass="section-icon"/>
+                            </StackPane>
+                            <Label text="Tâches actives" styleClass="section-title"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <HBox styleClass="count-badge" alignment="CENTER">
+                                <Label fx:id="lblActiveCount" text="18 actives" styleClass="count-text"/>
+                            </HBox>
+                        </HBox>
+
+                        <VBox styleClass="tasks-container tasks-container-active">
+                            <ListView fx:id="activeTasksList" VBox.vgrow="ALWAYS" styleClass="tasks-list"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- ARCHIVED TASKS SECTION -->
+                    <VBox spacing="16" styleClass="tasks-section">
+                        <HBox styleClass="section-header section-header-archived" alignment="CENTER_LEFT">
+                            <StackPane styleClass="section-icon-container section-icon-container-archived">
+                                <SVGPath content="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                                         styleClass="section-icon section-icon-archived"/>
+                            </StackPane>
+                            <Label text="Tâches archivées" styleClass="section-title section-title-archived"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <HBox styleClass="count-badge count-badge-archived" alignment="CENTER">
+                                <Label fx:id="lblArchivedCount" text="24 archivées" styleClass="count-text count-text-archived"/>
+                            </HBox>
+                        </HBox>
+
+                        <VBox styleClass="tasks-container tasks-container-archived">
+                            <ListView fx:id="archivedTasksList" VBox.vgrow="ALWAYS" styleClass="tasks-list"/>
+                        </VBox>
+                    </VBox>
+
                 </VBox>
-
-                <VBox HBox.hgrow="ALWAYS" prefHeight="140"
-                      spacing="8" alignment="TOP_LEFT"
-                      styleClass="red-card-light">
-                    <Label text="⏳  En cours" styleClass="card-label"/>
-                    <Label fx:id="lblInProgress" text="18" styleClass="card-number"/>
-                    <Label text="À compléter" styleClass="card-sub"/>
-                </VBox>
-
-                <VBox HBox.hgrow="ALWAYS" prefHeight="140"
-                      spacing="8" alignment="TOP_LEFT"
-                      styleClass="red-card-mid">
-                    <Label text="✅  Terminées" styleClass="card-label"/>
-                    <Label fx:id="lblCompleted" text="20" styleClass="card-number"/>
-                    <Label text="Ce mois-ci" styleClass="card-sub"/>
-                </VBox>
-
-                <VBox HBox.hgrow="ALWAYS" prefHeight="140"
-                      spacing="8" alignment="TOP_LEFT"
-                      styleClass="red-card-soft">
-                    <Label text="🔥  Urgentes" styleClass="card-label"/>
-                    <Label fx:id="lblUrgent" text="4" styleClass="card-number"/>
-                    <Label text="Échéance proche" styleClass="card-sub"/>
-                </VBox>
-
-            </HBox>
-
-            <!-- FILTERS & SORT CARD - IMPROVED -->
-            <HBox spacing="20" styleClass="filter-card">
-                <VBox spacing="8" HBox.hgrow="ALWAYS">
-                    <Label text="🔍 Rechercher" styleClass="filter-label"/>
-                    <TextField fx:id="txtSearch" promptText="Nom de la tâche..." styleClass="search-field"/>
-                </VBox>
-
-                <VBox spacing="8" prefWidth="200">
-                    <Label text="🏷️ Statut" styleClass="filter-label"/>
-                    <ComboBox fx:id="cmbStatus" prefWidth="200" styleClass="filter-combo" promptText="Tous les statuts">
-                        <items>
-                            <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Tous"/>
-                                <String fx:value="À faire"/>
-                                <String fx:value="En cours"/>
-                                <String fx:value="Terminée"/>
-                                <String fx:value="En retard"/>
-                                <String fx:value="Abandonnée"/>
-                            </FXCollections>
-                        </items>
-                    </ComboBox>
-                </VBox>
-
-                <VBox spacing="8" prefWidth="200">
-                    <Label text="⚡ Priorité" styleClass="filter-label"/>
-                    <ComboBox fx:id="cmbPriority" prefWidth="200" styleClass="filter-combo" promptText="Toutes priorités">
-                        <items>
-                            <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Toutes"/>
-                                <String fx:value="Haute"/>
-                                <String fx:value="Moyenne"/>
-                                <String fx:value="Basse"/>
-                            </FXCollections>
-                        </items>
-                    </ComboBox>
-                </VBox>
-
-                <VBox spacing="8" prefWidth="200">
-                    <Label text="📅 Trier par" styleClass="filter-label"/>
-                    <ComboBox fx:id="cmbSort" prefWidth="200" styleClass="filter-combo" promptText="Date de création">
-                        <items>
-                            <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Date de création"/>
-                                <String fx:value="Date d'échéance"/>
-                                <String fx:value="Priorité"/>
-                                <String fx:value="Nom (A-Z)"/>
-                            </FXCollections>
-                        </items>
-                    </ComboBox>
-                </VBox>
-
-                <VBox spacing="8" alignment="BOTTOM_CENTER">
-                    <Label text=" " styleClass="filter-label"/>
-                    <Button fx:id="btnResetFilters" text="⟲ Réinitialiser" styleClass="btn-reset"/>
-                </VBox>
-
-            </HBox>
-
-            <!-- Active Tasks Section -->
-            <VBox spacing="12">
-                <HBox alignment="CENTER_LEFT" spacing="12">
-                    <Label text="📌 Tâches actives" styleClass="panel-title" HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="lblActiveCount" text="0 actives" styleClass="task-count"/>
-                </HBox>
-
-                <ScrollPane fitToWidth="true" styleClass="task-scroll" prefHeight="400">
-                    <VBox fx:id="activeTasksContainer" spacing="16" styleClass="tasks-container"/>
-                </ScrollPane>
-            </VBox>
-
-            <!-- Separator -->
-            <HBox spacing="16" alignment="CENTER" styleClass="section-separator">
-                <Separator orientation="HORIZONTAL" HBox.hgrow="ALWAYS" styleClass="separator-line"/>
-                <Label text="📦 Archivées" styleClass="separator-text"/>
-                <Separator orientation="HORIZONTAL" HBox.hgrow="ALWAYS" styleClass="separator-line"/>
-            </HBox>
-
-            <!-- Archived Tasks Section -->
-            <VBox spacing="12">
-                <HBox alignment="CENTER_LEFT" spacing="12">
-                    <Label text="📦 Tâches archivées" styleClass="panel-title" HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="lblArchivedCount" text="0 archivées" styleClass="task-count-archived"/>
-                </HBox>
-
-                <ScrollPane fitToWidth="true" styleClass="task-scroll" prefHeight="400">
-                    <VBox fx:id="archivedTasksContainer" spacing="16" styleClass="tasks-container"/>
-                </ScrollPane>
-            </VBox>
-
-
+            </ScrollPane>
         </VBox>
-    </ScrollPane>
-
-</HBox>
+    </HBox>
+</VBox>

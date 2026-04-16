@@ -1,178 +1,413 @@
-/* ============================================================
-   alerte-details.css / alerte-edit.css / alerte-new.css
-   Shared styles — import alerte.css theme
-   ============================================================ */
+/* ============================================
+   MODERN RED THEME - ALERTE NEW FORM
+   Full Page Layout with Glassmorphism
+   ============================================ */
 
-.root-bg {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F5F5F6, rgba(253,120,120,0.94));
+/* Root with Red Gradient Background */
+.root {
+    -fx-background-color: linear-gradient(to bottom, #fef2f2, #fee2e2 30%, #fef2f2 70%, #ffffff);
+    -fx-font-family: "Segoe UI", "System", sans-serif;
 }
 
-.main-container {
-    -fx-padding: 32;
-    -fx-background-color: transparent;
-}
-
-.page-scroll {
+/* Main ScrollPane */
+.main-scroll {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }
-.page-scroll .viewport {
+
+.main-scroll > .viewport {
     -fx-background-color: transparent;
 }
 
-/* Typography */
-.title {
-    -fx-font-size: 28px;
+/* Form Wrapper - Fills entire width */
+.form-wrapper {
+    -fx-background-color: transparent;
+    -fx-max-width: Infinity;
+    -fx-min-width: 0;
+}
+
+/* ============================================
+   HERO HEADER WITH RED GRADIENT
+   ============================================ */
+.hero-header {
+    -fx-background-color: linear-gradient(to bottom right, #dc2626, #b91c1c 50%, #991b1b);
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.4), 20, 0, 0, 8);
+    -fx-min-width: 0;
+    -fx-max-width: Infinity;
+}
+
+.hero-title {
+    -fx-font-size: 32px;
     -fx-font-weight: bold;
-    -fx-text-fill: #18181B;
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 3, 0, 0, 1);
 }
-.subtitle {
-    -fx-font-size: 13px;
-    -fx-text-fill: #71717A;
+
+.hero-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(255, 255, 255, 0.85);
+    -fx-font-weight: 500;
 }
+
+/* ============================================
+   FORM CONTAINER - Full Width with Padding
+   ============================================ */
+.form-container {
+    -fx-background-color: transparent;
+    -fx-min-width: 0;
+    -fx-max-width: Infinity;
+    -fx-alignment: top-center;
+}
+
+/* ============================================
+   GLASS CARDS
+   ============================================ */
+.glass-card {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
+    -fx-background-radius: 16;
+    -fx-border-color: rgba(220, 38, 38, 0.15);
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.1), 15, 0, 0, 4);
+    -fx-min-width: 0;
+    -fx-max-width: Infinity;
+}
+
+.glass-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.2), 20, 0, 0, 6);
+    -fx-border-color: rgba(220, 38, 38, 0.25);
+}
+
+/* Accent Card Variant */
+.accent-card {
+    -fx-background-color: linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), rgba(254, 242, 242, 0.7));
+    -fx-border-color: rgba(220, 38, 38, 0.2);
+    -fx-border-width: 1 1 1 4;
+}
+
+/* ============================================
+   SECTION HEADERS
+   ============================================ */
+.section-header {
+    -fx-padding: 0 0 12 0;
+    -fx-border-color: transparent transparent rgba(220, 38, 38, 0.2) transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+.section-icon {
+    -fx-font-size: 24px;
+}
+
 .section-title {
-    -fx-font-size: 16px;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: #18181B;
-    -fx-border-color: transparent transparent #F0F0F1 transparent;
-    -fx-border-width: 0 0 1.5 0;
-    -fx-padding: 0 0 10 0;
-}
-.field-label {
-    -fx-font-size: 11px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #71717A;
-}
-.field-value {
-    -fx-font-size: 15px;
-    -fx-text-fill: #3F3F46;
+    -fx-text-fill: #7f1d1d;
 }
 
-/* Info card */
-.info-card {
-    -fx-background-color: rgba(255,255,255,0.95);
-    -fx-background-radius: 24;
-    -fx-border-color: rgba(255,255,255,0.6);
-    -fx-border-radius: 24;
-    -fx-border-width: 1;
-    -fx-padding: 28;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 16, 0, 0, 6);
-}
-
-/* Form card */
-.form-card {
-    -fx-background-color: rgba(255,255,255,0.95);
-    -fx-background-radius: 24;
-    -fx-border-color: rgba(255,255,255,0.6);
-    -fx-border-radius: 24;
-    -fx-border-width: 1;
-    -fx-padding: 32;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 8);
-}
-
-/* Badge */
-.badge {
-    -fx-background-radius: 20;
-    -fx-padding: 6 16;
+.required-hint {
     -fx-font-size: 12px;
-    -fx-font-weight: bold;
+    -fx-text-fill: #dc2626;
+    -fx-font-style: italic;
 }
 
-/* Form fields */
-.form-field {
-    -fx-background-color: #F9FAFB;
+/* ============================================
+   FORM GRID & LABELS
+   ============================================ */
+.form-grid {
+    -fx-alignment: top-left;
+}
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #374151;
+    -fx-alignment: center-left;
+}
+
+/* ============================================
+   MODERN INPUT FIELDS
+   ============================================ */
+TextField.modern-field,
+TextArea.modern-textarea,
+.modern-field,
+.modern-textarea {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 2;
+    -fx-padding: 12 16;
+    -fx-font-size: 14px;
+    -fx-text-fill: #1f2937;
+    -fx-prompt-text-fill: #9ca3af;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.02), 2, 0, 0, 1);
+    -fx-font-family: "Segoe UI", "System", sans-serif;
+}
+
+TextField.modern-field:hover,
+.modern-field:hover {
+    -fx-border-color: #fca5a5;
+    -fx-background-color: #fef2f2;
+}
+
+TextField.modern-field:focused,
+.modern-field:focused {
+    -fx-border-color: #dc2626;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.2), 8, 0, 0, 0);
+}
+
+/* Time Field Special Styling */
+.time-field {
+    -fx-pref-width: 150;
+    -fx-max-width: 150;
+}
+
+/* Modern TextArea */
+TextArea.modern-textarea,
+.modern-textarea {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 2;
+    -fx-padding: 12 16;
+    -fx-font-size: 14px;
+    -fx-text-fill: #1f2937;
+    -fx-prompt-text-fill: #9ca3af;
+    -fx-wrap-text: true;
+    -fx-font-family: "Segoe UI", "System", sans-serif;
+    -fx-control-inner-background: #ffffff;
+}
+
+TextArea.modern-textarea .content,
+.modern-textarea .content {
+    -fx-background-color: #ffffff;
+    -fx-padding: 8px;
+}
+
+TextArea.modern-textarea:hover,
+.modern-textarea:hover {
+    -fx-border-color: #fca5a5;
+    -fx-background-color: #fef2f2;
+}
+
+TextArea.modern-textarea:focused,
+.modern-textarea:focused {
+    -fx-border-color: #dc2626;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.2), 8, 0, 0, 0);
+}
+
+/* ============================================
+   ERROR LABELS & TEXT LABELS
+   ============================================ */
+Label.error-label,
+.error-label {
+    -fx-text-fill: #dc2626;
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-padding: 0 0 0 5;
+}
+
+Label.form-label,
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #374151;
+    -fx-alignment: center-left;
+}
+
+Label.section-icon,
+.section-icon {
+    -fx-font-size: 24px;
+}
+
+Label.section-title,
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #7f1d1d;
+}
+
+Label.required-hint,
+.required-hint {
+    -fx-font-size: 12px;
+    -fx-text-fill: #dc2626;
+    -fx-font-style: italic;
+}
+
+Label.group-label,
+.group-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #991b1b;
+    -fx-padding: 0 0 8 0;
+}
+
+/* ============================================
+   CHECKBOX SECTION
+   ============================================ */
+.checkbox-wrapper {
+    -fx-alignment: top-left;
+    -fx-spacing: 50;
+}
+
+.checkbox-group {
+    -fx-spacing: 12;
+    -fx-padding: 15;
+    -fx-background-color: rgba(254, 242, 242, 0.5);
     -fx-background-radius: 12;
-    -fx-border-color: #E4E4E7;
+    -fx-border-color: rgba(220, 38, 38, 0.1);
     -fx-border-radius: 12;
     -fx-border-width: 1;
-    -fx-padding: 11 14;
-    -fx-font-size: 14px;
-    -fx-text-fill: #18181B;
-    -fx-prompt-text-fill: #A1A1AA;
-}
-.form-field:focused {
-    -fx-border-color: #E63946;
-    -fx-background-color: #FFFFFF;
-    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.2), 10, 0, 0, 2);
-}
-.form-check {
-    -fx-font-size: 13px;
-    -fx-text-fill: #52525B;
+    -fx-min-width: 200;
 }
 
-/* Buttons */
-.btn-back {
-    -fx-background-color: #FFFFFF;
-    -fx-text-fill: #71717A;
-    -fx-background-radius: 24;
-    -fx-padding: 8 20;
+.group-label {
     -fx-font-size: 13px;
     -fx-font-weight: bold;
-    -fx-cursor: hand;
-    -fx-border-color: #E4E4E7;
-    -fx-border-radius: 24;
-    -fx-border-width: 1;
-}
-.btn-back:hover {
-    -fx-background-color: #F4F4F5;
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
+    -fx-text-fill: #991b1b;
+    -fx-padding: 0 0 8 0;
 }
 
-.btn-primary {
-    -fx-background-color: linear-gradient(to right, #E63946, #C1121F);
+/* Modern Checkboxes */
+CheckBox.modern-checkbox,
+.modern-checkbox {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4b5563;
+    -fx-font-weight: 500;
+    -fx-cursor: hand;
+    -fx-font-family: "Segoe UI", "System", sans-serif;
+}
+
+CheckBox.modern-checkbox > .box,
+.modern-checkbox > .box {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 2;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 3;
+    -fx-min-width: 22;
+    -fx-min-height: 22;
+    -fx-max-width: 22;
+    -fx-max-height: 22;
+}
+
+CheckBox.modern-checkbox:hover > .box,
+.modern-checkbox:hover > .box {
+    -fx-border-color: #dc2626;
+    -fx-background-color: #fef2f2;
+}
+
+CheckBox.modern-checkbox:selected > .box,
+.modern-checkbox:selected > .box {
+    -fx-background-color: linear-gradient(to bottom right, #dc2626, #b91c1c);
+    -fx-border-color: #dc2626;
+}
+
+CheckBox.modern-checkbox:selected > .box > .mark,
+.modern-checkbox:selected > .box > .mark {
+    -fx-background-color: white;
+    -fx-shape: "M 9.5 2.5 L 4.5 7.5 L 2 5 L 0.5 6.5 L 4.5 10.5 L 11 4 Z";
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+}
+
+/* ============================================
+   BUTTON BAR - Glassmorphism Buttons
+   ============================================ */
+.button-bar {
+    -fx-alignment: center-right;
+    -fx-padding: 20 0 0 0;
+}
+
+Button.btn-glass-success,
+.btn-glass-success {
+    -fx-background-color: linear-gradient(to bottom right, #dc2626, #b91c1c);
     -fx-text-fill: white;
-    -fx-background-radius: 24;
-    -fx-padding: 11 26;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-font-size: 14px;
+    -fx-padding: 14 32;
+    -fx-background-radius: 10;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.4), 14, 0, 0, 5);
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.4), 10, 0, 0, 4);
+    -fx-font-family: "Segoe UI", "System", sans-serif;
 }
-.btn-primary:hover {
-    -fx-background-color: linear-gradient(to right, #FF4D5A, #E63946);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
+
+Button.btn-glass-success:hover,
+.btn-glass-success:hover {
+    -fx-background-color: linear-gradient(to bottom right, #ef4444, #dc2626);
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.6), 15, 0, 0, 6);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
 }
-.btn-primary:pressed {
+
+Button.btn-glass-success:pressed,
+.btn-glass-success:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
-.btn-secondary {
-    -fx-background-color: #FFFFFF;
-    -fx-text-fill: #71717A;
-    -fx-background-radius: 24;
-    -fx-padding: 11 26;
-    -fx-font-size: 14px;
-    -fx-font-weight: 600;
-    -fx-cursor: hand;
-    -fx-border-color: #E4E4E7;
-    -fx-border-radius: 24;
-    -fx-border-width: 1;
-}
-.btn-secondary:hover {
-    -fx-background-color: #F4F4F5;
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-}
-
-/* Notification */
-.notification-label {
-    -fx-background-color: #4CAF50;
-    -fx-text-fill: white;
-    -fx-padding: 10 20;
+Button.btn-glass-cancel,
+.btn-glass-cancel {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-background-radius: 12;
-    -fx-opacity: 0;
+    -fx-padding: 14 28;
+    -fx-background-radius: 10;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+    -fx-font-family: "Segoe UI", "System", sans-serif;
 }
 
-/* Scrollbars */
-.scroll-bar:vertical .thumb {
-    -fx-background-color: #FECDD3;
-    -fx-background-radius: 8;
+Button.btn-glass-cancel:hover,
+.btn-glass-cancel:hover {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dc2626;
+    -fx-text-fill: #dc2626;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.2), 8, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
 }
-.scroll-bar .track, .scroll-bar .increment-button, .scroll-bar .decrement-button {
+
+Button.btn-glass-cancel:pressed,
+.btn-glass-cancel:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+.scroll-bar {
     -fx-background-color: transparent;
-    -fx-padding: 0;
+    -fx-pref-width: 12;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: linear-gradient(to bottom, #fca5a5, #f87171);
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.3), 4, 0, 0, 1);
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: linear-gradient(to bottom, #f87171, #ef4444);
+}
+
+.scroll-bar .track {
+    -fx-background-color: rgba(254, 242, 242, 0.5);
+    -fx-background-radius: 6;
+}
+
+/* ============================================
+   TRANSITIONS
+   ============================================ */
+.modern-field, .modern-textarea, .btn-glass-success, .btn-glass-cancel, .glass-card {
+    -fx-transition: all 0.3s ease;
 }

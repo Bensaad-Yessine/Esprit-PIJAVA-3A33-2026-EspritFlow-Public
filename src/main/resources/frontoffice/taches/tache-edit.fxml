@@ -1,122 +1,188 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 
-<HBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
+<HBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="piJava.Controllers.frontoffice.taches.TacheEditController"
+      styleClass="root"
       stylesheets="@tache-edit.css"
-      styleClass="root-bg" prefWidth="1100" prefHeight="800">
+      prefWidth="1200" prefHeight="850">
 
     <ScrollPane fitToWidth="true" styleClass="page-scroll" HBox.hgrow="ALWAYS">
-        <VBox spacing="26" styleClass="main-container">
+        <VBox styleClass="main-container">
 
-            <!-- HEADER -->
-            <HBox alignment="CENTER_LEFT" spacing="20">
-                <VBox HBox.hgrow="ALWAYS" spacing="6">
-                    <Label text="✏️ Modifier la tâche" styleClass="title"/>
-                    <Label text="ESPRIT Flow · Modifier une tâche académique" styleClass="subtitle"/>
-                </VBox>
-            </HBox>
+            <!-- HEADER SECTION -->
+            <VBox spacing="8" styleClass="header-section">
+                <Label text="✏️ Modifier la tâche" styleClass="title"/>
+                <Label text="ESPRIT Flow · Modifier une tâche existante" styleClass="subtitle"/>
+            </VBox>
 
             <!-- FORM CARD -->
-            <VBox spacing="24" styleClass="form-card">
+            <VBox styleClass="form-card">
 
-                <!-- Title -->
-                <VBox spacing="8">
-                    <Label text="Titre *" styleClass="field-label"/>
-                    <TextField fx:id="txtTitre" promptText="Titre de la tâche" styleClass="form-field"/>
-                </VBox>
+                <!-- TWO COLUMN GRID -->
+                <GridPane styleClass="form-grid" vgap="20" hgap="100">
 
-                <!-- Type -->
-                <VBox spacing="8">
-                    <Label text="Type *" styleClass="field-label"/>
-                    <ComboBox fx:id="cbType" maxWidth="Infinity" styleClass="form-field">
-                        <items>
-                            <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="MANUEL"/>
-                                <String fx:value="REVISION"/>
-                                <String fx:value="REUNION"/>
-                                <String fx:value="EMPLOI"/>
-                                <String fx:value="SANTE"/>
-                            </FXCollections>
-                        </items>
-                    </ComboBox>
-                </VBox>
+                    <!-- COLUMN 1 -->
+                    <!-- TITRE -->
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Titre *" styleClass="field-label">
+                            <graphic>
+                                <Region styleClass="field-icon icon-title"/>
+                            </graphic>
+                        </Label>
+                        <TextField fx:id="txtTitre" styleClass="form-field" promptText="Entrez le titre de la tâche"/>
+                        <Label fx:id="lblTitreError" styleClass="error-label"/>
+                    </VBox>
 
-                <!-- Dates row -->
-                <HBox spacing="20">
-                    <VBox spacing="8" HBox.hgrow="ALWAYS">
-                        <Label text="Date de début *" styleClass="field-label"/>
-                        <DatePicker fx:id="dpDateDebut" styleClass="date-picker"/>
-                    </VBox>
-                    <VBox spacing="8" HBox.hgrow="ALWAYS">
-                        <Label text="Heure de début (HH:mm)" styleClass="field-label"/>
-                        <TextField fx:id="txtHeureDebut" promptText="00:00" styleClass="form-field"/>
-                    </VBox>
-                    <VBox spacing="8" HBox.hgrow="ALWAYS">
-                        <Label text="Date de fin *" styleClass="field-label"/>
-                        <DatePicker fx:id="dpDateFin" styleClass="date-picker"/>
-                    </VBox>
-                    <VBox spacing="8" HBox.hgrow="ALWAYS">
-                        <Label text="Heure de fin (HH:mm)" styleClass="field-label"/>
-                        <TextField fx:id="txtHeureFin" promptText="23:59" styleClass="form-field"/>
-                    </VBox>
-                </HBox>
-
-                <!-- Priority + Status row -->
-                <HBox spacing="20">
-                    <VBox spacing="8" HBox.hgrow="ALWAYS">
-                        <Label text="Priorité *" styleClass="field-label"/>
-                        <ComboBox fx:id="cbPriorite" maxWidth="Infinity" styleClass="form-field">
+                    <!-- TYPE -->
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Type *" styleClass="field-label">
+                            <graphic>
+                                <Region styleClass="field-icon icon-type"/>
+                            </graphic>
+                        </Label>
+                        <ComboBox fx:id="cbType" styleClass="form-field combo-box">
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="HAUTE"/>
-                                    <String fx:value="MOYENNE"/>
-                                    <String fx:value="BASSE"/>
+                                    <String fx:value="MANUEL"/>
+                                    <String fx:value="REVISION"/>
+                                    <String fx:value="REUNION"/>
+                                    <String fx:value="EMPLOI"/>
+                                    <String fx:value="SANTE"/>
                                 </FXCollections>
                             </items>
                         </ComboBox>
+                        <Label fx:id="lblTypeError" styleClass="error-label"/>
                     </VBox>
-                    <VBox spacing="8" HBox.hgrow="ALWAYS">
-                        <Label text="Statut" styleClass="field-label"/>
-                        <ComboBox fx:id="cbStatut" maxWidth="Infinity" styleClass="form-field">
+
+                    <!-- DATE DEBUT -->
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="Date début *" styleClass="field-label">
+                            <graphic>
+                                <Region styleClass="field-icon icon-calendar"/>
+                            </graphic>
+                        </Label>
+                        <DatePicker fx:id="dpDateDebut" styleClass="date-picker" promptText="Sélectionnez une date"/>
+                        <Label fx:id="lblDateDebutError" styleClass="error-label"/>
+                    </VBox>
+
+                    <!-- HEURE DEBUT -->
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label text="Heure début" styleClass="field-label">
+                            <graphic>
+                                <Region styleClass="field-icon icon-clock"/>
+                            </graphic>
+                        </Label>
+                        <TextField fx:id="txtHeureDebut" styleClass="form-field" promptText="HH:MM"/>
+                    </VBox>
+
+                    <!-- DATE FIN -->
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <Label text="Date fin *" styleClass="field-label">
+                            <graphic>
+                                <Region styleClass="field-icon icon-calendar"/>
+                            </graphic>
+                        </Label>
+                        <DatePicker fx:id="dpDateFin" styleClass="date-picker" promptText="Sélectionnez une date"/>
+                        <Label fx:id="lblDateFinError" styleClass="error-label"/>
+                    </VBox>
+
+                    <!-- HEURE FIN -->
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label text="Heure fin" styleClass="field-label">
+                            <graphic>
+                                <Region styleClass="field-icon icon-clock"/>
+                            </graphic>
+                        </Label>
+                        <TextField fx:id="txtHeureFin" styleClass="form-field" promptText="HH:MM"/>
+                    </VBox>
+
+                    <!-- PRIORITE -->
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                        <Label text="Priorité *" styleClass="field-label">
+                            <graphic>
+                                <Region styleClass="field-icon icon-priority"/>
+                            </graphic>
+                        </Label>
+                        <ComboBox fx:id="cbPriorite" styleClass="form-field combo-box">
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="A_FAIRE"/>
+                                    <String fx:value="ELEVEE"/>
+                                    <String fx:value="MOYEN"/>
+                                    <String fx:value="FAIBLE"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                        <Label fx:id="lblPrioriteError" styleClass="error-label"/>
+                    </VBox>
+
+                    <!-- STATUT -->
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <Label text="Statut" styleClass="field-label">
+                            <graphic>
+                                <Region styleClass="field-icon icon-status"/>
+                            </graphic>
+                        </Label>
+                        <ComboBox fx:id="cbStatut" styleClass="form-field combo-box">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
                                     <String fx:value="EN_COURS"/>
+                                    <String fx:value="A_FAIRE"/>
                                     <String fx:value="PAUSED"/>
-                                    <String fx:value="TERMINE"/>
-                                    <String fx:value="ABANDON"/>
+                                    <String fx:value="TERMINEE"/>
                                 </FXCollections>
                             </items>
                         </ComboBox>
+                        <Label fx:id="lblStatutError" styleClass="error-label"/>
                     </VBox>
-                </HBox>
 
-                <!-- Description -->
-                <VBox spacing="8">
-                    <Label text="Description" styleClass="field-label"/>
-                    <TextArea fx:id="txtDescription" promptText="Description de la tâche"
-                              styleClass="form-field" prefRowCount="3"/>
-                </VBox>
+                    <!-- DUREE -->
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                        <Label text="Durée estimée" styleClass="field-label">
+                            <graphic>
+                                <Region styleClass="field-icon icon-duration"/>
+                            </graphic>
+                        </Label>
+                        <TextField fx:id="txtDuree" styleClass="form-field" promptText="Minutes"/>
+                        <Label fx:id="lblDureeError" styleClass="error-label"/>
+                    </VBox>
 
-                <!-- Duration -->
-                <VBox spacing="8">
-                    <Label text="Durée estimée (minutes)" styleClass="field-label"/>
-                    <TextField fx:id="txtDuree" promptText="ex: 60" styleClass="form-field"/>
-                </VBox>
+                    <!-- NOTIFICATION -->
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                        <Label fx:id="lblNotification" styleClass="notification-label" text="✓ Modifications enregistrées"/>
+                    </VBox>
 
-                <!-- Notification -->
-                <Label fx:id="lblNotification" styleClass="notification-label"/>
+                    <!-- DESCRIPTION - SPANS BOTH COLUMNS -->
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2">
+                        <Label text="Description" styleClass="field-label">
+                            <graphic>
+                                <Region styleClass="field-icon icon-description"/>
+                            </graphic>
+                        </Label>
+                        <TextArea fx:id="txtDescription"
+                                  styleClass="form-textarea"
+                                  prefRowCount="4"
+                                  promptText="Décrivez les détails de la tâche..."/>
+                        <Label fx:id="lblDescriptionError" styleClass="error-label"/>
+                    </VBox>
 
-                <!-- Buttons -->
-                <HBox spacing="12" alignment="CENTER_RIGHT">
-                    <Button text="Annuler"       onAction="#handleCancel" styleClass="btn-secondary"/>
-                    <Button text="Enregistrer"   onAction="#handleSave"   styleClass="btn-primary"/>
+                </GridPane>
+
+                <!-- DIVIDER -->
+                <Region styleClass="divider"/>
+
+                <!-- BUTTONS -->
+                <HBox spacing="16" alignment="CENTER_RIGHT" styleClass="action-buttons">
+                    <Button text="Annuler" onAction="#handleCancel" styleClass="btn-secondary"/>
+                    <Button text="Enregistrer" onAction="#handleUpdate" styleClass="btn-primary"/>
                 </HBox>
 
             </VBox>

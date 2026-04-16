@@ -13,12 +13,12 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="760.0" prefWidth="900.0"
+<BorderPane prefHeight="760.0" prefWidth="640.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="piJava.Controllers.backoffice.suivibienetre.AjouterSuiviController"
             stylesheets="@style.css"
-            style="-fx-background-color: #0b1220;">
+            style="-fx-background-color: #0d0f14;">
 
     <top>
         <HBox styleClass="top-bar" spacing="12">

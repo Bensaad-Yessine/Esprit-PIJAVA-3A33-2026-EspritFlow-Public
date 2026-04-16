@@ -12,12 +12,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TextField?>
+
 <BorderPane prefHeight="760.0" prefWidth="1250.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="piJava.Controllers.frontoffice.objectifsante.AfficherObjectifsController"
             stylesheets="@style.css"
-        style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F5F5F6, rgba(253, 120, 120, 0.94));">
+            style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F5F5F6, rgba(253, 120, 120, 0.94));">
 
     <top>
         <HBox styleClass="top-bar" spacing="12">
@@ -67,7 +68,6 @@
                             </children>
                         </HBox>
 
-
                         <HBox spacing="16">
                             <children>
                                 <VBox spacing="6" styleClass="stat-card" HBox.hgrow="ALWAYS">
@@ -102,6 +102,7 @@
                                         <Label text="Actifs" styleClass="badge-blue"/>
                                     </children>
                                 </HBox>
+
                                 <HBox alignment="CENTER_LEFT" spacing="12">
                                     <children>
                                         <TextField fx:id="txtRecherche"
@@ -117,10 +118,9 @@
                                                 onAction="#reinitialiserFiltres"/>
                                     </children>
                                 </HBox>
+
                                 <TableView fx:id="tableObjectifs" VBox.vgrow="ALWAYS">
                                     <columns>
-
-
                                         <TableColumn fx:id="colTitre" prefWidth="220.0" text="Objectif"/>
                                         <TableColumn fx:id="colType" prefWidth="140.0" text="Catégorie"/>
                                         <TableColumn fx:id="colValeurCible" prefWidth="120.0" text="Cible"/>
@@ -128,6 +128,7 @@
                                         <TableColumn fx:id="colDateFin" prefWidth="130.0" text="Fin"/>
                                         <TableColumn fx:id="colPriorite" prefWidth="120.0" text="Priorité"/>
                                         <TableColumn fx:id="colStatut" prefWidth="130.0" text="Statut"/>
+                                        <TableColumn fx:id="colActions" prefWidth="180.0" text="Actions"/>
                                     </columns>
                                 </TableView>
                             </children>
