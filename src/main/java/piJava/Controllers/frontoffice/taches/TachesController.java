@@ -1,277 +1,443 @@
 package piJava.Controllers.frontoffice.taches;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.geometry.Pos;
+
+import javafx.scene.shape.SVGPath;
+import piJava.Controllers.frontoffice.taches.TacheEditController;
+import piJava.Controllers.frontoffice.taches.TachesDetailsController;
 import piJava.Controllers.frontoffice.FrontSidebarController;
-import piJava.entities.tache;
 import piJava.services.TacheService;
+import piJava.entities.tache;
 import piJava.utils.SessionManager;
+
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class TachesController implements Initializable {
 
-    // ✅ Comes from session instead of hardcoded
-    private int currentUserId;
+    private final int currentUserId = SessionManager.getInstance().getCurrentUser().getId();
 
-    @FXML private VBox activeTasksContainer;
-    @FXML private VBox archivedTasksContainer;
+    @FXML private ListView<tache> activeTasksList;
+    @FXML private ListView<tache> archivedTasksList;
+
     @FXML private Label lblActiveCount;
     @FXML private Label lblArchivedCount;
     @FXML private Label notificationLabel;
 
+    @FXML private TextField txtSearch;
+    @FXML private ComboBox<String> cmbPriority;
+    @FXML private ComboBox<String> cmbSort;
+    @FXML private Button btnResetFilters;
+
+    private List<tache> allTasks = new ArrayList<>();
+    private List<tache> activeTasks = new ArrayList<>();
+    private List<tache> archivedTasks = new ArrayList<>();
+
     private FrontSidebarController sidebarController;
 
-    public void setSidebarController(FrontSidebarController sidebarController) {
-        this.sidebarController = sidebarController;
+    // Static variables to temporarily store task data
+    private static tache currentTaskForDetails;
+    private static tache currentTaskForEdit;
+
+    public void setSidebarController(FrontSidebarController sidebarcontroller) {
+        this.sidebarController = sidebarcontroller;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // ✅ Get logged-in user id from session
-        if (SessionManager.getInstance().isLoggedIn()) {
-            currentUserId = SessionManager.getInstance().getCurrentUser().getId();
-        } else {
-            showError("Session expirée", "Veuillez vous reconnecter.");
-            return;
-        }
-
-        loadTasks();
-    }
-
-    // ── Load & render tasks ────────────────────────────────────────────────────
-
-    private void loadTasks() {
         try {
-            TacheService ts = new TacheService();
-            List<tache> allTasks = ts.showUserTasks(currentUserId);
+            loadTasks();
 
-            List<String> activeStatuses = Arrays.asList("EN_COURS", "A_FAIRE", "PAUSED");
-            List<tache> activeTasks   = new ArrayList<>();
-            List<tache> archivedTasks = new ArrayList<>();
+            cmbPriority.setValue("Toutes");
+            cmbSort.setValue("Date de création");
 
-            for (tache t : allTasks) {
-                if (activeStatuses.contains(t.getStatut())) activeTasks.add(t);
-                else archivedTasks.add(t);
-            }
+            txtSearch.textProperty().addListener((obs, o, n) -> refreshTasks());
+            cmbPriority.setOnAction(e -> refreshTasks());
+            cmbSort.setOnAction(e -> refreshTasks());
 
-            activeTasksContainer.getChildren().clear();
-            archivedTasksContainer.getChildren().clear();
+            btnResetFilters.setOnAction(e -> {
+                txtSearch.clear();
+                cmbPriority.setValue("Toutes");
+                cmbSort.setValue("Date de création");
+                refreshTasks();
+            });
 
-            for (tache t : activeTasks) {
-                activeTasksContainer.getChildren().add(createTaskCard(t, false));
-            }
-            for (tache t : archivedTasks) {
-                archivedTasksContainer.getChildren().add(createTaskCard(t, true));
-            }
-
-            lblActiveCount.setText(activeTasks.size() + " actives");
-            lblArchivedCount.setText(archivedTasks.size() + " archivées");
+            refreshTasks();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            showError("Erreur de chargement", "Impossible de charger les tâches.\n" + e.getMessage());
         }
     }
 
-    // ── Build a task card ──────────────────────────────────────────────────────
+    private void loadTasks() throws SQLException {
+        TacheService ts = new TacheService();
+
+        allTasks = ts.showUserTasks(currentUserId);
+        activeTasks.clear();
+        archivedTasks.clear();
+
+        List<String> activeStatus = Arrays.asList("EN_COURS", "A_FAIRE", "PAUSED");
+
+        for (tache t : allTasks) {
+            if (activeStatus.contains(t.getStatut())) {
+                activeTasks.add(t);
+            } else {
+                archivedTasks.add(t);
+            }
+        }
+    }
+
+    private void refreshTasks() {
+
+        String search = txtSearch.getText() == null ? "" : txtSearch.getText().toLowerCase();
+        String priority = cmbPriority.getValue();
+
+        List<tache> filteredActive = new ArrayList<>(activeTasks.stream()
+                .filter(t -> filterTask(t, search, priority))
+                .toList());
+
+        List<tache> filteredArchived = new ArrayList<>(archivedTasks.stream()
+                .filter(t -> filterTask(t, search, priority))
+                .toList());
+
+        sortTasks(filteredActive);
+        sortTasks(filteredArchived);
+
+        renderTasks(filteredActive, filteredArchived);
+    }
+
+    private boolean filterTask(tache t, String search, String priority) {
+
+        boolean matchesSearch = search.isEmpty() ||
+                t.getTitre().toLowerCase().contains(search);
+
+        boolean matchesPriority = (priority == null || priority.equals("Toutes")) ||
+                t.getPriorite().equalsIgnoreCase(mapPriorityToDB(priority));
+
+        return matchesSearch && matchesPriority;
+    }
+
+    private String mapPriorityToDB(String uiPriority) {
+        return switch(uiPriority.toLowerCase()) {
+            case "haute" -> "ELEVEE";
+            case "moyenne" -> "MOYEN";
+            case "basse" -> "FAIBLE";
+            default -> uiPriority;
+        };
+    }
+
+    private void sortTasks(List<tache> list) {
+
+        String sort = cmbSort.getValue();
+        if (sort == null) return;
+
+        switch (sort) {
+            case "Date de création":
+                list.sort(Comparator.comparing(tache::getDate_debut));
+                break;
+            case "Date d'échéance":
+                list.sort(Comparator.comparing(tache::getDate_fin));
+                break;
+            case "Priorité":
+                list.sort(Comparator.comparing(t -> t.getPriorite().toLowerCase()));
+                break;
+            case "Nom (A-Z)":
+                list.sort(Comparator.comparing(t -> t.getTitre().toLowerCase()));
+                break;
+        }
+    }
+
+    private void renderTasks(List<tache> active, List<tache> archived) {
+
+        activeTasksList.getItems().setAll(active);
+        archivedTasksList.getItems().setAll(archived);
+
+        lblActiveCount.setText(active.size() + " actives");
+        lblArchivedCount.setText(archived.size() + " archivées");
+
+        activeTasksList.setCellFactory(list -> new TaskCell(false));
+        archivedTasksList.setCellFactory(list -> new TaskCell(true));
+    }
+
+    private class TaskCell extends ListCell<tache> {
+
+        private final boolean archived;
+
+        public TaskCell(boolean archived) {
+            this.archived = archived;
+        }
+
+        @Override
+        protected void updateItem(tache t, boolean empty) {
+            super.updateItem(t, empty);
+
+            if (empty || t == null) {
+                setGraphic(null);
+                return;
+            }
+
+            setGraphic(createTaskCard(t, archived));
+        }
+    }
 
     private HBox createTaskCard(tache t, boolean archived) {
-        HBox root = new HBox(20);
+        HBox root = new HBox(16);
+        root.getStyleClass().addAll("task-item", archived ? "task-item-archived" : "task-item-active");
         root.setAlignment(Pos.CENTER_LEFT);
-        root.getStyleClass().add(archived ? "archived-task-item" : "task-item");
 
-        // Priority bar
-        VBox priorityBar = new VBox();
-        priorityBar.setPrefWidth(8);
-        String priorityClass = t.getPriorite() != null ? t.getPriorite().toLowerCase() : "basse";
-        priorityBar.getStyleClass().add(
-                archived ? "archived-priority-bar-" + priorityClass
-                        : "priority-bar-" + priorityClass
-        );
+        // Priority Indicator
+        StackPane priorityIndicator = new StackPane();
+        String priorityClass = getPriorityClass(t.getPriorite());
+        priorityIndicator.getStyleClass().addAll("task-priority-indicator", priorityClass);
+
+        SVGPath priorityIcon = new SVGPath();
+        priorityIcon.setContent(getPriorityIcon(t.getPriorite()));
+        priorityIcon.getStyleClass().add("priority-icon");
+        priorityIndicator.getChildren().add(priorityIcon);
 
         // Content
-        VBox content = new VBox(10);
+        VBox content = new VBox(8);
         HBox.setHgrow(content, Priority.ALWAYS);
-
-        // Top row: title + badges
-        HBox topRow = new HBox(12);
-        topRow.setAlignment(Pos.CENTER_LEFT);
+        content.getStyleClass().add("task-content");
 
         Label title = new Label(t.getTitre());
-        title.getStyleClass().add(archived ? "archived-task-title" : "task-title");
+        title.getStyleClass().add("task-title");
+
+        Label desc = new Label(t.getDescription());
+        desc.getStyleClass().add("task-description");
+        desc.setWrapText(true);
+
+        // Meta info
+        HBox meta = new HBox(12);
+        meta.getStyleClass().add("task-meta");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+
+        HBox dateBox = createMetaItem("M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z",
+                sdf.format(t.getDate_debut()) + " → " + sdf.format(t.getDate_fin()), archived);
+
+        meta.getChildren().add(dateBox);
+
+        // Badges
+        HBox badges = new HBox(8);
+        badges.getStyleClass().add("badge-group");
 
         Label priorityBadge = new Label(t.getPriorite());
-        priorityBadge.getStyleClass().add(
-                archived ? "archived-priority-badge-" + priorityClass
-                        : "priority-badge-" + priorityClass
-        );
+        priorityBadge.getStyleClass().addAll("task-badge", getPriorityBadgeClass(t.getPriorite()));
 
-        String statusClass = t.getStatut() != null
-                ? t.getStatut().toLowerCase().replace(" ", "-") : "inconnu";
         Label statusBadge = new Label(t.getStatut());
-        statusBadge.getStyleClass().add(
-                archived ? "archived-status-badge-" + statusClass
-                        : "status-badge-" + statusClass
-        );
+        statusBadge.getStyleClass().addAll("task-badge", getStatusBadgeClass(t.getStatut()));
 
-        topRow.getChildren().addAll(title, priorityBadge, statusBadge);
+        badges.getChildren().addAll(priorityBadge, statusBadge);
 
-        // Description
-        Label desc = new Label(t.getDescription() != null ? t.getDescription() : "");
-        desc.setWrapText(true);
-        desc.getStyleClass().add(archived ? "archived-task-description" : "task-description");
+        content.getChildren().addAll(title, desc, meta, badges);
 
-        // Dates meta
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String debut = t.getDate_debut() != null ? sdf.format(t.getDate_debut()) : "—";
-        String fin   = t.getDate_fin()   != null ? sdf.format(t.getDate_fin())   : "—";
-        Label dates = new Label("📅 Début: " + debut + "  |  Fin: " + fin);
-        dates.getStyleClass().add(archived ? "archived-task-meta" : "task-meta");
+        // Actions
+        HBox actions = new HBox(10);
+        actions.setAlignment(Pos.CENTER_RIGHT);
 
-        content.getChildren().addAll(topRow, desc, dates);
+        if (!archived) {
+            Button detailsBtn = new Button("Détails");
+            detailsBtn.getStyleClass().addAll("task-btn", "task-btn-details");
 
-        // Action buttons
-        VBox actions = new VBox(10);
-        actions.setAlignment(Pos.CENTER);
+            Button editBtn = new Button("Modifier");
+            editBtn.getStyleClass().addAll("task-btn", "task-btn-edit");
 
-        Button btnDetails = new Button("📄 Détails");
-        Button btnEdit    = new Button(archived ? "↩️ Restaurer" : "✏️ Modifier");
-        Button btnDelete  = new Button("🗑 Supprimer");
+            Button deleteBtn = new Button("Supprimer");
+            deleteBtn.getStyleClass().addAll("task-btn", "task-btn-delete");
+            deleteBtn.setOnAction(e -> {
+                try {
+                    TacheService ts = new TacheService();
+                    ts.delete(t.getId());
+                    activeTasks.remove(t);
+                    archivedTasks.remove(t);
+                    refreshTasks();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("✔ Succès");
+                    alert.setHeaderText("Tâche supprimée");
+                    alert.setContentText("La tâche a été supprimée avec succès.");
+                    alert.showAndWait();
+                } catch (SQLException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("❌ Erreur");
+                    alert.setHeaderText("Suppression échoué");
+                    alert.setContentText("Erreur : " + ex.getMessage());
+                    alert.showAndWait();
+                }
+            });
+            // Details action
+            detailsBtn.setOnAction(e -> {
+                try {
+                    if (sidebarController != null) {
+                        // Set the task for the details controller to access
+                        TachesController.setCurrentTaskForDetails(t);
+                        sidebarController.loadView("/frontoffice/taches/tache-details.fxml");
+                    }
+                } catch (Exception ex) {
+                    System.out.println("Error loading details: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+            });
 
-        btnDetails.getStyleClass().add(archived ? "btn-details-archived" : "btn-details");
-        btnEdit.getStyleClass().add(archived ? "btn-restore" : "btn-edit");
-        btnDelete.getStyleClass().add(archived ? "btn-delete-archived" : "btn-delete");
+            // Edit action
+            editBtn.setOnAction(e -> {
+                try {
+                    if (sidebarController != null) {
+                        // Set the task for the edit controller to access
+                        TachesController.setCurrentTaskForEdit(t);
+                        sidebarController.loadView("/frontoffice/taches/tache-edit.fxml");
+                    }
+                } catch (Exception ex) {
+                    System.out.println("Error loading edit: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+            });
 
-        // ── Delete ──────────────────────────────────────────────
-        btnDelete.setOnAction(e -> handleDelete(t, root, archived));
 
-        // ── Details ─────────────────────────────────────────────
-        btnDetails.setOnAction(e -> handleDetails(t));
+            actions.getChildren().addAll(detailsBtn, editBtn, deleteBtn);
+        } else {
+            Button restoreBtn = new Button("Restaurer");
+            restoreBtn.getStyleClass().addAll("task-btn", "task-btn-details");
 
-        // ── Edit ────────────────────────────────────────────────
-        btnEdit.setOnAction(e -> handleEdit(t, archived));
+            Button deletePermBtn = new Button("Supprimer");
+            deletePermBtn.getStyleClass().addAll("task-btn", "task-btn-delete");
 
-        actions.getChildren().addAll(btnDetails, btnEdit, btnDelete);
-        root.getChildren().addAll(priorityBar, content, actions);
+            restoreBtn.setOnAction(e -> {
+                try {
+                    t.setStatut("A_FAIRE");
+                    TacheService ts = new TacheService();
+                    ts.edit(t);
+                    archivedTasks.remove(t);
+                    activeTasks.add(t);
+                    refreshTasks();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("✔ Succès");
+                    alert.setHeaderText("Tâche restaurée");
+                    alert.setContentText("La tâche a été restaurée avec succès.");
+                    alert.showAndWait();
+                } catch (SQLException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("❌ Erreur");
+                    alert.setHeaderText("Restauration échouée");
+                    alert.setContentText("Erreur : " + ex.getMessage());
+                    alert.showAndWait();
+                }
+            });
+
+            deletePermBtn.setOnAction(e -> {
+                try {
+                    TacheService ts = new TacheService();
+                    ts.delete(t.getId());
+                    allTasks.remove(t);
+                    archivedTasks.remove(t);
+                    refreshTasks();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("✔ Succès");
+                    alert.setHeaderText("Tâche supprimée définitivement");
+                    alert.setContentText("La tâche a été supprimée définitivement.");
+                    alert.showAndWait();
+                } catch (SQLException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("❌ Erreur");
+                    alert.setHeaderText("Suppression échouée");
+                    alert.setContentText("Erreur : " + ex.getMessage());
+                    alert.showAndWait();
+                }
+            });
+
+            actions.getChildren().addAll(restoreBtn, deletePermBtn);
+        }
+
+        root.getChildren().addAll(priorityIndicator, content, actions);
         return root;
     }
 
-    // ── Button handlers ────────────────────────────────────────────────────────
+    private HBox createMetaItem(String iconContent, String text, boolean archived) {
+        HBox box = new HBox(6);
+        box.getStyleClass().addAll("task-meta-item", archived ? "task-meta-item-archived" : "task-meta-item-active");
+        box.setAlignment(Pos.CENTER_LEFT);
 
-    private void handleDelete(tache t, HBox card, boolean archived) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirmer la suppression");
-        confirm.setHeaderText("Supprimer \"" + t.getTitre() + "\" ?");
-        confirm.setContentText("Cette action est irréversible.");
-        confirm.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                try {
-                    new TacheService().delete(t.getId());
-                    ((VBox) card.getParent()).getChildren().remove(card);
+        SVGPath icon = new SVGPath();
+        icon.setContent(iconContent);
+        icon.getStyleClass().add("task-meta-icon");
 
-                    if (archived) {
-                        int count = parseCount(lblArchivedCount.getText()) - 1;
-                        lblArchivedCount.setText(count + " archivées");
-                    } else {
-                        int count = parseCount(lblActiveCount.getText()) - 1;
-                        lblActiveCount.setText(count + " actives");
-                    }
+        Label label = new Label(text);
+        label.getStyleClass().add("task-meta-text");
 
-                } catch (SQLException ex) {
-                    showError("Suppression échouée", ex.getMessage());
-                }
-            }
-        });
+        box.getChildren().addAll(icon, label);
+        return box;
     }
 
-    private void handleDetails(tache t) {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/frontoffice/taches/tache-details.fxml"));
-            Parent r = loader.load();
-
-            TachesDetailsController controller = loader.getController();
-            controller.setTask(t);
-            controller.setSidebarController(sidebarController);
-
-
-
-        } catch (IOException ex) {
-            showError("Erreur de navigation", ex.getMessage());
-        }
+    private String getPriorityClass(String priority) {
+        return switch(priority.toLowerCase()) {
+            case "haute" -> "task-priority-high";
+            case "moyenne" -> "task-priority-medium";
+            case "basse" -> "task-priority-low";
+            default -> "task-priority-low";
+        };
     }
 
-    private void handleEdit(tache t, boolean archived) {
-        if (archived) {
-            // Restore: set status back to A_FAIRE and save
-            try {
-                t.setStatut("A_FAIRE");
-                new TacheService().edit(t);
-                loadTasks(); // Refresh the whole list
-            } catch (SQLException ex) {
-                showError("Restauration échouée", ex.getMessage());
-            }
+    private String getPriorityBadgeClass(String priority) {
+        return switch(priority.toLowerCase()) {
+            case "haute" -> "badge-priority-high";
+            case "moyenne" -> "badge-priority-medium";
+            case "basse" -> "badge-priority-low";
+            default -> "badge-priority-low";
+        };
+    }
+
+    private String getStatusBadgeClass(String status) {
+        return switch(status.toLowerCase()) {
+            case "a_faire", "todo" -> "badge-status-todo";
+            case "en_cours", "in_progress" -> "badge-status-progress";
+            case "terminee", "done" -> "badge-status-done";
+            default -> "badge-status-archived";
+        };
+    }
+
+    private String getPriorityIcon(String priority) {
+        return switch(priority.toLowerCase()) {
+            case "haute" -> "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z";
+            case "moyenne" -> "M13 10V3L4 14h7v7l9-11h-7z";
+            case "basse" -> "M5 13l4 4L19 7";
+            default -> "M5 13l4 4L19 7";
+        };
+    }
+    public void addTask(javafx.event.ActionEvent e) {
+        if (sidebarController != null) {
+            sidebarController.loadView("/frontoffice/taches/tache-new.fxml");
         } else {
-            // Navigate to edit form
-            try {
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/frontoffice/taches/tache-edit.fxml"));
-                Parent r = loader.load();
-
-                TacheEditController controller = loader.getController();
-                controller.setTask(t);
-                controller.setSidebarController(sidebarController);
-
-            } catch (IOException ex) {
-                showError("Erreur de navigation", ex.getMessage());
-            }
+            System.out.println("Sidebar controller is null, cannot load new task view");
         }
     }
 
-    @FXML
-    public void addTask(ActionEvent e) {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/frontoffice/taches/tache-new.fxml"));
-            Parent r = loader.load();
-
-            TacheNewController controller = loader.getController();
-            controller.setSidebarController(sidebarController);
-
-
-        } catch (IOException ex) {
-            showError("Erreur de navigation", ex.getMessage());
-        }
+    // Static methods to set tasks before loading views
+    public static void setCurrentTaskForDetails(tache task) {
+        currentTaskForDetails = task;
     }
 
-    // ── Helpers ────────────────────────────────────────────────────────────────
-
-    private int parseCount(String text) {
-        try { return Integer.parseInt(text.split(" ")[0]); }
-        catch (NumberFormatException e) { return 0; }
+    public static void setCurrentTaskForEdit(tache task) {
+        currentTaskForEdit = task;
     }
 
-    private void showError(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    public static tache getCurrentTaskForEdit() {
+        return currentTaskForEdit;
+    }
+
+    public static tache getCurrentTaskForDetails() {
+        return currentTaskForDetails;
     }
 }

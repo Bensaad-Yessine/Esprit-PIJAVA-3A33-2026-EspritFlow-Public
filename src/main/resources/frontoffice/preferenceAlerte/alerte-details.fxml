@@ -1,95 +1,234 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Rectangle?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="piJava.Controllers.frontoffice.preferencealerte.AlerteDetailsController"
-      stylesheets="@alerte-details.css"
-      styleClass="main-container"
-      spacing="24">
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="piJava.Controllers.frontoffice.preferencealerte.AlerteDetailsController"
+            stylesheets="@alerte-details.css"
+            prefHeight="750.0" prefWidth="850.0"
+            styleClass="root-pane">
 
-    <!-- HEADER -->
-    <HBox alignment="CENTER_LEFT" spacing="16">
-        <Button text="← Retour" onAction="#handleBack" styleClass="btn-back"/>
-        <VBox spacing="4" HBox.hgrow="ALWAYS">
-            <Label text="Détails de la préférence" styleClass="title"/>
-            <Label text="EspritFlow · Informations complètes" styleClass="subtitle"/>
+    <VBox spacing="0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+
+        <!-- Hero Header Section with Red Gradient -->
+        <VBox styleClass="hero-header" spacing="15">
+            <padding>
+                <Insets top="25" right="30" bottom="25" left="30"/>
+            </padding>
+
+            <!-- Top Navigation Bar -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Button text="← Retour" onAction="#handleRetour" styleClass="btn-back-glass"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Button text="✎ Modifier" onAction="#handleModifier" styleClass="btn-glass-primary"/>
+                    <Button text="🗑 Supprimer" onAction="#handleSupprimer" styleClass="btn-glass-danger"/>
+                </HBox>
+            </HBox>
+
+            <!-- Title and Status Area -->
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label fx:id="lblNom" text="Nom de l'alerte" styleClass="hero-title"/>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <!-- Status Badge with Glass Effect -->
+                        <HBox fx:id="statusBadge" styleClass="status-badge-glass" alignment="CENTER">
+                            <padding>
+                                <Insets top="6" right="16" bottom="6" left="16"/>
+                            </padding>
+                            <Label fx:id="lblStatus" text="Active" styleClass="status-text"/>
+                        </HBox>
+
+                        <!-- Default Badge -->
+                        <HBox fx:id="defaultBadge" styleClass="default-badge-glass" alignment="CENTER"
+                              visible="false" managed="false">
+                            <padding>
+                                <Insets top="6" right="16" bottom="6" left="16"/>
+                            </padding>
+                            <Label fx:id="lblDefault" text="Par défaut" styleClass="default-text"/>
+                        </HBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Activate Button -->
+                <Button fx:id="btnActiver"
+                        text="⚡ Activer"
+                        onAction="#handleActive"
+                        styleClass="btn-activate-hero"/>
+            </HBox>
         </VBox>
-    </HBox>
 
-    <!-- INFO CARD -->
-    <VBox styleClass="info-card" spacing="20">
+        <!-- Main Content Area -->
+        <ScrollPane fitToWidth="true" styleClass="content-scroll" VBox.vgrow="ALWAYS">
+            <VBox spacing="20" styleClass="content-container">
+                <padding>
+                    <Insets top="25" right="30" bottom="30" left="30"/>
+                </padding>
 
-        <Label text="Informations générales" styleClass="section-title"/>
+                <!-- Canaux de Notification Section - Glass Card -->
+                <VBox spacing="15" styleClass="glass-card">
+                    <padding>
+                        <Insets top="25" right="25" bottom="25" left="25"/>
+                    </padding>
 
-        <GridPane hgap="24" vgap="16">
-            <columnConstraints>
-                <ColumnConstraints percentWidth="50"/>
-                <ColumnConstraints percentWidth="50"/>
-            </columnConstraints>
+                    <!-- Section Header with Icon -->
+                    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="section-header">
+                        <Label text="🔔" styleClass="section-icon"/>
+                        <Label text="Canaux de Notification" styleClass="section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Rectangle width="40" height="3" styleClass="section-accent-line"/>
+                    </HBox>
 
-            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                <Label text="NOM" styleClass="field-label"/>
-                <Label fx:id="lblNom" styleClass="field-value"/>
+                    <GridPane hgap="25" vgap="20" styleClass="info-grid">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="33"/>
+                            <ColumnConstraints percentWidth="33"/>
+                            <ColumnConstraints percentWidth="33"/>
+                        </columnConstraints>
+
+                        <!-- Email Channel -->
+                        <VBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="channel-box">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="📧" styleClass="channel-icon"/>
+                                <Label text="Email" styleClass="field-label"/>
+                            </HBox>
+                            <CheckBox fx:id="chkEmailActif" text="Notifications par email"
+                                      styleClass="modern-checkbox"/>
+                        </VBox>
+
+                        <!-- Push Channel -->
+                        <VBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="channel-box">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="📱" styleClass="channel-icon"/>
+                                <Label text="Push" styleClass="field-label"/>
+                            </HBox>
+                            <CheckBox fx:id="chkPushActif" text="Notifications push"
+                                      styleClass="modern-checkbox"/>
+                        </VBox>
+
+                        <!-- Site Web Channel -->
+                        <VBox spacing="10" GridPane.columnIndex="2" GridPane.rowIndex="0" styleClass="channel-box">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="🌐" styleClass="channel-icon"/>
+                                <Label text="Site Web" styleClass="field-label"/>
+                            </HBox>
+                            <CheckBox fx:id="chkSiteNotif" text="Notifications sur le site"
+                                      styleClass="modern-checkbox"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+
+                <!-- Paramètres Section - Glass Card -->
+                <VBox spacing="15" styleClass="glass-card">
+                    <padding>
+                        <Insets top="25" right="25" bottom="25" left="25"/>
+                    </padding>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="section-header">
+                        <Label text="⚙️" styleClass="section-icon"/>
+                        <Label text="Paramètres de Rappel" styleClass="section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Rectangle width="40" height="3" styleClass="section-accent-line"/>
+                    </HBox>
+
+                    <GridPane hgap="30" vgap="20" styleClass="info-grid">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Délai de rappel" styleClass="field-label"/>
+                            <HBox spacing="12" alignment="CENTER_LEFT" styleClass="info-box-modern">
+                                <Label text="⏱" styleClass="icon-box"/>
+                                <Label fx:id="lblDelaiRappel" text="30 minutes" styleClass="field-value"/>
+                            </HBox>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+
+                <!-- Heures de Silence Section - Glass Card with Red Border Accent -->
+                <VBox spacing="15" styleClass="glass-card accent-border">
+                    <padding>
+                        <Insets top="25" right="25" bottom="25" left="25"/>
+                    </padding>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="section-header">
+                        <Label text="🌙" styleClass="section-icon"/>
+                        <Label text="Heures de Silence" styleClass="section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Rectangle width="40" height="3" styleClass="section-accent-line-red"/>
+                    </HBox>
+
+                    <GridPane hgap="30" vgap="20" styleClass="info-grid">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Heure de début" styleClass="field-label"/>
+                            <HBox spacing="12" alignment="CENTER_LEFT" styleClass="info-box-modern night-box">
+                                <Label text="🌙" styleClass="icon-box"/>
+                                <Label fx:id="lblHeureSilenceDebut" text="22:00" styleClass="field-value"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Heure de fin" styleClass="field-label"/>
+                            <HBox spacing="12" alignment="CENTER_LEFT" styleClass="info-box-modern day-box">
+                                <Label text="☀️" styleClass="icon-box"/>
+                                <Label fx:id="lblHeureSilenceFin" text="08:00" styleClass="field-value"/>
+                            </HBox>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+
+                <!-- Métadonnées Section - Glass Card -->
+                <VBox spacing="15" styleClass="glass-card">
+                    <padding>
+                        <Insets top="25" right="25" bottom="25" left="25"/>
+                    </padding>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="section-header">
+                        <Label text="📊" styleClass="section-icon"/>
+                        <Label text="Informations" styleClass="section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Rectangle width="40" height="3" styleClass="section-accent-line"/>
+                    </HBox>
+
+                    <GridPane hgap="30" vgap="20" styleClass="info-grid">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Date de création" styleClass="field-label"/>
+                            <HBox spacing="12" alignment="CENTER_LEFT" styleClass="info-box-modern">
+                                <Label text="📅" styleClass="icon-box"/>
+                                <Label fx:id="lblDateCreation" text="01/01/2024 10:30" styleClass="field-value"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Dernière mise à jour" styleClass="field-label"/>
+                            <HBox spacing="12" alignment="CENTER_LEFT" styleClass="info-box-modern">
+                                <Label text="🔄" styleClass="icon-box"/>
+                                <Label fx:id="lblDateMiseAjour" text="15/01/2024 14:20" styleClass="field-value"/>
+                            </HBox>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+
             </VBox>
-
-            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <Label text="STATUT" styleClass="field-label"/>
-                <Label fx:id="lblActive" styleClass="badge"/>
-            </VBox>
-
-            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                <Label text="PAR DÉFAUT" styleClass="field-label"/>
-                <Label fx:id="lblDefault" styleClass="field-value"/>
-            </VBox>
-
-            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <Label text="DÉLAI DE RAPPEL" styleClass="field-label"/>
-                <Label fx:id="lblDelai" styleClass="field-value"/>
-            </VBox>
-        </GridPane>
-
-        <Label text="Canaux de notification" styleClass="section-title"/>
-
-        <GridPane hgap="24" vgap="16">
-            <columnConstraints>
-                <ColumnConstraints percentWidth="33"/>
-                <ColumnConstraints percentWidth="33"/>
-                <ColumnConstraints percentWidth="33"/>
-            </columnConstraints>
-
-            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                <Label text="📧 EMAIL" styleClass="field-label"/>
-                <Label fx:id="lblEmail" styleClass="field-value"/>
-            </VBox>
-
-            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <Label text="🔔 PUSH" styleClass="field-label"/>
-                <Label fx:id="lblPush" styleClass="field-value"/>
-            </VBox>
-
-            <VBox spacing="6" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                <Label text="🌐 SITE" styleClass="field-label"/>
-                <Label fx:id="lblSite" styleClass="field-value"/>
-            </VBox>
-        </GridPane>
-
-        <Label text="Heures de silence" styleClass="section-title"/>
-
-        <HBox spacing="40">
-            <VBox spacing="6">
-                <Label text="DÉBUT" styleClass="field-label"/>
-                <Label fx:id="lblSilenceDebut" styleClass="field-value"/>
-            </VBox>
-            <VBox spacing="6">
-                <Label text="FIN" styleClass="field-label"/>
-                <Label fx:id="lblSilenceFin" styleClass="field-value"/>
-            </VBox>
-        </HBox>
+        </ScrollPane>
 
     </VBox>
 
-</VBox>
+</AnchorPane>

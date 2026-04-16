@@ -229,7 +229,7 @@ public class SidebarController implements Initializable {
     }
 
     // ─── Content loader ───────────────────────────────────────────────────────
-    private void loadView(String fxmlPath) {
+    public void loadView(String fxmlPath) {
         if (contentArea == null) {
             System.err.println("SidebarController: contentArea is null — call setContentArea() before navigating.");
             return;
@@ -247,6 +247,10 @@ public class SidebarController implements Initializable {
             Object controller = loader.getController();
 
             // Injection pour Objectifs santé
+            if (controller instanceof piJava.Controllers.backoffice.group.GroupContentController c) {
+                c.setSidebarController(this);
+                c.setContentArea(contentArea);
+            }
             if (controller instanceof piJava.Controllers.backoffice.objectifsante.AfficherObjectifsController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
@@ -256,6 +260,34 @@ public class SidebarController implements Initializable {
             if (controller instanceof piJava.Controllers.backoffice.suivibienetre.AfficherSuivisController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
+            }
+
+            // Injection pour Tâches
+            if (controller instanceof piJava.Controllers.backoffice.taches.TachesController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof piJava.Controllers.backoffice.taches.TachesDetailsController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof piJava.Controllers.backoffice.taches.TacheEditController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof piJava.Controllers.backoffice.taches.TacheNewController c) {
+                c.setSidebarController(this);
+            }
+
+            // Injection pour Préférences d'alertes
+            if (controller instanceof piJava.Controllers.backoffice.preferenceAlerte.AlertesController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof piJava.Controllers.backoffice.preferenceAlerte.AlerteDetailsController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof piJava.Controllers.backoffice.preferenceAlerte.AlerteEditController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof piJava.Controllers.backoffice.preferenceAlerte.AlerteNewController c) {
+                c.setSidebarController(this);
             }
 
             contentArea.getChildren().setAll(view);

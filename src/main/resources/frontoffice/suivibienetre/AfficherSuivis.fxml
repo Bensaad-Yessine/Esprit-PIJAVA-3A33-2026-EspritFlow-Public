@@ -125,6 +125,7 @@
                                         <TableColumn fx:id="colNiveauStress" prefWidth="120.0" text="Stress"/>
                                         <TableColumn fx:id="colQualiteAlimentation" prefWidth="145.0" text="Alimentation"/>
                                         <TableColumn fx:id="colScore" prefWidth="110.0" text="Score"/>
+                                        <TableColumn fx:id="colActions" prefWidth="90.0" text="Actions"/>
 
                                     </columns>
                                 </TableView>

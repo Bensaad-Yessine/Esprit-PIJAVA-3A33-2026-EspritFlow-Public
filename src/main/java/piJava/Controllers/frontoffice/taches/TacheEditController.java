@@ -3,145 +3,254 @@ package piJava.Controllers.frontoffice.taches;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import piJava.Controllers.frontoffice.FrontSidebarController;
-import piJava.entities.suiviTache;
 import piJava.entities.tache;
-import piJava.services.SuiviTacheService;
 import piJava.services.TacheService;
+import piJava.utils.TacheValidator;
+import piJava.utils.ValidationHelper;
 
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TacheEditController {
 
-    @FXML private TextField        txtTitre;
+    private tache currentTache;
+    private final TacheService service = new TacheService();
+
+    @FXML private TextField txtTitre;
     @FXML private ComboBox<String> cbType;
-    @FXML private DatePicker       dpDateDebut;
-    @FXML private TextField        txtHeureDebut;
-    @FXML private DatePicker       dpDateFin;
-    @FXML private TextField        txtHeureFin;
+    @FXML private DatePicker dpDateDebut;
+    @FXML private TextField txtHeureDebut;
+    @FXML private DatePicker dpDateFin;
+    @FXML private TextField txtHeureFin;
     @FXML private ComboBox<String> cbPriorite;
     @FXML private ComboBox<String> cbStatut;
-    @FXML private TextArea         txtDescription;
-    @FXML private TextField        txtDuree;
-    @FXML private Label            lblNotification;
+    @FXML private TextArea txtDescription;
+    @FXML private TextField txtDuree;
 
-    private tache currentTask;
+    // error labels
+    @FXML private Label lblTitreError;
+    @FXML private Label lblTypeError;
+    @FXML private Label lblDateDebutError;
+    @FXML private Label lblDateFinError;
+    @FXML private Label lblPrioriteError;
+    @FXML private Label lblStatutError;
+    @FXML private Label lblDescriptionError;
+    @FXML private Label lblDureeError;
+
+    @FXML private Label lblNotification;
+
     private FrontSidebarController sidebarController;
 
     public void setSidebarController(FrontSidebarController sidebarController) {
         this.sidebarController = sidebarController;
-    }
-
-    /** Called by TachesController before showing this form */
-    public void setTask(tache t) {
-        this.currentTask = t;
-        populateForm(t);
-    }
-
-    // ── Pre-fill form with existing task values ────────────────────────────────
-
-    private void populateForm(tache t) {
-        txtTitre.setText(t.getTitre());
-
-        if (cbType.getItems().isEmpty()) cbType.getItems().addAll("PERSONNEL", "PROFESSIONNEL", "ETUDE", "AUTRE");
-        cbType.setValue(t.getType());
-
-        if (cbPriorite.getItems().isEmpty()) cbPriorite.getItems().addAll("HAUTE", "MOYENNE", "BASSE");
-        cbPriorite.setValue(t.getPriorite());
-
-        if (cbStatut.getItems().isEmpty()) cbStatut.getItems().addAll("A_FAIRE", "EN_COURS", "PAUSED", "TERMINE", "ABANDON");
-        cbStatut.setValue(t.getStatut());
-
-        txtDescription.setText(t.getDescription() != null ? t.getDescription() : "");
-        txtDuree.setText(String.valueOf(t.getDuree_estimee()));
-
-        if (t.getDate_debut() != null) {
-            LocalDateTime ldt = t.getDate_debut().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-            dpDateDebut.setValue(ldt.toLocalDate());
-            txtHeureDebut.setText(ldt.toLocalTime().toString());
-        }
-        if (t.getDate_fin() != null) {
-            LocalDateTime ldt = t.getDate_fin().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-            dpDateFin.setValue(ldt.toLocalDate());
-            txtHeureFin.setText(ldt.toLocalTime().toString());
+        // Retrieve the task that was set before loading this view
+        if (TachesController.getCurrentTaskForEdit() != null) {
+            setTache(TachesController.getCurrentTaskForEdit());
+            TachesController.setCurrentTaskForEdit(null); // Clear it after use
         }
     }
 
-    // ── Save edit ──────────────────────────────────────────────────────────────
+    public void setTache(tache t) {
+        this.currentTache = t;
+        fillForm();
+    }
 
     @FXML
-    private void handleSave() {
+    public void initialize() {
+
+        // combos
+        cbType.getItems().addAll("MANUEL", "REUNION", "REVISION", "SANTE", "EMPLOI");
+        cbPriorite.getItems().addAll("FAIBLE", "MOYEN", "ELEVEE");
+        cbStatut.getItems().addAll("A_FAIRE", "EN_COURS", "TERMINE", "EN_RETARD", "PAUSED", "ABANDON");
+
+        ValidationHelper.initializeErrorLabel(lblTitreError);
+        ValidationHelper.initializeErrorLabel(lblTypeError);
+        ValidationHelper.initializeErrorLabel(lblDateDebutError);
+        ValidationHelper.initializeErrorLabel(lblDateFinError);
+        ValidationHelper.initializeErrorLabel(lblPrioriteError);
+        ValidationHelper.initializeErrorLabel(lblStatutError);
+        ValidationHelper.initializeErrorLabel(lblDescriptionError);
+        ValidationHelper.initializeErrorLabel(lblDureeError);
+
+        // live validation
+        txtTitre.textProperty().addListener((o, a, b) -> validateTitre());
+        txtDescription.textProperty().addListener((o, a, b) -> validateDescription());
+        txtDuree.textProperty().addListener((o, a, b) -> validateDuree());
+
+        cbType.valueProperty().addListener((o, a, b) -> validateType());
+        cbPriorite.valueProperty().addListener((o, a, b) -> validatePriorite());
+        cbStatut.valueProperty().addListener((o, a, b) -> validateStatut());
+
+        dpDateDebut.valueProperty().addListener((o, a, b) -> validateDates());
+        dpDateFin.valueProperty().addListener((o, a, b) -> validateDates());
+
+        txtHeureDebut.textProperty().addListener((o, a, b) -> validateDates());
+        txtHeureFin.textProperty().addListener((o, a, b) -> validateDates());
+    }
+
+    // ---------------- FILL ----------------
+    private void fillForm() {
+        if (currentTache == null) return;
+
+        txtTitre.setText(currentTache.getTitre());
+        cbType.setValue(currentTache.getType());
+
+        LocalDateTime start = LocalDateTime.ofInstant(
+                currentTache.getDate_debut().toInstant(),
+                ZoneId.systemDefault()
+        );
+
+        LocalDateTime end = LocalDateTime.ofInstant(
+                currentTache.getDate_fin().toInstant(),
+                ZoneId.systemDefault()
+        );
+
+        dpDateDebut.setValue(start.toLocalDate());
+        txtHeureDebut.setText(start.toLocalTime().toString());
+
+        dpDateFin.setValue(end.toLocalDate());
+        txtHeureFin.setText(end.toLocalTime().toString());
+
+        cbPriorite.setValue(currentTache.getPriorite());
+        cbStatut.setValue(currentTache.getStatut());
+
+        txtDescription.setText(currentTache.getDescription());
+        txtDuree.setText(String.valueOf(currentTache.getDuree_estimee()));
+    }
+
+    // ---------------- VALIDATION ----------------
+
+    private void validateTitre() {
+        List<String> errors = TacheValidator.validateTitre(txtTitre.getText());
+        ValidationHelper.showFieldErrors(txtTitre, lblTitreError, errors);
+    }
+
+    private void validateType() {
+        List<String> errors = TacheValidator.validateType(cbType.getValue());
+        ValidationHelper.showFieldErrors(cbType, lblTypeError, errors);
+    }
+
+    private void validatePriorite() {
+        List<String> errors = TacheValidator.validatePriorite(cbPriorite.getValue());
+        ValidationHelper.showFieldErrors(cbPriorite, lblPrioriteError, errors);
+    }
+
+    private void validateStatut() {
+        List<String> errors = TacheValidator.validateStatut(cbStatut.getValue());
+        ValidationHelper.showFieldErrors(cbStatut, lblStatutError, errors);
+    }
+
+    private void validateDescription() {
+        List<String> errors = TacheValidator.validateDescription(txtDescription.getText());
+        ValidationHelper.showFieldErrors(txtDescription, lblDescriptionError, errors);
+    }
+
+    private void validateDuree() {
+        List<String> errors = TacheValidator.validateDureeEstimeeText(txtDuree.getText());
+        ValidationHelper.showFieldErrors(txtDuree, lblDureeError, errors);
+    }
+
+    private void validateDates() {
         try {
-            if (txtTitre.getText().isBlank()) {
-                lblNotification.setText("⚠ Le titre est obligatoire.");
-                return;
-            }
-            if (dpDateDebut.getValue() == null || dpDateFin.getValue() == null) {
-                lblNotification.setText("⚠ Les dates sont obligatoires.");
-                return;
-            }
+            Date d1 = parseDate(dpDateDebut, txtHeureDebut);
+            Date d2 = parseDate(dpDateFin, txtHeureFin);
 
-            // Dates
-            LocalTime startTime = txtHeureDebut.getText().isBlank()
-                    ? LocalTime.of(0, 0) : LocalTime.parse(txtHeureDebut.getText());
-            Date dateDebut = Date.from(LocalDateTime.of(dpDateDebut.getValue(), startTime)
-                    .atZone(ZoneId.systemDefault()).toInstant());
+            ValidationHelper.showFieldErrors(dpDateDebut, lblDateDebutError,
+                    TacheValidator.validateDateDebut(d1));
 
-            LocalTime endTime = txtHeureFin.getText().isBlank()
-                    ? LocalTime.of(23, 59) : LocalTime.parse(txtHeureFin.getText());
-            Date dateFin = Date.from(LocalDateTime.of(dpDateFin.getValue(), endTime)
-                    .atZone(ZoneId.systemDefault()).toInstant());
+            ValidationHelper.showFieldErrors(dpDateFin, lblDateFinError,
+                    TacheValidator.validateDates(d1, d2));
 
-            // Track old status for suivi
-            String oldStatus = currentTask.getStatut();
-            String newStatus = cbStatut.getValue();
+        } catch (Exception ignored) {}
+    }
 
-            // Apply changes to the existing task object (keeps id, user_id, etc.)
-            currentTask.setTitre(txtTitre.getText());
-            currentTask.setType(cbType.getValue());
-            currentTask.setDate_debut(dateDebut);
-            currentTask.setDate_fin(dateFin);
-            currentTask.setPriorite(cbPriorite.getValue());
-            currentTask.setStatut(newStatus);
-            currentTask.setDescription(txtDescription.getText());
-            currentTask.setDuree_estimee(txtDuree.getText().isBlank() ? 0 : Integer.parseInt(txtDuree.getText()));
-            currentTask.setUpdated_at(new Date());
+    private Date parseDate(DatePicker dp, TextField tf) {
+        LocalDate d = dp.getValue();
+        LocalTime t = LocalTime.parse(tf.getText());
+        return Date.from(LocalDateTime.of(d, t)
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
+    }
 
-            // ✅ edit(t) — id comes from the object itself
-            new TacheService().edit(currentTask);
+    // ---------------- UPDATE ----------------
 
-            // Log status change if it changed
-            if (!oldStatus.equals(newStatus)) {
-                suiviTache s = new suiviTache();
-                s.setTache(currentTask);
-                s.setAncienStatut(oldStatus);
-                s.setNouveauStatut(newStatus);
-                s.setCommentaire("Modification manuelle");
-                s.setDateAction(new Date());
-                new SuiviTacheService().add(s);
-            }
+    @FXML
+    private void handleUpdate() {
 
-            lblNotification.setText("✅ Tâche modifiée avec succès !");
+        // Validate all form fields
+        List<String> errors = new ArrayList<>();
 
+        errors.addAll(TacheValidator.validateTitre(txtTitre.getText()));
+        errors.addAll(TacheValidator.validateDescription(txtDescription.getText()));
+        errors.addAll(TacheValidator.validateType(cbType.getValue()));
+        errors.addAll(TacheValidator.validatePriorite(cbPriorite.getValue()));
+        errors.addAll(TacheValidator.validateStatut(cbStatut.getValue()));
 
-
-        } catch (NumberFormatException e) {
-            lblNotification.setText("⚠ La durée doit être un nombre entier.");
-        } catch (SQLException e) {
-            lblNotification.setText("⚠ Erreur DB : " + e.getMessage());
-            e.printStackTrace();
+        try {
+            Date d1 = parseDate(dpDateDebut, txtHeureDebut);
+            Date d2 = parseDate(dpDateFin, txtHeureFin);
+            errors.addAll(TacheValidator.validateDates(d1, d2));
         } catch (Exception e) {
-            lblNotification.setText("⚠ Erreur : " + e.getMessage());
-            e.printStackTrace();
+            errors.add("Format heure invalide (HH:mm)");
         }
+
+        errors.addAll(TacheValidator.validateDureeEstimeeText(txtDuree.getText()));
+
+        if (!errors.isEmpty()) {
+            return;
+        }
+
+        try {
+            currentTache.setTitre(txtTitre.getText());
+            currentTache.setDescription(txtDescription.getText());
+            currentTache.setType(cbType.getValue());
+            currentTache.setPriorite(cbPriorite.getValue());
+            currentTache.setStatut(cbStatut.getValue());
+
+            Date d1 = parseDate(dpDateDebut, txtHeureDebut);
+            Date d2 = parseDate(dpDateFin, txtHeureFin);
+
+            currentTache.setDate_debut(d1);
+            currentTache.setDate_fin(d2);
+
+            currentTache.setDuree_estimee(Integer.parseInt(txtDuree.getText()));
+
+            service.edit(currentTache);
+
+            lblNotification.setText("✔ Mise à jour réussie");
+            handleBack();
+
+        } catch (Exception e) {
+            showError();
+        }
+    }
+
+    private void handleBack() {
+        try {
+            if (sidebarController != null) {
+                sidebarController.goToTaches();
+            }
+        } catch (Exception e) {
+            System.err.println("Error going back: " + e.getMessage());
+        }
+    }
+
+    private void showError() {
+        lblNotification.setStyle("-fx-text-fill: red;");
+        lblNotification.setText("Erreur lors de la mise à jour");
     }
 
     @FXML
     private void handleCancel() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Annulation");
+        alert.setHeaderText("Annuler les modifications ?");
+        alert.setContentText("Les changements non enregistrés seront perdus.");
 
+        if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            handleBack();
+        }
     }
 }

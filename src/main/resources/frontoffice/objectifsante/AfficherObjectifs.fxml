@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TextField?>
+
 <BorderPane prefHeight="760.0" prefWidth="1250.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml"
@@ -101,6 +102,7 @@
                                         <Label text="Actifs" styleClass="badge-blue"/>
                                     </children>
                                 </HBox>
+
                                 <HBox alignment="CENTER_LEFT" spacing="12">
                                     <children>
                                         <TextField fx:id="txtRecherche"
@@ -116,6 +118,7 @@
                                                 onAction="#reinitialiserFiltres"/>
                                     </children>
                                 </HBox>
+
                                 <TableView fx:id="tableObjectifs" VBox.vgrow="ALWAYS">
                                     <columns>
                                         <TableColumn fx:id="colTitre" prefWidth="220.0" text="Objectif"/>
@@ -125,6 +128,7 @@
                                         <TableColumn fx:id="colDateFin" prefWidth="130.0" text="Fin"/>
                                         <TableColumn fx:id="colPriorite" prefWidth="120.0" text="Priorité"/>
                                         <TableColumn fx:id="colStatut" prefWidth="130.0" text="Statut"/>
+                                        <TableColumn fx:id="colActions" prefWidth="180.0" text="Actions"/>
                                     </columns>
                                 </TableView>
                             </children>

@@ -5,8 +5,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
-import piJava.Controllers.frontoffice.FrontSidebarController;
+import javafx.stage.Stage;
 import piJava.entities.ObjectifSante;
 import piJava.entities.user;
 import piJava.services.ObjectifSanteService;
@@ -56,19 +55,9 @@ public class AjouterObjectifController {
     private Label errPriorite;
 
     private AfficherObjectifsController afficherObjectifsController;
-    private FrontSidebarController sidebarController;
-    private StackPane contentArea;
 
     public void setAfficherObjectifsController(AfficherObjectifsController afficherObjectifsController) {
         this.afficherObjectifsController = afficherObjectifsController;
-    }
-
-    public void setSidebarController(FrontSidebarController sidebarController) {
-        this.sidebarController = sidebarController;
-    }
-
-    public void setContentArea(StackPane contentArea) {
-        this.contentArea = contentArea;
     }
 
     @FXML
@@ -79,14 +68,7 @@ public class AjouterObjectifController {
 
     @FXML
     public void retourObjectifs() {
-        try {
-            if (sidebarController != null) {
-                sidebarController.goToObjectifs();
-            }
-        } catch (Exception e) {
-            System.out.println("Erreur lors du retour vers les objectifs : " + e.getMessage());
-            e.printStackTrace();
-        }
+        fermerFenetre();
     }
 
     @FXML
@@ -129,14 +111,17 @@ public class AjouterObjectifController {
                 afficherObjectifsController.chargerObjectifs();
             }
 
-            if (sidebarController != null) {
-                sidebarController.goToObjectifs();
-            }
+            fermerFenetre();
 
         } catch (Exception e) {
             errTitre.setText("Erreur lors de l'ajout.");
             e.printStackTrace();
         }
+    }
+
+    private void fermerFenetre() {
+        Stage stage = (Stage) txtTitre.getScene().getWindow();
+        stage.close();
     }
 
     private void mettreAJourUnite(String type) {

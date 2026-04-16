@@ -17,6 +17,7 @@ public class preferenceAlerte {
     private Date date_creation;
     private Date date_mise_ajour;
     private int user_id;
+    private String description;
 
 
 
@@ -117,6 +118,13 @@ public class preferenceAlerte {
         this.user_id = user_id;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     @Override
     public String toString() {

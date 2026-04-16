@@ -24,6 +24,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import piJava.Controllers.frontoffice.taches.TachesController;
+import piJava.Controllers.frontoffice.taches.TachesDetailsController;
+import piJava.Controllers.frontoffice.taches.TacheEditController;
+import piJava.Controllers.frontoffice.taches.TacheNewController;
+import piJava.Controllers.frontoffice.preferencealerte.AlertesController;
+import piJava.Controllers.frontoffice.preferencealerte.AlerteDetailsController;
+import piJava.Controllers.frontoffice.preferencealerte.AlerteEditController;
+import piJava.Controllers.frontoffice.preferencealerte.AlerteNewController;
 
 public class FrontSidebarController implements Initializable {
 
@@ -228,7 +236,7 @@ public class FrontSidebarController implements Initializable {
     }
 
     // ─── Content loader ───────────────────────────────────────────────────────
-    private void loadView(String fxmlPath) {
+    public void loadView(String fxmlPath) {
         if (contentArea == null) {
             System.err.println("FrontSidebarController: contentArea is null — call setContentArea() before navigating.");
             return;
@@ -251,15 +259,7 @@ public class FrontSidebarController implements Initializable {
                 c.setContentArea(contentArea);
             }
 
-            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.AjouterObjectifController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
 
-            if (controller instanceof piJava.Controllers.frontoffice.objectifsante.ModifierObjectifController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
 
             // Injection pour Suivis bien-être
             if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AfficherSuivisController c) {
@@ -267,19 +267,40 @@ public class FrontSidebarController implements Initializable {
                 c.setContentArea(contentArea);
             }
 
-            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.AjouterSuiviController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
 
-            if (controller instanceof piJava.Controllers.frontoffice.suivibienetre.ModifierSuiviController c) {
-                c.setSidebarController(this);
-                c.setContentArea(contentArea);
-            }
 
             if (controller instanceof MatieresContentController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
+            }
+            // ✅ Inject sidebar reference into taches controllers
+            if (controller instanceof TachesController c) {
+                c.setSidebarController(this);
+            }
+
+            // ✅ Inject sidebar reference into task detail/edit/new controllers
+            if (controller instanceof TachesDetailsController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof TacheEditController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof TacheNewController c) {
+                c.setSidebarController(this);
+            }
+
+            // ✅ Inject sidebar reference into alerte controllers
+            if (controller instanceof AlertesController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof AlerteDetailsController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof AlerteEditController c) {
+                c.setSidebarController(this);
+            }
+            if (controller instanceof AlerteNewController c) {
+                c.setSidebarController(this);
             }
 
             contentArea.getChildren().setAll(view);
