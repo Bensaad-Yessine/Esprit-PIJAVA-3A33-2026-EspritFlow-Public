@@ -1,15 +1,11 @@
 package piJava.Controllers.backoffice.group;
 
-import javafx.animation.*;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.util.Duration;
 import piJava.entities.Groupe;
 import piJava.entities.PropositionReunion;
 import piJava.services.PropositionReunionService;
@@ -44,7 +40,6 @@ public class PropositionReunionController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setupColumns();
         setupSearch();
     }
 
@@ -60,72 +55,9 @@ public class PropositionReunionController implements Initializable {
     public void setParentController(GroupContentController parent) {
         this.parentController = parent;
     }
-    
+
     public void setContentArea(StackPane contentArea) {
         this.contentArea = contentArea;
-    }
-
-    // ── Column Setup ───────────────────────────────────────────
-    private void setupColumns() {
-        // ID
-        idCol.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().getId())));
-
-        // DATE
-        dateCol.setCellValueFactory(d -> new SimpleStringProperty(
-                d.getValue().getDateReunion() != null ? d.getValue().getDateReunion().toString() : "—"
-        ));
-
-        // HEURE (显示开始和结束时间)
-        heureCol.setCellValueFactory(d -> {
-            PropositionReunion prop = d.getValue();
-            String debut = prop.getHeureDebut() != null ? prop.getHeureDebut().toString() : "—";
-            String fin = prop.getHeureFin() != null ? prop.getHeureFin().toString() : "—";
-            return new SimpleStringProperty(debut + " - " + fin);
-        });
-
-        // LIEU
-        lieuCol.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getLieu(), "—")));
-
-        // STATUT
-        statusCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getStatut()));
-        statusCol.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setGraphic(null); return; }
-                Label badge = new Label(item);
-                String color = "En attente".equalsIgnoreCase(item) ? "#f59e0b" : 
-                              "Acceptée".equalsIgnoreCase(item) ? "#10b981" : "#ef4444";
-                badge.setStyle("-fx-padding:4px 12px; -fx-background-color:" + color + "; " +
-                              "-fx-text-fill:white; -fx-border-radius:12;");
-                setGraphic(badge);
-            }
-        });
-
-        // DESCRIPTION
-        descCol.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getDescription(), "—")));
-
-        // ACTIONS
-        actionsCol.setCellFactory(param -> new TableCell<>() {
-            private final Button editBtn = createActionButton("✎", "#8b5cf6");
-            private final Button delBtn = createActionButton("✕", "#ef4444");
-            private final HBox actions = new HBox(6, editBtn, delBtn);
-
-            {
-                actions.setAlignment(Pos.CENTER_LEFT);
-            }
-
-            @Override protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getIndex() < 0) {
-                    setGraphic(null);
-                    return;
-                }
-                PropositionReunion prop = getTableView().getItems().get(getIndex());
-                editBtn.setOnAction(e -> handleEdit(prop));
-                delBtn.setOnAction(e -> handleDelete(prop));
-                setGraphic(actions);
-            }
-        });
     }
 
     // ── Data Loading ───────────────────────────────────────────
@@ -133,10 +65,10 @@ public class PropositionReunionController implements Initializable {
         if (propositionsContainer == null || footerLabel == null) {
             return;
         }
-        
+
         try {
             System.out.println("[DEBUG] Loading propositions for groupe: " + currentGroupe.getId());
-allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
+            allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
             filtered.setAll(allPropositions);
             updateStats();
             updateDisplay();
@@ -146,7 +78,7 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
             allPropositions.clear();
             filtered.clear();
             updateStats();
-            updateTable();
+            updateDisplay();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors du chargement: " + e.getMessage());
         }
     }
@@ -172,7 +104,7 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
         }
         footerLabel.setText("Affichage de " + filtered.size() + " proposition(s)");
     }
-    
+
     private VBox createPropositionCard(PropositionReunion prop) {
         VBox card = new VBox();
         card.setSpacing(12);
@@ -186,8 +118,8 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
         Label dateLabel = new Label("📅 " + (prop.getDateReunion() != null ? prop.getDateReunion() : "—"));
         dateLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #7f8fa6;");
 
-        String timeRange = (prop.getHeureDebut() != null ? prop.getHeureDebut() : "") + 
-                         (prop.getHeureFin() != null ? " - " + prop.getHeureFin() : "");
+        String timeRange = (prop.getHeureDebut() != null ? prop.getHeureDebut() : "") +
+                (prop.getHeureFin() != null ? " - " + prop.getHeureFin() : "");
         Label timeLabel = new Label("🕐 " + (timeRange.isEmpty() ? "—" : timeRange));
         timeLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #7f8fa6;");
 
@@ -196,8 +128,8 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
 
         String status = prop.getStatut() != null ? prop.getStatut() : "En attente";
         Label statusBadge = new Label(status);
-        String statusColor = "En attente".equalsIgnoreCase(status) ? "#f59e0b" : 
-                          "Acceptée".equalsIgnoreCase(status) ? "#10b981" : "#ef4444";
+        String statusColor = "En attente".equalsIgnoreCase(status) ? "#f59e0b" :
+                "Acceptée".equalsIgnoreCase(status) ? "#10b981" : "#ef4444";
         statusBadge.setStyle("-fx-padding: 6 14; -fx-background-color: " + statusColor + "; -fx-text-fill: white; -fx-font-weight: 700; -fx-background-radius: 16; -fx-font-size: 12px;");
 
         Label descLabel = new Label(prop.getDescription() != null ? prop.getDescription() : "Aucune description");
@@ -226,9 +158,10 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
 
     private void applyFilters() {
         String search = searchField.getText() != null ? searchField.getText().toLowerCase() : "";
+        // ✅ FIXED: moved the closing ')' of setAll to after .collect()
         filtered.setAll(allPropositions.stream()
                 .filter(p -> (p.getDescription() != null && p.getDescription().toLowerCase().contains(search)) ||
-                            (p.getLieu() != null && p.getLieu().toLowerCase().contains(search))))
+                        (p.getLieu() != null && p.getLieu().toLowerCase().contains(search)))
                 .collect(Collectors.toList()));
         updateDisplay();
     }
@@ -239,87 +172,77 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Nouvelle Proposition de Réunion");
         dialog.setHeaderText("Ajouter une nouvelle proposition pour " + currentGroupe.getNom());
-        
-        // Create form fields
+
         GridPane form = new GridPane();
         form.setHgap(12);
         form.setVgap(12);
         form.setPadding(new Insets(16));
-        
+
         TextField titreField = new TextField();
         titreField.setPromptText("Titre de la proposition");
         titreField.setPrefWidth(300);
-        
+
         DatePicker dateField = new DatePicker();
         dateField.setValue(java.time.LocalDate.now());
-        
+
         ComboBox<String> debStart = createTimeCombo();
         ComboBox<String> debEnd = createTimeCombo();
         debEnd.setValue("10:00");
-        
+
         TextField lieuField = new TextField();
         lieuField.setPromptText("Lieu de la réunion");
         lieuField.setPrefWidth(300);
-        
+
         TextArea descField = new TextArea();
         descField.setPromptText("Description");
         descField.setPrefWidth(300);
         descField.setPrefHeight(80);
         descField.setWrapText(true);
-        
-        // Add to form
+
         form.add(new Label("Titre:"), 0, 0);
         form.add(titreField, 1, 0);
-        
         form.add(new Label("Date:"), 0, 1);
         form.add(dateField, 1, 1);
-        
         form.add(new Label("Heure Début:"), 0, 2);
         form.add(debStart, 1, 2);
-        
         form.add(new Label("Heure Fin:"), 0, 3);
         form.add(debEnd, 1, 3);
-        
         form.add(new Label("Lieu:"), 0, 4);
         form.add(lieuField, 1, 4);
-        
         form.add(new Label("Description:"), 0, 5);
         form.add(descField, 1, 5);
-        
+
         ComboBox<String> statusField = new ComboBox<>();
         statusField.getItems().addAll("En attente", "Acceptée", "Refusée");
         statusField.setValue("En attente");
-        
+
         form.add(new Label("Statut:"), 0, 6);
         form.add(statusField, 1, 6);
-        
+
         dialog.getDialogPane().setContent(form);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         styleAlert(dialog);
-        
+
         dialog.showAndWait().ifPresent((ButtonType response) -> {
             if (response == ButtonType.OK) {
                 if (titreField.getText().trim().isEmpty()) {
                     showAlert(Alert.AlertType.WARNING, "Validation", "Le titre est requis");
                     return;
                 }
-                
-                // Validation: Titre doit commencer par une majuscule
+
                 String titre = titreField.getText().trim();
                 if (!Character.isUpperCase(titre.charAt(0))) {
                     showAlert(Alert.AlertType.WARNING, "Validation", "Le titre doit commencer par une majuscule.");
                     return;
                 }
-                
-                // Validation: Date doit être supérieure à aujourd'hui
+
                 java.time.LocalDate selectedDate = dateField.getValue();
                 java.time.LocalDate today = java.time.LocalDate.now();
                 if (selectedDate == null || !selectedDate.isAfter(today)) {
                     showAlert(Alert.AlertType.WARNING, "Validation", "La date doit être un jour supérieur à aujourd'hui.");
                     return;
                 }
-                
-                // Validation: Date fin max 3 heures après début
+
                 java.time.LocalTime startTime = timeStringToLocalTime(debStart.getValue());
                 java.time.LocalTime endTime = timeStringToLocalTime(debEnd.getValue());
                 if (startTime != null && endTime != null) {
@@ -332,14 +255,13 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
                         return;
                     }
                 }
-                
-                // Validation: Description minimum 10 caractères
+
                 String description = descField.getText();
                 if (description != null && !description.isEmpty() && description.trim().length() < 10) {
                     showAlert(Alert.AlertType.WARNING, "Validation", "La description doit contenir au moins 10 caractères.");
                     return;
                 }
-                
+
                 try {
                     PropositionReunion prop = new PropositionReunion();
                     prop.setTitre(titreField.getText());
@@ -350,7 +272,7 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
                     prop.setDescription(descField.getText());
                     prop.setIdGroupeId(currentGroupe.getId());
                     prop.setStatut(statusField.getValue());
-                    
+
                     propositionService.add(prop);
                     loadData();
                     showAlert(Alert.AlertType.INFORMATION, "Succès", "Proposition ajoutée avec succès!");
@@ -365,82 +287,72 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Modifier Proposition de Réunion");
         dialog.setHeaderText("Éditer: " + proposition.getTitre());
-        
-        // Create form fields
+
         GridPane form = new GridPane();
         form.setHgap(12);
         form.setVgap(12);
         form.setPadding(new Insets(16));
-        
+
         TextField titreField = new TextField();
         titreField.setText(proposition.getTitre());
         titreField.setPrefWidth(300);
-        
+
         DatePicker dateField = new DatePicker();
         dateField.setValue(proposition.getDateReunion() != null ? proposition.getDateReunion() : java.time.LocalDate.now());
-        
+
         ComboBox<String> debStart = createTimeCombo();
         debStart.setValue(proposition.getHeureDebut() != null ? proposition.getHeureDebut().toString() : "09:00");
-        
+
         ComboBox<String> debEnd = createTimeCombo();
         debEnd.setValue(proposition.getHeureFin() != null ? proposition.getHeureFin().toString() : "10:00");
-        
+
         TextField lieuField = new TextField();
         lieuField.setText(nvl(proposition.getLieu(), ""));
         lieuField.setPrefWidth(300);
-        
+
         TextArea descField = new TextArea();
         descField.setText(nvl(proposition.getDescription(), ""));
         descField.setPrefWidth(300);
         descField.setPrefHeight(80);
         descField.setWrapText(true);
-        
-        // Add to form
+
         form.add(new Label("Titre:"), 0, 0);
         form.add(titreField, 1, 0);
-        
         form.add(new Label("Date:"), 0, 1);
         form.add(dateField, 1, 1);
-        
         form.add(new Label("Heure Début:"), 0, 2);
         form.add(debStart, 1, 2);
-        
         form.add(new Label("Heure Fin:"), 0, 3);
         form.add(debEnd, 1, 3);
-        
         form.add(new Label("Lieu:"), 0, 4);
         form.add(lieuField, 1, 4);
-        
         form.add(new Label("Description:"), 0, 5);
         form.add(descField, 1, 5);
-        
+
         dialog.getDialogPane().setContent(form);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         styleAlert(dialog);
-        
+
         dialog.showAndWait().ifPresent((ButtonType response) -> {
             if (response == ButtonType.OK) {
                 if (titreField.getText().trim().isEmpty()) {
                     showAlert(Alert.AlertType.WARNING, "Validation", "Le titre est requis");
                     return;
                 }
-                
-                // Validation: Titre doit commencer par une majuscule
+
                 String titre = titreField.getText().trim();
                 if (!Character.isUpperCase(titre.charAt(0))) {
                     showAlert(Alert.AlertType.WARNING, "Validation", "Le titre doit commencer par une majuscule.");
                     return;
                 }
-                
-                // Validation: Date doit être supérieure à aujourd'hui
+
                 java.time.LocalDate selectedDate = dateField.getValue();
                 java.time.LocalDate today = java.time.LocalDate.now();
                 if (selectedDate == null || !selectedDate.isAfter(today)) {
                     showAlert(Alert.AlertType.WARNING, "Validation", "La date doit être un jour supérieur à aujourd'hui.");
                     return;
                 }
-                
-                // Validation: Date fin max 3 heures après début
+
                 java.time.LocalTime startTime = timeStringToLocalTime(debStart.getValue());
                 java.time.LocalTime endTime = timeStringToLocalTime(debEnd.getValue());
                 if (startTime != null && endTime != null) {
@@ -453,14 +365,13 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
                         return;
                     }
                 }
-                
-                // Validation: Description minimum 10 caractères
+
                 String description = descField.getText();
                 if (description != null && !description.isEmpty() && description.trim().length() < 10) {
                     showAlert(Alert.AlertType.WARNING, "Validation", "La description doit contenir au moins 10 caractères.");
                     return;
                 }
-                
+
                 try {
                     proposition.setTitre(titreField.getText());
                     proposition.setDateReunion(dateField.getValue());
@@ -468,7 +379,7 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
                     proposition.setHeureFin(timeStringToLocalTime(debEnd.getValue()));
                     proposition.setLieu(lieuField.getText());
                     proposition.setDescription(descField.getText());
-                    
+
                     propositionService.edit(proposition);
                     loadData();
                     showAlert(Alert.AlertType.INFORMATION, "Succès", "Proposition modifiée avec succès!");
@@ -505,7 +416,7 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
                     getClass().getResource("/backoffice/group/GroupContent.fxml")
             );
             javafx.scene.Parent view = loader.load();
-            
+
             if (contentArea != null) {
                 contentArea.getChildren().setAll(view);
             }
@@ -535,14 +446,6 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
         if (time == null || time.isEmpty()) return java.time.LocalTime.of(9, 0);
         String[] parts = time.split(":");
         return java.time.LocalTime.of(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
-    }
-
-    private Button createActionButton(String text, String color) {
-        Button btn = new Button(text);
-        btn.setStyle("-fx-font-size:11px; -fx-padding:4px 8px; " +
-                   "-fx-background-color:" + color + "; -fx-text-fill:white; " +
-                   "-fx-border-radius:4; -fx-cursor:hand;");
-        return btn;
     }
 
     private void showInfo(String msg) {
