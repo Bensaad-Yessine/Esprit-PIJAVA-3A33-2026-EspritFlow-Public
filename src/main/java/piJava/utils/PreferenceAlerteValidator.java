@@ -1,109 +1,166 @@
 package piJava.utils;
 
 import piJava.entities.preferenceAlerte;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PreferenceAlerteValidator {
 
-    // ── Full object validation ─────────────────────────────────
-    public static List<String> validate(preferenceAlerte alerte) {
+    // ═══════════════════════════════════════════════
+    // FULL VALIDATION
+    // ═══════════════════════════════════════════════
+    public static List<String> validate(preferenceAlerte p) {
         List<String> errors = new ArrayList<>();
 
-        errors.addAll(validateNom(alerte.getNom()));
-        errors.addAll(validateDescription(alerte.getDescription()));
-        errors.addAll(validateDelai(alerte.getDelai_rappel_min()));
+        errors.addAll(validateNom(p.getNom()));
+        errors.addAll(validateDescription(p.getDescription()));
+        errors.addAll(validateDelaiRappel(p.getDelai_rappel_min()));
+        errors.addAll(validateSilenceTimes(p.getHeure_silence_debut(), p.getHeure_silence_fin()));
+        errors.addAll(validateUser(p.getUser_id())); // adapt if needed
 
-        if (alerte.getHeure_silence_debut() != null) {
-            errors.addAll(validateHeure(alerte.getHeure_silence_debut()));
-        }
-        if (alerte.getHeure_silence_fin() != null) {
-            errors.addAll(validateHeure(alerte.getHeure_silence_fin()));
-        }
-        if (alerte.getHeure_silence_debut() != null && alerte.getHeure_silence_fin() != null) {
-            if (alerte.getHeure_silence_debut().equals(alerte.getHeure_silence_fin())) {
-                errors.add("L'heure de début et de fin doivent être différentes.");
+        return errors;
+    }
+
+    // ═══════════════════════════════════════════════
+    // NOM (TITLE)
+    // ═══════════════════════════════════════════════
+    public static List<String> validateNom(String nom) {
+        List<String> errors = new ArrayList<>();
+
+        if (nom == null || nom.trim().isEmpty()) {
+            errors.add("Le nom de la préférence est obligatoire.");
+        } else {
+            if (nom.length() < 5) {
+                errors.add("Le nom doit contenir au moins 5 caractères.");
+            }
+
+            if (nom.length() > 50) {
+                errors.add("Le nom ne doit pas dépasser 50 caractères.");
+            }
+
+            if (!Character.isUpperCase(nom.charAt(0))) {
+                errors.add("Le nom doit commencer par une majuscule.");
             }
         }
 
         return errors;
     }
 
-    // ── Field-level validators ─────────────────────────────────
-    public static List<String> validateNom(String nom) {
-        List<String> errors = new ArrayList<>();
-        if (nom == null || nom.trim().isEmpty()) {
-            errors.add("Le nom est obligatoire.");
-            return errors;
-        }
-        if (nom.trim().length() < 3) {
-            errors.add("Le nom doit contenir au moins 3 caractères.");
-        }
-        if (nom.trim().length() > 100) {
-            errors.add("Le nom ne doit pas dépasser 100 caractères.");
-        }
-        return errors;
-    }
-
+    // ═══════════════════════════════════════════════
+    // DESCRIPTION (YOU REQUESTED ADDITION)
+    // ═══════════════════════════════════════════════
     public static List<String> validateDescription(String description) {
         List<String> errors = new ArrayList<>();
+
         if (description == null || description.trim().isEmpty()) {
-            return errors; // Description is optional
+            errors.add("La description est obligatoire.");
+        } else {
+            if (description.length() < 10) {
+                errors.add("La description doit contenir au moins 10 caractères.");
+            }
+
+            if (!Character.isUpperCase(description.charAt(0))) {
+                errors.add("La description doit commencer par une majuscule.");
+            }
         }
-        if (description.trim().length() < 10) {
-            errors.add("La description doit contenir au moins 10 caractères.");
-        }
-        if (description.trim().length() > 500) {
-            errors.add("La description ne doit pas dépasser 500 caractères.");
-        }
+
         return errors;
     }
 
-    public static List<String> validateDelai(int delai) {
+    // ═══════════════════════════════════════════════
+    // DELAI RAPPEL
+    // ═══════════════════════════════════════════════
+    public static List<String> validateDelaiRappel(int delai) {
         List<String> errors = new ArrayList<>();
-        if (delai < 0) {
-            errors.add("Le délai ne peut pas être négatif.");
+
+        if (delai <= 0) {
+            errors.add("Le délai de rappel doit être positif.");
         }
-        if (delai > 10080) { // max 1 week in minutes
-            errors.add("Le délai ne peut pas dépasser 10080 minutes (1 semaine).");
-        }
+
         return errors;
     }
 
+    // ═══════════════════════════════════════════════
+    // USER
+    // ═══════════════════════════════════════════════
+    public static List<String> validateUser(int userId) {
+        List<String> errors = new ArrayList<>();
+
+        if (userId == 0) {
+            errors.add("L'utilisateur est obligatoire.");
+        }
+
+        return errors;
+    }
+
+    // ═══════════════════════════════════════════════
+    // SILENCE TIMES
+    // ═══════════════════════════════════════════════
+    public static List<String> validateSilenceTimes(
+            LocalTime debut,
+            LocalTime fin
+    ) {
+        List<String> errors = new ArrayList<>();
+
+        if (debut == null) {
+            errors.add("L'heure de début du silence est obligatoire.");
+        }
+
+        if (fin == null) {
+            errors.add("L'heure de fin du silence est obligatoire.");
+        }
+
+        if (debut != null && fin != null) {
+
+            // ONLY rule: must be different
+            if (debut.equals(fin)) {
+                errors.add("L’heure de début et de fin doivent être différentes.");
+            }
+
+            // NO ordering rule (start can be after end)
+        }
+
+        return errors;
+    }
+
+    // ═══════════════════════════════════════════════
+    // DELAI RAPPEL TEXT
+    // ═══════════════════════════════════════════════
     public static List<String> validateDelaiText(String delaiText) {
         List<String> errors = new ArrayList<>();
-        if (delaiText == null || delaiText.trim().isEmpty()) {
+
+        if (delaiText != null && !delaiText.trim().isEmpty()) {
+            try {
+                int delai = Integer.parseInt(delaiText);
+                errors.addAll(validateDelaiRappel(delai));
+            } catch (NumberFormatException e) {
+                errors.add("Le délai doit être un nombre entier.");
+            }
+        } else {
             errors.add("Le délai est obligatoire.");
-            return errors;
         }
-        try {
-            int delai = Integer.parseInt(delaiText.trim());
-            errors.addAll(validateDelai(delai));
-        } catch (NumberFormatException e) {
-            errors.add("Le délai doit être un nombre entier.");
-        }
+
         return errors;
     }
 
-    public static List<String> validateHeure(LocalTime heure) {
-        List<String> errors = new ArrayList<>();
-        if (heure == null) {
-            errors.add("L'heure est invalide.");
-        }
-        return errors;
-    }
-
+    // ═══════════════════════════════════════════════
+    // HEURE TEXT
+    // ═══════════════════════════════════════════════
     public static List<String> validateHeureText(String heureText) {
         List<String> errors = new ArrayList<>();
-        if (heureText == null || heureText.trim().isEmpty()) {
-            return errors; // Optional field
+
+        if (heureText != null && !heureText.trim().isEmpty()) {
+            try {
+                LocalTime.parse(heureText);
+            } catch (Exception e) {
+                errors.add("L'heure doit être au format HH:mm.");
+            }
+        } else {
+            errors.add("L'heure est obligatoire.");
         }
-        try {
-            LocalTime.parse(heureText.trim());
-        } catch (Exception e) {
-            errors.add("Format d'heure invalide. Utilisez HH:mm (ex: 08:30).");
-        }
+
         return errors;
     }
 }

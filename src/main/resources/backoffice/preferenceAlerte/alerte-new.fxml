@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="piJava.Controllers.backoffice.preferenceAlerte.AlerteNewController"
+            stylesheets="@alerte-new.css"
+            fitToWidth="true"
+            fitToHeight="true"
+            styleClass="scroll-pane">
+
+    <content>
+
+        <VBox spacing="20" styleClass="dashboard-root" style="-fx-padding: 28 32;">
+
+            <!-- HEADER -->
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="🔔 Nouvelle Préférence d'Alerte" styleClass="page-title"/>
+                    <Label text="Créer une configuration utilisateur personnalisée" styleClass="page-subtitle"/>
+                </VBox>
+            </HBox>
+
+            <!-- FORM -->
+            <VBox spacing="16" styleClass="task-card">
+
+                <!-- ═══════════════════════════════════════════════════════ -->
+                <!-- SECTION: INFORMATIONS GÉNÉRALES -->
+                <!-- ═══════════════════════════════════════════════════════ -->
+                <Label text="📋 INFORMATIONS GÉNÉRALES" styleClass="section-title"/>
+
+                <!-- USER ID -->
+                <VBox spacing="4">
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="ID Utilisateur" styleClass="form-label-highlight"/>
+                        <Label text="*" styleClass="required-star"/>
+                    </HBox>
+                    <TextField fx:id="userIdField"
+                               promptText="Entrez l'ID utilisateur (ex: 12)"
+                               styleClass="input"/>
+                    <Label fx:id="userError" styleClass="error-label"/>
+                </VBox>
+
+                <!-- NOM -->
+                <VBox spacing="4">
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="Nom de la préférence" styleClass="form-label-highlight"/>
+                        <Label text="*" styleClass="required-star"/>
+                    </HBox>
+                    <TextField fx:id="nomField"
+                               promptText="Ex: Alerte Email Matin"
+                               styleClass="input"/>
+                    <Label fx:id="nomError" styleClass="error-label"/>
+                </VBox>
+
+                <!-- DESCRIPTION -->
+                <VBox spacing="4">
+                    <Label text="Description" styleClass="form-label"/>
+                    <TextArea fx:id="descriptionField"
+                              promptText="Décrivez le but de cette préférence d'alerte..."
+                              styleClass="input"
+                              wrapText="true"
+                              prefRowCount="3"/>
+                    <Label fx:id="descriptionError" styleClass="error-label"/>
+                </VBox>
+
+                <!-- ═══════════════════════════════════════════════════════ -->
+                <!-- SECTION: CONFIGURATION -->
+                <!-- ═══════════════════════════════════════════════════════ -->
+                <Label text="⚙️ CONFIGURATION" styleClass="section-title"/>
+
+                <!-- DELAI -->
+                <VBox spacing="4">
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="Délai de rappel" styleClass="form-label-highlight"/>
+                        <Label text="(minutes)" styleClass="info-badge"/>
+                    </HBox>
+                    <TextField fx:id="delaiField"
+                               promptText="Ex: 30"
+                               styleClass="input"/>
+                    <Label fx:id="delaiError" styleClass="error-label"/>
+                </VBox>
+
+                <!-- SILENCE TIME -->
+                <VBox spacing="4">
+                    <Label text="Plage de silence" styleClass="form-label"/>
+                    <HBox spacing="12">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Début" styleClass="form-label" style="-fx-font-size: 11px;"/>
+                            <TextField fx:id="debutField"
+                                       promptText="HH:mm"
+                                       styleClass="input"/>
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Fin" styleClass="form-label" style="-fx-font-size: 11px;"/>
+                            <TextField fx:id="finField"
+                                       promptText="HH:mm"
+                                       styleClass="input"/>
+                        </VBox>
+                    </HBox>
+                    <Label fx:id="timeError" styleClass="error-label"/>
+                </VBox>
+
+                <Separator/>
+
+                <!-- ═══════════════════════════════════════════════════════ -->
+                <!-- SECTION: OPTIONS -->
+                <!-- ═══════════════════════════════════════════════════════ -->
+                <Label text="🔘 OPTIONS" styleClass="section-title"/>
+
+                <HBox spacing="20">
+                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+                        <CheckBox fx:id="activeCheck" text="Activer cette alerte">
+                            <tooltip>
+                                <Tooltip text="Activer ou désactiver cette préférence"/>
+                            </tooltip>
+                        </CheckBox>
+                        <CheckBox fx:id="defaultCheck" text="Définir par défaut">
+                            <tooltip>
+                                <Tooltip text="Utiliser comme configuration par défaut"/>
+                            </tooltip>
+                        </CheckBox>
+                    </VBox>
+                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+                        <CheckBox fx:id="emailCheck" text="📧 Notification Email">
+                            <tooltip>
+                                <Tooltip text="Envoyer les alertes par email"/>
+                            </tooltip>
+                        </CheckBox>
+                        <CheckBox fx:id="pushCheck" text="📱 Notification Push">
+                            <tooltip>
+                                <Tooltip text="Envoyer les alertes push"/>
+                            </tooltip>
+                        </CheckBox>
+                        <CheckBox fx:id="siteCheck" text="🌐 Notification Site">
+                            <tooltip>
+                                <Tooltip text="Afficher les alertes sur le site"/>
+                            </tooltip>
+                        </CheckBox>
+                    </VBox>
+                </HBox>
+
+            </VBox>
+
+            <!-- ACTIONS -->
+            <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 0 0 20 0;">
+                <Button text="❌ Annuler"
+                        onAction="#handleCancel"
+                        styleClass="btn-secondary"/>
+                <Button text="✓ Créer la préférence"
+                        onAction="#handleAdd"
+                        styleClass="btn-primary"/>
+            </HBox>
+
+        </VBox>
+
+    </content>
+
+</ScrollPane>

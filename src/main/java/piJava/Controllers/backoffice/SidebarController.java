@@ -156,7 +156,7 @@ public class SidebarController implements Initializable {
     @FXML
     public void goToTaches() {
         setActiveButton(tachesBtn);
-        loadView("/backoffice/taches/taches-content.fxml");
+        loadView("/backoffice/taches/tache-content.fxml");
     }
 
     @FXML
@@ -203,7 +203,7 @@ public class SidebarController implements Initializable {
     @FXML
     public void goToNotifications() {
         setActiveButton(notificationsBtn);
-        loadView("/backoffice/notifications/notif-content.fxml");
+        loadView("/backoffice/preferenceAlerte/alerte-content.fxml");
     }
 
     @FXML
