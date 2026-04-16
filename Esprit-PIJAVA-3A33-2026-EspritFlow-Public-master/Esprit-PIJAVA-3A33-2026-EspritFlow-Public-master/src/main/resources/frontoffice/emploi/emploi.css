@@ -1,0 +1,154 @@
+.main-container {
+    -fx-background-color: #fff1f2; /* Très léger rouge/rosé comme le fond principal */
+    -fx-padding: 30;
+}
+
+.page-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #b91c1c; /* Rouge Esprit */
+}
+
+.badge-classe {
+    -fx-background-color: #fecdd3;
+    -fx-text-fill: #b91c1c;
+    -fx-padding: 5 12;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.btn-export {
+    -fx-background-color: #1e293b;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-padding: 10 20;
+    -fx-background-radius: 8;
+}
+
+.btn-export:hover {
+    -fx-background-color: #0f172a;
+}
+
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);
+}
+
+/* Bordure haute subtile rouge comme sur l'image */
+.stat-card-border-top {
+    -fx-border-color: #ef4444 transparent transparent transparent;
+    -fx-border-width: 4 0 0 0;
+    -fx-border-radius: 10;
+}
+
+.stat-value {
+    -fx-font-size: 36px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #1e293b;
+}
+
+.stat-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #334155;
+}
+
+.info-panel {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);
+}
+
+.charge-day-box {
+    -fx-background-radius: 8;
+    -fx-padding: 15 10;
+    -fx-alignment: center;
+    -fx-min-width: 65px;
+}
+
+.charge-day-box.empty {
+    -fx-background-color: #94a3b8;
+}
+
+.charge-day-box.active {
+    -fx-background-color: #10b981;
+}
+
+.charge-day-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.charge-day-val {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: 900;
+}
+
+/* Grille Semaine */
+.grid-container {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);
+}
+
+.grid-cell {
+    -fx-border-color: #f1f5f9;
+    -fx-border-width: 1;
+}
+
+.grid-header-cell {
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10;
+    -fx-alignment: center;
+}
+
+.hour-label {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12px;
+    -fx-translate-y: -10; /* Soulever un peu le label de l'heure */
+}
+
+/* Seance Bloc dans la grille */
+.seance-block {
+    -fx-background-radius: 6;
+    -fx-padding: 5 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.seance-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+}
+
+.seance-time {
+    -fx-font-size: 10px;
+    -fx-text-fill: rgba(255, 255, 255, 0.9);
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+.scroll-pane:focused {
+    -fx-background-insets: 0;
+}

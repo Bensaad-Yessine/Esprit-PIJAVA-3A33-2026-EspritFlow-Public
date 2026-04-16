@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="piJava.Controllers.AjouterUser"
+            prefHeight="720.0" prefWidth="1000.0"
+            stylesheets="@register.css"
+            styleClass="root-pane">
+
+    <!-- Left branding panel — mirrors login page -->
+    <VBox alignment="CENTER" layoutX="0" layoutY="0"
+          prefWidth="460" prefHeight="720"
+          styleClass="brand-panel">
+        <padding><Insets left="70" right="50"/></padding>
+
+        <!-- Logo -->
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <StackPane prefWidth="42" prefHeight="42" styleClass="logo-box">
+                <Label text="E" styleClass="logo-letter"/>
+            </StackPane>
+            <Label text="EspritFlow" styleClass="logo-name"/>
+            <VBox.margin><Insets bottom="48"/></VBox.margin>
+        </HBox>
+
+        <!-- Headline -->
+        <Label text="Join EspritFlow." styleClass="headline">
+            <VBox.margin><Insets bottom="12"/></VBox.margin>
+        </Label>
+        <Label text="Create your free account and start learning today."
+               styleClass="subheadline" wrapText="true">
+            <VBox.margin><Insets bottom="48"/></VBox.margin>
+        </Label>
+
+        <!-- Feature pills -->
+        <VBox spacing="14">
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane prefWidth="32" prefHeight="32" styleClass="feature-icon">
+                    <Label text="✦" styleClass="feature-icon-blue"/>
+                </StackPane>
+                <Label text="Access your full class schedule instantly"
+                       styleClass="feature-text"/>
+            </HBox>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane prefWidth="32" prefHeight="32" styleClass="feature-icon">
+                    <Label text="◈" styleClass="feature-icon-indigo"/>
+                </StackPane>
+                <Label text="Connect with classmates &amp; professors"
+                       styleClass="feature-text"/>
+            </HBox>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane prefWidth="32" prefHeight="32" styleClass="feature-icon">
+                    <Label text="⬡" styleClass="feature-icon-red"/>
+                </StackPane>
+                <Label text="Verified ESPRIT student accounts only"
+                       styleClass="feature-text"/>
+            </HBox>
+        </VBox>
+
+    </VBox>
+
+    <!-- Divider -->
+    <Region layoutX="460" layoutY="40" prefWidth="1" prefHeight="640"
+            styleClass="divider"/>
+
+    <!-- Right register card -->
+    <VBox alignment="TOP_LEFT"
+          layoutX="490" layoutY="30"
+          prefWidth="480"
+          styleClass="register-card">
+
+        <ScrollPane fitToWidth="true" prefHeight="660"
+                    styleClass="register-scroll">
+            <VBox spacing="0" styleClass="form-inner">
+
+                <!-- Header -->
+                <Label text="Create account" styleClass="card-title">
+                    <VBox.margin><Insets bottom="4"/></VBox.margin>
+                </Label>
+                <Label text="Fill in your details to get started"
+                       styleClass="card-subtitle">
+                    <VBox.margin><Insets bottom="24"/></VBox.margin>
+                </Label>
+
+                <!-- Nom + Prénom row -->
+                <HBox spacing="12">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Nom de famille" styleClass="field-label"/>
+                        <TextField fx:id="nomFamille"
+                                   promptText="Votre nom"
+                                   styleClass="input-field"/>
+                    </VBox>
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Prénom" styleClass="field-label"/>
+                        <TextField fx:id="prenom"
+                                   promptText="Votre prénom"
+                                   styleClass="input-field"/>
+                    </VBox>
+                    <VBox.margin><Insets bottom="16"/></VBox.margin>
+                </HBox>
+
+                <!-- Email -->
+                <Label text="Adresse email" styleClass="field-label">
+                    <VBox.margin><Insets bottom="5"/></VBox.margin>
+                </Label>
+                <TextField fx:id="email"
+                           promptText="you@esprit.tn"
+                           styleClass="input-field">
+                    <VBox.margin><Insets bottom="16"/></VBox.margin>
+                </TextField>
+
+                <!-- Phone + Date row -->
+                <HBox spacing="12">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Numéro de téléphone" styleClass="field-label"/>
+                        <TextField fx:id="telephone"
+                                   promptText="+216 XX XXX XXX"
+                                   styleClass="input-field"/>
+                    </VBox>
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Date de naissance" styleClass="field-label"/>
+                        <HBox spacing="6">
+                            <ComboBox fx:id="jourNaissance" promptText="JJ"
+                                      styleClass="combo-field" HBox.hgrow="ALWAYS"/>
+                            <ComboBox fx:id="moisNaissance" promptText="MM"
+                                      styleClass="combo-field" HBox.hgrow="ALWAYS"/>
+                            <ComboBox fx:id="anneeNaissance" promptText="AAAA"
+                                      styleClass="combo-field" HBox.hgrow="ALWAYS"/>
+                        </HBox>
+                    </VBox>
+                    <VBox.margin><Insets bottom="16"/></VBox.margin>
+                </HBox>
+
+                <!-- Sexe -->
+                <Label text="Sexe" styleClass="field-label">
+                    <VBox.margin><Insets bottom="8"/></VBox.margin>
+                </Label>
+                <HBox spacing="12">
+                    <ToggleButton fx:id="btnHomme" text="♂  Homme"
+                                  HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                  styleClass="toggle-btn"/>
+                    <ToggleButton fx:id="btnFemme" text="♀  Femme"
+                                  HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                  styleClass="toggle-btn"/>
+                    <VBox.margin><Insets bottom="16"/></VBox.margin>
+                </HBox>
+
+                <!-- Classe -->
+                <Label text="Classe" styleClass="field-label">
+                    <VBox.margin><Insets bottom="5"/></VBox.margin>
+                </Label>
+                <ComboBox fx:id="classe" promptText="Choisir votre classe"
+                          maxWidth="Infinity"
+                          styleClass="combo-field">
+                    <VBox.margin><Insets bottom="16"/></VBox.margin>
+                </ComboBox>
+
+                <!-- Password -->
+                <Label text="Mot de passe" styleClass="field-label">
+                    <VBox.margin><Insets bottom="5"/></VBox.margin>
+                </Label>
+                <PasswordField fx:id="motDePasse"
+                               promptText="Min. 6 caractères"
+                               styleClass="input-field">
+                    <VBox.margin><Insets bottom="5"/></VBox.margin>
+                </PasswordField>
+
+                <!-- Password strength bar area -->
+                <HBox spacing="4" alignment="CENTER_LEFT">
+                    <Label fx:id="passwordStrengthLabel"
+                           text="Sécurité: —"
+                           styleClass="strength-label"/>
+                    <VBox.margin><Insets bottom="14"/></VBox.margin>
+                </HBox>
+
+                <!-- Terms -->
+                <CheckBox fx:id="acceptTerms"
+                          wrapText="true"
+                          text="J'accepte les conditions d'utilisation et la politique de confidentialité"
+                          styleClass="terms-check">
+                    <VBox.margin><Insets bottom="20"/></VBox.margin>
+                </CheckBox>
+
+                <!-- Register button -->
+                <Button fx:id="btnRegister"
+                        text="Créer mon compte"
+                        maxWidth="Infinity"
+                        onAction="#handleRegister"
+                        styleClass="btn-primary">
+                    <VBox.margin><Insets bottom="10"/></VBox.margin>
+                </Button>
+
+                <!-- Gmail button -->
+                <Button fx:id="btnGmail"
+                        text="G  S'inscrire avec Gmail"
+                        maxWidth="Infinity"
+                        onAction="#handleGmailRegister"
+                        styleClass="btn-outline">
+                    <VBox.margin><Insets bottom="18"/></VBox.margin>
+                </Button>
+
+                <!-- Sign in row -->
+                <HBox alignment="CENTER" spacing="5">
+                    <Label text="Déjà un compte ?" styleClass="muted-text"/>
+                    <Hyperlink fx:id="signInLink" text="Se connecter →"
+                               onAction="#handleSignIn"
+                               styleClass="link-blue-bold"/>
+                </HBox>
+
+            </VBox>
+        </ScrollPane>
+
+    </VBox>
+
+</AnchorPane>

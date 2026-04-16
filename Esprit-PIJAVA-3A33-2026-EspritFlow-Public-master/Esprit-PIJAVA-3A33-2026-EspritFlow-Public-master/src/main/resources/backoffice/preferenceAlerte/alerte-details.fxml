@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="piJava.Controllers.backoffice.preferenceAlerte.AlerteDetailsController"
+      stylesheets="@alerte-details.css"
+      styleClass="dashboard-root"
+      spacing="0">
+
+    <!-- HEADER SECTION -->
+    <HBox styleClass="header-section" alignment="CENTER_LEFT">
+        <VBox spacing="6" HBox.hgrow="ALWAYS">
+            <Label text="🔔 Détails Alerte" styleClass="page-title"/>
+            <Label text="Informations complètes de la préférence" styleClass="page-subtitle"/>
+        </VBox>
+
+        <Button text="⬅ Retour" onAction="#handleRetour" styleClass="btn-primary"/>
+    </HBox>
+
+    <!-- MAIN CONTENT -->
+    <HBox styleClass="main-content" spacing="24" VBox.vgrow="ALWAYS">
+
+        <!-- LEFT PANEL - Alert Info -->
+        <VBox spacing="18" styleClass="task-card" prefWidth="420" minWidth="380">
+
+            <!-- Nom Section -->
+            <VBox spacing="8">
+                <Label text="Nom de l'Alerte" styleClass="section-title"/>
+                <Label fx:id="lblNom" styleClass="task-title" wrapText="true"/>
+            </VBox>
+
+            <Separator/>
+
+            <!-- User Section - ADDED lblUserId -->
+            <VBox spacing="8">
+                <Label text="Utilisateur Assigné" styleClass="section-title"/>
+                <Label fx:id="lblUserId" styleClass="task-user"/>
+            </VBox>
+
+            <Separator/>
+
+            <!-- Status Row -->
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label text="Statut" styleClass="info-label"/>
+                    <!-- Controller expects statusBadge HBox with lblStatus inside -->
+                    <HBox fx:id="statusBadge">
+                        <Label fx:id="lblStatus" styleClass="badge-active"/>
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label text="Par Défaut" styleClass="info-label"/>
+                    <!-- Controller expects defaultBadge HBox with lblDefault inside -->
+                    <HBox fx:id="defaultBadge">
+                        <Label fx:id="lblDefault" styleClass="badge-default"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+
+            <Separator/>
+
+            <!-- Canaux Section -->
+            <VBox spacing="10" styleClass="channels-section">
+                <Label text="Canaux de Notification" styleClass="section-title" style="-fx-border-width: 0;"/>
+
+                <VBox spacing="8">
+                    <CheckBox fx:id="chkEmailActif" text="📧 Email"/>
+                    <CheckBox fx:id="chkPushActif" text="📱 Push Notification"/>
+                    <CheckBox fx:id="chkSiteNotif" text="🌐 Notification Site"/>
+                </VBox>
+            </VBox>
+
+        </VBox>
+
+        <!-- RIGHT PANEL - Parameters -->
+        <VBox spacing="18" styleClass="task-card" HBox.hgrow="ALWAYS">
+
+            <Label text="Paramètres de Configuration" styleClass="section-title"/>
+
+            <!-- Timing Settings -->
+            <VBox spacing="12">
+                <HBox styleClass="info-row" alignment="CENTER_LEFT">
+                    <Label text="Délai Rappel:" styleClass="info-label"/>
+                    <Label fx:id="lblDelaiRappel" styleClass="info-value"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="minutes" style="-fx-text-fill: #64748B; -fx-font-size: 12px;"/>
+                </HBox>
+
+                <Separator style="-fx-padding: 6 0;"/>
+
+                <Label text="Période de Silence" styleClass="section-title" style="-fx-border-width: 0; -fx-font-size: 14px;"/>
+
+                <HBox styleClass="info-row" alignment="CENTER_LEFT">
+                    <Label text="Début:" styleClass="info-label"/>
+                    <Label fx:id="lblHeureSilenceDebut" styleClass="info-value"/>
+                </HBox>
+
+                <HBox styleClass="info-row" alignment="CENTER_LEFT">
+                    <Label text="Fin:" styleClass="info-label"/>
+                    <Label fx:id="lblHeureSilenceFin" styleClass="info-value"/>
+                </HBox>
+            </VBox>
+
+            <Separator/>
+
+            <!-- Metadata -->
+            <VBox spacing="12">
+                <Label text="Informations Système" styleClass="section-title" style="-fx-border-width: 0; -fx-font-size: 14px;"/>
+
+                <HBox styleClass="info-row" alignment="CENTER_LEFT">
+                    <Label text="Date Création:" styleClass="info-label"/>
+                    <Label fx:id="lblDateCreation" styleClass="info-value"/>
+                </HBox>
+
+                <HBox styleClass="info-row" alignment="CENTER_LEFT">
+                    <Label text="Dernière MàJ:" styleClass="info-label"/>
+                    <Label fx:id="lblDateMiseAjour" styleClass="info-value"/>
+                </HBox>
+            </VBox>
+
+            <!-- Footer Info - REMOVED lblAlerteId since controller doesn't have it -->
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <HBox spacing="15" style="-fx-padding: 12 0 0 0; -fx-border-color: linear-gradient(from 0% 0% to 100% 0%, transparent, #3B4A5A, transparent); -fx-border-width: 1 0 0 0;" alignment="CENTER_LEFT">
+                <Label text="ID:" styleClass="info-label"/>
+                <Label fx:id="lblAlerteId" style="-fx-text-fill: #64748B; -fx-font-size: 13px;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Version: 1.0" style="-fx-text-fill: #475569; -fx-font-size: 11px;"/>
+            </HBox>
+
+        </VBox>
+
+    </HBox>
+
+    <!-- ACTION BUTTONS BAR -->
+    <HBox styleClass="action-bar" alignment="CENTER_LEFT">
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button text="✏ Modifier" onAction="#handleModifier" styleClass="btn-edit"/>
+            <Button text="🗑 Supprimer" onAction="#handleSupprimer" styleClass="btn-delete"/>
+        </HBox>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+    </HBox>
+
+</VBox>
