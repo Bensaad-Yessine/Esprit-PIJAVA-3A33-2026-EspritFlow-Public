@@ -1,113 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
 
-<ScrollPane xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="piJava.Controllers.backoffice.group.GroupContentController"
-          fitToWidth="true"
-          fitToHeight="true"
-          styleClass="groups-scroll"
-          stylesheets="@group.css">
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="piJava.Controllers.backoffice.group.GroupContentController"
+            stylesheets="@group.css"
+            styleClass="dashboard-root">
 
-    <VBox spacing="16" styleClass="groups-root">
-        <padding>
-            <Insets top="16" right="24" bottom="16" left="24"/>
-        </padding>
+    <VBox styleClass="main-content"
+          spacing="24"
+          fillWidth="true"
+          AnchorPane.topAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0">
 
-        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="page-header">
-            <VBox HBox.hgrow="ALWAYS" spacing="4">
+        <!-- HEADER -->
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+
+            <VBox HBox.hgrow="ALWAYS" spacing="6">
                 <HBox alignment="CENTER_LEFT" spacing="8">
                     <Label text="Backoffice" styleClass="breadcrumb-inactive"/>
                     <Label text="›" styleClass="breadcrumb-sep"/>
                     <Label text="Groupes" styleClass="breadcrumb-active"/>
                 </HBox>
-                <Label text="Gestion des Groupes Projet" styleClass="page-title"/>
+                <Label text="👥 Gestion des Groupes" styleClass="page-title"/>
+                <Label text="Gestion des groupes de projet et propositions de réunion" styleClass="page-subtitle"/>
             </VBox>
-            <TextField fx:id="searchField"
-                       promptText="Rechercher..."
-                       styleClass="search-bar"/>
-            <Button fx:id="addGroupBtn" text="+ Nouveau Groupe"
-                    styleClass="btn-add" onAction="#handleAdd"/>
+
+            <Button fx:id="addGroupBtn" text="➕ Nouveau Groupe"
+                    onAction="#handleAdd"
+                    styleClass="btn-primary"/>
         </HBox>
 
-        <HBox spacing="16" styleClass="stats-row">
-            <HBox spacing="10" styleClass="stat-card">
-                <VBox spacing="2">
-                    <Label fx:id="totalGroupsLabel" text="0" styleClass="stat-number"/>
-                    <Label text="Total Groupes" styleClass="stat-label"/>
-                </VBox>
-            </HBox>
+        <!-- STATS -->
+        <HBox spacing="20" styleClass="stats-row" maxWidth="Infinity" HBox.hgrow="ALWAYS">
 
-            <HBox spacing="10" styleClass="stat-card">
-                <VBox spacing="2">
-                    <Label fx:id="activeGroupsLabel" text="0" styleClass="stat-number"/>
-                    <Label text="Actifs" styleClass="stat-label"/>
-                </VBox>
-            </HBox>
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="👥 Total" styleClass="stat-label"/>
+                <Label fx:id="totalGroupsLabel" text="0" styleClass="stat-number"/>
+                <Label text="Groupes" styleClass="stat-sub"/>
+            </VBox>
 
-            <HBox spacing="10" styleClass="stat-card">
-                <VBox spacing="2">
-                    <Label fx:id="totalMembersLabel" text="0" styleClass="stat-number"/>
-                    <Label text="Membres" styleClass="stat-label"/>
-                </VBox>
-            </HBox>
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="✓ Actifs" styleClass="stat-label"/>
+                <Label fx:id="activeGroupsLabel" text="0" styleClass="stat-number" style="-fx-text-fill: #10B981;"/>
+                <Label text="En cours" styleClass="stat-sub"/>
+            </VBox>
 
-            <HBox spacing="10" styleClass="stat-card">
-                <VBox spacing="2">
-                    <Label fx:id="coveredSubjectsLabel" text="0" styleClass="stat-number"/>
-                    <Label text="Matières" styleClass="stat-label"/>
-                </VBox>
-            </HBox>
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="📊 Moyenne" styleClass="stat-label"/>
+                <Label fx:id="avgMembersLabel" text="0" styleClass="stat-number" style="-fx-text-fill: #F59E0B;"/>
+                <Label text="Membres" styleClass="stat-sub"/>
+            </VBox>
+
         </HBox>
 
-        <HBox spacing="10" styleClass="filter-bar">
-            <Label text="Filtrer :" styleClass="filter-label"/>
-            <ComboBox fx:id="statusFilter" promptText="Statut" styleClass="filter-combo"/>
-            <Button fx:id="resetFilterBtn" text="Reset"
-                    styleClass="btn-reset" onAction="#handleResetFilters"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Label fx:id="resultCountLabel" text="0 résultat(s)" styleClass="result-count"/>
-        </HBox>
+        <!-- LIST CONTAINER -->
+        <VBox VBox.vgrow="ALWAYS" spacing="12" styleClass="list-container" maxWidth="Infinity">
 
-        <VBox styleClass="table-panel" VBox.vgrow="ALWAYS">
-            <TableView fx:id="groupTable" styleClass="group-table" VBox.vgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Liste des groupes" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+                <Label text="Filtrage:" styleClass="filter-label"/>
+                <TextField fx:id="searchField" promptText="🔍 Rechercher..."
+                           styleClass="search-field"/>
+                <ComboBox fx:id="statusFilter" promptText="Statut" styleClass="filter-combo"/>
+                <Button fx:id="resetFilterBtn" text="Reset"
+                        onAction="#handleResetFilters"
+                        styleClass="btn-secondary"/>
+            </HBox>
+
+            <Label fx:id="resultCountLabel" text="0 groupes" styleClass="task-count"/>
+
+            <TableView fx:id="groupTable"
+                       VBox.vgrow="ALWAYS"
+                       maxWidth="Infinity"
+                       maxHeight="Infinity"
+                       styleClass="task-list">
                 <columns>
-                    <TableColumn fx:id="idCol" text="ID" prefWidth="60"/>
-                    <TableColumn fx:id="nameCol" text="GROUPE" prefWidth="200"/>
-                    <TableColumn fx:id="projectCol" text="MATIÈRE" prefWidth="150"/>
-                    <TableColumn fx:id="membersCol" text="MEMBRES" prefWidth="100"/>
-                    <TableColumn fx:id="descCol" text="DESCRIPTION" prefWidth="200"/>
-                    <TableColumn fx:id="statusCol" text="STATUT" prefWidth="100"/>
-                    <TableColumn fx:id="actionsCol" text="ACTIONS" prefWidth="150"/>
+                    <TableColumn fx:id="idCol" text="ID" prefWidth="50" sortable="true"/>
+                    <TableColumn fx:id="nameCol" text="Nom du groupe" prefWidth="150" sortable="true"/>
+                    <TableColumn fx:id="projectCol" text="Projet" prefWidth="150" sortable="true"/>
+                    <TableColumn fx:id="membersCol" text="Membres" prefWidth="80" sortable="true"/>
+                    <TableColumn fx:id="statusCol" text="Statut" prefWidth="100" sortable="true"/>
+                    <TableColumn fx:id="descCol" text="Description" prefWidth="200" sortable="true"/>
+                    <TableColumn fx:id="actionsCol" text="Actions" prefWidth="120" sortable="false"/>
                 </columns>
-                <placeholder>
-                    <VBox alignment="CENTER" spacing="12">
-                        <Label text="Aucun groupe trouvé" styleClass="empty-title"/>
-                    </VBox>
-                </placeholder>
             </TableView>
 
-            <HBox styleClass="table-footer">
-                <Label fx:id="footerLabel" text="Affichage de 0 entrées" styleClass="footer-text"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="prevBtn" text="‹" styleClass="page-btn" onAction="#handlePrev"/>
-                <Label fx:id="pageLabel" text="1" styleClass="page-label"/>
-                <Button fx:id="nextBtn" text="›" styleClass="page-btn" onAction="#handleNext"/>
-            </HBox>
         </VBox>
 
+        <!-- FOOTER -->
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="table-footer">
+            <Label fx:id="footerLabel" text="Affichage de 0 entrées" styleClass="footer-text"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="prevBtn" text="‹" styleClass="page-btn" onAction="#handlePrev"/>
+            <Label fx:id="pageLabel" text="1" styleClass="page-current"/>
+            <Button fx:id="nextBtn" text="›" styleClass="page-btn" onAction="#handleNext"/>
+        </HBox>
+
     </VBox>
-</ScrollPane>
+
+</AnchorPane>

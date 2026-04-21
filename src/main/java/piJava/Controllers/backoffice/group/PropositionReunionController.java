@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import piJava.Controllers.backoffice.SidebarController;
 import piJava.entities.Groupe;
 import piJava.entities.PropositionReunion;
 import piJava.services.PropositionReunionService;
@@ -32,6 +33,7 @@ public class PropositionReunionController implements Initializable {
     @FXML private Button backBtn;
 
     private StackPane contentArea;
+    private SidebarController sidebarController;
     private Groupe currentGroupe;
     private final PropositionReunionService propositionService = new PropositionReunionService();
     private ObservableList<PropositionReunion> allPropositions = FXCollections.observableArrayList();
@@ -58,6 +60,10 @@ public class PropositionReunionController implements Initializable {
 
     public void setContentArea(StackPane contentArea) {
         this.contentArea = contentArea;
+    }
+
+    public void setSidebarController(SidebarController sidebarController) {
+        this.sidebarController = sidebarController;
     }
 
     // ── Data Loading ───────────────────────────────────────────
@@ -412,13 +418,17 @@ public class PropositionReunionController implements Initializable {
     @FXML
     private void handleBack() {
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
-                    getClass().getResource("/backoffice/group/GroupContent.fxml")
-            );
-            javafx.scene.Parent view = loader.load();
+            if (sidebarController != null) {
+                sidebarController.loadView("/backoffice/group/GroupContent.fxml");
+            } else {
+                javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                        getClass().getResource("/backoffice/group/GroupContent.fxml")
+                );
+                javafx.scene.Parent view = loader.load();
 
-            if (contentArea != null) {
-                contentArea.getChildren().setAll(view);
+                if (contentArea != null) {
+                    contentArea.getChildren().setAll(view);
+                }
             }
         } catch (Exception e) {
             System.err.println("[ERROR] Back navigation failed: " + e.getMessage());

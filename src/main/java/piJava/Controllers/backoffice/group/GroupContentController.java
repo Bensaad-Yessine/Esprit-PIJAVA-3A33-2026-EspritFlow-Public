@@ -30,8 +30,8 @@ public class GroupContentController implements Initializable {
     // ── Mini stats ─────────────────────────────────────────────
     @FXML private Label totalGroupsLabel;
     @FXML private Label activeGroupsLabel;
-    @FXML private Label totalMembersLabel;
-    @FXML private Label coveredSubjectsLabel;
+    //@FXML private Label totalMembersLabel;
+    @FXML private Label avgMembersLabel;
 
     // ── Filters ────────────────────────────────────────────────
     @FXML private ComboBox<String> statusFilter;
@@ -210,15 +210,21 @@ public class GroupContentController implements Initializable {
 
     private void updateStats() {
         int total = allGroups.size();
-        int active = (int) allGroups.stream().filter(g -> "Actif".equalsIgnoreCase(g.getStatut())).count();
+        int active = (int) allGroups.stream()
+                .filter(g -> "Actif".equalsIgnoreCase(g.getStatut()))
+                .count();
         double avgMembers = allGroups.isEmpty() ? 0 : allGroups.stream()
                 .mapToInt(Groupe::getNbreMembre)
                 .average()
                 .orElse(0);
+        int totalMembers = allGroups.stream()
+                .mapToInt(Groupe::getNbreMembre)
+                .sum();
 
         totalGroupsLabel.setText(String.valueOf(total));
         activeGroupsLabel.setText(String.valueOf(active));
-        avgMembersLabel.setText(String.format("%.1f", avgMembers));
+        //totalMembersLabel.setText(String.valueOf(totalMembers));       // ✅ total members
+        avgMembersLabel.setText(String.format("%.1f", avgMembers)); // ✅ avg members
     }
 
     private void updateTable() {
@@ -316,6 +322,7 @@ public class GroupContentController implements Initializable {
             
             controller.setCurrentGroupe(groupe);
             controller.setParentController(this);
+            controller.setSidebarController(sidebarController);
             controller.setContentArea(contentArea);
             
             if (contentArea != null) {

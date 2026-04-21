@@ -1,68 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
 
-<ScrollPane xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="piJava.Controllers.backoffice.group.PropositionReunionController"
-          fitToWidth="true"
-          fitToHeight="true"
-          styleClass="groups-scroll"
-          stylesheets="@group.css">
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="piJava.Controllers.backoffice.group.PropositionReunionController"
+            stylesheets="@group.css"
+            styleClass="dashboard-root">
 
-    <VBox spacing="16" styleClass="main-content">
-        
-        <VBox spacing="8">
-            <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label text="Backoffice" styleClass="breadcrumb-inactive"/>
-                <Label text="›" styleClass="breadcrumb-sep"/>
-                <Label text="Groupes" styleClass="breadcrumb-inactive"/>
-                <Label text="›" styleClass="breadcrumb-sep"/>
-                <Label fx:id="groupNameBreadcrumb" text="Propositions" styleClass="breadcrumb-active"/>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="16">
-                <Label fx:id="pageTitle" text="Propositions de Réunion" styleClass="page-title"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-bar"/>
-                <Button fx:id="addPropositionBtn" text="+ Nouvelle" styleClass="btn-add" onAction="#handleAdd"/>
-            </HBox>
-        </VBox>
+    <VBox styleClass="main-content"
+          spacing="24"
+          fillWidth="true"
+          AnchorPane.topAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0">
 
-        <HBox spacing="16" styleClass="stats-row">
-            <HBox spacing="10" styleClass="stat-card">
-                <VBox spacing="2">
-                    <Label fx:id="totalPropositionsLabel" text="0" styleClass="stat-number"/>
-                    <Label text="Total" styleClass="stat-label"/>
-                </VBox>
-            </HBox>
+        <!-- HEADER -->
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header" maxWidth="Infinity" HBox.hgrow="ALWAYS">
 
-            <HBox spacing="10" styleClass="stat-card">
-                <VBox spacing="2">
-                    <Label fx:id="acceptedPropositionsLabel" text="0" styleClass="stat-number"/>
-                    <Label text="Acceptées" styleClass="stat-label"/>
-                </VBox>
-            </HBox>
+            <VBox HBox.hgrow="ALWAYS" spacing="6">
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label text="Backoffice" styleClass="breadcrumb-inactive"/>
+                    <Label text="›" styleClass="breadcrumb-sep"/>
+                    <Label text="Groupes" styleClass="breadcrumb-inactive"/>
+                    <Label text="›" styleClass="breadcrumb-sep"/>
+                    <Label fx:id="groupNameBreadcrumb" text="Propositions" styleClass="breadcrumb-active"/>
+                </HBox>
+                <Label fx:id="pageTitle" text="📋 Propositions Réunion" styleClass="page-title"/>
+                <Label text="Gestion des propositions de réunion pour le groupe" styleClass="page-subtitle"/>
+            </VBox>
 
-            <HBox spacing="10" styleClass="stat-card">
-                <VBox spacing="2">
-                    <Label fx:id="pendingPropositionsLabel" text="0" styleClass="stat-number"/>
-                    <Label text="En attente" styleClass="stat-label"/>
-                </VBox>
-            </HBox>
+            <Button fx:id="addPropositionBtn" text="➕ Nouvelle Proposition"
+                    onAction="#handleAdd"
+                    styleClass="btn-primary"/>
         </HBox>
 
-        <VBox spacing="16" styleClass="cards-section">
-            <Label text="Liste des Propositions" styleClass="section-title"/>
-            <FlowPane fx:id="propositionsContainer" styleClass="propositions-flow" hgap="16" vgap="16"/>
-        </VBox>
+        <!-- STATS -->
+        <HBox spacing="20" styleClass="stats-row" maxWidth="Infinity" HBox.hgrow="ALWAYS">
 
-        <HBox alignment="CENTER_LEFT">
-            <Label fx:id="footerLabel" text="Affichage de 0 propositions" styleClass="footer-text"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="backBtn" text="← Retour aux groupes" styleClass="btn-back" onAction="#handleBack"/>
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="📋 Total" styleClass="stat-label"/>
+                <Label fx:id="totalPropositionsLabel" text="0" styleClass="stat-number"/>
+                <Label text="Propositions" styleClass="stat-sub"/>
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="✓ Acceptées" styleClass="stat-label"/>
+                <Label fx:id="acceptedPropositionsLabel" text="0" styleClass="stat-number" style="-fx-text-fill: #10B981;"/>
+                <Label text="Validées" styleClass="stat-sub"/>
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="⏳ En attente" styleClass="stat-label"/>
+                <Label fx:id="pendingPropositionsLabel" text="0" styleClass="stat-number" style="-fx-text-fill: #F59E0B;"/>
+                <Label text="En cours" styleClass="stat-sub"/>
+            </VBox>
+
         </HBox>
+
+        <!-- LIST CONTAINER -->
+        <VBox VBox.vgrow="ALWAYS" spacing="12" styleClass="list-container" maxWidth="Infinity">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Liste des propositions" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="searchField" promptText="🔍 Rechercher..."
+                           styleClass="search-field"/>
+            </HBox>
+
+            <Label fx:id="footerLabel" text="0 propositions" styleClass="task-count"/>
+
+            <ScrollPane fitToWidth="true"
+                        fitToHeight="true"
+                        VBox.vgrow="ALWAYS"
+                        maxWidth="Infinity"
+                        maxHeight="Infinity"
+                        styleClass="proposition-scroll">
+                <content>
+                    <FlowPane fx:id="propositionsContainer"
+                              hgap="16"
+                              vgap="16"
+                              prefWrapLength="900"
+                              alignment="TOP_LEFT"
+                              styleClass="proposition-grid"/>
+                </content>
+            </ScrollPane>
+
+            <Button fx:id="backBtn" text="← Retour aux groupes"
+                    onAction="#handleBack"
+                    styleClass="btn-back"/>
+
+        </VBox>
 
     </VBox>
-</ScrollPane>
+
+</AnchorPane>
