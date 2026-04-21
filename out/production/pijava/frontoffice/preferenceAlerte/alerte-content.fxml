@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="piJava.Controllers.frontoffice.preferencealerte.AlertesController"
+      stylesheets="@alerte.css"
+      spacing="20"
+      style="-fx-padding: 24;"
+      styleClass="main-container">
+
+    <!-- HEADER -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="🔔 Préférences d'Alerte" styleClass="title"/>
+            <Label text="Gérez vos notifications et préférences de rappel" styleClass="subtitle"/>
+        </VBox>
+
+        <Button text="➕ Nouvelle Préférence"
+                styleClass="btn-primary"
+                onAction="#addAlerte"/>
+    </HBox>
+
+    <!-- STATS ROW -->
+    <HBox spacing="20">
+
+        <VBox styleClass="red-card" spacing="8" HBox.hgrow="ALWAYS">
+            <Label text="Total" styleClass="card-label"/>
+            <Label fx:id="lblAlertesCount" text="0 préférence(s)" styleClass="card-number"/>
+            <Label text="Configurations actives" styleClass="card-sub"/>
+        </VBox>
+
+        <VBox styleClass="red-card-light" spacing="8" HBox.hgrow="ALWAYS">
+            <Label text="📧 Email" styleClass="card-label"/>
+            <Label text="Actif" styleClass="card-number"/>
+            <Label text="Notifications par email" styleClass="card-sub"/>
+        </VBox>
+
+        <VBox styleClass="red-card-mid" spacing="8" HBox.hgrow="ALWAYS">
+            <Label text="🔔 Push" styleClass="card-label"/>
+            <Label text="Actif" styleClass="card-number"/>
+            <Label text="Notifications push" styleClass="card-sub"/>
+        </VBox>
+
+        <VBox styleClass="red-card-soft" spacing="8" HBox.hgrow="ALWAYS">
+            <Label text="🌐 Site" styleClass="card-label"/>
+            <Label text="Actif" styleClass="card-number"/>
+            <Label text="Notifications sur site" styleClass="card-sub"/>
+        </VBox>
+
+    </HBox>
+
+    <!-- NOTIFICATION -->
+    <Label fx:id="notificationLabel"
+           styleClass="notification-label"
+           maxWidth="Infinity"/>
+
+    <!-- PANEL -->
+    <VBox styleClass="panel" VBox.vgrow="ALWAYS" spacing="10">
+
+        <!-- PANEL HEADER -->
+        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="panel-header">
+
+            <Label text="Mes Préférences"
+                   styleClass="panel-title"
+                   HBox.hgrow="ALWAYS"/>
+
+            <Label fx:id="taskCountLabel"
+                   text="0 préférence(s)"
+                   styleClass="task-count"/>
+        </HBox>
+
+        <!-- LIST -->
+        <ScrollPane fitToWidth="true"
+                    VBox.vgrow="ALWAYS"
+                    styleClass="task-scroll">
+
+            <VBox fx:id="alertesContainer"
+                  spacing="16"
+                  styleClass="tasks-container"/>
+        </ScrollPane>
+
+    </VBox>
+
+</VBox>

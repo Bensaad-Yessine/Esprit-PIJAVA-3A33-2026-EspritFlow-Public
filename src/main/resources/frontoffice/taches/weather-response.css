@@ -1,0 +1,240 @@
+/* Root and Main Container */
+.root {
+    -fx-background-color: white;
+}
+
+.scroll-pane {
+    -fx-background-color: white;
+    -fx-background: white;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: white;
+}
+
+.scroll-pane > .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10;
+}
+
+.scroll-pane > .scroll-bar:vertical > .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 5;
+}
+
+.scroll-pane > .scroll-bar:vertical > .track {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 5;
+}
+
+.main-container {
+    -fx-background-color: white;
+}
+
+/* Header */
+.header {
+    -fx-background-color: #3b82f6;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
+}
+
+.header-icon {
+    -fx-font-size: 32px;
+    -fx-text-fill: white;
+}
+
+.header-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.close-icon-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-min-width: 35px;
+    -fx-min-height: 35px;
+    -fx-max-width: 35px;
+    -fx-max-height: 35px;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+.close-icon-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+}
+
+.close-icon-btn:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Weather Card */
+.weather-card {
+    -fx-background-color: #f0f9ff;
+    -fx-background-radius: 16;
+    -fx-border-color: #3b82f6;
+    -fx-border-width: 0 0 0 4;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.15), 12, 0, 0, 3);
+}
+
+.weather-icon-container {
+    -fx-background-color: #3b82f6;
+    -fx-background-radius: 25;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-max-width: 50px;
+    -fx-max-height: 50px;
+}
+
+.weather-icon {
+    -fx-font-size: 30px;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+}
+
+.card-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e3a8a;
+}
+
+.weather-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #3b82f6;
+    -fx-font-weight: 600;
+}
+
+/* Info Boxes (Temperature & Humidity) */
+.info-box {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
+}
+
+.temperature-value {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e3a8a;
+}
+
+.humidity-value {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e3a8a;
+}
+
+.info-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+}
+
+/* AI Advice Card */
+.ai-card {
+    -fx-background-color: #faf5ff;
+    -fx-background-radius: 16;
+    -fx-border-color: #8b5cf6;
+    -fx-border-width: 0 0 0 4;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.15), 12, 0, 0, 3);
+}
+
+.ai-icon-container {
+    -fx-background-color: #8b5cf6;
+    -fx-background-radius: 10;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+}
+
+.ai-icon {
+    -fx-font-size: 24px;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+}
+
+.ai-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4c1d95;
+}
+
+/* AI Advice Items */
+.advice-item {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.06), 6, 0, 0, 2);
+}
+
+.advice-header {
+    -fx-spacing: 12;
+}
+
+.advice-icon {
+    -fx-font-size: 24px;
+    -fx-min-width: 32px;
+    -fx-text-fill: #1e293b;
+}
+
+.advice-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+}
+
+.advice-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #475569;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 0.3em;
+}
+
+/* Footer */
+.footer {
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1 0 0 0;
+}
+
+.footer-icon {
+    -fx-font-size: 14px;
+    -fx-text-fill: #94a3b8;
+}
+
+.footer-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+}
+
+/* Footer Bar */
+.footer-bar {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* Close Button */
+.close-btn {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-background-radius: 10;
+    -fx-padding: 12 32 12 32;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.3), 10, 0, 0, 4);
+}
+
+.close-btn:hover {
+    -fx-background-color: #2563eb;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.4), 14, 0, 0, 5);
+    -fx-scale-y: 1.02;
+}
+
+.close-btn:pressed {
+    -fx-background-color: #1e40af;
+    -fx-translate-y: 1;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.2), 6, 0, 0, 2);
+}

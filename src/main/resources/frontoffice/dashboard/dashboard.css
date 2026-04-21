@@ -1,0 +1,353 @@
+/* ============================================================
+   ESPRIT FLOW — dashboard.css
+   JavaFX gradient syntax: from X% Y% to X% Y%
+   NOTE: "to bottom right" is CSS3 only — JavaFX will silently
+   ignore it and fall back to gray. Always use from/to %.
+   ============================================================ */
+
+
+/* ── ROOT & BACKGROUND ────────────────────────────────────── */
+
+.root-bg {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F5F5F6, rgba(253, 120, 120, 0.94));
+}
+
+.main-container {
+    -fx-padding: 32;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F5F5F6, rgba(251, 178, 178, 0.93));
+}
+
+
+/* ── TYPOGRAPHY ───────────────────────────────────────────── */
+
+.title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #18181B;
+}
+
+.subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #A1A1AA;
+}
+
+
+/* ── BUTTONS ──────────────────────────────────────────────── */
+
+.btn-primary {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #E63946, #C1121F);
+    -fx-text-fill: white;
+    -fx-background-radius: 22;
+    -fx-padding: 10 22;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.35), 14, 0, 0, 4);
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #FF4D5A, #E63946);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+}
+
+.btn-primary:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+.btn-ghost {
+    -fx-background-color: transparent;
+    -fx-text-fill: #E63946;
+    -fx-border-color: #E63946;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 6 16;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+
+.btn-ghost:hover {
+    -fx-background-color: #FEE2E4;
+}
+
+
+/* ── STAT CARDS ───────────────────────────────────────────── */
+/*
+   ROOT CAUSE OF GRAY CARDS:
+   1. "to bottom right" is CSS3 syntax — JavaFX ignores it silently.
+      Correct syntax: linear-gradient(from 0% 0% to 100% 100%, c1, c2)
+   2. Splitting .card + .red-card causes specificity conflicts.
+      Each variant is now a single self-contained class.
+*/
+
+.red-card {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #E63946, #9D0208);
+    -fx-background-radius: 18;
+    -fx-padding: 20 20 16 20;
+    -fx-effect: dropshadow(gaussian, rgba(157,2,8,0.22), 16, 0, 0, 6);
+    -fx-cursor: hand;
+}
+.red-card:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #FF4D5A, #C1121F);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+    -fx-effect: dropshadow(gaussian, rgba(157,2,8,0.40), 24, 0, 0, 10);
+}
+.red-card:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+.red-card-light {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #FF6B6B, #C1121F);
+    -fx-background-radius: 18;
+    -fx-padding: 20 20 16 20;
+    -fx-effect: dropshadow(gaussian, rgba(193,18,31,0.22), 16, 0, 0, 6);
+    -fx-cursor: hand;
+}
+.red-card-light:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #FF8A8A, #E63946);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+    -fx-effect: dropshadow(gaussian, rgba(193,18,31,0.40), 24, 0, 0, 10);
+}
+.red-card-light:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+.red-card-mid {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #E63946, #C1121F);
+    -fx-background-radius: 18;
+    -fx-padding: 20 20 16 20;
+    -fx-effect: dropshadow(gaussian, rgba(193,18,31,0.22), 16, 0, 0, 6);
+    -fx-cursor: hand;
+}
+.red-card-mid:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #FF4D5A, #E63946);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+    -fx-effect: dropshadow(gaussian, rgba(193,18,31,0.40), 24, 0, 0, 10);
+}
+.red-card-mid:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+.red-card-soft {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F28482, #E63946);
+    -fx-background-radius: 18;
+    -fx-padding: 20 20 16 20;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.22), 16, 0, 0, 6);
+    -fx-cursor: hand;
+}
+.red-card-soft:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #FFA0A0, #FF6B6B);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.40), 24, 0, 0, 10);
+}
+.red-card-soft:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+/* Text inside all card variants */
+.card-label {
+    -fx-text-fill: rgba(255,255,255,0.82);
+    -fx-font-size: 13px;
+}
+
+.card-number {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+}
+
+.card-sub {
+    -fx-text-fill: rgba(255,255,255,0.65);
+    -fx-font-size: 11px;
+}
+
+
+/* ── PANELS (white surfaces) ──────────────────────────────── */
+
+.panel {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 18;
+    -fx-border-color: #E4E4E7;
+    -fx-border-radius: 18;
+    -fx-border-width: 1;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 14, 0, 0, 4);
+    -fx-spacing: 14;
+}
+
+.panel-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #18181B;
+}
+
+
+/* ── FILIÈRE BREAKDOWN ────────────────────────────────────── */
+
+.filiere-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #3F3F46;
+}
+
+.filiere-pct {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #18181B;
+}
+
+.dot-red   { -fx-text-fill: #E63946; -fx-font-size: 16px; }
+.dot-red2  { -fx-text-fill: #C1121F; -fx-font-size: 16px; }
+.dot-red3  { -fx-text-fill: #FF6B6B; -fx-font-size: 16px; }
+.dot-pink  { -fx-text-fill: #F28482; -fx-font-size: 16px; }
+.dot-gray  { -fx-text-fill: #A1A1AA; -fx-font-size: 16px; }
+
+
+/* ── MINI STAT BOX ────────────────────────────────────────── */
+
+.mini-stat-box {
+    -fx-background-color: #f8b8be;
+    -fx-background-radius: 12;
+    -fx-border-color: #FECDD3;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 14;
+}
+
+.mini-stat-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #71717A;
+}
+
+.mini-stat-value {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C1121F;
+}
+
+
+/* ── TABLE ────────────────────────────────────────────────── */
+
+.table {
+    -fx-background-color: transparent;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: transparent;
+}
+
+.table .column-header-background {
+    -fx-background-color: #F4F4F5;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table .column-header .label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #A1A1AA;
+    -fx-font-weight: normal;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.table-row-cell {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent transparent #F0F0F1 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-font-size: 13px;
+    -fx-text-fill: #3F3F46;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #FFF4F4;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #FEE2E4;
+    -fx-text-fill: #18181B;
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: #18181B;
+}
+
+
+/* ── BAR CHART ────────────────────────────────────────────── */
+
+.chart {
+    -fx-background-color: transparent;
+    -fx-padding: 8 0 0 0;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-content {
+    -fx-background-color: transparent;
+}
+
+.default-color0.chart-bar {
+    -fx-background-color: linear-gradient(from 0% 100% to 0% 0%, #9D0208, #E63946);
+    -fx-background-radius: 5 5 0 0;
+}
+
+.default-color0.chart-bar:hover {
+    -fx-background-color: linear-gradient(from 0% 100% to 0% 0%, #C1121F, #FF6B6B);
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.4), 10, 0, 0, 3);
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #EBEBEC;
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: transparent;
+}
+
+.axis-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #A1A1AA;
+}
+
+.axis {
+    -fx-tick-label-fill: #A1A1AA;
+    -fx-tick-label-font-size: 11px;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+
+/* ── SCROLLBARS ───────────────────────────────────────────── */
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #FECDD3;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #FDA4AF;
+}
+
+.scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}

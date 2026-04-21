@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="piJava.Controllers.frontoffice.classe.ClasseContentController"
+      stylesheets="@classe.css"
+      prefWidth="1500" prefHeight="900"
+      styleClass="root-bg">
+
+    <ScrollPane fitToWidth="true" styleClass="page-scroll" HBox.hgrow="ALWAYS">
+        <VBox spacing="26" styleClass="main-container">
+
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <VBox HBox.hgrow="ALWAYS" spacing="6">
+                    <Label text="Ma classe" styleClass="title"/>
+                    <Label text="ESPRIT Flow · Votre classe connectée" styleClass="subtitle"/>
+                </VBox>
+                <Button text="↻ Rafraîchir" onAction="#handleRefresh" styleClass="btn-primary"/>
+            </HBox>
+
+            <HBox spacing="20" styleClass="hero-card">
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <Label text="Informations de votre classe" styleClass="hero-title"/>
+                    <Label text="La classe de votre compte s’affiche ici de manière simple et claire."
+                           wrapText="true"
+                           styleClass="hero-subtitle"/>
+                </VBox>
+                <Label text="🏫" styleClass="hero-sticker"/>
+            </HBox>
+
+            <VBox spacing="14" styleClass="panel">
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Détails de la classe" styleClass="panel-title" HBox.hgrow="ALWAYS"/>
+                    <Label text="Lecture seule" styleClass="badge-blue"/>
+                </HBox>
+
+                <HBox spacing="20">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS" styleClass="info-card">
+                        <Label text="Classe" styleClass="info-label"/>
+                        <Label fx:id="lblClassName" text="—" styleClass="info-value"/>
+                    </VBox>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS" styleClass="info-card">
+                        <Label text="Niveau" styleClass="info-label"/>
+                        <Label fx:id="lblClassLevel" text="—" styleClass="info-value"/>
+                    </VBox>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS" styleClass="info-card">
+                        <Label text="Année universitaire" styleClass="info-label"/>
+                        <Label fx:id="lblClassYear" text="—" styleClass="info-value"/>
+                    </VBox>
+                </HBox>
+
+                <VBox spacing="6" styleClass="info-card">
+                    <Label text="Description" styleClass="info-label"/>
+                    <Label fx:id="lblClassDescription" text="—" wrapText="true" styleClass="info-description"/>
+                </VBox>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+</HBox>
+
+
