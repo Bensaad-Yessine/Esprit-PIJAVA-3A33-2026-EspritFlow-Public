@@ -78,6 +78,10 @@
                     <!-- NOTIFICATION -->
                     <StackPane styleClass="notification-area">
                         <Label fx:id="notificationLabel" text="" styleClass="notification-toast" managed="false" visible="false"/>
+                        <Button fx:id="btnWeeklyAnalysis"
+                                text="🌤 Weather"
+                                onAction="#handleWeeklyAnalysis"
+                                styleClass="btn-weather"/>
                     </StackPane>
 
                     <!-- STAT CARDS -->

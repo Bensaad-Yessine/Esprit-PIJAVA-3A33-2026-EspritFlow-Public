@@ -5,6 +5,7 @@ import piJava.utils.MyDataBase;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -187,5 +188,68 @@ public class TacheService implements ICrud<tache> {
     }
 
 
+    public List<tache> getTasksByUserSince(int userId, LocalDateTime since) {
+        List<tache> taches = new ArrayList<>();
+        String sql = "SELECT * FROM tache WHERE user_id = ? AND created_at >= ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setTimestamp(2, Timestamp.valueOf(since));
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                tache t = new tache();
+                t.setId(rs.getInt("id"));
+                t.setTitre(rs.getString("titre"));
+                t.setType(rs.getString("type"));
+                t.setDate_debut(rs.getTimestamp("date_debut"));
+                t.setDate_fin(rs.getTimestamp("date_fin"));
+                t.setPriorite(rs.getString("priorite"));
+                t.setStatut(rs.getString("statut"));
+                t.setUser_id(rs.getInt("user_id"));
+                t.setDate_echeance(rs.getTimestamp("date_echeance"));
+                t.setDescription(rs.getString("description"));
+                t.setDuree_estimee(rs.getInt("duree_estimee"));
+                t.setPrediction(rs.getDouble("prediction"));
+                taches.add(t);
+            }
+        } catch (SQLException e) {
+            System.out.println("DB Error: " + e.getMessage());
+        }
+
+        return taches;
+    }
+
+
+    public tache showById(int tacheId) {
+        String sql = "SELECT * FROM tache WHERE id = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, tacheId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                tache t = new tache();
+                t.setId(rs.getInt("id"));
+                t.setTitre(rs.getString("titre"));
+                t.setType(rs.getString("type"));
+                t.setDate_debut(rs.getTimestamp("date_debut"));
+                t.setDate_fin(rs.getTimestamp("date_fin"));
+                t.setPriorite(rs.getString("priorite"));
+                t.setStatut(rs.getString("statut"));
+                t.setUser_id(rs.getInt("user_id"));
+                t.setDate_echeance(rs.getTimestamp("date_echeance"));
+                if (rs.getString("description") != null) {
+                    t.setDescription(rs.getString("description"));
+                } else t.setDescription("pas de description");
+                t.setDuree_estimee(rs.getInt("duree_estimee"));
+                t.setPrediction(rs.getDouble("prediction"));
+                return t;
+            } return null;
+
+        } catch (SQLException e) {
+            System.out.println("DB Error: " + e.getMessage());
+            return null;
+        }
+    }
 }
 

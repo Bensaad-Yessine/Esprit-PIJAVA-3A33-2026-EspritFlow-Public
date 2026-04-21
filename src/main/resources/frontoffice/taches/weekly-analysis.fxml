@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="piJava.Controllers.frontoffice.taches.BehaviorAnalysisController"
+            prefHeight="500.0" prefWidth="700.0">
+
+    <children>
+
+        <VBox spacing="15.0" layoutX="20.0" layoutY="20.0"
+              prefWidth="660.0" prefHeight="460.0">
+
+            <!-- Title -->
+            <Label text="📊 Analyse hebdomadaire"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+            <!-- Loading label -->
+            <Label fx:id="loadingLabel"
+                   text="Chargement..."
+                   style="-fx-text-fill: gray;" />
+
+            <!-- Summary section -->
+            <Label text="Résumé de productivité" />
+            <TextArea fx:id="summaryArea"
+                      prefHeight="150.0"
+                      wrapText="true"
+                      editable="false" />
+
+            <!-- Advice section -->
+            <Label text="Conseils personnalisés" />
+            <TextArea fx:id="adviceArea"
+                      prefHeight="150.0"
+                      wrapText="true"
+                      editable="false" />
+
+            <!-- Close button -->
+            <HBox alignment="CENTER_RIGHT">
+                <Button text="Fermer"
+                        onAction="#handleClose"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white;" />
+            </HBox>
+
+        </VBox>
+
+    </children>
+
+</AnchorPane>

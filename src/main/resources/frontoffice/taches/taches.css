@@ -891,14 +891,14 @@ Button.task-btn-delete:pressed,
 }
 
 .btn-weather {
-
     -fx-background-color: linear-gradient(to right, #2672b5, #194f51);
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-background-radius: 14;
-    -fx-padding: 8 14;
+    -fx-background-radius: 28;
+    -fx-padding: 12 24;
     -fx-cursor: hand;
-    -fx-font-size: 13px;
+    -fx-font-size: 14px;
+    -fx-graphic-text-gap: 10;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0.2, 0, 2);
 }
 

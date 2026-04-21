@@ -5,6 +5,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.Date;
 import java.util.List;
+
+import piJava.services.api.BehaviorAnalysisService;
 import piJava.services.api.WeatherAiService;
 public class TacheTest {
 
@@ -76,11 +78,10 @@ public class TacheTest {
     }
 
     @Test
-    public void testApiKey(){
-        WeatherAiService ws = new WeatherAiService();
-        //String response = ws.getWeatherAndAdvice();
+    public void testBehaviour() {
+        BehaviorAnalysisService s = new BehaviorAnalysisService();
 
-        //System.out.println(response);
-
+        System.out.println(s.getOrComputeProfile(1));
     }
+
 }

@@ -20,6 +20,7 @@ import piJava.Controllers.frontoffice.taches.TachesDetailsController;
 import piJava.Controllers.frontoffice.FrontSidebarController;
 import piJava.services.TacheService;
 import piJava.entities.tache;
+import piJava.services.api.BehaviorAnalysisService;
 import piJava.services.api.WeatherAiService;
 import piJava.utils.SessionManager;
 
@@ -34,18 +35,30 @@ public class TachesController implements Initializable {
 
     private final int currentUserId = SessionManager.getInstance().getCurrentUser().getId();
 
-    @FXML private ListView<tache> activeTasksList;
-    @FXML private ListView<tache> archivedTasksList;
+    @FXML
+    private ListView<tache> activeTasksList;
+    @FXML
+    private ListView<tache> archivedTasksList;
 
-    @FXML private Label lblActiveCount;
-    @FXML private Label lblArchivedCount;
-    @FXML private Label notificationLabel;
+    @FXML
+    private Label lblActiveCount;
+    @FXML
+    private Label lblArchivedCount;
+    @FXML
+    private Label notificationLabel;
 
-    @FXML private TextField txtSearch;
-    @FXML private ComboBox<String> cmbPriority;
-    @FXML private ComboBox<String> cmbSort;
-    @FXML private Button btnResetFilters;
-
+    @FXML
+    private TextField txtSearch;
+    @FXML
+    private ComboBox<String> cmbPriority;
+    @FXML
+    private ComboBox<String> cmbSort;
+    @FXML
+    private Button btnResetFilters;
+    @FXML
+    private Button btnWeather;
+    @FXML
+    private Button btnWeeklyAnalysis;
     private List<tache> allTasks = new ArrayList<>();
     private List<tache> activeTasks = new ArrayList<>();
     private List<tache> archivedTasks = new ArrayList<>();
@@ -135,7 +148,7 @@ public class TachesController implements Initializable {
     }
 
     private String mapPriorityToDB(String uiPriority) {
-        return switch(uiPriority.toLowerCase()) {
+        return switch (uiPriority.toLowerCase()) {
             case "haute" -> "ELEVEE";
             case "moyenne" -> "MOYEN";
             case "basse" -> "FAIBLE";
@@ -386,7 +399,7 @@ public class TachesController implements Initializable {
     }
 
     private String getPriorityClass(String priority) {
-        return switch(priority.toLowerCase()) {
+        return switch (priority.toLowerCase()) {
             case "haute" -> "task-priority-high";
             case "moyenne" -> "task-priority-medium";
             case "basse" -> "task-priority-low";
@@ -395,7 +408,7 @@ public class TachesController implements Initializable {
     }
 
     private String getPriorityBadgeClass(String priority) {
-        return switch(priority.toLowerCase()) {
+        return switch (priority.toLowerCase()) {
             case "haute" -> "badge-priority-high";
             case "moyenne" -> "badge-priority-medium";
             case "basse" -> "badge-priority-low";
@@ -404,7 +417,7 @@ public class TachesController implements Initializable {
     }
 
     private String getStatusBadgeClass(String status) {
-        return switch(status.toLowerCase()) {
+        return switch (status.toLowerCase()) {
             case "a_faire", "todo" -> "badge-status-todo";
             case "en_cours", "in_progress" -> "badge-status-progress";
             case "terminee", "done" -> "badge-status-done";
@@ -413,8 +426,9 @@ public class TachesController implements Initializable {
     }
 
     private String getPriorityIcon(String priority) {
-        return switch(priority.toLowerCase()) {
-            case "haute" -> "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z";
+        return switch (priority.toLowerCase()) {
+            case "haute" ->
+                    "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z";
             case "moyenne" -> "M13 10V3L4 14h7v7l9-11h-7z";
             case "basse" -> "M5 13l4 4L19 7";
             default -> "M5 13l4 4L19 7";
@@ -466,7 +480,7 @@ public class TachesController implements Initializable {
             stage.show();
 
         } catch (IOException ex) {
-            Alert alert =  new Alert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
             alert.setHeaderText("Erreur lors de l'ouverture de la météo");
             alert.setContentText("Détails : " + ex.getMessage());
@@ -474,4 +488,31 @@ public class TachesController implements Initializable {
         }
 
     }
+
+    @FXML
+    public void handleWeeklyAnalysis(ActionEvent e) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/frontoffice/taches/weekly-analysis.fxml")
+            );
+
+            Parent root = loader.load();
+
+            BehaviorAnalysisController controller = loader.getController();
+            controller.loadDataForUser(currentUserId);
+
+            Stage stage = new Stage();
+            stage.setTitle("Analyse hebdomadaire");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Erreur lors de l'ouverture de l'analyse");
+            alert.setContentText("Détails : " + ex.getMessage());
+            alert.showAndWait();
+        }
+    }
+
 }
