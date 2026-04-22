@@ -293,10 +293,15 @@ public class BehaviorAnalysisService {
         1) Un résumé concis (max 120 mots)
         2) Des conseils actionnables (max 120 mots)
 
-        Réponds uniquement en JSON :
+        IMPORTANT:
+        - Réponds STRICTEMENT en JSON valide
+        - N'utilise PAS de tableau pour les conseils
+        - N'ajoute AUCUN texte en dehors du JSON
+        - Format EXACT attendu :
+        
         {
-          "weeklyProductivitySummary": "...",
-          "behavioralAdvice": "..."
+          "weeklyProductivitySummary": "texte",
+          "behavioralAdvice": "texte"
         }
 
         Métriques :
@@ -374,11 +379,42 @@ public class BehaviorAnalysisService {
 
             JSONObject parsed = new JSONObject(content);
 
-            result.put("weeklyProductivitySummary",
-                    parsed.optString("weeklyProductivitySummary", "Analyse disponible."));
-            result.put("behavioralAdvice",
-                    parsed.optString("behavioralAdvice", "Continuez vos efforts !"));
+// ✅ HANDLE SUMMARY
+            String summary;
 
+            if (parsed.has("weeklyProductivitySummary")) {
+                summary = parsed.getString("weeklyProductivitySummary");
+            } else {
+                // fallback → convert whole JSON to readable text
+                summary = parsed.toString(2);
+            }
+
+// ✅ HANDLE ADVICE
+            String advice;
+
+            if (parsed.has("behavioralAdvice")) {
+
+                Object adviceObj = parsed.get("behavioralAdvice");
+
+                if (adviceObj instanceof org.json.JSONArray arr) {
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < arr.length(); i++) {
+                        sb.append("- ").append(arr.getString(i)).append("\n");
+                    }
+
+                    advice = sb.toString();
+
+                } else {
+                    advice = adviceObj.toString();
+                }
+
+            } else {
+                advice = "Conseils non disponibles.";
+            }
+
+            result.put("weeklyProductivitySummary", summary);
+            result.put("behavioralAdvice", advice);
             return result;
 
         } catch (Exception e) {
@@ -404,8 +440,7 @@ public class BehaviorAnalysisService {
         // ⚠️ assuming you have a User reference method somewhere
         // You MUST fetch user entity (adjust to your project)
         // User user = userService.findById(userId);
-        // sp.setUser(user);
-
+        sp.setUserId(userId);
         sp.setCompletionRate((Double) metrics.get("completionRate"));
         sp.setAbandonmentRate((Double) metrics.get("abandonmentRate"));
         sp.setAverageStartDelayMinutes((Double) metrics.get("averageStartDelayMinutes"));

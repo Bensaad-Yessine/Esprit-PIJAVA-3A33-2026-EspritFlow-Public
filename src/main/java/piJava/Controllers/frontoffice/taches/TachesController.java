@@ -12,6 +12,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
+import javafx.scene.chart.*;
 
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
@@ -21,6 +22,7 @@ import piJava.Controllers.frontoffice.FrontSidebarController;
 import piJava.services.TacheService;
 import piJava.entities.tache;
 import piJava.services.api.BehaviorAnalysisService;
+import piJava.services.api.StatisticsService;
 import piJava.services.api.WeatherAiService;
 import piJava.utils.SessionManager;
 
@@ -35,36 +37,37 @@ public class TachesController implements Initializable {
 
     private final int currentUserId = SessionManager.getInstance().getCurrentUser().getId();
 
-    @FXML
-    private ListView<tache> activeTasksList;
-    @FXML
-    private ListView<tache> archivedTasksList;
+    @FXML private ListView<tache> activeTasksList;
+    @FXML private ListView<tache> archivedTasksList;
 
-    @FXML
-    private Label lblActiveCount;
-    @FXML
-    private Label lblArchivedCount;
-    @FXML
-    private Label notificationLabel;
+    @FXML private Label lblActiveCount;
+    @FXML private Label lblArchivedCount;
+    @FXML private Label notificationLabel;
 
-    @FXML
-    private TextField txtSearch;
-    @FXML
-    private ComboBox<String> cmbPriority;
-    @FXML
-    private ComboBox<String> cmbSort;
-    @FXML
-    private Button btnResetFilters;
-    @FXML
-    private Button btnWeather;
-    @FXML
-    private Button btnWeeklyAnalysis;
+    @FXML private TextField txtSearch;
+    @FXML private ComboBox<String> cmbPriority;
+    @FXML private ComboBox<String> cmbSort;
+    @FXML private Button btnResetFilters;
+    @FXML private Button btnWeather;
+    @FXML private Button btnWeeklyAnalysis;
+
+    @FXML private BarChart<String, Number> statusChart;
+    @FXML private PieChart priorityChart;
+    @FXML private LineChart<String, Number> progressChart;
+
+    @FXML private Label lblTotalTasks;
+    @FXML private Label lblInProgress;
+    @FXML private Label lblCompleted;
+    @FXML private Label lblUrgent;
+
+
     private List<tache> allTasks = new ArrayList<>();
     private List<tache> activeTasks = new ArrayList<>();
     private List<tache> archivedTasks = new ArrayList<>();
 
     private FrontSidebarController sidebarController;
-
+    private StatisticsService statsService = new StatisticsService();
+    private TacheService ts = new TacheService();
     // Static variables to temporarily store task data
     private static tache currentTaskForDetails;
     private static tache currentTaskForEdit;
@@ -93,6 +96,7 @@ public class TachesController implements Initializable {
             });
 
             refreshTasks();
+            loadStatsAndCharts();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -100,8 +104,6 @@ public class TachesController implements Initializable {
     }
 
     private void loadTasks() throws SQLException {
-        TacheService ts = new TacheService();
-
         allTasks = ts.showUserTasks(currentUserId);
         activeTasks.clear();
         archivedTasks.clear();
@@ -460,6 +462,8 @@ public class TachesController implements Initializable {
         return currentTaskForDetails;
     }
 
+
+    // WEATHER AI ADVICES
     @FXML
     public void handleWeather(ActionEvent e) {
         try {
@@ -489,6 +493,7 @@ public class TachesController implements Initializable {
 
     }
 
+    // BEHAVIOR ANALYSIS AI
     @FXML
     public void handleWeeklyAnalysis(ActionEvent e) {
         try {
@@ -515,4 +520,108 @@ public class TachesController implements Initializable {
         }
     }
 
+    // STATS LOADING
+    private void loadStatsAndCharts() {
+        try {
+
+            Map<String, Object> stats = statsService.getUserStats(currentUserId);
+            Map<String, Integer> counts = (Map<String, Integer>) stats.get("counts");
+
+            // UPDATE CARDS
+            updateStatsCards(counts);
+
+            // charts
+            buildStatusChart(counts);
+            buildPriorityChart(counts);
+            buildProgressChart();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ---------------- STATUS CHART ----------------
+    private void buildStatusChart(Map<String, Integer> c) {
+
+        statusChart.getData().clear();
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Tâches");
+
+        int todo = c.get("total")
+                - c.get("completed")
+                - c.get("abandoned")
+                - c.get("inProgress")
+                - c.get("overdue")
+                - c.get("paused");
+
+        series.getData().add(new XYChart.Data<>("À faire", todo));
+        series.getData().add(new XYChart.Data<>("En cours", c.get("inProgress")));
+        series.getData().add(new XYChart.Data<>("Terminées", c.get("completed")));
+        series.getData().add(new XYChart.Data<>("Abandonnées", c.get("abandoned")));
+        series.getData().add(new XYChart.Data<>("En retard", c.get("overdue")));
+        series.getData().add(new XYChart.Data<>("En pause", c.get("paused")));
+
+        statusChart.getData().add(series);
+    }
+
+    // ---------------- PRIORITY CHART ----------------
+    private void buildPriorityChart(Map<String, Integer> c) {
+
+        priorityChart.getData().clear();
+
+        int high = c.getOrDefault("highPriority", 0);
+        int remaining = Math.max(0, c.get("total") - high);
+
+        int medium = (int) (remaining * 0.6);
+        int low = remaining - medium;
+
+        priorityChart.getData().add(new PieChart.Data("Haute", high));
+        priorityChart.getData().add(new PieChart.Data("Moyenne", medium));
+        priorityChart.getData().add(new PieChart.Data("Faible", low));
+    }
+
+    // ---------------- PROGRESS CHART (PLACEHOLDER) ----------------
+    private void buildProgressChart() {
+
+        progressChart.getData().clear();
+
+        Map<String, Map<String, Integer>> data =
+                statsService.getProgressLastDays(currentUserId, 30);
+
+        XYChart.Series<String, Number> created = new XYChart.Series<>();
+        created.setName("Créées");
+
+        XYChart.Series<String, Number> completed = new XYChart.Series<>();
+        completed.setName("Terminées");
+
+        XYChart.Series<String, Number> abandoned = new XYChart.Series<>();
+        abandoned.setName("Abandonnées");
+
+        for (Map.Entry<String, Map<String, Integer>> entry : data.entrySet()) {
+
+            String date = entry.getKey();
+            Map<String, Integer> day = entry.getValue();
+
+            created.getData().add(new XYChart.Data<>(date.substring(5), day.getOrDefault("created", 0)));
+            completed.getData().add(new XYChart.Data<>(date.substring(5), day.getOrDefault("completed", 0)));
+            abandoned.getData().add(new XYChart.Data<>(date.substring(5), day.getOrDefault("abandoned", 0)));
+        }
+
+        progressChart.getData().addAll(created, completed, abandoned);
+    }
+
+
+    private void updateStatsCards(Map<String, Integer> c) {
+
+        int total = c.get("total");
+        int completed = c.get("completed");
+        int inProgress = c.get("inProgress");
+        int overdue = c.get("overdue");
+
+        lblTotalTasks.setText(String.valueOf(total));
+        lblInProgress.setText(String.valueOf(inProgress));
+        lblCompleted.setText(String.valueOf(completed));
+        lblUrgent.setText(String.valueOf(overdue));
+    }
 }

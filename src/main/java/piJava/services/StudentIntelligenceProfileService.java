@@ -41,6 +41,10 @@ public class StudentIntelligenceProfileService implements ICrud<StudentIntellige
             profile.setPauseFrequency(rs.getDouble("pause_frequency"));
             profile.setMostProductiveHour(rs.getInt("most_productive_hour"));
             profile.setMostProductiveDayOfWeek(rs.getInt("most_productive_day_of_week"));
+            profile.setWeeklyProductivitySummary(rs.getString("weekly_productivity_summary"));
+            profile.setBehavioralAdvice(rs.getString("behavioral_advice"));
+
+            return profile;
         }
 
         return null;

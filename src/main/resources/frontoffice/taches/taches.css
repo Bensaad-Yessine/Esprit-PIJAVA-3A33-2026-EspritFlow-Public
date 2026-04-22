@@ -1,24 +1,24 @@
 /* ============================================
-   ESPRIT FLOW - MODERN RED & WHITE THEME
+   ESPRIT FLOW — MODERN RED & WHITE THEME
    ============================================ */
 
-/* ==================== ROOT & VARIABLES ==================== */
+/* -------------------- ROOT -------------------- */
 .root-container {
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
     -fx-background-color: linear-gradient(to bottom right, #efd5d5, #ffffff, #cc9393);
 }
 
-/* ==================== GLASSMORPHISM HEADER ==================== */
+/* -------------------- HEADER -------------------- */
 .app-header {
     -fx-padding: 20 40;
     -fx-background-color: linear-gradient(to right, rgba(255,255,255,0.95), rgba(254,242,242,0.95));
     -fx-background-radius: 0 0 24 24;
     -fx-border-color: #fecaca;
     -fx-border-width: 0 0 2 0;
-    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.15), 20, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.12), 20, 0, 0, 4);
 }
 
-/* Logo Area */
+/* Logo */
 .logo-container {
     -fx-min-width: 44;
     -fx-min-height: 44;
@@ -26,7 +26,7 @@
     -fx-pref-height: 44;
     -fx-background-color: linear-gradient(to bottom right, #dc2626, #991b1b);
     -fx-background-radius: 12;
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.4), 12, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.35), 12, 0, 0, 4);
     -fx-padding: 10;
 }
 
@@ -116,7 +116,7 @@
     -fx-text-fill: #374151;
 }
 
-/* ==================== CONTENT AREA ==================== */
+/* -------------------- CONTENT -------------------- */
 .content-wrapper {
     -fx-padding: 0 40 40 40;
 }
@@ -158,7 +158,7 @@
     -fx-padding: 0 8 0 0;
 }
 
-/* ==================== PAGE HEADER ==================== */
+/* -------------------- PAGE HEADER -------------------- */
 .page-header {
     -fx-padding: 8 0;
 }
@@ -192,8 +192,7 @@
     -fx-text-fill: #6b7280;
 }
 
-/* ==================== BUTTONS ==================== */
-Button.btn-primary,
+/* -------------------- BUTTONS -------------------- */
 .btn-primary {
     -fx-background-color: linear-gradient(to right, #dc2626, #b91c1c);
     -fx-text-fill: white;
@@ -206,25 +205,22 @@ Button.btn-primary,
     -fx-border-color: rgba(255,255,255,0.2);
     -fx-border-radius: 28;
     -fx-border-width: 2;
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.35), 16, 0, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.30), 16, 0, 0, 6);
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
-Button.btn-primary:hover,
 .btn-primary:hover {
     -fx-background-color: linear-gradient(to right, #ef4444, #dc2626);
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.5), 20, 0, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.45), 20, 0, 0, 8);
 }
 
-Button.btn-primary:pressed,
 .btn-primary:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
-Button.btn-secondary,
 .btn-secondary {
     -fx-background-color: linear-gradient(to bottom, #ffffff, #f9fafb);
     -fx-text-fill: #374151;
@@ -240,7 +236,6 @@ Button.btn-secondary,
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
-Button.btn-secondary:hover,
 .btn-secondary:hover {
     -fx-background-color: linear-gradient(to bottom, #f9fafb, #f3f4f6);
     -fx-border-color: #d1d5db;
@@ -250,7 +245,6 @@ Button.btn-secondary:hover,
     -fx-scale-y: 1.02;
 }
 
-Button.btn-secondary:pressed,
 .btn-secondary:pressed {
     -fx-scale-x: 0.97;
     -fx-scale-y: 0.97;
@@ -267,28 +261,30 @@ Button.btn-secondary:pressed,
     -fx-scale-y: 0.9;
 }
 
-.btn-secondary {
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #f9fafb);
-    -fx-text-fill: #374151;
-    -fx-background-radius: 24;
+.btn-weather {
+    -fx-background-color: linear-gradient(to right, #2672b5, #194f51);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 28;
     -fx-padding: 12 24;
-    -fx-font-weight: 600;
-    -fx-font-size: 13px;
     -fx-cursor: hand;
-    -fx-border-color: #e5e7eb;
-    -fx-border-radius: 24;
-    -fx-border-width: 2;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);
+    -fx-font-size: 14px;
+    -fx-graphic-text-gap: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0.2, 0, 2);
 }
 
-.btn-secondary:hover {
-    -fx-background-color: linear-gradient(to bottom, #f9fafb, #f3f4f6);
-    -fx-border-color: #d1d5db;
-    -fx-text-fill: #111827;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);
+.btn-weather:hover {
+    -fx-opacity: 0.92;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
 }
 
-/* ==================== NOTIFICATION ==================== */
+.btn-weather:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* -------------------- NOTIFICATION -------------------- */
 .notification-area {
     -fx-min-height: 0;
     -fx-pref-height: 0;
@@ -301,7 +297,7 @@ Button.btn-secondary:pressed,
     -fx-background-radius: 16;
     -fx-font-size: 14px;
     -fx-font-weight: 600;
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.4), 20, 0, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.35), 20, 0, 0, 8);
     -fx-translate-y: -20;
     -fx-opacity: 0;
 }
@@ -310,7 +306,6 @@ Button.btn-secondary:pressed,
     -fx-translate-y: 0;
     -fx-opacity: 1;
 }
-
 /* ==================== STAT CARDS ==================== */
 /* ──── STAT CARDS ───────────────────────────────────────────── */
 
@@ -402,7 +397,7 @@ Button.btn-secondary:pressed,
     -fx-text-fill: rgba(255,255,255,0.65);
     -fx-font-size: 11px;
 }
-/* ==================== FILTER BAR ==================== */
+/* -------------------- FILTER BAR -------------------- */
 .filter-bar {
     -fx-background-color: linear-gradient(to right, rgba(255,255,255,0.9), rgba(254,242,242,0.9));
     -fx-background-radius: 24;
@@ -411,11 +406,10 @@ Button.btn-secondary:pressed,
     -fx-border-color: #fecaca;
     -fx-border-radius: 24;
     -fx-border-width: 2;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 16, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 16, 0, 0, 4);
 }
 
-.search-field,
-TextField.search-field {
+.search-field {
     -fx-background-color: white;
     -fx-background-radius: 16;
     -fx-border-color: #e5e7eb;
@@ -428,15 +422,13 @@ TextField.search-field {
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
-.search-field:focused,
-TextField.search-field:focused {
+.search-field:focused {
     -fx-border-color: #f87171;
     -fx-background-color: white;
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.2), 16, 0, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.18), 16, 0, 0, 6);
 }
 
-.filter-combo,
-ComboBox.filter-combo {
+.filter-combo {
     -fx-background-color: white;
     -fx-background-radius: 16;
     -fx-border-color: #e5e7eb;
@@ -449,19 +441,17 @@ ComboBox.filter-combo {
     -fx-text-fill: #111827;
 }
 
-.filter-combo:focused,
-ComboBox.filter-combo:focused {
+.filter-combo:focused {
     -fx-border-color: #f87171;
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.15), 12, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.12), 12, 0, 0, 4);
 }
 
-.filter-combo .list-cell,
-ComboBox.filter-combo .list-cell {
+.filter-combo .list-cell {
     -fx-padding: 8 12;
     -fx-text-fill: #111827;
 }
 
-/* ==================== TASKS SECTIONS ==================== */
+/* -------------------- TASKS SECTIONS -------------------- */
 .tasks-section {
     -fx-spacing: 16;
 }
@@ -531,7 +521,7 @@ ComboBox.filter-combo .list-cell {
     -fx-text-fill: #1e40af;
 }
 
-/* ==================== TASKS CONTAINERS ==================== */
+/* -------------------- TASKS CONTAINERS -------------------- */
 .tasks-container {
     -fx-background-radius: 24;
     -fx-border-radius: 24;
@@ -543,7 +533,7 @@ ComboBox.filter-combo .list-cell {
 .tasks-container-active {
     -fx-background-color: linear-gradient(to bottom, #ffffff, #fafbfc);
     -fx-border-color: #e5e7eb;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 24, 0, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 24, 0, 0, 8);
 }
 
 .tasks-container-archived {
@@ -552,32 +542,28 @@ ComboBox.filter-combo .list-cell {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 16, 0, 0, 4);
 }
 
-.tasks-list,
-ListView.tasks-list {
+.tasks-list {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
     -fx-padding: 8;
     -fx-control-inner-background: transparent;
 }
 
-.tasks-list .list-cell,
-ListView.tasks-list .list-cell {
+.tasks-list .list-cell {
     -fx-background-color: transparent;
     -fx-padding: 6 0;
     -fx-text-fill: #111827;
 }
 
-.tasks-list .list-cell:empty,
-ListView.tasks-list .list-cell:empty {
+.tasks-list .list-cell:empty {
     -fx-padding: 0;
 }
 
-.tasks-list .list-cell:filled:hover,
-ListView.tasks-list .list-cell:filled:hover {
+.tasks-list .list-cell:filled:hover {
     -fx-background-color: transparent;
 }
 
-/* ==================== TASK ITEM CARDS ==================== */
+/* -------------------- TASK ITEMS -------------------- */
 .task-item {
     -fx-background-color: white;
     -fx-background-radius: 16;
@@ -587,13 +573,13 @@ ListView.tasks-list .list-cell:filled:hover {
     -fx-padding: 20;
     -fx-spacing: 16;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 8, 0, 0, 2);
 }
 
 .task-item:hover {
     -fx-border-color: #fca5a5;
     -fx-background-color: linear-gradient(to right, #ffffff, #fef2f2);
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.15), 16, 0, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.12), 16, 0, 0, 6);
     -fx-translate-x: 4;
 }
 
@@ -690,7 +676,7 @@ ListView.tasks-list .list-cell:filled:hover {
     -fx-font-weight: 500;
 }
 
-/* Badges */
+/* -------------------- BADGES -------------------- */
 .task-badge {
     -fx-background-radius: 20;
     -fx-padding: 4 12;
@@ -742,8 +728,7 @@ ListView.tasks-list .list-cell:filled:hover {
     -fx-border-color: #94a3b8;
 }
 
-/* Action Buttons */
-Button.task-btn,
+/* -------------------- ACTION BUTTONS -------------------- */
 .task-btn {
     -fx-background-radius: 10;
     -fx-padding: 10 18;
@@ -757,67 +742,58 @@ Button.task-btn,
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
-Button.task-btn-details,
 .task-btn-details {
     -fx-background-color: linear-gradient(to bottom, #dbeafe, #bfdbfe);
     -fx-text-fill: #1e40af;
     -fx-border-color: #93c5fd;
 }
 
-Button.task-btn-details:hover,
 .task-btn-details:hover {
     -fx-background-color: linear-gradient(to bottom, #bfdbfe, #93c5fd);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
-Button.task-btn-details:pressed,
 .task-btn-details:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
-Button.task-btn-edit,
 .task-btn-edit {
     -fx-background-color: linear-gradient(to bottom, #fef3c7, #fde68a);
     -fx-text-fill: #92400e;
     -fx-border-color: #fcd34d;
 }
 
-Button.task-btn-edit:hover,
 .task-btn-edit:hover {
     -fx-background-color: linear-gradient(to bottom, #fde68a, #fcd34d);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
-Button.task-btn-edit:pressed,
 .task-btn-edit:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
-Button.task-btn-delete,
 .task-btn-delete {
     -fx-background-color: linear-gradient(to bottom, #fee2e2, #fecaca);
     -fx-text-fill: #dc2626;
     -fx-border-color: #fca5a5;
 }
 
-Button.task-btn-delete:hover,
 .task-btn-delete:hover {
     -fx-background-color: linear-gradient(to bottom, #fecaca, #fca5a5);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
-Button.task-btn-delete:pressed,
 .task-btn-delete:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
-/* ==================== EMPTY STATE ==================== */
+/* -------------------- EMPTY STATE -------------------- */
 .empty-state {
     -fx-alignment: center;
     -fx-padding: 60 40;
@@ -852,7 +828,7 @@ Button.task-btn-delete:pressed,
     -fx-text-fill: #6b7280;
 }
 
-/* ==================== SCROLLBAR STYLING ==================== */
+/* -------------------- SCROLLBARS -------------------- */
 .scroll-bar:horizontal .track,
 .scroll-bar:vertical .track {
     -fx-background-color: transparent;
@@ -871,7 +847,7 @@ Button.task-btn-delete:pressed,
     -fx-background-color: linear-gradient(to bottom, #ef4444, #dc2626);
 }
 
-/* ==================== FOCUS STYLES ==================== */
+/* -------------------- FOCUS & SELECTION -------------------- */
 .text-field:focused,
 .combo-box:focused,
 .button:focused {
@@ -879,7 +855,6 @@ Button.task-btn-delete:pressed,
     -fx-faint-focus-color: transparent;
 }
 
-/* ==================== SELECTION STYLES ==================== */
 .list-view:focused .list-cell:filled:selected {
     -fx-background-color: transparent;
 }
@@ -887,28 +862,23 @@ Button.task-btn-delete:pressed,
 .list-view:focused .list-cell:filled:selected .task-item {
     -fx-border-color: #dc2626;
     -fx-background-color: linear-gradient(to right, #ffffff, #fef2f2);
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.25), 20, 0, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.22), 20, 0, 0, 8);
 }
 
-.btn-weather {
-    -fx-background-color: linear-gradient(to right, #2672b5, #194f51);
-    -fx-text-fill: white;
+/* charts */
+
+.charts-section {
+    padding: 10 0 20 0;
+}
+
+.chart-title {
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-background-radius: 28;
-    -fx-padding: 12 24;
-    -fx-cursor: hand;
-    -fx-font-size: 14px;
-    -fx-graphic-text-gap: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0.2, 0, 2);
 }
 
-.btn-weather:hover {
-    -fx-opacity: 0.9;
-    -fx-scale-x: 1.03;
-    -fx-scale-y: 1.03;
+.chart {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 10;
 }
 
-.btn-weather:pressed {
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}

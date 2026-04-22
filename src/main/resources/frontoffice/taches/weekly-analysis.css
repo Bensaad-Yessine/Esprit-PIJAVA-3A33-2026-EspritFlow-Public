@@ -1,0 +1,461 @@
+/* ============================================
+   WEEKLY ANALYSIS - MODERN STYLESHEET
+   ============================================ */
+
+/* Root Pane */
+.root-pane {
+    -fx-background-color: #f8f9fa;
+}
+
+/* Main Container */
+.main-container {
+    -fx-background-color: transparent;
+}
+
+/* ============================================
+   HEADER SECTION
+   ============================================ */
+
+.header-section {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #667eea, #764ba2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 15, 0, 0, 3);
+}
+
+.main-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(255, 255, 255, 0.95);
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.loading-indicator {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-background-radius: 20px;
+    -fx-padding: 10 18 10 18;
+}
+
+/* ============================================
+   CONTENT AREA
+   ============================================ */
+
+.content-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.content-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.content-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.content-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #cbd5e0;
+    -fx-background-radius: 10px;
+}
+
+.content-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #a0aec0;
+}
+
+.content-container {
+    -fx-background-color: transparent;
+}
+
+/* ============================================
+   SECTION TITLES
+   ============================================ */
+
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a202c;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-padding: 15 0 10 0;
+}
+
+/* ============================================
+   STATISTICS CARDS
+   ============================================ */
+
+.stats-container {
+    -fx-background-color: transparent;
+}
+
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 20, 0, 0, 4);
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 16px;
+}
+
+.stat-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 25, 0, 0, 6);
+    -fx-cursor: hand;
+    -fx-border-color: #cbd5e0;
+}
+
+.stat-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #4a5568;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-padding: 0 0 10 0;
+}
+
+.stat-value {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a202c;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.stat-trend {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 0 0 0;
+}
+
+.stat-trend.positive {
+    -fx-text-fill: #38a169;
+}
+
+.stat-trend.negative {
+    -fx-text-fill: #e53e3e;
+}
+
+.stat-trend.neutral {
+    -fx-text-fill: #dd6b20;
+}
+
+.stat-description {
+    -fx-font-size: 13px;
+    -fx-text-fill: #718096;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-padding: 8 0 0 0;
+}
+
+/* ============================================
+   PROGRESS BARS
+   ============================================ */
+
+.progress-bar-completion .bar {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #48bb78, #2f855a);
+    -fx-background-radius: 12px;
+    -fx-padding: 6px;
+}
+
+.progress-bar-completion .track {
+    -fx-background-color: #e6fffa;
+    -fx-background-radius: 12px;
+}
+
+.progress-bar-abandon .bar {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #FF6B6B, #C1121F);
+    -fx-background-radius: 12px;
+    -fx-padding: 6px;
+}
+
+.progress-bar-abandon .track {
+    -fx-background-color: #fff5f5;
+    -fx-background-radius: 12px;
+}
+
+.progress-bar-delay .bar {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #ed8936, #c05621);
+    -fx-background-radius: 12px;
+    -fx-padding: 6px;
+}
+
+.progress-bar-delay .track {
+    -fx-background-color: #fffaf0;
+    -fx-background-radius: 12px;
+}
+
+.progress-bar-pause .bar {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #4299e1, #2b6cb0);
+    -fx-background-radius: 12px;
+    -fx-padding: 6px;
+}
+
+.progress-bar-pause .track {
+    -fx-background-color: #ebf8ff;
+    -fx-background-radius: 12px;
+}
+
+/* ============================================
+   INSIGHTS CARDS
+   ============================================ */
+
+.insights-container {
+    -fx-background-color: transparent;
+}
+
+.insight-card {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #2d3748, #1a202c);
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 20, 0, 0, 6);
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 16px;
+}
+
+.insight-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 25, 0, 0, 8);
+    -fx-cursor: hand;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #374151, #1f2937);
+}
+
+.insight-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: rgba(255, 255, 255, 0.85);
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-padding: 0 0 8 0;
+    -fx-letter-spacing: 0.5px;
+}
+
+.insight-value {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-padding: 8 0 8 0;
+}
+
+.insight-hint {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-style: italic;
+}
+
+/* ============================================
+   TASK TYPE CONTAINER
+   ============================================ */
+
+.task-type-container {
+    -fx-background-color: white;
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 20, 0, 0, 4);
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 16px;
+}
+
+.task-type-row {
+    -fx-padding: 12 0 12 0;
+    -fx-border-color: transparent transparent #f7fafc transparent;
+    -fx-border-width: 0 0 1.5 0;
+}
+
+.task-type-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #2d3748;
+    -fx-min-width: 150px;
+}
+
+.task-type-badge {
+    -fx-background-color: #edf2f7;
+    -fx-background-radius: 14px;
+    -fx-padding: 5 14 5 14;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2d3748;
+}
+
+.task-type-value {
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #1a202c;
+}
+
+/* ============================================
+   SUMMARY AND ADVICE CARDS
+   ============================================ */
+
+.summary-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 20, 0, 0, 4);
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-radius: 16px;
+}
+
+.summary-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 25, 0, 0, 6);
+}
+
+.advice-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 20, 0, 0, 4);
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-radius: 16px;
+}
+
+.advice-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 25, 0, 0, 6);
+}
+
+.summary-text-area {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 15px;
+    -fx-text-fill: #2d3748;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-line-spacing: 0.4em;
+    -fx-padding: 5;
+}
+
+.summary-text-area .content {
+    -fx-background-color: transparent;
+    -fx-padding: 5;
+}
+
+.summary-text-area:focused {
+    -fx-border-color: transparent;
+    -fx-effect: none;
+}
+
+.advice-text-area {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 15px;
+    -fx-text-fill: #2d3748;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-line-spacing: 0.4em;
+    -fx-padding: 5;
+}
+
+.advice-text-area .content {
+    -fx-background-color: transparent;
+    -fx-padding: 5;
+}
+
+.advice-text-area:focused {
+    -fx-border-color: transparent;
+    -fx-effect: none;
+}
+
+/* Remove scrollbar styling for text areas */
+.summary-text-area .scroll-bar:vertical,
+.advice-text-area .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-opacity: 0.4;
+}
+
+.summary-text-area .scroll-bar:vertical .thumb,
+.advice-text-area .scroll-bar:vertical .thumb {
+    -fx-background-color: #cbd5e0;
+    -fx-background-radius: 8px;
+}
+
+.summary-text-area .scroll-bar:vertical .thumb:hover,
+.advice-text-area .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #a0aec0;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.button-container {
+    -fx-padding: 15 0 0 0;
+}
+
+.primary-button {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #FF6B6B, #C1121F);
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+    -fx-padding: 14 32 14 32;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(193, 18, 31, 0.35), 12, 0, 0, 4);
+}
+
+.primary-button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #e53e3e, #9b0f1f);
+    -fx-effect: dropshadow(gaussian, rgba(193, 18, 31, 0.5), 16, 0, 0, 6);
+}
+
+.primary-button:pressed {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #c53030, #7a0d19);
+    -fx-effect: dropshadow(gaussian, rgba(193, 18, 31, 0.3), 8, 0, 0, 2);
+}
+
+.secondary-button {
+    -fx-background-color: white;
+    -fx-text-fill: #2d3748;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-padding: 14 28 14 28;
+    -fx-background-radius: 10px;
+    -fx-border-color: #cbd5e0;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 10px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
+}
+
+.secondary-button:hover {
+    -fx-background-color: #f7fafc;
+    -fx-border-color: #a0aec0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 12, 0, 0, 4);
+}
+
+.secondary-button:pressed {
+    -fx-background-color: #edf2f7;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0, 0, 1);
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 600px) {
+    .stat-card {
+        -fx-min-width: 100%;
+    }
+
+    .insight-card {
+        -fx-min-width: 100%;
+    }
+}
+
+/* ============================================
+   CUSTOM ENHANCEMENTS
+   ============================================ */
+
+.stat-card,
+.insight-card,
+.summary-card,
+.advice-card,
+.primary-button,
+.secondary-button {
+    -fx-transition: all 0.3s ease;
+}
+
+/* Add subtle decoration to section titles */
+.section-title {
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-padding: 15 0 12 0;
+}
