@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import piJava.Controllers.frontoffice.taches.TacheEditController;
 import piJava.Controllers.frontoffice.taches.TachesDetailsController;
 import piJava.Controllers.frontoffice.FrontSidebarController;
+import piJava.entities.user;
 import piJava.services.TacheService;
 import piJava.entities.tache;
 import piJava.services.api.BehaviorAnalysisService;
@@ -35,7 +36,8 @@ import java.util.*;
 
 public class TachesController implements Initializable {
 
-    private final int currentUserId = SessionManager.getInstance().getCurrentUser().getId();
+    private final user currentUser = SessionManager.getInstance().getCurrentUser();
+    private final int currentUserId = currentUser.getId();
 
     @FXML private ListView<tache> activeTasksList;
     @FXML private ListView<tache> archivedTasksList;

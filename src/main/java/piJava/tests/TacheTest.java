@@ -1,12 +1,19 @@
 package piJava.tests;
 
+import piJava.entities.Notification;
 import piJava.entities.tache;
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import piJava.entities.user;
+import piJava.services.NotificationService;
+import piJava.services.UserServices;
 import piJava.services.api.BehaviorAnalysisService;
+import piJava.services.api.NotifsService;
 import piJava.services.api.WeatherAiService;
 public class TacheTest {
 
@@ -82,6 +89,33 @@ public class TacheTest {
         BehaviorAnalysisService s = new BehaviorAnalysisService();
 
         System.out.println(s.getOrComputeProfile(1));
+    }
+
+    @Test
+    public void testNotifs(){
+        NotifsService ns = new NotifsService();
+        UserServices us = new UserServices();
+        NotificationService notifService = new NotificationService();
+        user u = us.getById(1);
+
+        ns.runForUser(u);
+
+        List<Notification> notifs = null;
+        try {
+            notifs = notifService.showUserNotifs(u.getId());
+        } catch (SQLException e) {
+            System.out.println("Erreur " + e.getMessage());
+        }
+
+        for (Notification n : notifs) {
+            System.out.println(
+                    n.getId() + " | " +
+                            n.getMessage() + " | " +
+                            n.getType() + " | " +
+                            n.isEmail() + " | " +
+                            n.getCreatedAt()
+            );
+        }
     }
 
 }
