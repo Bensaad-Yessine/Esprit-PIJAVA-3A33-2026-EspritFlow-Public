@@ -196,23 +196,23 @@ public class NotifsService {
     public void sendEmail(String to, String subject, String htmlBody) {
 
         try {
-            String json = """
-        {
-          "sender": {
-            "name": "Task App",
-            "email": "tahayassinesnoussi05@gmail.com"
-          },
-          "to": [
-            { "email": "%s" }
-          ],
-          "subject": "%s",
-          "htmlContent": "%s"
-        }
-        """.formatted(
-                    to,
-                    subject,
-                    htmlBody.replace("\"", "'")
-            );
+
+            String safeHtml = htmlBody
+                    .replace("\\", "\\\\")
+                    .replace("\"", "\\\"")
+                    .replace("\n", "");
+
+            String json = "{"
+                    + "\"sender\":{"
+                    + "\"name\":\"Task App\","
+                    + "\"email\":\"tahayassinesnoussi05@gmail.com\""
+                    + "},"
+                    + "\"to\":[{"
+                    + "\"email\":\"" + to + "\""
+                    + "}],"
+                    + "\"subject\":\"" + subject + "\","
+                    + "\"htmlContent\":\"" + safeHtml + "\""
+                    + "}";
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.brevo.com/v3/smtp/email"))
@@ -233,4 +233,14 @@ public class NotifsService {
             e.printStackTrace();
         }
     }
+
+    public List<Notification> getUserNotifications(int userId) {
+        try {
+            return ns.showUserNotifs(userId);
+        } catch (SQLException e) {
+            System.out.println("Erreur getUserNotifications: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
 }

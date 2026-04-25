@@ -33,10 +33,11 @@
         </HBox>
         <Region HBox.hgrow="ALWAYS"/>
         <HBox spacing="16" alignment="CENTER" styleClass="user-menu">
-            <StackPane styleClass="notification-btn">
+            <!-- HEADER (only the notification button changed) -->
+            <StackPane fx:id="notificationBtn" onMouseClicked="#toggleNotifications" styleClass="notification-btn">
                 <SVGPath content="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"
                          styleClass="notification-icon"/>
-                <Circle radius="4" styleClass="notification-dot"/>
+                <Circle fx:id="notificationDot" radius="4" styleClass="notification-dot" visible="false"/>
             </StackPane>
             <HBox styleClass="user-profile">
                 <StackPane styleClass="avatar-container">
@@ -79,9 +80,9 @@
             <ScrollPane fitToWidth="true" styleClass="custom-scroll" VBox.vgrow="ALWAYS">
                 <VBox spacing="28" styleClass="scroll-content">
 
-                    <!-- NOTIFICATION TOAST (hidden by default) -->
-                    <HBox alignment="CENTER" styleClass="notification-area">
-                        <Label fx:id="notificationLabel" text="" styleClass="notification-toast" managed="false" visible="false"/>
+                    <!-- NOTIFICATION AREA (hidden by default, controlled by controller) -->
+                    <HBox fx:id="notificationArea" alignment="CENTER" styleClass="notification-area" visible="false" managed="false">
+                        <ListView fx:id="notificationsList" prefHeight="220" styleClass="notifications-list"/>
                     </HBox>
 
                     <!-- STAT CARDS -->

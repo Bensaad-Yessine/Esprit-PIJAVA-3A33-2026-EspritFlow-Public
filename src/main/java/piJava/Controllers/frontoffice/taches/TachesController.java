@@ -14,6 +14,9 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 import javafx.scene.chart.*;
 
+import javafx.scene.shape.Circle;
+import piJava.entities.Notification;
+import piJava.services.api.NotifsService;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import piJava.Controllers.frontoffice.taches.TacheEditController;
@@ -33,6 +36,9 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class TachesController implements Initializable {
 
@@ -44,7 +50,6 @@ public class TachesController implements Initializable {
 
     @FXML private Label lblActiveCount;
     @FXML private Label lblArchivedCount;
-    @FXML private Label notificationLabel;
 
     @FXML private TextField txtSearch;
     @FXML private ComboBox<String> cmbPriority;
@@ -62,6 +67,12 @@ public class TachesController implements Initializable {
     @FXML private Label lblCompleted;
     @FXML private Label lblUrgent;
 
+    @FXML private HBox notificationArea;
+    @FXML private StackPane notificationBtn;
+    @FXML private Circle notificationDot;
+    private boolean notificationsVisible = false;
+    @FXML private ListView<Notification> notificationsList;
+
 
     private List<tache> allTasks = new ArrayList<>();
     private List<tache> activeTasks = new ArrayList<>();
@@ -70,9 +81,15 @@ public class TachesController implements Initializable {
     private FrontSidebarController sidebarController;
     private StatisticsService statsService = new StatisticsService();
     private TacheService ts = new TacheService();
+    private NotifsService ns = new NotifsService();
+
     // Static variables to temporarily store task data
     private static tache currentTaskForDetails;
     private static tache currentTaskForEdit;
+
+
+    private final ScheduledExecutorService notifScheduler =
+            Executors.newSingleThreadScheduledExecutor();
 
     public void setSidebarController(FrontSidebarController sidebarcontroller) {
         this.sidebarController = sidebarcontroller;
@@ -81,6 +98,12 @@ public class TachesController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
+            // 1. Notifications setup FIRST
+            setupNotificationsList();
+            notificationArea.setVisible(false);
+            notificationArea.setManaged(false);
+            startNotificationAutoRefresh();
+
             loadTasks();
 
             cmbPriority.setValue("Toutes");
@@ -104,7 +127,6 @@ public class TachesController implements Initializable {
             e.printStackTrace();
         }
     }
-
     private void loadTasks() throws SQLException {
         allTasks = ts.showUserTasks(currentUserId);
         activeTasks.clear();
@@ -625,5 +647,81 @@ public class TachesController implements Initializable {
         lblInProgress.setText(String.valueOf(inProgress));
         lblCompleted.setText(String.valueOf(completed));
         lblUrgent.setText(String.valueOf(overdue));
+    }
+
+
+    // NOTIFICATIONS
+    private void setupNotificationsList() {
+        notificationsList.setCellFactory(list -> new ListCell<Notification>() {
+            @Override
+            protected void updateItem(Notification item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                    setStyle("");
+                } else {
+                    // Display message + time
+                    String text = item.getMessage();
+                    if (item.getCreatedAt() != null) {
+                        text += "\n" + item.getCreatedAt().format(
+                                java.time.format.DateTimeFormatter.ofPattern("dd/MM HH:mm")
+                        );
+                    }
+                    setText(text);
+                    setWrapText(true);
+
+                    // Bold if unread
+                    if (!item.isRead()) {
+                        setStyle("-fx-font-weight: bold; -fx-text-fill: #dc3545;");
+                    } else {
+                        setStyle("-fx-font-weight: normal; -fx-text-fill: #555;");
+                    }
+                }
+            }
+        });
+    }
+
+    @FXML
+    private void toggleNotifications(javafx.scene.input.MouseEvent event) {
+        notificationsVisible = !notificationsVisible;
+        notificationArea.setVisible(notificationsVisible);
+        notificationArea.setManaged(notificationsVisible);
+
+        if (notificationsVisible) {
+            loadNotifications(); // refresh when opening
+        }
+    }
+
+    private void loadNotifications() {
+        notifScheduler.submit(() -> {
+            try {
+                // 1. Generate any new notifications (deadline checks, etc.)
+                ns.runForUser(currentUser);
+
+                // 2. Fetch current list
+                List<Notification> notifs = ns.getUserNotifications(currentUserId);
+
+                javafx.application.Platform.runLater(() -> {
+                    notificationsList.getItems().setAll(notifs);
+
+                    // Show/hide red dot on bell
+                    boolean hasUnread = notifs.stream().anyMatch(n -> !n.isRead());
+                    notificationDot.setVisible(hasUnread);
+                });
+
+            } catch (Exception e) {
+                System.out.println("Load notif error: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void startNotificationAutoRefresh() {
+        loadNotifications(); // initial load
+
+        notifScheduler.scheduleAtFixedRate(() -> {
+            loadNotifications();
+        }, 30, 30, TimeUnit.SECONDS);
     }
 }

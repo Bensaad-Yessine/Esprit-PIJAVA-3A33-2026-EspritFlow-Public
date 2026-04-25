@@ -118,4 +118,20 @@ public class TacheTest {
         }
     }
 
+    @Test
+    public void testBrevo() {
+        NotifsService ns = new  NotifsService();
+        String testemail = "tahayassinesnoussi05@gmail.com";
+
+        String html = """
+                        <html>
+                        <body style="font-family:Arial;background:#f8f9fa;padding:20px;">
+                          <p>Test test</p>
+                        </body>
+                        </html>
+                        """;
+        ns.sendEmail(testemail,"test Brevo mailing",html);
+
+    }
+
 }
