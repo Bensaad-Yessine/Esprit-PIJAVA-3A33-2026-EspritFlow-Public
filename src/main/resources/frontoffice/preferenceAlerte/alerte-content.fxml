@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="piJava.Controllers.frontoffice.preferencealerte.AlertesController"
+            stylesheets="@alerte.css"
+            styleClass="content-scroll"
+            fitToWidth="true"
+            hbarPolicy="NEVER">
+
+    <VBox spacing="28"
+          styleClass="main-container">
+
+    <!-- HEADER SECTION -->
+    <HBox alignment="CENTER_LEFT" spacing="24">
+        <VBox spacing="6" HBox.hgrow="ALWAYS">
+            <Label text="🔔 Préférences d'Alerte" styleClass="title"/>
+            <Label text="Gérez vos notifications, rappels et préférences de communication" styleClass="subtitle"/>
+        </VBox>
+
+        <HBox spacing="12" alignment="CENTER_RIGHT">
+            <Button text="📊 Tableau de bord" styleClass="btn-secondary"/>
+            <Button text="➕ Nouvelle Préférence" styleClass="btn-primary" onAction="#addAlerte"/>
+        </HBox>
+    </HBox>
+
+    <!-- SECTION DIVIDER -->
+    <HBox styleClass="section-divider"/>
+
+    <!-- STATS ROW - ENHANCED -->
+    <HBox spacing="20">
+        <!-- Total Card -->
+        <VBox styleClass="stat-card, red-card" spacing="10" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="📋" styleClass="card-icon"/>
+                <Label text="TOTAL" styleClass="card-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <HBox styleClass="card-indicator, card-indicator-active"/>
+            </HBox>
+            <Label fx:id="lblAlertesCount" text="0" styleClass="card-number"/>
+            <Label text="Configurations actives" styleClass="card-sub"/>
+        </VBox>
+
+        <!-- Email Card -->
+        <VBox styleClass="stat-card, red-card-light" spacing="10" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="📧" styleClass="card-icon"/>
+                <Label text="EMAIL" styleClass="card-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="●" styleClass="card-icon" style="-fx-text-fill: #10B981; -fx-font-size: 12px;"/>
+            </HBox>
+            <Label fx:id="lblEmailCount" text="0" styleClass="card-number"/>
+            <Label text="Notifications configurées" styleClass="card-sub"/>
+        </VBox>
+
+        <!-- Push Card -->
+        <VBox styleClass="stat-card, red-card-mid" spacing="10" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="🔔" styleClass="card-icon"/>
+                <Label text="PUSH" styleClass="card-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="●" styleClass="card-icon" style="-fx-text-fill: #10B981; -fx-font-size: 12px;"/>
+            </HBox>
+            <Label fx:id="lblPushCount" text="0" styleClass="card-number"/>
+            <Label text="Alertes mobiles actives" styleClass="card-sub"/>
+        </VBox>
+
+        <!-- Site Card -->
+        <VBox styleClass="stat-card, red-card-soft" spacing="10" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="🌐" styleClass="card-icon"/>
+                <Label text="SITE" styleClass="card-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="●" styleClass="card-icon" style="-fx-text-fill: #10B981; -fx-font-size: 12px;"/>
+            </HBox>
+            <Label fx:id="lblSiteCount" text="0" styleClass="card-number"/>
+            <Label text="Notifications web actives" styleClass="card-sub"/>
+        </VBox>
+    </HBox>
+
+    <!-- FILTER CHIPS -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="FILTRER PAR:" styleClass="section-label"/>
+        <Button text="Toutes" styleClass="filter-chip, filter-chip-active" onAction="#filterAll"/>
+        <Button text="Actives" styleClass="filter-chip" onAction="#filterActive"/>
+        <Button text="Inactives" styleClass="filter-chip" onAction="#filterInactive"/>
+        <Button text="Email" styleClass="filter-chip" onAction="#filterEmail"/>
+        <Button text="Push" styleClass="filter-chip" onAction="#filterPush"/>
+        <Button text="Site" styleClass="filter-chip" onAction="#filterSite"/>
+        <Button text="📅 Date Création" styleClass="filter-chip" onAction="#sortByDateCreation"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="🔍 Rechercher une préférence..." styleClass="search-field" prefWidth="280" onKeyReleased="#handleSearch"/>
+    </HBox>
+
+    <!-- NOTIFICATION TOAST -->
+    <Label fx:id="notificationLabel" styleClass="notification-label" maxWidth="Infinity" text=""/>
+
+    <!-- MAIN PANEL WITH LISTVIEW -->
+    <VBox styleClass="panel" VBox.vgrow="ALWAYS" spacing="16" minHeight="400">
+
+        <!-- PANEL HEADER -->
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="panel-header">
+            <HBox spacing="12" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                <Label text="📋" style="-fx-font-size: 24px;"/>
+                <Label text="Mes Préférences d'Alerte" styleClass="panel-title"/>
+                <Label fx:id="taskCountLabel" text="0 préférence(s)" styleClass="panel-badge"/>
+            </HBox>
+
+            <HBox spacing="10">
+                <Button text="🔄 Actualiser" styleClass="btn-secondary" onAction="#refreshList"/>
+                <Button text="⚙️ Paramètres" styleClass="btn-secondary"/>
+            </HBox>
+        </HBox>
+
+        <!-- LISTVIEW -->
+        <ListView fx:id="alertesListView" VBox.vgrow="ALWAYS" styleClass="task-scroll" prefHeight="400" minHeight="200"/>
+
+    </VBox>
+
+    <!-- FOOTER INFO -->
+    <HBox alignment="CENTER" spacing="8">
+        <Label text="💡" style="-fx-font-size: 14px;"/>
+        <Label text="Astuce: Sélectionnez une alerte pour voir les options d'édition et de suppression"
+               style="-fx-font-size: 12px; -fx-text-fill: #9CA3AF; -fx-font-weight: 500;"/>
+    </HBox>
+
+    </VBox>
+
+</ScrollPane>

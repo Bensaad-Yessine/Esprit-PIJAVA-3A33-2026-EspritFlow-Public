@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="piJava.Controllers.frontoffice.classe.ClasseContentController"
+      stylesheets="@classe.css"
+      prefWidth="1500" prefHeight="900"
+      styleClass="root-bg">
+
+    <ScrollPane fitToWidth="true" styleClass="page-scroll" HBox.hgrow="ALWAYS">
+        <VBox spacing="26" styleClass="main-container">
+
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <VBox HBox.hgrow="ALWAYS" spacing="6">
+                    <Label text="Ma classe" styleClass="title"/>
+                    <Label text="ESPRIT Flow · Votre classe connectée" styleClass="subtitle"/>
+                </VBox>
+                <Button text="↻ Rafraîchir" onAction="#handleRefresh" styleClass="btn-primary"/>
+            </HBox>
+
+            <HBox fx:id="heroCard" spacing="20" styleClass="hero-card">
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <Label text="Informations de votre classe" styleClass="hero-title"/>
+                    <Label text="La classe de votre compte s’affiche ici de manière simple et claire."
+                           wrapText="true"
+                           styleClass="hero-subtitle"/>
+                </VBox>
+                <Label text="🏫" styleClass="hero-sticker"/>
+            </HBox>
+
+            <VBox spacing="14" styleClass="panel">
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Détails de la classe" styleClass="panel-title" HBox.hgrow="ALWAYS"/>
+                    <Label text="Lecture seule" styleClass="badge-blue"/>
+                </HBox>
+
+                <HBox spacing="20">
+                    <VBox HBox.hgrow="ALWAYS" prefHeight="130" spacing="6" alignment="TOP_LEFT" styleClass="red-card">
+                        <Label text="Classe" styleClass="card-label"/>
+                        <Label fx:id="lblClassName" text="—" styleClass="card-number"/>
+                        <Label text="Classe associée à votre compte" styleClass="card-sub"/>
+                    </VBox>
+
+                    <VBox HBox.hgrow="ALWAYS" prefHeight="130" spacing="6" alignment="TOP_LEFT" styleClass="red-card-light">
+                        <Label text="Niveau" styleClass="card-label"/>
+                        <Label fx:id="lblClassLevel" text="—" styleClass="card-number"/>
+                        <Label text="Niveau pédagogique" styleClass="card-sub"/>
+                    </VBox>
+
+                    <VBox HBox.hgrow="ALWAYS" prefHeight="130" spacing="6" alignment="TOP_LEFT" styleClass="red-card-mid">
+                        <Label text="Année universitaire" styleClass="card-label"/>
+                        <Label fx:id="lblClassYear" text="—" styleClass="card-number"/>
+                        <Label text="Cycle académique" styleClass="card-sub"/>
+                    </VBox>
+                </HBox>
+
+                <VBox spacing="6" styleClass="info-card">
+                    <Label text="Description" styleClass="info-label"/>
+                    <Label fx:id="lblClassDescription" text="—" wrapText="true" styleClass="info-description"/>
+                </VBox>
+
+                <VBox spacing="10">
+                    <Label text="Statistiques de votre classe" styleClass="panel-title"/>
+                    <HBox spacing="20">
+                        <VBox fx:id="cardStatsMatieres" HBox.hgrow="ALWAYS" prefHeight="112" spacing="6" alignment="TOP_LEFT" styleClass="stats-card stats-cyan">
+                            <Label text="Matières" styleClass="stats-title"/>
+                            <Label fx:id="lblStatsMatieres" text="—" styleClass="stats-value"/>
+                            <Label text="Matières liées à votre classe" styleClass="stats-note"/>
+                        </VBox>
+
+                        <VBox fx:id="cardStatsCoefficient" HBox.hgrow="ALWAYS" prefHeight="112" spacing="6" alignment="TOP_LEFT" styleClass="stats-card stats-rose">
+                            <Label text="Total coefficient" styleClass="stats-title"/>
+                            <Label fx:id="lblStatsCoefficient" text="—" styleClass="stats-value"/>
+                            <Label text="Poids cumulé de la classe" styleClass="stats-note"/>
+                        </VBox>
+
+                        <VBox fx:id="cardStatsCharge" HBox.hgrow="ALWAYS" prefHeight="112" spacing="6" alignment="TOP_LEFT" styleClass="stats-card stats-amber">
+                            <Label text="Charge horaire" styleClass="stats-title"/>
+                            <Label fx:id="lblStatsCharge" text="—" styleClass="stats-value"/>
+                            <Label text="Volume horaire global" styleClass="stats-note"/>
+                        </VBox>
+
+                        <VBox fx:id="cardStatsComplexite" HBox.hgrow="ALWAYS" prefHeight="112" spacing="6" alignment="TOP_LEFT" styleClass="stats-card stats-emerald">
+                            <Label text="Complexité moyenne" styleClass="stats-title"/>
+                            <Label fx:id="lblStatsComplexite" text="—" styleClass="stats-value"/>
+                            <Label text="Score moyen des matières" styleClass="stats-note"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+</HBox>
+
+

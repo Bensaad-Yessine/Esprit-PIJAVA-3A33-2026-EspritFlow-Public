@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="piJava.Controllers.backoffice.taches.TachesController"
+            stylesheets="@tache.css"
+            styleClass="dashboard-root">
+
+    <VBox styleClass="main-content"
+          spacing="24"
+          fillWidth="true"
+          AnchorPane.topAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0">
+
+        <!-- HEADER -->
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+
+            <VBox HBox.hgrow="ALWAYS" spacing="6">
+                <Label text="📋 Gestion des Tâches" styleClass="page-title"/>
+                <Label text="Suivi global et gestion des tâches assignées" styleClass="page-subtitle"/>
+            </VBox>
+
+            <Button text="➕ Nouvelle Tâche"
+                    onAction="#addTask"
+                    styleClass="btn-primary"/>
+        </HBox>
+
+        <!-- STATS -->
+        <HBox spacing="20" styleClass="stats-row" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="📊 Total" styleClass="stat-label"/>
+                <Label fx:id="lblTotalCount" text="128" styleClass="stat-number"/>
+                <Label text="↑ 12%" styleClass="stat-trend"/>
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="⚡ En cours" styleClass="stat-label"/>
+                <Label fx:id="lblActiveCount" text="54" styleClass="stat-number" style="-fx-text-fill: #3B82F6;"/>
+                <Label text="Actives" styleClass="stat-sub"/>
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="✓ Terminées" styleClass="stat-label"/>
+                <Label fx:id="lblCompletedCount" text="60" styleClass="stat-number" style="-fx-text-fill: #10B981;"/>
+                <Label text="+8 ce mois" styleClass="stat-trend"/>
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="⏸ En pause" styleClass="stat-label"/>
+                <Label fx:id="lblPausedCount" text="14" styleClass="stat-number" style="-fx-text-fill: #F59E0B;"/>
+                <Label text="En attente" styleClass="stat-sub"/>
+            </VBox>
+
+        </HBox>
+
+        <!-- LIST CONTAINER -->
+        <VBox VBox.vgrow="ALWAYS" spacing="12" styleClass="list-container" maxWidth="Infinity">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Liste des tâches" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="txtSearch" promptText="🔍 Rechercher..."
+                           styleClass="search-field"/>
+                <ComboBox fx:id="cmbPriority" promptText="Priorité" styleClass="filter-combo"/>
+                <ComboBox fx:id="cmbSort" promptText="Trier par" styleClass="filter-combo"/>
+                <Button fx:id="btnResetFilters"
+                        text="Reset"
+                        onAction="#resetFilters"
+                        styleClass="btn-secondary"/>
+            </HBox>
+
+            <Label fx:id="lblTaskCount" text="128 tâches au total" styleClass="task-count"/>
+
+            <ListView fx:id="tasksListView"
+                      VBox.vgrow="ALWAYS"
+                      maxWidth="Infinity"
+                      maxHeight="Infinity"
+                      styleClass="task-list"/>
+
+        </VBox>
+
+    </VBox>
+
+</AnchorPane>
