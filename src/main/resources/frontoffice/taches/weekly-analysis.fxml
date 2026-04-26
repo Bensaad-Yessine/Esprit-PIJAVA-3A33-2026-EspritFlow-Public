@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="piJava.Controllers.frontoffice.taches.BehaviorAnalysisController"
+            stylesheets="@weekly-analysis.css"
+            prefHeight="700.0" prefWidth="900.0"
+            styleClass="root-pane">
+
+    <children>
+
+        <VBox spacing="0" layoutX="0" layoutY="0"
+              prefWidth="900.0" prefHeight="700.0"
+              styleClass="main-container">
+
+            <!-- Header Section -->
+            <HBox styleClass="header-section" alignment="CENTER_LEFT" spacing="15">
+                <padding>
+                    <Insets top="25" right="30" bottom="25" left="30"/>
+                </padding>
+                <VBox spacing="5">
+                    <Label text="📊 Analyse Hebdomadaire de Performance"
+                           styleClass="main-title"/>
+                    <Label text="Analyse détaillée de votre productivité et comportement d'étude"
+                           styleClass="subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="loadingLabel"
+                       text="Chargement..."
+                       styleClass="loading-indicator"/>
+            </HBox>
+
+            <!-- Content Area -->
+            <ScrollPane fitToWidth="true" fitToHeight="true"
+                        styleClass="content-scroll"
+                        VBox.vgrow="ALWAYS">
+                <VBox spacing="20" styleClass="content-container">
+                    <padding>
+                        <Insets top="20" right="30" bottom="20" left="30"/>
+                    </padding>
+
+                    <!-- Statistics Overview Cards -->
+                    <Label text="Vue d'ensemble des statistiques"
+                           styleClass="section-title"/>
+
+                    <HBox spacing="15" alignment="CENTER" styleClass="stats-container">
+                        <VBox spacing="15" HBox.hgrow="ALWAYS">
+                            <!-- Completion Rate Card -->
+                            <VBox styleClass="stat-card">
+                                <padding>
+                                    <Insets top="20" right="20" bottom="20" left="20"/>
+                                </padding>
+                                <Label text="✅ Taux de Complétion" styleClass="stat-label"/>
+                                <HBox alignment="BASELINE_LEFT" spacing="5">
+                                    <Label fx:id="completionRateValue" text="0%" styleClass="stat-value"/>
+                                    <Label fx:id="completionRateTrend" text="↑" styleClass="stat-trend positive"/>
+                                </HBox>
+                                <ProgressBar fx:id="completionRateBar" progress="0"
+                                             maxWidth="Infinity" styleClass="progress-bar-completion"/>
+                                <Label fx:id="completionRateDesc" text="Tâches terminées avec succès"
+                                       styleClass="stat-description"/>
+                            </VBox>
+
+                            <!-- Average Start Delay Card -->
+                            <VBox styleClass="stat-card">
+                                <padding>
+                                    <Insets top="20" right="20" bottom="20" left="20"/>
+                                </padding>
+                                <Label text="⏱️ Délai de Démarrage" styleClass="stat-label"/>
+                                <HBox alignment="BASELINE_LEFT" spacing="5">
+                                    <Label fx:id="startDelayValue" text="0 min" styleClass="stat-value"/>
+                                    <Label fx:id="startDelayTrend" text="↓" styleClass="stat-trend positive"/>
+                                </HBox>
+                                <ProgressBar fx:id="startDelayBar" progress="0"
+                                             maxWidth="Infinity" styleClass="progress-bar-delay"/>
+                                <Label fx:id="startDelayDesc" text="Temps moyen avant de commencer"
+                                       styleClass="stat-description"/>
+                            </VBox>
+                        </VBox>
+
+                        <VBox spacing="15" HBox.hgrow="ALWAYS">
+                            <!-- Abandonment Rate Card -->
+                            <VBox styleClass="stat-card">
+                                <padding>
+                                    <Insets top="20" right="20" bottom="20" left="20"/>
+                                </padding>
+                                <Label text="⚠️ Taux d'Abandon" styleClass="stat-label"/>
+                                <HBox alignment="BASELINE_LEFT" spacing="5">
+                                    <Label fx:id="abandonmentRateValue" text="0%" styleClass="stat-value"/>
+                                    <Label fx:id="abandonmentRateTrend" text="↓" styleClass="stat-trend negative"/>
+                                </HBox>
+                                <ProgressBar fx:id="abandonmentRateBar" progress="0"
+                                             maxWidth="Infinity" styleClass="progress-bar-abandon"/>
+                                <Label fx:id="abandonmentRateDesc" text="Tâches abandonnées ou non terminées"
+                                       styleClass="stat-description"/>
+                            </VBox>
+
+                            <!-- Pause Frequency Card -->
+                            <VBox styleClass="stat-card">
+                                <padding>
+                                    <Insets top="20" right="20" bottom="20" left="20"/>
+                                </padding>
+                                <Label text="⏸️ Fréquence de Pause" styleClass="stat-label"/>
+                                <HBox alignment="BASELINE_LEFT" spacing="5">
+                                    <Label fx:id="pauseFrequencyValue" text="0" styleClass="stat-value"/>
+                                    <Label fx:id="pauseFrequencyTrend" text="→" styleClass="stat-trend neutral"/>
+                                </HBox>
+                                <ProgressBar fx:id="pauseFrequencyBar" progress="0"
+                                             maxWidth="Infinity" styleClass="progress-bar-pause"/>
+                                <Label fx:id="pauseFrequencyDesc" text="Pauses par tâche"
+                                       styleClass="stat-description"/>
+                            </VBox>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Productivity Insights -->
+                    <Label text="Insights de Productivité"
+                           styleClass="section-title"/>
+
+                    <HBox spacing="15" alignment="CENTER" styleClass="insights-container">
+
+                        <!-- Most Productive Hour -->
+                        <VBox styleClass="insight-card" HBox.hgrow="ALWAYS">
+                            <padding>
+                                <Insets top="20" right="20" bottom="20" left="20"/>
+                            </padding>
+                            <Label text="🕐 Heure la Plus Productive" styleClass="insight-label"/>
+                            <Label fx:id="productiveHourValue" text="--:--" styleClass="insight-value"/>
+                            <Label text="Planifiez vos tâches importantes" styleClass="insight-hint"/>
+                        </VBox>
+
+                        <!-- Most Productive Day -->
+                        <VBox styleClass="insight-card" HBox.hgrow="ALWAYS">
+                            <padding>
+                                <Insets top="20" right="20" bottom="20" left="20"/>
+                            </padding>
+                            <Label text="📅 Jour le Plus Productif" styleClass="insight-label"/>
+                            <Label fx:id="productiveDayValue" text="-------" styleClass="insight-value"/>
+                            <Label text="Optimisez votre planning hebdomadaire" styleClass="insight-hint"/>
+                        </VBox>
+
+                    </HBox>
+
+                    <!-- Task Type Performance -->
+                    <Label text="Performance par Type de Tâche"
+                           styleClass="section-title"/>
+
+                    <VBox spacing="10" styleClass="task-type-container">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+
+                        <!-- Will be populated programmatically, but here's the template -->
+                        <VBox fx:id="taskTypeStats" spacing="8"/>
+
+                    </VBox>
+
+                    <!-- AI Summary Section -->
+                    <Label text="📝 Résumé de Productivité IA"
+                           styleClass="section-title"/>
+
+                    <VBox styleClass="summary-card">
+                        <padding>
+                            <Insets top="25" right="25" bottom="25" left="25"/>
+                        </padding>
+                        <TextArea fx:id="summaryArea"
+                                  wrapText="true"
+                                  editable="false"
+                                  styleClass="summary-text-area"
+                                  prefHeight="180.0"
+                                  minHeight="180.0"/>
+                    </VBox>
+
+                    <!-- AI Advice Section -->
+                    <Label text="💡 Conseils Personnalisés"
+                           styleClass="section-title"/>
+
+                    <VBox styleClass="advice-card">
+                        <padding>
+                            <Insets top="25" right="25" bottom="25" left="25"/>
+                        </padding>
+                        <TextArea fx:id="adviceArea"
+                                  wrapText="true"
+                                  editable="false"
+                                  styleClass="advice-text-area"
+                                  prefHeight="180.0"
+                                  minHeight="180.0"/>
+                    </VBox>
+
+                    <!-- Action Buttons -->
+                    <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="button-container">
+                        <padding>
+                            <Insets top="10" right="0" bottom="10" left="0"/>
+                        </padding>
+                        <Button text="📊 Exporter PDF"
+                                onAction="#handleExport"
+                                styleClass="secondary-button"/>
+                        <Button text="🔄 Rafraîchir"
+                                onAction="#handleRefresh"
+                                styleClass="secondary-button"/>
+                        <Button text="Fermer"
+                                onAction="#handleClose"
+                                styleClass="primary-button"/>
+                    </HBox>
+
+                </VBox>
+            </ScrollPane>
+
+        </VBox>
+
+    </children>
+
+</AnchorPane>

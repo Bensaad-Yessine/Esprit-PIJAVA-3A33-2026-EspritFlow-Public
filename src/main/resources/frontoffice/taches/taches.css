@@ -1,24 +1,42 @@
 /* ============================================
+<<<<<<< HEAD
    ESPRIT FLOW - MODERN RED & WHITE THEME
    ============================================ */
 
 /* ==================== ROOT & VARIABLES ==================== */
+=======
+   ESPRIT FLOW — MODERN RED & WHITE THEME
+   ============================================ */
+
+/* -------------------- ROOT -------------------- */
+>>>>>>> origin/gestionTache
 .root-container {
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
     -fx-background-color: linear-gradient(to bottom right, #efd5d5, #ffffff, #cc9393);
 }
 
+<<<<<<< HEAD
 /* ==================== GLASSMORPHISM HEADER ==================== */
+=======
+/* -------------------- HEADER -------------------- */
+>>>>>>> origin/gestionTache
 .app-header {
     -fx-padding: 20 40;
     -fx-background-color: linear-gradient(to right, rgba(255,255,255,0.95), rgba(254,242,242,0.95));
     -fx-background-radius: 0 0 24 24;
     -fx-border-color: #fecaca;
     -fx-border-width: 0 0 2 0;
+<<<<<<< HEAD
     -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.15), 20, 0, 0, 4);
 }
 
 /* Logo Area */
+=======
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.12), 20, 0, 0, 4);
+}
+
+/* Logo */
+>>>>>>> origin/gestionTache
 .logo-container {
     -fx-min-width: 44;
     -fx-min-height: 44;
@@ -26,7 +44,11 @@
     -fx-pref-height: 44;
     -fx-background-color: linear-gradient(to bottom right, #dc2626, #991b1b);
     -fx-background-radius: 12;
+<<<<<<< HEAD
     -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.4), 12, 0, 0, 4);
+=======
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.35), 12, 0, 0, 4);
+>>>>>>> origin/gestionTache
     -fx-padding: 10;
 }
 
@@ -116,7 +138,11 @@
     -fx-text-fill: #374151;
 }
 
+<<<<<<< HEAD
 /* ==================== CONTENT AREA ==================== */
+=======
+/* -------------------- CONTENT -------------------- */
+>>>>>>> origin/gestionTache
 .content-wrapper {
     -fx-padding: 0 40 40 40;
 }
@@ -158,7 +184,11 @@
     -fx-padding: 0 8 0 0;
 }
 
+<<<<<<< HEAD
 /* ==================== PAGE HEADER ==================== */
+=======
+/* -------------------- PAGE HEADER -------------------- */
+>>>>>>> origin/gestionTache
 .page-header {
     -fx-padding: 8 0;
 }
@@ -192,8 +222,12 @@
     -fx-text-fill: #6b7280;
 }
 
+<<<<<<< HEAD
 /* ==================== BUTTONS ==================== */
 Button.btn-primary,
+=======
+/* -------------------- BUTTONS -------------------- */
+>>>>>>> origin/gestionTache
 .btn-primary {
     -fx-background-color: linear-gradient(to right, #dc2626, #b91c1c);
     -fx-text-fill: white;
@@ -206,25 +240,41 @@ Button.btn-primary,
     -fx-border-color: rgba(255,255,255,0.2);
     -fx-border-radius: 28;
     -fx-border-width: 2;
+<<<<<<< HEAD
     -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.35), 16, 0, 0, 6);
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
 Button.btn-primary:hover,
+=======
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.30), 16, 0, 0, 6);
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
+}
+
+>>>>>>> origin/gestionTache
 .btn-primary:hover {
     -fx-background-color: linear-gradient(to right, #ef4444, #dc2626);
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
+<<<<<<< HEAD
     -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.5), 20, 0, 0, 8);
 }
 
 Button.btn-primary:pressed,
+=======
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.45), 20, 0, 0, 8);
+}
+
+>>>>>>> origin/gestionTache
 .btn-primary:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
+<<<<<<< HEAD
 Button.btn-secondary,
+=======
+>>>>>>> origin/gestionTache
 .btn-secondary {
     -fx-background-color: linear-gradient(to bottom, #ffffff, #f9fafb);
     -fx-text-fill: #374151;
@@ -240,7 +290,10 @@ Button.btn-secondary,
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
+<<<<<<< HEAD
 Button.btn-secondary:hover,
+=======
+>>>>>>> origin/gestionTache
 .btn-secondary:hover {
     -fx-background-color: linear-gradient(to bottom, #f9fafb, #f3f4f6);
     -fx-border-color: #d1d5db;
@@ -250,7 +303,10 @@ Button.btn-secondary:hover,
     -fx-scale-y: 1.02;
 }
 
+<<<<<<< HEAD
 Button.btn-secondary:pressed,
+=======
+>>>>>>> origin/gestionTache
 .btn-secondary:pressed {
     -fx-scale-x: 0.97;
     -fx-scale-y: 0.97;
@@ -267,6 +323,7 @@ Button.btn-secondary:pressed,
     -fx-scale-y: 0.9;
 }
 
+<<<<<<< HEAD
 .btn-secondary {
     -fx-background-color: linear-gradient(to bottom, #ffffff, #f9fafb);
     -fx-text-fill: #374151;
@@ -289,6 +346,32 @@ Button.btn-secondary:pressed,
 }
 
 /* ==================== NOTIFICATION ==================== */
+=======
+.btn-weather {
+    -fx-background-color: linear-gradient(to right, #2672b5, #194f51);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 28;
+    -fx-padding: 12 24;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-graphic-text-gap: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0.2, 0, 2);
+}
+
+.btn-weather:hover {
+    -fx-opacity: 0.92;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.btn-weather:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* -------------------- NOTIFICATION -------------------- */
+>>>>>>> origin/gestionTache
 .notification-area {
     -fx-min-height: 0;
     -fx-pref-height: 0;
@@ -301,7 +384,11 @@ Button.btn-secondary:pressed,
     -fx-background-radius: 16;
     -fx-font-size: 14px;
     -fx-font-weight: 600;
+<<<<<<< HEAD
     -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.4), 20, 0, 0, 8);
+=======
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.35), 20, 0, 0, 8);
+>>>>>>> origin/gestionTache
     -fx-translate-y: -20;
     -fx-opacity: 0;
 }
@@ -310,7 +397,10 @@ Button.btn-secondary:pressed,
     -fx-translate-y: 0;
     -fx-opacity: 1;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/gestionTache
 /* ==================== STAT CARDS ==================== */
 /* ──── STAT CARDS ───────────────────────────────────────────── */
 
@@ -402,7 +492,11 @@ Button.btn-secondary:pressed,
     -fx-text-fill: rgba(255,255,255,0.65);
     -fx-font-size: 11px;
 }
+<<<<<<< HEAD
 /* ==================== FILTER BAR ==================== */
+=======
+/* -------------------- FILTER BAR -------------------- */
+>>>>>>> origin/gestionTache
 .filter-bar {
     -fx-background-color: linear-gradient(to right, rgba(255,255,255,0.9), rgba(254,242,242,0.9));
     -fx-background-radius: 24;
@@ -411,11 +505,18 @@ Button.btn-secondary:pressed,
     -fx-border-color: #fecaca;
     -fx-border-radius: 24;
     -fx-border-width: 2;
+<<<<<<< HEAD
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 16, 0, 0, 4);
 }
 
 .search-field,
 TextField.search-field {
+=======
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 16, 0, 0, 4);
+}
+
+.search-field {
+>>>>>>> origin/gestionTache
     -fx-background-color: white;
     -fx-background-radius: 16;
     -fx-border-color: #e5e7eb;
@@ -428,6 +529,7 @@ TextField.search-field {
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
+<<<<<<< HEAD
 .search-field:focused,
 TextField.search-field:focused {
     -fx-border-color: #f87171;
@@ -437,6 +539,15 @@ TextField.search-field:focused {
 
 .filter-combo,
 ComboBox.filter-combo {
+=======
+.search-field:focused {
+    -fx-border-color: #f87171;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.18), 16, 0, 0, 6);
+}
+
+.filter-combo {
+>>>>>>> origin/gestionTache
     -fx-background-color: white;
     -fx-background-radius: 16;
     -fx-border-color: #e5e7eb;
@@ -449,6 +560,7 @@ ComboBox.filter-combo {
     -fx-text-fill: #111827;
 }
 
+<<<<<<< HEAD
 .filter-combo:focused,
 ComboBox.filter-combo:focused {
     -fx-border-color: #f87171;
@@ -457,11 +569,23 @@ ComboBox.filter-combo:focused {
 
 .filter-combo .list-cell,
 ComboBox.filter-combo .list-cell {
+=======
+.filter-combo:focused {
+    -fx-border-color: #f87171;
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.12), 12, 0, 0, 4);
+}
+
+.filter-combo .list-cell {
+>>>>>>> origin/gestionTache
     -fx-padding: 8 12;
     -fx-text-fill: #111827;
 }
 
+<<<<<<< HEAD
 /* ==================== TASKS SECTIONS ==================== */
+=======
+/* -------------------- TASKS SECTIONS -------------------- */
+>>>>>>> origin/gestionTache
 .tasks-section {
     -fx-spacing: 16;
 }
@@ -531,7 +655,11 @@ ComboBox.filter-combo .list-cell {
     -fx-text-fill: #1e40af;
 }
 
+<<<<<<< HEAD
 /* ==================== TASKS CONTAINERS ==================== */
+=======
+/* -------------------- TASKS CONTAINERS -------------------- */
+>>>>>>> origin/gestionTache
 .tasks-container {
     -fx-background-radius: 24;
     -fx-border-radius: 24;
@@ -543,7 +671,11 @@ ComboBox.filter-combo .list-cell {
 .tasks-container-active {
     -fx-background-color: linear-gradient(to bottom, #ffffff, #fafbfc);
     -fx-border-color: #e5e7eb;
+<<<<<<< HEAD
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 24, 0, 0, 8);
+=======
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 24, 0, 0, 8);
+>>>>>>> origin/gestionTache
 }
 
 .tasks-container-archived {
@@ -552,21 +684,30 @@ ComboBox.filter-combo .list-cell {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 16, 0, 0, 4);
 }
 
+<<<<<<< HEAD
 .tasks-list,
 ListView.tasks-list {
+=======
+.tasks-list {
+>>>>>>> origin/gestionTache
     -fx-background-color: transparent;
     -fx-border-color: transparent;
     -fx-padding: 8;
     -fx-control-inner-background: transparent;
 }
 
+<<<<<<< HEAD
 .tasks-list .list-cell,
 ListView.tasks-list .list-cell {
+=======
+.tasks-list .list-cell {
+>>>>>>> origin/gestionTache
     -fx-background-color: transparent;
     -fx-padding: 6 0;
     -fx-text-fill: #111827;
 }
 
+<<<<<<< HEAD
 .tasks-list .list-cell:empty,
 ListView.tasks-list .list-cell:empty {
     -fx-padding: 0;
@@ -578,6 +719,17 @@ ListView.tasks-list .list-cell:filled:hover {
 }
 
 /* ==================== TASK ITEM CARDS ==================== */
+=======
+.tasks-list .list-cell:empty {
+    -fx-padding: 0;
+}
+
+.tasks-list .list-cell:filled:hover {
+    -fx-background-color: transparent;
+}
+
+/* -------------------- TASK ITEMS -------------------- */
+>>>>>>> origin/gestionTache
 .task-item {
     -fx-background-color: white;
     -fx-background-radius: 16;
@@ -587,13 +739,21 @@ ListView.tasks-list .list-cell:filled:hover {
     -fx-padding: 20;
     -fx-spacing: 16;
     -fx-cursor: hand;
+<<<<<<< HEAD
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 0, 2);
+=======
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 8, 0, 0, 2);
+>>>>>>> origin/gestionTache
 }
 
 .task-item:hover {
     -fx-border-color: #fca5a5;
     -fx-background-color: linear-gradient(to right, #ffffff, #fef2f2);
+<<<<<<< HEAD
     -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.15), 16, 0, 0, 6);
+=======
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.12), 16, 0, 0, 6);
+>>>>>>> origin/gestionTache
     -fx-translate-x: 4;
 }
 
@@ -690,7 +850,11 @@ ListView.tasks-list .list-cell:filled:hover {
     -fx-font-weight: 500;
 }
 
+<<<<<<< HEAD
 /* Badges */
+=======
+/* -------------------- BADGES -------------------- */
+>>>>>>> origin/gestionTache
 .task-badge {
     -fx-background-radius: 20;
     -fx-padding: 4 12;
@@ -742,8 +906,12 @@ ListView.tasks-list .list-cell:filled:hover {
     -fx-border-color: #94a3b8;
 }
 
+<<<<<<< HEAD
 /* Action Buttons */
 Button.task-btn,
+=======
+/* -------------------- ACTION BUTTONS -------------------- */
+>>>>>>> origin/gestionTache
 .task-btn {
     -fx-background-radius: 10;
     -fx-padding: 10 18;
@@ -757,67 +925,98 @@ Button.task-btn,
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
+<<<<<<< HEAD
 Button.task-btn-details,
+=======
+>>>>>>> origin/gestionTache
 .task-btn-details {
     -fx-background-color: linear-gradient(to bottom, #dbeafe, #bfdbfe);
     -fx-text-fill: #1e40af;
     -fx-border-color: #93c5fd;
 }
 
+<<<<<<< HEAD
 Button.task-btn-details:hover,
+=======
+>>>>>>> origin/gestionTache
 .task-btn-details:hover {
     -fx-background-color: linear-gradient(to bottom, #bfdbfe, #93c5fd);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
+<<<<<<< HEAD
 Button.task-btn-details:pressed,
+=======
+>>>>>>> origin/gestionTache
 .task-btn-details:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
+<<<<<<< HEAD
 Button.task-btn-edit,
+=======
+>>>>>>> origin/gestionTache
 .task-btn-edit {
     -fx-background-color: linear-gradient(to bottom, #fef3c7, #fde68a);
     -fx-text-fill: #92400e;
     -fx-border-color: #fcd34d;
 }
 
+<<<<<<< HEAD
 Button.task-btn-edit:hover,
+=======
+>>>>>>> origin/gestionTache
 .task-btn-edit:hover {
     -fx-background-color: linear-gradient(to bottom, #fde68a, #fcd34d);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
+<<<<<<< HEAD
 Button.task-btn-edit:pressed,
+=======
+>>>>>>> origin/gestionTache
 .task-btn-edit:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
+<<<<<<< HEAD
 Button.task-btn-delete,
+=======
+>>>>>>> origin/gestionTache
 .task-btn-delete {
     -fx-background-color: linear-gradient(to bottom, #fee2e2, #fecaca);
     -fx-text-fill: #dc2626;
     -fx-border-color: #fca5a5;
 }
 
+<<<<<<< HEAD
 Button.task-btn-delete:hover,
+=======
+>>>>>>> origin/gestionTache
 .task-btn-delete:hover {
     -fx-background-color: linear-gradient(to bottom, #fecaca, #fca5a5);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
+<<<<<<< HEAD
 Button.task-btn-delete:pressed,
+=======
+>>>>>>> origin/gestionTache
 .task-btn-delete:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
+<<<<<<< HEAD
 /* ==================== EMPTY STATE ==================== */
+=======
+/* -------------------- EMPTY STATE -------------------- */
+>>>>>>> origin/gestionTache
 .empty-state {
     -fx-alignment: center;
     -fx-padding: 60 40;
@@ -852,7 +1051,11 @@ Button.task-btn-delete:pressed,
     -fx-text-fill: #6b7280;
 }
 
+<<<<<<< HEAD
 /* ==================== SCROLLBAR STYLING ==================== */
+=======
+/* -------------------- SCROLLBARS -------------------- */
+>>>>>>> origin/gestionTache
 .scroll-bar:horizontal .track,
 .scroll-bar:vertical .track {
     -fx-background-color: transparent;
@@ -871,7 +1074,11 @@ Button.task-btn-delete:pressed,
     -fx-background-color: linear-gradient(to bottom, #ef4444, #dc2626);
 }
 
+<<<<<<< HEAD
 /* ==================== FOCUS STYLES ==================== */
+=======
+/* -------------------- FOCUS & SELECTION -------------------- */
+>>>>>>> origin/gestionTache
 .text-field:focused,
 .combo-box:focused,
 .button:focused {
@@ -879,7 +1086,10 @@ Button.task-btn-delete:pressed,
     -fx-faint-focus-color: transparent;
 }
 
+<<<<<<< HEAD
 /* ==================== SELECTION STYLES ==================== */
+=======
+>>>>>>> origin/gestionTache
 .list-view:focused .list-cell:filled:selected {
     -fx-background-color: transparent;
 }
@@ -887,5 +1097,28 @@ Button.task-btn-delete:pressed,
 .list-view:focused .list-cell:filled:selected .task-item {
     -fx-border-color: #dc2626;
     -fx-background-color: linear-gradient(to right, #ffffff, #fef2f2);
+<<<<<<< HEAD
     -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.25), 20, 0, 0, 8);
 }
+=======
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.22), 20, 0, 0, 8);
+}
+
+/* charts */
+
+.charts-section {
+    padding: 10 0 20 0;
+}
+
+.chart-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.chart {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 10;
+}
+
+>>>>>>> origin/gestionTache

@@ -4,10 +4,15 @@ import piJava.entities.suiviTache;
 import piJava.services.ICrud;
 import piJava.utils.MyDataBase;
 
+<<<<<<< HEAD
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+=======
+import java.sql.*;
+import java.time.LocalDateTime;
+>>>>>>> origin/gestionTache
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,4 +73,48 @@ public class SuiviTacheService implements ICrud<suiviTache> {
     }
 
 
+<<<<<<< HEAD
+=======
+    public List<suiviTache> getSuivisByUserSince(int userId, LocalDateTime since) {
+
+        List<suiviTache> st = new ArrayList<>();
+
+        String sql = "SELECT st.* FROM suivi_tache st " +
+                "JOIN tache t ON st.tache_id = t.id " +
+                "WHERE t.user_id = ? AND st.date_action >= ? " +
+                "ORDER BY st.date_action DESC";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, userId);
+
+            if (since != null) {
+                ps.setTimestamp(2, Timestamp.valueOf(since));
+            } else {
+                ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.MIN));
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                suiviTache s = new suiviTache();
+                s.setId(rs.getInt("id"));
+                s.setDateAction(rs.getTimestamp("date_action"));
+                s.setAncienStatut(rs.getString("ancien_statut"));
+                s.setNouveauStatut(rs.getString("nouveau_statut"));
+                s.setCommentaire(rs.getString("commentaire"));
+
+                s.setTache(new TacheService().showById(rs.getInt("tache_id")));
+
+                st.add(s);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
+            return new ArrayList<>();
+        }
+
+        return st;
+    }
+>>>>>>> origin/gestionTache
 }

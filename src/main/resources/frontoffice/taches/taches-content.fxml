@@ -8,6 +8,14 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.shape.Circle?>
 
+<<<<<<< HEAD
+=======
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.CategoryAxis?>
+>>>>>>> origin/gestionTache
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="piJava.Controllers.frontoffice.taches.TachesController"
       stylesheets="@taches.css"
@@ -28,10 +36,18 @@
         </HBox>
         <Region HBox.hgrow="ALWAYS"/>
         <HBox spacing="16" alignment="CENTER" styleClass="user-menu">
+<<<<<<< HEAD
             <StackPane styleClass="notification-btn">
                 <SVGPath content="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"
                          styleClass="notification-icon"/>
                 <Circle radius="4" styleClass="notification-dot"/>
+=======
+            <!-- HEADER (only the notification button changed) -->
+            <StackPane fx:id="notificationBtn" onMouseClicked="#toggleNotifications" styleClass="notification-btn">
+                <SVGPath content="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"
+                         styleClass="notification-icon"/>
+                <Circle fx:id="notificationDot" radius="4" styleClass="notification-dot" visible="false"/>
+>>>>>>> origin/gestionTache
             </StackPane>
             <HBox styleClass="user-profile">
                 <StackPane styleClass="avatar-container">
@@ -58,6 +74,13 @@
                     </HBox>
                     <Label text="Gestion de tâches académiques • ESPRIT Flow" styleClass="page-subtitle"/>
                 </VBox>
+<<<<<<< HEAD
+=======
+
+                <Button fx:id="btnWeather" text="🌤 Météo" onAction="#handleWeather" styleClass="btn-weather"/>
+                <Button fx:id="btnWeeklyAnalysis" text="📊 Analyse" onAction="#handleWeeklyAnalysis" styleClass="btn-weather"/>
+
+>>>>>>> origin/gestionTache
                 <Button fx:id="btnNewTask" text="Nouvelle tâche" onAction="#addTask" styleClass="btn-primary">
                     <graphic>
                         <StackPane styleClass="btn-icon-container">
@@ -70,10 +93,17 @@
             <ScrollPane fitToWidth="true" styleClass="custom-scroll" VBox.vgrow="ALWAYS">
                 <VBox spacing="28" styleClass="scroll-content">
 
+<<<<<<< HEAD
                     <!-- NOTIFICATION -->
                     <StackPane styleClass="notification-area">
                         <Label fx:id="notificationLabel" text="" styleClass="notification-toast" managed="false" visible="false"/>
                     </StackPane>
+=======
+                    <!-- NOTIFICATION AREA (hidden by default, controlled by controller) -->
+                    <HBox fx:id="notificationArea" alignment="CENTER" styleClass="notification-area" visible="false" managed="false">
+                        <ListView fx:id="notificationsList" prefHeight="220" styleClass="notifications-list"/>
+                    </HBox>
+>>>>>>> origin/gestionTache
 
                     <!-- STAT CARDS -->
                     <HBox spacing="16">
@@ -109,8 +139,57 @@
                             <Label text="Échéance proche" styleClass="card-sub"/>
                         </VBox>
                     </HBox>
+<<<<<<< HEAD
                     <!-- FILTER BAR -->
                     <HBox styleClass="filter-bar" spacing="16">
+=======
+
+                    <!-- CHARTS SECTION -->
+                    <VBox spacing="20" styleClass="charts-section">
+
+                        <Label text="📊 Analyse des tâches" styleClass="section-title"/>
+
+                        <HBox spacing="20">
+
+                            <!-- STATUS CHART -->
+                            <VBox HBox.hgrow="ALWAYS" spacing="8">
+                                <Label text="Répartition des statuts" styleClass="chart-title"/>
+                                <BarChart fx:id="statusChart" VBox.vgrow="ALWAYS">
+                                    <xAxis>
+                                        <CategoryAxis label="Statut"/>
+                                    </xAxis>
+                                    <yAxis>
+                                        <NumberAxis label="Nombre"/>
+                                    </yAxis>
+                                </BarChart>
+                            </VBox>
+
+                            <!-- PRIORITY CHART -->
+                            <VBox HBox.hgrow="ALWAYS" spacing="8">
+                                <Label text="Priorités" styleClass="chart-title"/>
+                                <PieChart fx:id="priorityChart" VBox.vgrow="ALWAYS"/>
+                            </VBox>
+
+                        </HBox>
+
+                        <!-- PROGRESS CHART -->
+                        <VBox spacing="8">
+                            <Label text="Évolution des tâches" styleClass="chart-title"/>
+                            <LineChart fx:id="progressChart" prefHeight="300">
+                                <xAxis>
+                                    <CategoryAxis label="Date"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis label="Tâches"/>
+                                </yAxis>
+                            </LineChart>
+                        </VBox>
+
+                    </VBox>
+
+                    <!-- FILTER BAR -->
+                    <HBox styleClass="filter-bar" spacing="16" alignment="CENTER_LEFT">
+>>>>>>> origin/gestionTache
                         <TextField fx:id="txtSearch" promptText="🔍 Rechercher une tâche..." HBox.hgrow="ALWAYS" styleClass="search-field"/>
 
                         <HBox spacing="12" styleClass="filter-group">
