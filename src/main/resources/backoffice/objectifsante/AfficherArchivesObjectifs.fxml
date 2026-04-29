@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="760.0" prefWidth="1400.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="piJava.Controllers.backoffice.objectifsante.AfficherArchivesObjectifsController"
+            stylesheets="@style.css"
+            style="-fx-background-color: #0d0f14;">
+
+    <top>
+        <HBox styleClass="top-bar" spacing="12">
+            <padding>
+                <Insets top="16" right="24" bottom="16" left="24"/>
+            </padding>
+            <children>
+                <VBox spacing="2">
+                    <children>
+                        <Label text="Esprit Flow" styleClass="top-bar-title"/>
+                        <Label text="Archives objectifs santé - Tous les utilisateurs" styleClass="top-bar-subtitle"/>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true"
+                    pannable="true"
+                    style="-fx-background: transparent; -fx-background-color: transparent;">
+
+            <content>
+                <VBox spacing="20" style="-fx-padding: 24;">
+                    <children>
+
+                        <HBox spacing="20" styleClass="hero-card">
+                            <children>
+                                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="🗂 Archives des objectifs santé" styleClass="hero-title"/>
+                                        <Label text="Consultez, modifiez, supprimez et visualisez les suivis des objectifs archivés de tous les utilisateurs."
+                                               wrapText="true"
+                                               styleClass="hero-subtitle"/>
+                                    </children>
+                                </VBox>
+                                <Label text="📦" styleClass="hero-sticker"/>
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <children>
+                                <Label text="Objectifs archivés" styleClass="label-title"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="lblNbArchives" text="0 archive(s)" styleClass="badge-blue"/>
+                                <Button text="Retour aux actifs"
+                                        styleClass="secondary-button"
+                                        onAction="#retourObjectifsActifs"/>
+                            </children>
+                        </HBox>
+
+                        <VBox styleClass="card" spacing="14">
+                            <children>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label text="📋 Liste des archives" styleClass="label-title"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Label text="Archives" styleClass="badge-blue"/>
+                                    </children>
+                                </HBox>
+
+                                <TableView fx:id="tableArchives"
+                                           prefHeight="460.0"
+                                           minHeight="460.0"
+                                           maxHeight="460.0">
+                                    <columns>
+                                        <TableColumn fx:id="colId" prefWidth="90.0" text="#"/>
+                                        <TableColumn fx:id="colUserId" prefWidth="110.0" text="ID Utilisateur"/>
+                                        <TableColumn fx:id="colUserNom" prefWidth="140.0" text="Nom"/>
+                                        <TableColumn fx:id="colUserPrenom" prefWidth="140.0" text="Prénom"/>
+                                        <TableColumn fx:id="colTitre" prefWidth="220.0" text="Objectif"/>
+                                        <TableColumn fx:id="colType" prefWidth="140.0" text="Catégorie"/>
+                                        <TableColumn fx:id="colValeurCible" prefWidth="110.0" text="Cible"/>
+                                        <TableColumn fx:id="colDateDebut" prefWidth="130.0" text="Début"/>
+                                        <TableColumn fx:id="colDateFin" prefWidth="130.0" text="Fin"/>
+                                        <TableColumn fx:id="colPriorite" prefWidth="120.0" text="Priorité"/>
+                                        <TableColumn fx:id="colStatut" prefWidth="140.0" text="Statut final"/>
+                                        <TableColumn fx:id="colArchivedAt" prefWidth="170.0" text="Archivé le"/>
+                                        <TableColumn fx:id="colActions" prefWidth="260.0" text="Actions"/>
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

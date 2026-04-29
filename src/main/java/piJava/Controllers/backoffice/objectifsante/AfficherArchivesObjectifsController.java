@@ -6,14 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -27,55 +20,23 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import java.sql.SQLException;
 
-public class AfficherObjectifsController {
+public class AfficherArchivesObjectifsController {
 
-    @FXML
-    private TableView<ObjectifSante> tableObjectifs;
-
-    @FXML
-    private TableColumn<ObjectifSante, Integer> colId;
-
-    @FXML
-    private TableColumn<ObjectifSante, Integer> colUserId;
-
-    @FXML
-    private TableColumn<ObjectifSante, String> colUserNom;
-
-    @FXML
-    private TableColumn<ObjectifSante, String> colUserPrenom;
-
-    @FXML
-    private TableColumn<ObjectifSante, String> colTitre;
-
-    @FXML
-    private TableColumn<ObjectifSante, String> colType;
-
-    @FXML
-    private TableColumn<ObjectifSante, Integer> colValeurCible;
-
-    @FXML
-    private TableColumn<ObjectifSante, java.sql.Date> colDateDebut;
-
-    @FXML
-    private TableColumn<ObjectifSante, java.sql.Date> colDateFin;
-
-    @FXML
-    private TableColumn<ObjectifSante, String> colPriorite;
-
-    @FXML
-    private TableColumn<ObjectifSante, String> colStatut;
-
-    @FXML
-    private TableColumn<ObjectifSante, Void> colActions;
-
-    @FXML
-    private TextField txtRecherche;
-
-    @FXML
-    private ComboBox<String> cbTri;
-
-    @FXML
-    private ComboBox<String> cbCategorie;
+    @FXML private TableView<ObjectifSante> tableArchives;
+    @FXML private TableColumn<ObjectifSante, Integer> colId;
+    @FXML private TableColumn<ObjectifSante, Integer> colUserId;
+    @FXML private TableColumn<ObjectifSante, String> colUserNom;
+    @FXML private TableColumn<ObjectifSante, String> colUserPrenom;
+    @FXML private TableColumn<ObjectifSante, String> colTitre;
+    @FXML private TableColumn<ObjectifSante, String> colType;
+    @FXML private TableColumn<ObjectifSante, Integer> colValeurCible;
+    @FXML private TableColumn<ObjectifSante, java.sql.Date> colDateDebut;
+    @FXML private TableColumn<ObjectifSante, java.sql.Date> colDateFin;
+    @FXML private TableColumn<ObjectifSante, String> colPriorite;
+    @FXML private TableColumn<ObjectifSante, String> colStatut;
+    @FXML private TableColumn<ObjectifSante, java.sql.Timestamp> colArchivedAt;
+    @FXML private TableColumn<ObjectifSante, Void> colActions;
+    @FXML private Label lblNbArchives;
 
     private SidebarController sidebarController;
     private StackPane contentArea;
@@ -101,43 +62,15 @@ public class AfficherObjectifsController {
         colDateFin.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
         colPriorite.setCellValueFactory(new PropertyValueFactory<>("priorite"));
         colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
+        colArchivedAt.setCellValueFactory(new PropertyValueFactory<>("archivedAt"));
 
         appliquerBadges();
         appliquerStylesColonnes();
         ajouterColonneActions();
 
-        cbTri.getItems().addAll("Par défaut", "Date début", "Priorité");
-        cbTri.setValue("Par défaut");
-
-        cbCategorie.getItems().addAll("Toutes", "SOMMEIL", "SPORT", "ALIMENTATION");
-        cbCategorie.setValue("Toutes");
-
-        txtRecherche.textProperty().addListener((obs, oldVal, newVal) -> appliquerRechercheEtTri());
-        cbTri.valueProperty().addListener((obs, oldVal, newVal) -> appliquerRechercheEtTri());
-        cbCategorie.valueProperty().addListener((obs, oldVal, newVal) -> appliquerRechercheEtTri());
-
-        chargerObjectifs();
+        chargerArchives();
     }
-    @FXML
-    public void ouvrirArchives() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/backoffice/objectifsante/AfficherArchivesObjectifs.fxml"));
-            Parent root = loader.load();
 
-            AfficherArchivesObjectifsController controller = loader.getController();
-            controller.setSidebarController(sidebarController);
-            controller.setContentArea(contentArea);
-            controller.chargerArchives();
-
-            if (contentArea != null) {
-                contentArea.getChildren().setAll(root);
-            }
-
-        } catch (Exception e) {
-            System.out.println("Erreur lors de l'ouverture des archives : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
     private void appliquerBadges() {
         colType.setCellFactory(column -> new TableCell<>() {
             private final Label badge = new Label();
@@ -163,7 +96,6 @@ public class AfficherObjectifsController {
 
                 setGraphic(badge);
                 setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         });
 
@@ -191,7 +123,6 @@ public class AfficherObjectifsController {
 
                 setGraphic(badge);
                 setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         });
 
@@ -211,7 +142,6 @@ public class AfficherObjectifsController {
                 badge.getStyleClass().setAll("table-badge");
 
                 switch (item.toUpperCase()) {
-                    case "EN_COURS" -> badge.getStyleClass().add("badge-status-progress");
                     case "ATTEINT" -> badge.getStyleClass().add("badge-status-done");
                     case "ABANDONNE" -> badge.getStyleClass().add("badge-status-cancel");
                     default -> badge.getStyleClass().add("badge-neutral-dark");
@@ -219,7 +149,6 @@ public class AfficherObjectifsController {
 
                 setGraphic(badge);
                 setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         });
     }
@@ -240,7 +169,6 @@ public class AfficherObjectifsController {
                 badge.getStyleClass().setAll("mini-badge-dark");
                 setGraphic(badge);
                 setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         });
 
@@ -259,7 +187,6 @@ public class AfficherObjectifsController {
                 badge.getStyleClass().setAll("mini-badge-steel");
                 setGraphic(badge);
                 setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         });
 
@@ -278,7 +205,6 @@ public class AfficherObjectifsController {
                 label.getStyleClass().setAll("cell-title-strong");
                 setGraphic(label);
                 setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         });
 
@@ -297,7 +223,6 @@ public class AfficherObjectifsController {
                 label.getStyleClass().setAll("cell-user-name");
                 setGraphic(label);
                 setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         });
 
@@ -316,7 +241,6 @@ public class AfficherObjectifsController {
                 label.getStyleClass().setAll("cell-user-firstname");
                 setGraphic(label);
                 setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         });
 
@@ -335,7 +259,6 @@ public class AfficherObjectifsController {
                 badge.getStyleClass().setAll("mini-badge-dark");
                 setGraphic(badge);
                 setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         });
 
@@ -354,7 +277,6 @@ public class AfficherObjectifsController {
                 badge.getStyleClass().setAll("date-badge-dark");
                 setGraphic(badge);
                 setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         });
 
@@ -373,7 +295,24 @@ public class AfficherObjectifsController {
                 badge.getStyleClass().setAll("date-badge-dark");
                 setGraphic(badge);
                 setText(null);
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            }
+        });
+
+        colArchivedAt.setCellFactory(column -> new TableCell<>() {
+            private final Label badge = new Label();
+
+            @Override
+            protected void updateItem(java.sql.Timestamp item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                    setText(null);
+                    return;
+                }
+                badge.setText(item.toLocalDateTime().toString().replace("T", " "));
+                badge.getStyleClass().setAll("mini-badge-steel");
+                setGraphic(badge);
+                setText(null);
             }
         });
     }
@@ -384,7 +323,6 @@ public class AfficherObjectifsController {
             private final Button btnVoirSuivis = new Button("👁");
             private final Button btnModifier = new Button("✎");
             private final Button btnSupprimer = new Button("✖");
-
             private final HBox container = new HBox(8, btnVoirSuivis, btnModifier, btnSupprimer);
 
             {
@@ -424,103 +362,9 @@ public class AfficherObjectifsController {
         });
     }
 
-    @FXML
-    public void ouvrirAjouterObjectif() {
+    private void ouvrirAfficherSuivisDepuisLigne(ObjectifSante objectifSelectionne) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/backoffice/objectifsante/AjouterObjectif.fxml"));
-            Parent root = loader.load();
-
-            AjouterObjectifController controller = loader.getController();
-            controller.setAfficherObjectifsController(this);
-
-            Stage stage = new Stage();
-            stage.setTitle("Nouvel objectif");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.showAndWait();
-
-            chargerObjectifs();
-
-        } catch (Exception e) {
-            System.out.println("Erreur lors de l'ouverture de la fenêtre d'ajout : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void supprimerObjectif() {
-        try {
-            ObjectifSante objectifSelectionne = tableObjectifs.getSelectionModel().getSelectedItem();
-
             if (objectifSelectionne == null) {
-                afficherMessage("Suppression", "Aucun objectif sélectionné.");
-                return;
-            }
-
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-            confirm.setTitle("Confirmer la suppression");
-            confirm.setHeaderText(null);
-            confirm.setContentText("Voulez-vous vraiment supprimer cet objectif actif ?");
-
-            ButtonType resultat = confirm.showAndWait().orElse(ButtonType.CANCEL);
-
-            if (resultat != ButtonType.OK) {
-                return;
-            }
-
-            ObjectifSanteService service = new ObjectifSanteService();
-            service.supprimer(objectifSelectionne.getId());
-            chargerObjectifs();
-
-            afficherMessage("Succès", "L'objectif a été supprimé avec succès.");
-
-        } catch (Exception e) {
-            System.out.println("Erreur lors de la suppression : " + e.getMessage());
-            e.printStackTrace();
-            afficherMessage("Erreur", "Erreur lors de la suppression de l'objectif.");
-        }
-    }
-
-    @FXML
-    public void ouvrirModifierObjectif() {
-        try {
-            ObjectifSante objectifSelectionne = tableObjectifs.getSelectionModel().getSelectedItem();
-
-            if (objectifSelectionne == null) {
-                System.out.println("Aucun objectif sélectionné pour modification.");
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/backoffice/objectifsante/ModifierObjectif.fxml"));
-            Parent root = loader.load();
-
-            ModifierObjectifController controller = loader.getController();
-            controller.setObjectif(objectifSelectionne);
-            controller.setAfficherObjectifsController(this);
-
-            Stage stage = new Stage();
-            stage.setTitle("Modifier objectif");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.showAndWait();
-
-            chargerObjectifs();
-
-        } catch (Exception e) {
-            System.out.println("Erreur lors de l'ouverture de la fenêtre de modification : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void ouvrirAfficherSuivis() {
-        try {
-            ObjectifSante objectifSelectionne = tableObjectifs.getSelectionModel().getSelectedItem();
-
-            if (objectifSelectionne == null) {
-                System.out.println("Aucun objectif sélectionné.");
                 return;
             }
 
@@ -548,30 +392,6 @@ public class AfficherObjectifsController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    private void ouvrirAfficherSuivisDepuisLigne(ObjectifSante objectifSelectionne) {
-        try {
-            if (objectifSelectionne == null) {
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/backoffice/suivibienetre/AfficherSuivis.fxml"));
-            Parent root = loader.load();
-
-            AfficherSuivisController controller = loader.getController();
-            controller.setObjectifId(objectifSelectionne.getId());
-            controller.setSidebarController(sidebarController);
-            controller.setContentArea(contentArea);
-
-            if (contentArea != null) {
-                contentArea.getChildren().setAll(root);
-            }
-
-        } catch (Exception e) {
-            System.out.println("Erreur lors de l'ouverture des suivis : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
     private void ouvrirModifierObjectifDepuisLigne(ObjectifSante objectifSelectionne) {
         try {
             if (objectifSelectionne == null) {
@@ -583,19 +403,19 @@ public class AfficherObjectifsController {
 
             ModifierObjectifController controller = loader.getController();
             controller.setObjectif(objectifSelectionne);
-            controller.setAfficherObjectifsController(this);
+            controller.setAfficherObjectifsController(null);
 
             Stage stage = new Stage();
-            stage.setTitle("Modifier objectif");
+            stage.setTitle("Modifier objectif archivé");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
             stage.showAndWait();
 
-            chargerObjectifs();
+            chargerArchives();
 
         } catch (Exception e) {
-            System.out.println("Erreur lors de l'ouverture de la fenêtre de modification : " + e.getMessage());
+            System.out.println("Erreur lors de l'ouverture de la modification archive : " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -609,7 +429,7 @@ public class AfficherObjectifsController {
             Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
             confirm.setTitle("Confirmer la suppression");
             confirm.setHeaderText(null);
-            confirm.setContentText("Voulez-vous vraiment supprimer cet objectif actif ?");
+            confirm.setContentText("Voulez-vous vraiment supprimer cet objectif archivé ?");
 
             ButtonType resultat = confirm.showAndWait().orElse(ButtonType.CANCEL);
 
@@ -619,59 +439,51 @@ public class AfficherObjectifsController {
 
             ObjectifSanteService service = new ObjectifSanteService();
             service.supprimer(objectifSelectionne.getId());
-            chargerObjectifs();
+            chargerArchives();
 
-            afficherMessage("Succès", "L'objectif a été supprimé avec succès.");
+            afficherMessage("Succès", "L'objectif archivé a été supprimé avec succès.");
 
         } catch (Exception e) {
-            System.out.println("Erreur lors de la suppression : " + e.getMessage());
+            System.out.println("Erreur lors de la suppression archive : " + e.getMessage());
             e.printStackTrace();
-            afficherMessage("Erreur", "Erreur lors de la suppression de l'objectif.");
+            afficherMessage("Erreur", "Erreur lors de la suppression de l'objectif archivé.");
         }
     }
     @FXML
-    public void appliquerRechercheEtTri() {
-        ObjectifSanteService service = new ObjectifSanteService();
-
+    public void retourObjectifsActifs() {
         try {
-            String recherche = txtRecherche.getText();
-            String categorie = cbCategorie.getValue();
-            String triSelection = cbTri.getValue();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/backoffice/objectifsante/AfficherObjectifs.fxml"));
+            Parent root = loader.load();
 
-            String tri = null;
-            if ("Date début".equals(triSelection)) {
-                tri = "date_debut";
-            } else if ("Priorité".equals(triSelection)) {
-                tri = "priorite";
+            AfficherObjectifsController controller = loader.getController();
+            controller.setSidebarController(sidebarController);
+            controller.setContentArea(contentArea);
+            controller.chargerObjectifs();
+
+            if (contentArea != null) {
+                contentArea.getChildren().setAll(root);
             }
 
-            ObservableList<ObjectifSante> objectifs = FXCollections.observableArrayList();
-            objectifs.addAll(service.rechercherEtTrierBack(recherche, categorie, tri));
-            tableObjectifs.setItems(objectifs);
-
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la recherche / tri des objectifs : " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur lors du retour aux objectifs actifs : " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    @FXML
-    public void reinitialiserFiltres() {
-        txtRecherche.clear();
-        cbCategorie.setValue("Toutes");
-        cbTri.setValue("Par défaut");
-        chargerObjectifs();
-    }
-
-    public void chargerObjectifs() {
+    public void chargerArchives() {
         ObjectifSanteService service = new ObjectifSanteService();
 
         try {
             ObservableList<ObjectifSante> objectifs = FXCollections.observableArrayList();
-            objectifs.addAll(service.recuperer());
-            tableObjectifs.setItems(objectifs);
+            objectifs.addAll(service.recupererArchivesBack());
+            tableArchives.setItems(objectifs);
+
+            if (lblNbArchives != null) {
+                lblNbArchives.setText(objectifs.size() + " archive(s)");
+            }
+
         } catch (SQLException e) {
-            System.out.println("Erreur lors du chargement des objectifs : " + e.getMessage());
+            System.out.println("Erreur lors du chargement des archives : " + e.getMessage());
             e.printStackTrace();
         }
     }

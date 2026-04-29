@@ -268,38 +268,54 @@ public class AfficherObjectifsController {
         colActions.setCellFactory(param -> new TableCell<>() {
 
             private final Button btnVoirSuivis = new Button("👁");
+            private final Button btnDetail = new Button("📄");
             private final Button btnModifier = new Button("✎");
             private final Button btnSupprimer = new Button("✖");
 
-            private final HBox container = new HBox(8, btnVoirSuivis, btnModifier, btnSupprimer);
+            private final HBox container = new HBox(8, btnVoirSuivis, btnDetail, btnModifier, btnSupprimer);
 
             {
                 btnVoirSuivis.getStyleClass().add("secondary-button");
+                btnDetail.getStyleClass().add("primary-button");
                 btnModifier.getStyleClass().add("primary-button");
                 btnSupprimer.getStyleClass().add("danger-button");
 
-                btnVoirSuivis.setMinWidth(45);
-                btnModifier.setMinWidth(45);
-                btnSupprimer.setMinWidth(45);
+                btnVoirSuivis.setMinWidth(42);
+                btnDetail.setMinWidth(42);
+                btnModifier.setMinWidth(42);
+                btnSupprimer.setMinWidth(42);
 
-                btnVoirSuivis.setPrefWidth(45);
-                btnModifier.setPrefWidth(45);
-                btnSupprimer.setPrefWidth(45);
+                btnVoirSuivis.setPrefWidth(42);
+                btnDetail.setPrefWidth(42);
+                btnModifier.setPrefWidth(42);
+                btnSupprimer.setPrefWidth(42);
 
-                btnVoirSuivis.setMaxWidth(45);
-                btnModifier.setMaxWidth(45);
-                btnSupprimer.setMaxWidth(45);
+                btnVoirSuivis.setMaxWidth(42);
+                btnDetail.setMaxWidth(42);
+                btnModifier.setMaxWidth(42);
+                btnSupprimer.setMaxWidth(42);
 
-                btnVoirSuivis.setStyle("-fx-font-size: 16px; -fx-padding: 4;");
-                btnModifier.setStyle("-fx-font-size: 16px; -fx-padding: 4;");
-                btnSupprimer.setStyle("-fx-font-size: 16px; -fx-padding: 4;");
+                btnVoirSuivis.setStyle("-fx-font-size: 15px; -fx-padding: 4;");
+                btnDetail.setStyle("-fx-font-size: 15px; -fx-padding: 4;");
+                btnModifier.setStyle("-fx-font-size: 15px; -fx-padding: 4;");
+                btnSupprimer.setStyle("-fx-font-size: 15px; -fx-padding: 4;");
 
-                container.setPrefWidth(160);
-                container.setMinWidth(160);
+                btnVoirSuivis.setTooltip(new Tooltip("Voir les suivis"));
+                btnDetail.setTooltip(new Tooltip("Voir le détail"));
+                btnModifier.setTooltip(new Tooltip("Modifier"));
+                btnSupprimer.setTooltip(new Tooltip("Supprimer"));
+
+                container.setPrefWidth(200);
+                container.setMinWidth(200);
 
                 btnVoirSuivis.setOnAction(event -> {
                     ObjectifSante objectif = getTableView().getItems().get(getIndex());
                     ouvrirAfficherSuivisDepuisLigne(objectif);
+                });
+
+                btnDetail.setOnAction(event -> {
+                    ObjectifSante objectif = getTableView().getItems().get(getIndex());
+                    ouvrirDetailObjectifDepuisLigne(objectif);
                 });
 
                 btnModifier.setOnAction(event -> {
@@ -345,20 +361,50 @@ public class AfficherObjectifsController {
             e.printStackTrace();
         }
     }
+    @FXML
+    public void ouvrirObjectifsArchives() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/frontoffice/objectifsante/AfficherArchivesObjectifs.fxml"));
+            Parent root = loader.load();
 
+            AfficherArchivesObjectifsController controller = loader.getController();
+            controller.setSidebarController(sidebarController);
+            controller.setContentArea(contentArea);
+            controller.chargerArchives();
+
+            if (contentArea != null) {
+                contentArea.getChildren().setAll(root);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            afficherMessage("Erreur", "Erreur lors de l'ouverture des archives.");
+        }
+    }
     @FXML
     public void supprimerObjectif() {
         try {
             ObjectifSante objectifSelectionne = tableObjectifs.getSelectionModel().getSelectedItem();
 
             if (objectifSelectionne == null) {
-                System.out.println("Aucun objectif sélectionné.");
+                afficherMessage("Suppression", "Aucun objectif sélectionné.");
+                return;
+            }
+
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirmer la suppression");
+            confirm.setHeaderText(null);
+            confirm.setContentText("Voulez-vous vraiment supprimer cet objectif actif ?");
+
+            ButtonType resultat = confirm.showAndWait().orElse(ButtonType.CANCEL);
+
+            if (resultat != ButtonType.OK) {
                 return;
             }
 
             user currentUser = SessionManager.getInstance().getCurrentUser();
             if (currentUser == null) {
-                System.out.println("Aucun utilisateur connecté.");
+                afficherMessage("Session", "Aucun utilisateur connecté.");
                 return;
             }
 
@@ -367,13 +413,15 @@ public class AfficherObjectifsController {
 
             if (success) {
                 chargerObjectifs();
+                afficherMessage("Succès", "L'objectif a été supprimé avec succès.");
             } else {
-                System.out.println("Suppression refusée.");
+                afficherMessage("Suppression refusée", "Vous ne pouvez pas supprimer cet objectif.");
             }
 
         } catch (Exception e) {
             System.out.println("Erreur lors de la suppression : " + e.getMessage());
             e.printStackTrace();
+            afficherMessage("Erreur", "Erreur lors de la suppression de l'objectif.");
         }
     }
 
@@ -383,13 +431,13 @@ public class AfficherObjectifsController {
             ObjectifSante objectifSelectionne = tableObjectifs.getSelectionModel().getSelectedItem();
 
             if (objectifSelectionne == null) {
-                System.out.println("Aucun objectif sélectionné pour modification.");
+                afficherMessage("Modification", "Aucun objectif sélectionné pour modification.");
                 return;
             }
 
             user currentUser = SessionManager.getInstance().getCurrentUser();
             if (currentUser == null) {
-                System.out.println("Aucun utilisateur connecté.");
+                afficherMessage("Session", "Aucun utilisateur connecté.");
                 return;
             }
 
@@ -397,7 +445,7 @@ public class AfficherObjectifsController {
             ObjectifSante objectifSecure = service.recupererParIdEtUser(objectifSelectionne.getId(), currentUser.getId());
 
             if (objectifSecure == null) {
-                System.out.println("Accès refusé à cet objectif.");
+                afficherMessage("Accès refusé", "Vous n'avez pas accès à cet objectif.");
                 return;
             }
 
@@ -421,6 +469,7 @@ public class AfficherObjectifsController {
         } catch (Exception e) {
             System.out.println("Erreur lors de l'ouverture de la fenêtre de modification : " + e.getMessage());
             e.printStackTrace();
+            afficherMessage("Erreur", "Erreur lors de l'ouverture de la fenêtre de modification.");
         }
     }
 
@@ -430,13 +479,13 @@ public class AfficherObjectifsController {
             ObjectifSante objectifSelectionne = tableObjectifs.getSelectionModel().getSelectedItem();
 
             if (objectifSelectionne == null) {
-                System.out.println("Aucun objectif sélectionné.");
+                afficherMessage("Suivis", "Aucun objectif sélectionné.");
                 return;
             }
 
             user currentUser = SessionManager.getInstance().getCurrentUser();
             if (currentUser == null) {
-                System.out.println("Aucun utilisateur connecté.");
+                afficherMessage("Session", "Aucun utilisateur connecté.");
                 return;
             }
 
@@ -444,7 +493,7 @@ public class AfficherObjectifsController {
             ObjectifSante objectifSecure = service.recupererParIdEtUser(objectifSelectionne.getId(), currentUser.getId());
 
             if (objectifSecure == null) {
-                System.out.println("Accès refusé à cet objectif.");
+                afficherMessage("Accès refusé", "Vous n'avez pas accès à cet objectif.");
                 return;
             }
 
@@ -463,6 +512,7 @@ public class AfficherObjectifsController {
         } catch (Exception e) {
             System.out.println("Erreur lors de l'ouverture des suivis : " + e.getMessage());
             e.printStackTrace();
+            afficherMessage("Erreur", "Erreur lors de l'ouverture des suivis.");
         }
     }
 
@@ -474,7 +524,7 @@ public class AfficherObjectifsController {
 
             user currentUser = SessionManager.getInstance().getCurrentUser();
             if (currentUser == null) {
-                System.out.println("Aucun utilisateur connecté.");
+                afficherMessage("Session", "Aucun utilisateur connecté.");
                 return;
             }
 
@@ -482,7 +532,7 @@ public class AfficherObjectifsController {
             ObjectifSante objectifSecure = service.recupererParIdEtUser(objectifSelectionne.getId(), currentUser.getId());
 
             if (objectifSecure == null) {
-                System.out.println("Accès refusé à cet objectif.");
+                afficherMessage("Accès refusé", "Vous n'avez pas accès à cet objectif.");
                 return;
             }
 
@@ -501,6 +551,47 @@ public class AfficherObjectifsController {
         } catch (Exception e) {
             System.out.println("Erreur lors de l'ouverture des suivis : " + e.getMessage());
             e.printStackTrace();
+            afficherMessage("Erreur", "Erreur lors de l'ouverture des suivis.");
+        }
+    }
+
+    private void ouvrirDetailObjectifDepuisLigne(ObjectifSante objectifSelectionne) {
+        try {
+            if (objectifSelectionne == null) {
+                afficherMessage("Détail objectif", "Aucun objectif sélectionné.");
+                return;
+            }
+
+            user currentUser = SessionManager.getInstance().getCurrentUser();
+            if (currentUser == null) {
+                afficherMessage("Session", "Aucun utilisateur connecté.");
+                return;
+            }
+
+            ObjectifSanteService service = new ObjectifSanteService();
+            ObjectifSante objectifSecure = service.recupererParIdEtUser(objectifSelectionne.getId(), currentUser.getId());
+
+            if (objectifSecure == null) {
+                afficherMessage("Accès refusé", "Vous n'avez pas accès à cet objectif.");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/frontoffice/objectifsante/DetailObjectif.fxml"));
+            Parent root = loader.load();
+
+            DetailObjectifController controller = loader.getController();
+            controller.setObjectif(objectifSecure);
+            controller.setSidebarController(sidebarController);
+            controller.setContentArea(contentArea);
+
+            if (contentArea != null) {
+                contentArea.getChildren().setAll(root);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'ouverture du détail objectif : " + e.getMessage());
+            e.printStackTrace();
+            afficherMessage("Erreur", "Erreur lors de l'ouverture du détail objectif.");
         }
     }
 
@@ -512,7 +603,7 @@ public class AfficherObjectifsController {
 
             user currentUser = SessionManager.getInstance().getCurrentUser();
             if (currentUser == null) {
-                System.out.println("Aucun utilisateur connecté.");
+                afficherMessage("Session", "Aucun utilisateur connecté.");
                 return;
             }
 
@@ -520,7 +611,7 @@ public class AfficherObjectifsController {
             ObjectifSante objectifSecure = service.recupererParIdEtUser(objectifSelectionne.getId(), currentUser.getId());
 
             if (objectifSecure == null) {
-                System.out.println("Accès refusé à cet objectif.");
+                afficherMessage("Accès refusé", "Vous n'avez pas accès à cet objectif.");
                 return;
             }
 
@@ -544,6 +635,7 @@ public class AfficherObjectifsController {
         } catch (Exception e) {
             System.out.println("Erreur lors de l'ouverture de la fenêtre de modification : " + e.getMessage());
             e.printStackTrace();
+            afficherMessage("Erreur", "Erreur lors de l'ouverture de la fenêtre de modification.");
         }
     }
 
@@ -553,9 +645,20 @@ public class AfficherObjectifsController {
                 return;
             }
 
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirmer la suppression");
+            confirm.setHeaderText(null);
+            confirm.setContentText("Voulez-vous vraiment supprimer cet objectif actif ?");
+
+            ButtonType resultat = confirm.showAndWait().orElse(ButtonType.CANCEL);
+
+            if (resultat != ButtonType.OK) {
+                return;
+            }
+
             user currentUser = SessionManager.getInstance().getCurrentUser();
             if (currentUser == null) {
-                System.out.println("Aucun utilisateur connecté.");
+                afficherMessage("Session", "Aucun utilisateur connecté.");
                 return;
             }
 
@@ -564,14 +667,24 @@ public class AfficherObjectifsController {
 
             if (success) {
                 chargerObjectifs();
+                afficherMessage("Succès", "L'objectif a été supprimé avec succès.");
             } else {
-                System.out.println("Suppression refusée.");
+                afficherMessage("Suppression refusée", "Vous ne pouvez pas supprimer cet objectif.");
             }
 
         } catch (Exception e) {
             System.out.println("Erreur lors de la suppression : " + e.getMessage());
             e.printStackTrace();
+            afficherMessage("Erreur", "Erreur lors de la suppression de l'objectif.");
         }
+    }
+
+    private void afficherMessage(String titre, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML

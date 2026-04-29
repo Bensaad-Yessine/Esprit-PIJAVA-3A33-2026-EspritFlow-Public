@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+
+<BorderPane prefHeight="760.0" prefWidth="1500.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="piJava.Controllers.frontoffice.objectifsante.DetailObjectifController"
+            stylesheets="@style.css"
+            style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F5F5F6, rgba(253, 120, 120, 0.94));">
+
+    <top>
+        <HBox styleClass="top-bar" spacing="12" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="16" right="24" bottom="16" left="24"/>
+            </padding>
+            <children>
+                <Button text="← Retour"
+                        onAction="#retourListeObjectifs"
+                        styleClass="secondary-button"/>
+
+                <VBox spacing="2">
+                    <children>
+                        <Label text="Esprit Flow" styleClass="top-bar-title"/>
+                        <Label text="Détail objectif santé" styleClass="top-bar-subtitle"/>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true"
+                    pannable="true"
+                    style="-fx-background: transparent; -fx-background-color: transparent;">
+            <content>
+                <VBox spacing="20" style="-fx-padding: 24;">
+                    <children>
+
+                        <HBox spacing="20" styleClass="hero-card">
+                            <children>
+                                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="📄 Détail de l'objectif sélectionné" styleClass="hero-title"/>
+                                        <Label text="Informations complètes, statistiques graphiques et coaching intelligent."
+                                               wrapText="true"
+                                               styleClass="hero-subtitle"/>
+                                    </children>
+                                </VBox>
+                                <Label text="🎯" styleClass="hero-sticker"/>
+                            </children>
+                        </HBox>
+
+                        <HBox spacing="16">
+                            <children>
+                                <VBox spacing="6" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="📌 Titre" styleClass="stat-title"/>
+                                        <Label fx:id="lblTitre" styleClass="stat-value"/>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="6" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="📊 Type" styleClass="stat-title"/>
+                                        <Label fx:id="lblType" styleClass="stat-value"/>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="6" styleClass="stat-card" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="🎯 Cible" styleClass="stat-title"/>
+                                        <Label fx:id="lblValeurCible" styleClass="stat-value"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox spacing="16">
+                            <children>
+                                <VBox spacing="8" styleClass="card" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Informations objectif" styleClass="label-title"/>
+
+                                        <HBox spacing="20">
+                                            <children>
+                                                <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="Date début" styleClass="stat-title"/>
+                                                        <Label fx:id="lblDateDebut" styleClass="detail-value"/>
+
+                                                        <Label text="Date fin" styleClass="stat-title"/>
+                                                        <Label fx:id="lblDateFin" styleClass="detail-value"/>
+                                                    </children>
+                                                </VBox>
+
+                                                <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="Priorité" styleClass="stat-title"/>
+                                                        <Label fx:id="lblPriorite" styleClass="detail-value"/>
+
+                                                        <Label text="Statut" styleClass="stat-title"/>
+                                                        <Label fx:id="lblStatut" styleClass="detail-value"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="8" styleClass="card" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Résumé suivis" styleClass="label-title"/>
+                                        <Label text="Nombre de suivis" styleClass="stat-title"/>
+                                        <Label fx:id="lblNombreSuivis" styleClass="detail-value"/>
+                                        <Label text="Score moyen" styleClass="stat-title"/>
+                                        <Label fx:id="lblScoreMoyen" styleClass="detail-value"/>
+                                        <Label text="3 derniers suivis" styleClass="stat-title"/>
+                                        <ListView fx:id="listDerniersSuivis" prefHeight="140.0"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- 3 graphes sur la même ligne -->
+                        <HBox spacing="16">
+                            <children>
+
+                                <VBox spacing="10" styleClass="card chart-card" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="📈 Évolution du score" styleClass="label-title"/>
+                                        <Label fx:id="lblStatScoreDetail" styleClass="chart-detail-label"/>
+                                        <LineChart fx:id="lineChartScore"
+                                                   animated="false"
+                                                   createSymbols="true"
+                                                   legendVisible="false"
+                                                   prefHeight="320.0">
+                                            <xAxis>
+                                                <CategoryAxis label="Date"/>
+                                            </xAxis>
+                                            <yAxis>
+                                                <NumberAxis label="Score" lowerBound="0.0" upperBound="100.0" tickUnit="10.0"/>
+                                            </yAxis>
+                                        </LineChart>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="10" styleClass="card chart-card" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="📊 Moyenne des indicateurs" styleClass="label-title"/>
+                                        <Label fx:id="lblStatIndicateursDetail" styleClass="chart-detail-label"/>
+                                        <BarChart fx:id="barChartIndicateurs"
+                                                  animated="false"
+                                                  legendVisible="false"
+                                                  categoryGap="18.0"
+                                                  barGap="8.0"
+                                                  prefHeight="320.0">
+                                            <xAxis>
+                                                <CategoryAxis label="Indicateur"/>
+                                            </xAxis>
+                                            <yAxis>
+                                                <NumberAxis label="Valeur /10" lowerBound="0.0" upperBound="10.0" tickUnit="1.0"/>
+                                            </yAxis>
+                                        </BarChart>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="10" styleClass="card chart-card" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="😊 Répartition des humeurs" styleClass="label-title"/>
+                                        <Label fx:id="lblStatHumeurDetail" styleClass="chart-detail-label"/>
+                                        <PieChart fx:id="pieChartHumeurs"
+                                                  clockwise="true"
+                                                  labelsVisible="true"
+                                                  legendVisible="false"
+                                                  prefHeight="320.0"/>
+                                    </children>
+                                </VBox>
+
+                            </children>
+                        </HBox>
+                        <VBox spacing="14" styleClass="card">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="12">
+                                    <children>
+                                        <Label text="🍽 Recettes recommandées" styleClass="label-title"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Button fx:id="btnProposerRecette"
+                                                text="Proposer une recette saine"
+                                                onAction="#proposerRecetteSaine"
+                                                styleClass="primary-button"/>
+                                    </children>
+                                </HBox>
+
+                                <Label text="Cette recommandation est basée sur votre objectif alimentation et votre dernier suivi bien-être."
+                                       wrapText="true"
+                                       styleClass="special-block-subtitle"/>
+
+                                <Label fx:id="lblRecetteMessage"
+                                       text="Cliquez sur le bouton pour afficher des recettes adaptées."
+                                       wrapText="true"
+                                       styleClass="chart-detail-label"/>
+
+                                <VBox fx:id="boxRecettes" spacing="12"/>
+                            </children>
+                        </VBox>
+                        <VBox spacing="14" styleClass="card">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="12">
+                                    <children>
+                                        <Label text="🏋️ Exercices recommandés" styleClass="label-title"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Button fx:id="btnProposerExercices"
+                                                text="Proposer des exercices"
+                                                onAction="#proposerExercicesSport"
+                                                styleClass="primary-button"/>
+                                    </children>
+                                </HBox>
+
+                                <Label text="Cette recommandation est basée sur votre objectif sport et votre dernier suivi bien-être."
+                                       wrapText="true"
+                                       styleClass="special-block-subtitle"/>
+
+                                <Label fx:id="lblExerciceMessage"
+                                       text="Cliquez sur le bouton pour afficher des exercices adaptés."
+                                       wrapText="true"
+                                       styleClass="chart-detail-label"/>
+
+                                <VBox fx:id="boxExercices" spacing="12"/>
+                            </children>
+                        </VBox>
+                        <VBox spacing="14" styleClass="card">
+                            <children>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label text="🤖 Coaching intelligent" styleClass="label-title"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Label fx:id="lblCoachingNiveau" text="MEDIUM" styleClass="badge-blue"/>
+                                    </children>
+                                </HBox>
+
+                                <HBox spacing="16">
+                                    <children>
+                                        <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label text="Titre du coaching" styleClass="stat-title"/>
+                                                <Label fx:id="lblCoachingTitre" styleClass="detail-big-value" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label text="Tendance" styleClass="stat-title"/>
+                                                <Label fx:id="lblTendance" styleClass="detail-big-value" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <VBox spacing="12"
+                                      maxWidth="1.7976931348623157E308"
+                                      styleClass="special-block-card confiance-block">
+                                    <children>
+                                        <Label text="✨ " styleClass="message-card-title"/>
+                                        <Label fx:id="lblMessageMotivation"
+                                               wrapText="true"
+                                               maxWidth="1.7976931348623157E308"
+                                               styleClass="confidence-message"/>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="12" styleClass="message-card analyse-card">
+                                    <children>
+                                        <Label text="📊 Analyse " styleClass="message-card-title"/>
+                                        <Label fx:id="lblResumeAnalyse"
+                                               wrapText="true"
+                                               maxWidth="1.7976931348623157E308"
+                                               styleClass="message-card-text"/>
+                                    </children>
+                                </VBox>
+
+                                <HBox spacing="20">
+                                    <children>
+                                        <VBox spacing="10"
+                                              HBox.hgrow="ALWAYS"
+                                              style="-fx-background-color: #f7fff9; -fx-border-color: #bde8c7; -fx-border-radius: 18; -fx-background-radius: 18; -fx-padding: 18;">
+                                            <children>
+                                                <Label text="✅ Point fort"
+                                                       style="-fx-font-size: 16px; -fx-font-weight: 800; -fx-text-fill: #1f2937;"/>
+                                                <Label fx:id="lblPointFort"
+                                                       wrapText="true"
+                                                       maxWidth="1.7976931348623157E308"
+                                                       minHeight="60.0"
+                                                       style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #0f7a34; -fx-background-color: #dff6e5; -fx-background-radius: 14; -fx-padding: 12 14 12 14;"/>
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="10"
+                                              HBox.hgrow="ALWAYS"
+                                              style="-fx-background-color: #fff8f8; -fx-border-color: #f3c6c6; -fx-border-radius: 18; -fx-background-radius: 18; -fx-padding: 18;">
+                                            <children>
+                                                <Label text="⚠ Point à améliorer"
+                                                       style="-fx-font-size: 16px; -fx-font-weight: 800; -fx-text-fill: #1f2937;"/>
+                                                <Label fx:id="lblPointFaible"
+                                                       wrapText="true"
+                                                       maxWidth="1.7976931348623157E308"
+                                                       minHeight="60.0"
+                                                       style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #cf2020; -fx-background-color: #fde3e3; -fx-background-radius: 14; -fx-padding: 12 14 12 14;"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <VBox spacing="12" styleClass="special-block-card objectif-conseils-block">
+                                    <children>
+                                        <Label text="🎯 Conseils pour votre objectif" styleClass="special-block-title"/>
+                                        <Label text="Recommandations directement liées au type de votre objectif santé."
+                                               styleClass="special-block-subtitle"/>
+                                        <VBox fx:id="boxConseils" spacing="12"/>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="12" styleClass="special-block-card faibles-conseils-block">
+                                    <children>
+                                        <Label text="📌 Conseils pour les niveaux faibles" styleClass="special-block-title"/>
+                                        <Label text="Conseils ciblés pour les indicateurs qui demandent encore une amélioration."
+                                               styleClass="special-block-subtitle"/>
+                                        <VBox fx:id="boxConseilsFaibles" spacing="12"/>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="12" styleClass="special-block-card confiance-block">
+                                    <children>
+                                        <Label text="💬" styleClass="special-block-title"/>
+                                        <Label fx:id="lblMessageConfiance" wrapText="true" styleClass="confidence-message"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>
