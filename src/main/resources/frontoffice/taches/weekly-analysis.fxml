@@ -8,201 +8,420 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="piJava.Controllers.frontoffice.taches.BehaviorAnalysisController"
             stylesheets="@weekly-analysis.css"
-            prefHeight="700.0" prefWidth="900.0"
+            prefHeight="750.0" prefWidth="980.0"
             styleClass="root-pane">
 
     <children>
 
-        <VBox spacing="0" layoutX="0" layoutY="0"
-              prefWidth="900.0" prefHeight="700.0"
-              styleClass="main-container">
+        <VBox spacing="0" prefWidth="980" prefHeight="750" styleClass="main-container">
 
-            <!-- Header Section -->
-            <HBox styleClass="header-section" alignment="CENTER_LEFT" spacing="15">
+            <!-- ============================================
+                 HEADER - Premium Gradient with Icons
+                 ============================================ -->
+            <HBox styleClass="header-section" alignment="CENTER_LEFT" spacing="18">
+
                 <padding>
-                    <Insets top="25" right="30" bottom="25" left="30"/>
+                    <Insets top="28" right="36" bottom="28" left="36"/>
                 </padding>
-                <VBox spacing="5">
-                    <Label text="📊 Analyse Hebdomadaire de Performance"
+
+                <StackPane style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 16;
+                                   -fx-min-width: 56; -fx-min-height: 56; -fx-max-width: 56; -fx-max-height: 56;
+                                   -fx-border-color: rgba(255,255,255,0.3); -fx-border-radius: 16; -fx-border-width: 1;">
+                    <Label text="📊" style="-fx-font-size: 28px;"/>
+                </StackPane>
+
+                <VBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="Analyse Hebdomadaire de Performance"
                            styleClass="main-title"/>
-                    <Label text="Analyse détaillée de votre productivité et comportement d'étude"
-                           styleClass="subtitle"/>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="⚡ Insights intelligents sur votre productivité"
+                               styleClass="subtitle"/>
+                        <Label text="● EN DIRECT"
+                               style="-fx-font-size: 11px; -fx-text-fill: #00f2fe; -fx-font-weight: bold;
+                                      -fx-background-color: rgba(0,242,254,0.15); -fx-background-radius: 12;
+                                      -fx-padding: 3 10;"/>
+                    </HBox>
                 </VBox>
+
                 <Region HBox.hgrow="ALWAYS"/>
+
                 <Label fx:id="loadingLabel"
-                       text="Chargement..."
+                       text="⏳ Chargement..."
                        styleClass="loading-indicator"/>
             </HBox>
 
-            <!-- Content Area -->
-            <ScrollPane fitToWidth="true" fitToHeight="true"
+            <!-- ============================================
+                 CONTENT AREA
+                 ============================================ -->
+            <ScrollPane fitToWidth="true"
                         styleClass="content-scroll"
                         VBox.vgrow="ALWAYS">
-                <VBox spacing="20" styleClass="content-container">
+
+                <VBox spacing="24" styleClass="content-container">
+
                     <padding>
-                        <Insets top="20" right="30" bottom="20" left="30"/>
+                        <Insets top="24" right="36" bottom="24" left="36"/>
                     </padding>
 
-                    <!-- Statistics Overview Cards -->
-                    <Label text="Vue d'ensemble des statistiques"
-                           styleClass="section-title"/>
+                    <!-- ============================================
+                         STATS SECTION TITLE
+                         ============================================ -->
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <StackPane style="-fx-background-color: linear-gradient(to right, #4facfe, #00f2fe);
+                                           -fx-background-radius: 10; -fx-min-width: 36; -fx-min-height: 36;">
+                            <Label text="📈" style="-fx-font-size: 18px;"/>
+                        </StackPane>
+                        <Label text="Vue d'ensemble"
+                               styleClass="section-title"/>
+                    </HBox>
 
-                    <HBox spacing="15" alignment="CENTER" styleClass="stats-container">
-                        <VBox spacing="15" HBox.hgrow="ALWAYS">
-                            <!-- Completion Rate Card -->
+                    <!-- ============================================
+                         STATS GRID - 2x2 Layout
+                         ============================================ -->
+                    <HBox spacing="20" alignment="CENTER">
+
+                        <!-- LEFT COLUMN -->
+                        <VBox spacing="20" HBox.hgrow="ALWAYS">
+
+                            <!-- Completion Rate -->
                             <VBox styleClass="stat-card">
                                 <padding>
-                                    <Insets top="20" right="20" bottom="20" left="20"/>
+                                    <Insets top="22" right="22" bottom="22" left="22"/>
                                 </padding>
-                                <Label text="✅ Taux de Complétion" styleClass="stat-label"/>
-                                <HBox alignment="BASELINE_LEFT" spacing="5">
-                                    <Label fx:id="completionRateValue" text="0%" styleClass="stat-value"/>
-                                    <Label fx:id="completionRateTrend" text="↑" styleClass="stat-trend positive"/>
+
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <StackPane style="-fx-background-color: linear-gradient(from 0% 100% to 100% 0%, #10b981, #34d399);
+                                                       -fx-background-radius: 12; -fx-min-width: 36; -fx-min-height: 36;">
+                                        <Label text="🔥" style="-fx-font-size: 18px;"/>
+                                    </StackPane>
+                                    <Label text="Taux de Complétion" styleClass="stat-label"/>
                                 </HBox>
-                                <ProgressBar fx:id="completionRateBar" progress="0"
-                                             maxWidth="Infinity" styleClass="progress-bar-completion"/>
-                                <Label fx:id="completionRateDesc" text="Tâches terminées avec succès"
+
+                                <HBox spacing="10" alignment="BASELINE_LEFT" style="-fx-padding: 12 0 8 0;">
+                                    <Label fx:id="completionRateValue"
+                                           text="0%"
+                                           styleClass="stat-value"/>
+                                    <Label fx:id="completionRateTrend"
+                                           text="↑ 12%"
+                                           styleClass="stat-trend positive"/>
+                                </HBox>
+
+                                <ProgressBar fx:id="completionRateBar"
+                                             progress="0"
+                                             maxWidth="Infinity"
+                                             styleClass="progress-bar-completion"/>
+
+                                <Label fx:id="completionRateDesc"
+                                       text="Tâches terminées avec succès cette semaine"
                                        styleClass="stat-description"/>
                             </VBox>
 
-                            <!-- Average Start Delay Card -->
+                            <!-- Start Delay -->
                             <VBox styleClass="stat-card">
                                 <padding>
-                                    <Insets top="20" right="20" bottom="20" left="20"/>
+                                    <Insets top="22" right="22" bottom="22" left="22"/>
                                 </padding>
-                                <Label text="⏱️ Délai de Démarrage" styleClass="stat-label"/>
-                                <HBox alignment="BASELINE_LEFT" spacing="5">
-                                    <Label fx:id="startDelayValue" text="0 min" styleClass="stat-value"/>
-                                    <Label fx:id="startDelayTrend" text="↓" styleClass="stat-trend positive"/>
+
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <StackPane style="-fx-background-color: linear-gradient(from 0% 100% to 100% 0%, #f59e0b, #fbbf24);
+                                                       -fx-background-radius: 12; -fx-min-width: 36; -fx-min-height: 36;">
+                                        <Label text="⏱️" style="-fx-font-size: 18px;"/>
+                                    </StackPane>
+                                    <Label text="Délai de Démarrage" styleClass="stat-label"/>
                                 </HBox>
-                                <ProgressBar fx:id="startDelayBar" progress="0"
-                                             maxWidth="Infinity" styleClass="progress-bar-delay"/>
-                                <Label fx:id="startDelayDesc" text="Temps moyen avant de commencer"
+
+                                <HBox spacing="10" alignment="BASELINE_LEFT" style="-fx-padding: 12 0 8 0;">
+                                    <Label fx:id="startDelayValue"
+                                           text="0 min"
+                                           styleClass="stat-value"/>
+                                    <Label fx:id="startDelayTrend"
+                                           text="↓ 5 min"
+                                           styleClass="stat-trend positive"/>
+                                </HBox>
+
+                                <ProgressBar fx:id="startDelayBar"
+                                             progress="0"
+                                             maxWidth="Infinity"
+                                             styleClass="progress-bar-delay"/>
+
+                                <Label fx:id="startDelayDesc"
+                                       text="Temps moyen avant de commencer une tâche"
                                        styleClass="stat-description"/>
                             </VBox>
+
                         </VBox>
 
-                        <VBox spacing="15" HBox.hgrow="ALWAYS">
-                            <!-- Abandonment Rate Card -->
+                        <!-- RIGHT COLUMN -->
+                        <VBox spacing="20" HBox.hgrow="ALWAYS">
+
+                            <!-- Abandonment Rate -->
                             <VBox styleClass="stat-card">
                                 <padding>
-                                    <Insets top="20" right="20" bottom="20" left="20"/>
+                                    <Insets top="22" right="22" bottom="22" left="22"/>
                                 </padding>
-                                <Label text="⚠️ Taux d'Abandon" styleClass="stat-label"/>
-                                <HBox alignment="BASELINE_LEFT" spacing="5">
-                                    <Label fx:id="abandonmentRateValue" text="0%" styleClass="stat-value"/>
-                                    <Label fx:id="abandonmentRateTrend" text="↓" styleClass="stat-trend negative"/>
+
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <StackPane style="-fx-background-color: linear-gradient(from 0% 100% to 100% 0%, #ef4444, #f87171);
+                                                       -fx-background-radius: 12; -fx-min-width: 36; -fx-min-height: 36;">
+                                        <Label text="⚠️" style="-fx-font-size: 18px;"/>
+                                    </StackPane>
+                                    <Label text="Taux d'Abandon" styleClass="stat-label"/>
                                 </HBox>
-                                <ProgressBar fx:id="abandonmentRateBar" progress="0"
-                                             maxWidth="Infinity" styleClass="progress-bar-abandon"/>
-                                <Label fx:id="abandonmentRateDesc" text="Tâches abandonnées ou non terminées"
+
+                                <HBox spacing="10" alignment="BASELINE_LEFT" style="-fx-padding: 12 0 8 0;">
+                                    <Label fx:id="abandonmentRateValue"
+                                           text="0%"
+                                           styleClass="stat-value"/>
+                                    <Label fx:id="abandonmentRateTrend"
+                                           text="↓ 3%"
+                                           styleClass="stat-trend negative"/>
+                                </HBox>
+
+                                <ProgressBar fx:id="abandonmentRateBar"
+                                             progress="0"
+                                             maxWidth="Infinity"
+                                             styleClass="progress-bar-abandon"/>
+
+                                <Label fx:id="abandonmentRateDesc"
+                                       text="Tâches non terminées ou abandonnées"
                                        styleClass="stat-description"/>
                             </VBox>
 
-                            <!-- Pause Frequency Card -->
+                            <!-- Pause Frequency -->
                             <VBox styleClass="stat-card">
                                 <padding>
-                                    <Insets top="20" right="20" bottom="20" left="20"/>
+                                    <Insets top="22" right="22" bottom="22" left="22"/>
                                 </padding>
-                                <Label text="⏸️ Fréquence de Pause" styleClass="stat-label"/>
-                                <HBox alignment="BASELINE_LEFT" spacing="5">
-                                    <Label fx:id="pauseFrequencyValue" text="0" styleClass="stat-value"/>
-                                    <Label fx:id="pauseFrequencyTrend" text="→" styleClass="stat-trend neutral"/>
+
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <StackPane style="-fx-background-color: linear-gradient(from 0% 100% to 100% 0%, #3b82f6, #60a5fa);
+                                                       -fx-background-radius: 12; -fx-min-width: 36; -fx-min-height: 36;">
+                                        <Label text="⏸️" style="-fx-font-size: 18px;"/>
+                                    </StackPane>
+                                    <Label text="Fréquence de Pause" styleClass="stat-label"/>
                                 </HBox>
-                                <ProgressBar fx:id="pauseFrequencyBar" progress="0"
-                                             maxWidth="Infinity" styleClass="progress-bar-pause"/>
-                                <Label fx:id="pauseFrequencyDesc" text="Pauses par tâche"
+
+                                <HBox spacing="10" alignment="BASELINE_LEFT" style="-fx-padding: 12 0 8 0;">
+                                    <Label fx:id="pauseFrequencyValue"
+                                           text="0"
+                                           styleClass="stat-value"/>
+                                    <Label fx:id="pauseFrequencyTrend"
+                                           text="→ Stable"
+                                           styleClass="stat-trend neutral"/>
+                                </HBox>
+
+                                <ProgressBar fx:id="pauseFrequencyBar"
+                                             progress="0"
+                                             maxWidth="Infinity"
+                                             styleClass="progress-bar-pause"/>
+
+                                <Label fx:id="pauseFrequencyDesc"
+                                       text="Nombre moyen de pauses par tâche"
                                        styleClass="stat-description"/>
                             </VBox>
+
                         </VBox>
                     </HBox>
 
-                    <!-- Productivity Insights -->
-                    <Label text="Insights de Productivité"
-                           styleClass="section-title"/>
+                    <!-- ============================================
+                         INSIGHTS SECTION
+                         ============================================ -->
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <StackPane style="-fx-background-color: linear-gradient(to right, #a78bfa, #8b5cf6);
+                                           -fx-background-radius: 10; -fx-min-width: 36; -fx-min-height: 36;">
+                            <Label text="🧠" style="-fx-font-size: 18px;"/>
+                        </StackPane>
+                        <Label text="Insights de Productivité"
+                               styleClass="section-title"/>
+                    </HBox>
 
-                    <HBox spacing="15" alignment="CENTER" styleClass="insights-container">
+                    <HBox spacing="20">
 
-                        <!-- Most Productive Hour -->
+                        <!-- Productive Hour -->
                         <VBox styleClass="insight-card" HBox.hgrow="ALWAYS">
                             <padding>
-                                <Insets top="20" right="20" bottom="20" left="20"/>
+                                <Insets top="24" right="24" bottom="24" left="24"/>
                             </padding>
-                            <Label text="🕐 Heure la Plus Productive" styleClass="insight-label"/>
-                            <Label fx:id="productiveHourValue" text="--:--" styleClass="insight-value"/>
-                            <Label text="Planifiez vos tâches importantes" styleClass="insight-hint"/>
+
+                            <HBox spacing="12" alignment="CENTER_LEFT">
+                                <Label text="🕐" styleClass="insight-icon"/>
+                                <Label text="Heure la Plus Productive"
+                                       styleClass="insight-label"/>
+                            </HBox>
+
+                            <Label fx:id="productiveHourValue"
+                                   text="--:--"
+                                   styleClass="insight-value"/>
+
+                            <Label text="Planifiez vos tâches importantes à cette heure"
+                                   styleClass="insight-hint"/>
                         </VBox>
 
-                        <!-- Most Productive Day -->
+                        <!-- Productive Day -->
                         <VBox styleClass="insight-card" HBox.hgrow="ALWAYS">
                             <padding>
-                                <Insets top="20" right="20" bottom="20" left="20"/>
+                                <Insets top="24" right="24" bottom="24" left="24"/>
                             </padding>
-                            <Label text="📅 Jour le Plus Productif" styleClass="insight-label"/>
-                            <Label fx:id="productiveDayValue" text="-------" styleClass="insight-value"/>
-                            <Label text="Optimisez votre planning hebdomadaire" styleClass="insight-hint"/>
+
+                            <HBox spacing="12" alignment="CENTER_LEFT">
+                                <Label text="📅" styleClass="insight-icon"/>
+                                <Label text="Jour le Plus Productif"
+                                       styleClass="insight-label"/>
+                            </HBox>
+
+                            <Label fx:id="productiveDayValue"
+                                   text="---"
+                                   styleClass="insight-value"/>
+
+                            <Label text="Optimisez votre semaine en fonction de ce jour"
+                                   styleClass="insight-hint"/>
                         </VBox>
 
                     </HBox>
 
-                    <!-- Task Type Performance -->
-                    <Label text="Performance par Type de Tâche"
-                           styleClass="section-title"/>
+                    <!-- ============================================
+                         TASK TYPE PERFORMANCE (Fixed visibility)
+                         ============================================ -->
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <StackPane style="-fx-background-color: linear-gradient(to right, #f59e0b, #fbbf24);
+                                           -fx-background-radius: 10; -fx-min-width: 36; -fx-min-height: 36;">
+                            <Label text="📌" style="-fx-font-size: 18px;"/>
+                        </StackPane>
+                        <Label text="Performance par Type de Tâche"
+                               styleClass="section-title"/>
+                    </HBox>
 
-                    <VBox spacing="10" styleClass="task-type-container">
+                    <VBox fx:id="taskTypeStats"
+                          spacing="12"
+                          styleClass="task-type-container">
                         <padding>
-                            <Insets top="15" right="15" bottom="15" left="15"/>
+                            <Insets top="22" right="22" bottom="22" left="22"/>
                         </padding>
 
-                        <!-- Will be populated programmatically, but here's the template -->
-                        <VBox fx:id="taskTypeStats" spacing="8"/>
+                        <!-- Example task type item - High contrast badges -->
+                        <HBox styleClass="task-type-item" spacing="16" alignment="CENTER_LEFT">
+                            <StackPane style="-fx-background-color: linear-gradient(from 0% 100% to 100% 0%, #4facfe, #00f2fe);
+                                               -fx-background-radius: 10; -fx-min-width: 40; -fx-min-height: 40;">
+                                <Label text="💼" style="-fx-font-size: 20px;"/>
+                            </StackPane>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Travail Professionnel" styleClass="task-type-name"/>
+                                <Label text="85% complété • 12 tâches" styleClass="task-type-stat"/>
+                            </VBox>
+                            <!-- Badge with white text on solid background -->
+                            <Label text="⭐ Excellent"
+                                   styleClass="task-type-badge badge-excellent"/>
+                        </HBox>
 
+                        <HBox styleClass="task-type-item" spacing="16" alignment="CENTER_LEFT">
+                            <StackPane style="-fx-background-color: linear-gradient(from 0% 100% to 100% 0%, #a78bfa, #8b5cf6);
+                                               -fx-background-radius: 10; -fx-min-width: 40; -fx-min-height: 40;">
+                                <Label text="📚" style="-fx-font-size: 20px;"/>
+                            </StackPane>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Apprentissage" styleClass="task-type-name"/>
+                                <Label text="72% complété • 8 tâches" styleClass="task-type-stat"/>
+                            </VBox>
+                            <Label text="📈 En progrès"
+                                   styleClass="task-type-badge badge-progress"/>
+                        </HBox>
+
+                        <HBox styleClass="task-type-item" spacing="16" alignment="CENTER_LEFT">
+                            <StackPane style="-fx-background-color: linear-gradient(from 0% 100% to 100% 0%, #f59e0b, #fbbf24);
+                                               -fx-background-radius: 10; -fx-min-width: 40; -fx-min-height: 40;">
+                                <Label text="🏃" style="-fx-font-size: 20px;"/>
+                            </StackPane>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Sport &amp; Bien-être" styleClass="task-type-name"/>
+                                <Label text="60% complété • 5 tâches" styleClass="task-type-stat"/>
+                            </VBox>
+                            <Label text="💪 À améliorer"
+                                   styleClass="task-type-badge badge-improve"/>
+                        </HBox>
                     </VBox>
 
-                    <!-- AI Summary Section -->
-                    <Label text="📝 Résumé de Productivité IA"
-                           styleClass="section-title"/>
+                    <!-- ============================================
+                         AI SUMMARY SECTION
+                         ============================================ -->
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <StackPane style="-fx-background-color: linear-gradient(to right, #10b981, #34d399);
+                                           -fx-background-radius: 10; -fx-min-width: 36; -fx-min-height: 36;">
+                            <Label text="📝" style="-fx-font-size: 18px;"/>
+                        </StackPane>
+                        <Label text="Résumé IA"
+                               styleClass="section-title"/>
+                    </HBox>
 
                     <VBox styleClass="summary-card">
                         <padding>
-                            <Insets top="25" right="25" bottom="25" left="25"/>
+                            <Insets top="24" right="24" bottom="24" left="24"/>
                         </padding>
+
+                        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 0 0 12 0;">
+                            <StackPane style="-fx-background-color: linear-gradient(from 0% 100% to 100% 0%, #10b981, #34d399);
+                                               -fx-background-radius: 10; -fx-min-width: 32; -fx-min-height: 32;">
+                                <Label text="🤖" style="-fx-font-size: 16px;"/>
+                            </StackPane>
+                            <Label text="Analyse générée par intelligence artificielle"
+                                   style="-fx-font-size: 13px; -fx-text-fill: #10b981; -fx-font-weight: 600;"/>
+                        </HBox>
+
                         <TextArea fx:id="summaryArea"
                                   wrapText="true"
                                   editable="false"
+                                  prefHeight="160"
                                   styleClass="summary-text-area"
-                                  prefHeight="180.0"
-                                  minHeight="180.0"/>
+                                  text="Entrain de réflaichir ... Merci d'attendre"/>
                     </VBox>
 
-                    <!-- AI Advice Section -->
-                    <Label text="💡 Conseils Personnalisés"
-                           styleClass="section-title"/>
+                    <!-- ============================================
+                         ADVICE SECTION
+                         ============================================ -->
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <StackPane style="-fx-background-color: linear-gradient(to right, #f59e0b, #fbbf24);
+                                           -fx-background-radius: 10; -fx-min-width: 36; -fx-min-height: 36;">
+                            <Label text="💡" style="-fx-font-size: 18px;"/>
+                        </StackPane>
+                        <Label text="Conseils Personnalisés"
+                               styleClass="section-title"/>
+                    </HBox>
 
                     <VBox styleClass="advice-card">
                         <padding>
-                            <Insets top="25" right="25" bottom="25" left="25"/>
+                            <Insets top="24" right="24" bottom="24" left="24"/>
                         </padding>
+
+                        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 0 0 12 0;">
+                            <StackPane style="-fx-background-color: linear-gradient(from 0% 100% to 100% 0%, #f59e0b, #fbbf24);
+                                               -fx-background-radius: 10; -fx-min-width: 32; -fx-min-height: 32;">
+                                <Label text="✨" style="-fx-font-size: 16px;"/>
+                            </StackPane>
+                            <Label text="Recommandations basées sur vos habitudes"
+                                   style="-fx-font-size: 13px; -fx-text-fill: #d97706; -fx-font-weight: 600;"/>
+                        </HBox>
+
                         <TextArea fx:id="adviceArea"
                                   wrapText="true"
                                   editable="false"
+                                  prefHeight="160"
                                   styleClass="advice-text-area"
-                                  prefHeight="180.0"
-                                  minHeight="180.0"/>
+                                  text="Entrain de réflaichir ... Merci d'attendre"/>
                     </VBox>
 
-                    <!-- Action Buttons -->
-                    <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="button-container">
-                        <padding>
-                            <Insets top="10" right="0" bottom="10" left="0"/>
-                        </padding>
-                        <Button text="📊 Exporter PDF"
+                    <!-- ============================================
+                         ACTION BUTTONS
+                         ============================================ -->
+                    <HBox spacing="16" alignment="CENTER_RIGHT" style="-fx-padding: 8 0 16 0;">
+
+                        <Button text="📄 Export PDF"
                                 onAction="#handleExport"
                                 styleClass="secondary-button"/>
+
                         <Button text="🔄 Rafraîchir"
                                 onAction="#handleRefresh"
                                 styleClass="secondary-button"/>
-                        <Button text="Fermer"
+
+                        <Button text="✕ Fermer"
                                 onAction="#handleClose"
                                 styleClass="primary-button"/>
                     </HBox>
@@ -213,5 +432,4 @@
         </VBox>
 
     </children>
-
 </AnchorPane>

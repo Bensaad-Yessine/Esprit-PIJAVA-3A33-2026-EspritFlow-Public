@@ -286,8 +286,33 @@
 
 /* -------------------- NOTIFICATION -------------------- */
 .notification-area {
-    -fx-min-height: 0;
-    -fx-pref-height: 0;
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-border-color: #fecaca;
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.08), 15, 0, 0, 5);
+}
+
+.notifications-list {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.notifications-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 10 12;
+    -fx-border-color: #f3f4f6;
+    -fx-border-width: 0 0 1 0;
+}
+
+
+
+.notifications-list .list-cell:filled:hover {
+    -fx-background-color: #fef2f2;
 }
 
 .notification-toast {
@@ -882,3 +907,88 @@
     -fx-padding: 10;
 }
 
+.notification-overlay {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 4);
+}
+
+/* Notification Panel Container */
+.notification-panel {
+    -fx-background-color: linear-gradient(to bottom, #fef2f2, #ffffff);
+    -fx-background-radius: 16 0 0 16;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 20, 0, -5, 0);
+    -fx-min-width: 360;
+    -fx-pref-width: 360;
+    -fx-max-width: 400;
+}
+
+/* Scrollbar styling for notification list */
+.notification-list .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8;
+}
+
+.notification-list .scroll-bar:vertical .thumb {
+    -fx-background-color: #fca5a5;
+    -fx-background-radius: 4;
+}
+
+.notification-list .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #f87171;
+}
+
+.notification-list .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+/* Empty list styling */
+.notification-list .list-cell:empty {
+    -fx-background-color: transparent;
+}
+
+/* Header styling */
+.notification-header {
+    -fx-background-color: linear-gradient(to right, #dc2626, #b91c1c);
+    -fx-padding: 16;
+    -fx-background-radius: 16 0 0 0;
+}
+
+.notification-header-label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Badge styling */
+.notification-badge {
+    -fx-background-color: #fbbf24;
+    -fx-text-fill: #92400e;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 8;
+    -fx-background-radius: 10;
+}
+
+/* Main content blur overlay */
+.blur-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Animation for slide in */
+@keyframes slideIn {
+    from { -fx-translate-x: 400; }
+    to { -fx-translate-x: 0; }
+}
+.notifications-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(to right, #4facfe, #00f2fe);
+    -fx-background-radius: 10;
+    -fx-padding: 12;
+    -fx-alignment: center;
+}

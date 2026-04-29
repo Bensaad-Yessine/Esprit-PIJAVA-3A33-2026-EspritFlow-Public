@@ -1,12 +1,18 @@
 package piJava.Controllers.frontoffice.taches;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -15,7 +21,9 @@ import javafx.geometry.Pos;
 import javafx.scene.chart.*;
 
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 import piJava.entities.Notification;
+import piJava.services.NotificationService;
 import piJava.services.api.NotifsService;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
@@ -67,7 +75,8 @@ public class TachesController implements Initializable {
     @FXML private Label lblCompleted;
     @FXML private Label lblUrgent;
 
-    @FXML private HBox notificationArea;
+    @FXML private VBox notificationArea;
+    @FXML private VBox mainContent;
     @FXML private StackPane notificationBtn;
     @FXML private Circle notificationDot;
     private boolean notificationsVisible = false;
@@ -82,7 +91,7 @@ public class TachesController implements Initializable {
     private StatisticsService statsService = new StatisticsService();
     private TacheService ts = new TacheService();
     private NotifsService ns = new NotifsService();
-
+    private NotificationService nss = new NotificationService();
     // Static variables to temporarily store task data
     private static tache currentTaskForDetails;
     private static tache currentTaskForEdit;
@@ -97,15 +106,33 @@ public class TachesController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        System.out.println("INIT START");
+        System.out.println("notificationsList = " + notificationsList);
+        System.out.println("notificationArea = " + notificationArea);
+
         try {
             // 1. Notifications setup FIRST
             setupNotificationsList();
-            notificationArea.setVisible(false);
-            notificationArea.setManaged(false);
             startNotificationAutoRefresh();
 
             loadTasks();
 
+            notificationArea.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+
+                    newScene.setOnMouseClicked(event -> {
+
+                        if (notificationsVisible &&
+                                !notificationArea.localToScene(notificationArea.getBoundsInLocal())
+                                        .contains(event.getSceneX(), event.getSceneY())) {
+
+                            notificationsVisible = false;
+                            notificationArea.setVisible(false);
+                            notificationArea.setManaged(false);
+                        }
+                    });
+                }
+            });
             cmbPriority.setValue("Toutes");
             cmbSort.setValue("Date de création");
 
@@ -635,7 +662,6 @@ public class TachesController implements Initializable {
         progressChart.getData().addAll(created, completed, abandoned);
     }
 
-
     private void updateStatsCards(Map<String, Integer> c) {
 
         int total = c.get("total");
@@ -649,39 +675,247 @@ public class TachesController implements Initializable {
         lblUrgent.setText(String.valueOf(overdue));
     }
 
-
     // NOTIFICATIONS
     private void setupNotificationsList() {
+        // Add blur effect to main content when notifications are shown
+        setupBlurEffect();
+
         notificationsList.setCellFactory(list -> new ListCell<Notification>() {
             @Override
             protected void updateItem(Notification item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                    setStyle("");
-                } else {
-                    // Display message + time
-                    String text = item.getMessage();
-                    if (item.getCreatedAt() != null) {
-                        text += "\n" + item.getCreatedAt().format(
-                                java.time.format.DateTimeFormatter.ofPattern("dd/MM HH:mm")
-                        );
-                    }
-                    setText(text);
-                    setWrapText(true);
 
-                    // Bold if unread
-                    if (!item.isRead()) {
-                        setStyle("-fx-font-weight: bold; -fx-text-fill: #dc3545;");
-                    } else {
-                        setStyle("-fx-font-weight: normal; -fx-text-fill: #555;");
-                    }
+                if (empty || item == null) {
+                    setGraphic(null);
+                    setStyle(null);
+                    return;
                 }
+
+                // Main card container with shadow and gradient border effect
+                VBox root = new VBox(8);
+                root.setStyle(
+                        "-fx-padding: 14;"+
+                                "-fx-background-color: white;" +
+                                "-fx-background-radius: 12;" +
+                                "-fx-border-radius: 12;" +
+                                "-fx-border-color: linear-gradient(to right, #f8d5d5, #ffc4c4);" +
+                                "-fx-border-width: 1.5;" +
+                                "-fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.15), 8, 0, 0, 2);"+
+                                "-fx-pref-width: 350;" + "-fx-max-width: 350;"
+                );
+
+                // Header with icon and message
+                HBox header = new HBox(8);
+                header.setAlignment(Pos.CENTER_LEFT);
+
+                // Warning icon for overdue notifications
+                Label icon = new Label("⚠");
+                icon.setStyle("-fx-font-size: 16px;");
+
+                Label message = new Label(item.getMessage());
+                message.setWrapText(true);
+                message.setMaxWidth(280);
+                message.setStyle("-fx-font-size: 13px; -fx-text-fill: #1f2937;");
+
+                // Bold if unread with accent color
+                if (!item.isRead()) {
+                    message.setStyle(
+                            "-fx-font-size: 13px;" +
+                                    "-fx-text-fill: #dc2626;" +
+                                    "-fx-font-weight: bold;"
+                    );
+                    icon.setStyle("-fx-font-size: 16px; -fx-text-fill: #dc2626;");
+                }
+
+                header.getChildren().addAll(icon, message);
+
+                // Date with icon
+                HBox dateBox = new HBox(5);
+                dateBox.setAlignment(Pos.CENTER_LEFT);
+                Label dateIcon = new Label("🕐");
+                dateIcon.setStyle("-fx-font-size: 10px; -fx-text-fill: #9ca3af;");
+
+                Label date = new Label(
+                        item.getCreatedAt() != null
+                                ? item.getCreatedAt().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM HH:mm"))
+                                : ""
+                );
+                date.setStyle("-fx-text-fill: #9ca3af; -fx-font-size: 11px;");
+                dateBox.getChildren().addAll(dateIcon, date);
+
+                // Action buttons with gradient styling
+                HBox actions = new HBox(10);
+                actions.setAlignment(Pos.CENTER_RIGHT);
+                actions.setPadding(new Insets(5, 0, 0, 0));
+
+                Button btnFinish = new Button("✓ Terminer");
+                btnFinish.setStyle(
+                        "-fx-background-color: linear-gradient(to right, #16a34a, #15803d);" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-size: 12px;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-padding: 6 14;" +
+                                "-fx-background-radius: 6;" +
+                                "-fx-cursor: hand;" +
+                                "-fx-effect: dropshadow(gaussian, rgba(22, 163, 74, 0.3), 4, 0, 0, 1);"
+                );
+
+                // Hover effect
+                btnFinish.setOnMouseEntered(e -> btnFinish.setStyle(
+                        "-fx-background-color: linear-gradient(to right, #15803d, #166534);" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-size: 12px;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-padding: 6 14;" +
+                                "-fx-background-radius: 6;" +
+                                "-fx-cursor: hand;" +
+                                "-fx-effect: dropshadow(gaussian, rgba(22, 163, 74, 0.4), 6, 0, 0, 2);"
+                ));
+                btnFinish.setOnMouseExited(e -> btnFinish.setStyle(
+                        "-fx-background-color: linear-gradient(to right, #16a34a, #15803d);" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-size: 12px;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-padding: 6 14;" +
+                                "-fx-background-radius: 6;" +
+                                "-fx-cursor: hand;" +
+                                "-fx-effect: dropshadow(gaussian, rgba(22, 163, 74, 0.3), 4, 0, 0, 1);"
+                ));
+
+                Button btnAbandon = new Button("✕ Abandonner");
+                btnAbandon.setStyle(
+                        "-fx-background-color: linear-gradient(to right, #dc2626, #b91c1c);" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-size: 12px;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-padding: 6 14;" +
+                                "-fx-background-radius: 6;" +
+                                "-fx-cursor: hand;" +
+                                "-fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.3), 4, 0, 0, 1);"
+                );
+
+                // Hover effect for abandon
+                btnAbandon.setOnMouseEntered(e -> btnAbandon.setStyle(
+                        "-fx-background-color: linear-gradient(to right, #b91c1c, #991b1b);" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-size: 12px;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-padding: 6 14;" +
+                                "-fx-background-radius: 6;" +
+                                "-fx-cursor: hand;" +
+                                "-fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.4), 6, 0, 0, 2);"
+                ));
+                btnAbandon.setOnMouseExited(e -> btnAbandon.setStyle(
+                        "-fx-background-color: linear-gradient(to right, #dc2626, #b91c1c);" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-size: 12px;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-padding: 6 14;" +
+                                "-fx-background-radius: 6;" +
+                                "-fx-cursor: hand;" +
+                                "-fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.3), 4, 0, 0, 1);"
+                ));
+
+                actions.getChildren().addAll(btnFinish, btnAbandon);
+
+                // Set actions
+                btnFinish.setOnAction(e -> handleNotificationAction(item, "finish"));
+                btnAbandon.setOnAction(e -> handleNotificationAction(item, "abandon"));
+
+                root.getChildren().addAll(header, dateBox, actions);
+                setGraphic(root);
+
+                // Add spacing between cells
+                setStyle("-fx-padding: 0 0 10 0; -fx-background-color: transparent;");
+            }
+        });
+
+        // Improve the list view itself
+        notificationsList.setStyle(
+                "-fx-background-color: transparent;" +
+                        "-fx-padding: 10;" +
+                        "-fx-background-insets: 0;" +
+                        "-fx-border-width: 0;"
+        );
+
+        // Remove default list view borders and make it fill width
+        notificationsList.setPrefWidth(450);
+        notificationsList.setMaxWidth(450);
+    }
+
+    // Method to setup blur effect on main content
+    private void setupBlurEffect() {
+        if (mainContent == null) return;
+
+        // Create the blur effect
+        GaussianBlur blur = new GaussianBlur(0);
+
+        // Apply to main content when notifications show
+        notificationArea.visibleProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                // Show notifications - apply blur
+                Timeline timeline = new Timeline(
+                        new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), 0)),
+                        new KeyFrame(Duration.millis(300), new KeyValue(blur.radiusProperty(), 10))
+                );
+                timeline.play();
+                mainContent.setEffect(blur);
+                mainContent.setMouseTransparent(true); // Prevent interaction with blurred content
+            } else {
+                // Hide notifications - remove blur
+                Timeline timeline = new Timeline(
+                        new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), 10)),
+                        new KeyFrame(Duration.millis(200), new KeyValue(blur.radiusProperty(), 0))
+                );
+                timeline.setOnFinished(e -> {
+                    mainContent.setEffect(null);
+                    mainContent.setMouseTransparent(false);
+                });
+                timeline.play();
             }
         });
     }
+    private void handleNotificationAction(Notification notif, String action) {
+        try {
+            if (notif.getTacheId() == null) return;
 
+            // Get task
+            tache t = ts.getById(notif.getTacheId()); // make sure this exists
+
+            if (t == null) return;
+
+            String currentStatus = t.getStatut();
+            String newStatus = "";
+
+            switch (action) {
+                case "finish":
+                    newStatus = "TERMINE";
+                    break;
+                case "abandon":
+                    newStatus = "ABANDON";
+                    break;
+            }
+
+            if (!newStatus.equals(currentStatus)) {
+
+                // update task
+                t.setStatut(newStatus);
+                t.setUpdated_at(new Date());
+                ts.edit(t);
+
+                // mark notification as read
+                notif.setRead(true);
+                nss.edit(notif); // create this if not exists
+
+                refreshTasks();
+                loadNotifications();
+
+            }
+
+        } catch (Exception e) {
+            System.out.println("Action notif error: " + e.getMessage());
+        }
+    }
     @FXML
     private void toggleNotifications(javafx.scene.input.MouseEvent event) {
         notificationsVisible = !notificationsVisible;
@@ -691,28 +925,32 @@ public class TachesController implements Initializable {
         if (notificationsVisible) {
             loadNotifications(); // refresh when opening
         }
+        event.consume();
     }
 
     private void loadNotifications() {
+        System.out.println("LOAD NOTIFICATIONS CALLED");
+
         notifScheduler.submit(() -> {
             try {
-                // 1. Generate any new notifications (deadline checks, etc.)
                 ns.runForUser(currentUser);
 
-                // 2. Fetch current list
-                List<Notification> notifs = ns.getUserNotifications(currentUserId);
+                List<Notification> allNotifs = ns.getUserNotifications(currentUserId);
+                List<Notification> unreadNotifs = allNotifs.stream()
+                        .filter(n -> !n.isRead())
+                        .toList();
+
+                System.out.println("FETCHED UNREAD NOTIFS = " + unreadNotifs.size());
 
                 javafx.application.Platform.runLater(() -> {
-                    notificationsList.getItems().setAll(notifs);
-
-                    // Show/hide red dot on bell
-                    boolean hasUnread = notifs.stream().anyMatch(n -> !n.isRead());
-                    notificationDot.setVisible(hasUnread);
+                    notificationsList.getItems().setAll(unreadNotifs);
+                    
+                    // Show dot if there are unread notifications
+                    notificationDot.setVisible(!unreadNotifs.isEmpty());
                 });
 
             } catch (Exception e) {
                 System.out.println("Load notif error: " + e.getMessage());
-                e.printStackTrace();
             }
         });
     }

@@ -6,129 +6,213 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="piJava.Controllers.frontoffice.taches.WeatherResponseController"
-      prefHeight="700.0" prefWidth="700.0"
+      prefHeight="750.0" prefWidth="750.0"
       stylesheets="@weather-response.css"
       styleClass="root">
-    
-    <!-- Header with Title and Close Button -->
+
+    <!-- ============================================
+         Header with Gradient Background
+         ============================================ -->
     <HBox styleClass="header" alignment="CENTER_LEFT" spacing="15">
         <padding>
-            <Insets top="20" right="25" bottom="20" left="25"/>
+            <Insets top="22" right="28" bottom="22" left="28"/>
         </padding>
         <Region HBox.hgrow="ALWAYS"/>
-        <Label text="☀" styleClass="header-icon"/>
-        <Label text="Conseil Météo IA" styleClass="header-title"/>
+        <StackPane styleClass="weather-icon-container">
+            <Label text="🌤" styleClass="header-icon"/>
+        </StackPane>
+        <VBox spacing="2" alignment="CENTER_LEFT">
+            <Label text="Conseil Météo IA" styleClass="header-title"/>
+            <Label text="Powered by AI • Temps réel"
+                   style="-fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.8); -fx-font-weight: 500;"/>
+        </VBox>
         <Region HBox.hgrow="ALWAYS"/>
         <Button text="✕" onAction="#handleClose" styleClass="close-icon-btn"/>
     </HBox>
-    
-    <!-- Scrollable Content Area -->
-    <ScrollPane fitToWidth="true" 
+
+    <!-- ============================================
+         Scrollable Content Area
+         ============================================ -->
+    <ScrollPane fitToWidth="true"
                 VBox.vgrow="ALWAYS"
                 styleClass="scroll-pane"
                 hbarPolicy="NEVER"
                 vbarPolicy="AS_NEEDED">
-        
-        <VBox spacing="20" styleClass="main-container">
+
+        <VBox spacing="24" styleClass="main-container">
             <padding>
-                <Insets top="25" right="30" bottom="25" left="30"/>
+                <Insets top="28" right="32" bottom="28" left="32"/>
             </padding>
-            
-            <!-- Weather Info Card -->
-            <VBox spacing="15" styleClass="weather-card">
+
+            <!-- ============================================
+                 Weather Info Card - Glassmorphism
+                 ============================================ -->
+            <VBox spacing="18" styleClass="weather-card">
                 <padding>
-                    <Insets top="24" right="24" bottom="24" left="24"/>
+                    <Insets top="28" right="28" bottom="28" left="28"/>
                 </padding>
-                
-                <!-- Header with Icon -->
-                <HBox spacing="15" alignment="CENTER_LEFT">
+
+                <!-- Card Header with Icon -->
+                <HBox spacing="16" alignment="CENTER_LEFT">
                     <StackPane styleClass="weather-icon-container">
-                        <Label text="☀" styleClass="weather-icon"/>
+                        <Label text="🌡" styleClass="weather-icon"/>
                     </StackPane>
-                    <VBox spacing="5">
+                    <VBox spacing="4">
                         <Label text="Météo Actuelle" styleClass="card-title"/>
-                        <Label fx:id="weatherDescription" 
-                               text="Données météo" 
-                               styleClass="weather-subtitle"/>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Label fx:id="weatherDescription"
+                                   text="Conditions météorologiques en temps réel"
+                                   styleClass="weather-subtitle"/>
+                            <Label text="● LIVE"
+                                   style="-fx-font-size: 10px; -fx-text-fill: #00f2fe; -fx-font-weight: bold;
+                                          -fx-background-color: rgba(0,242,254,0.1); -fx-background-radius: 10;
+                                          -fx-padding: 2 8;"/>
+                        </HBox>
                     </VBox>
                 </HBox>
-                
-                <!-- Temperature & Humidity Grid -->
-                <HBox spacing="15" alignment="CENTER">
+
+                <!-- Separator -->
+                <Region styleClass="separator"/>
+
+                <!-- Temperature & Humidity & Wind Grid -->
+                <HBox spacing="16" alignment="CENTER">
                     <!-- Temperature -->
-                    <VBox spacing="8" styleClass="info-box" HBox.hgrow="ALWAYS" alignment="CENTER">
+                    <VBox spacing="10" styleClass="info-box" HBox.hgrow="ALWAYS" alignment="CENTER">
                         <padding>
-                            <Insets top="18" right="16" bottom="18" left="16"/>
+                            <Insets top="20" right="16" bottom="20" left="16"/>
                         </padding>
-                        <Label fx:id="temperatureLabel" 
-                               text="--°C" 
+                        <Label text="🌡" styleClass="info-icon"/>
+                        <Label fx:id="temperatureLabel"
+                               text="--°C"
                                styleClass="temperature-value"/>
                         <Label text="Température" styleClass="info-label"/>
                     </VBox>
-                    
+
                     <!-- Humidity -->
-                    <VBox spacing="8" styleClass="info-box" HBox.hgrow="ALWAYS" alignment="CENTER">
+                    <VBox spacing="10" styleClass="info-box" HBox.hgrow="ALWAYS" alignment="CENTER">
                         <padding>
-                            <Insets top="18" right="16" bottom="18" left="16"/>
+                            <Insets top="20" right="16" bottom="20" left="16"/>
                         </padding>
-                        <Label fx:id="humidityLabel" 
+                        <Label text="💧" styleClass="info-icon"/>
+                        <Label fx:id="humidityLabel"
                                text="--%"
                                styleClass="humidity-value"/>
                         <Label text="Humidité" styleClass="info-label"/>
                     </VBox>
-                    
+
                     <!-- Wind -->
-                    <VBox spacing="8" styleClass="info-box" HBox.hgrow="ALWAYS" alignment="CENTER">
+                    <VBox spacing="10" styleClass="info-box" HBox.hgrow="ALWAYS" alignment="CENTER">
                         <padding>
-                            <Insets top="18" right="16" bottom="18" left="16"/>
+                            <Insets top="20" right="16" bottom="20" left="16"/>
                         </padding>
-                        <Label fx:id="windLabel" 
+                        <Label text="💨" styleClass="info-icon"/>
+                        <Label fx:id="windLabel"
                                text="-- km/h"
                                styleClass="wind-value"/>
                         <Label text="Vent" styleClass="info-label"/>
                     </VBox>
                 </HBox>
             </VBox>
-            
-            <!-- AI Advice Card -->
-            <VBox spacing="18" styleClass="ai-card">
+
+            <!-- ============================================
+                 AI Advice Card - Purple Theme
+                 ============================================ -->
+            <VBox spacing="20" styleClass="ai-card">
                 <padding>
-                    <Insets top="24" right="24" bottom="24" left="24"/>
+                    <Insets top="28" right="28" bottom="28" left="28"/>
                 </padding>
-                
+
                 <!-- AI Header -->
-                <HBox spacing="12" alignment="CENTER_LEFT">
+                <HBox spacing="14" alignment="CENTER_LEFT">
                     <StackPane styleClass="ai-icon-container">
                         <Label text="🤖" styleClass="ai-icon"/>
                     </StackPane>
-                    <Label text="Conseil IA Personnalisé" styleClass="ai-title"/>
+                    <VBox spacing="2">
+                        <Label text="Conseil IA Personnalisé" styleClass="ai-title"/>
+                        <Label text="Recommandations basées sur vos conditions"
+                               style="-fx-font-size: 12px; -fx-text-fill: #a78bfa; -fx-font-weight: 500;"/>
+                    </VBox>
                 </HBox>
-                
+
+                <!-- Separator -->
+                <Region styleClass="separator"
+                        style="-fx-background-color: linear-gradient(to right, transparent, #a78bfa, transparent);"/>
+
                 <!-- AI Advice Content -->
-                <VBox fx:id="aiAdviceContainer" spacing="18">
-                    <!-- Advice items will be added here dynamically -->
+                <VBox fx:id="aiAdviceContainer" spacing="16">
+                    <!-- Example Advice Item 1 -->
+                    <VBox spacing="12" styleClass="advice-item">
+                        <HBox spacing="12" styleClass="advice-header" alignment="CENTER_LEFT">
+                            <StackPane styleClass="advice-icon-container">
+                                <Label text="👕" styleClass="advice-icon"/>
+                            </StackPane>
+                            <Label text="Tenue recommandée" styleClass="advice-title"/>
+                        </HBox>
+                        <Label text="Portez des vêtements légers et respirants. La température est agréable aujourd'hui."
+                               styleClass="advice-text"/>
+                    </VBox>
+
+                    <!-- Example Advice Item 2 -->
+                    <VBox spacing="12" styleClass="advice-item">
+                        <HBox spacing="12" styleClass="advice-header" alignment="CENTER_LEFT">
+                            <StackPane styleClass="advice-icon-container">
+                                <Label text="☂️" styleClass="advice-icon"/>
+                            </StackPane>
+                            <Label text="Prévisions pluie" styleClass="advice-title"/>
+                        </HBox>
+                        <Label text="Aucune précipitation prévue. Vous pouvez sortir sans parapluie."
+                               styleClass="advice-text"/>
+                    </VBox>
+
+                    <!-- Example Advice Item 3 -->
+                    <VBox spacing="12" styleClass="advice-item">
+                        <HBox spacing="12" styleClass="advice-header" alignment="CENTER_LEFT">
+                            <StackPane styleClass="advice-icon-container">
+                                <Label text="🏃" styleClass="advice-icon"/>
+                            </StackPane>
+                            <Label text="Activités recommandées" styleClass="advice-title"/>
+                        </HBox>
+                        <Label text="Conditions idéales pour une promenade en plein air ou du jogging."
+                               styleClass="advice-text"/>
+                    </VBox>
                 </VBox>
             </VBox>
-            
-            <!-- Footer with timestamp -->
-            <HBox spacing="8" alignment="CENTER_LEFT" styleClass="footer">
+
+            <!-- ============================================
+                 Footer with Timestamp
+                 ============================================ -->
+            <HBox spacing="10" alignment="CENTER_LEFT" styleClass="footer">
                 <padding>
-                    <Insets top="20" right="0" bottom="10" left="0"/>
+                    <Insets top="18" right="20" bottom="18" left="20"/>
                 </padding>
                 <Label text="🕐" styleClass="footer-icon"/>
-                <Label fx:id="timestampLabel" 
-                       text="Mis à jour: --" 
+                <Label fx:id="timestampLabel"
+                       text="Mis à jour: --"
                        styleClass="footer-text"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="🔄 Rafraîchir"
+                       style="-fx-font-size: 12px; -fx-text-fill: #4facfe; -fx-font-weight: bold;
+                              -fx-cursor: hand; -fx-underline: true;"
+                       />
             </HBox>
         </VBox>
     </ScrollPane>
-    
-    <!-- Bottom Close Button -->
-    <HBox styleClass="footer-bar" alignment="CENTER">
+
+    <!-- ============================================
+         Bottom Close Button Bar
+         ============================================ -->
+    <HBox styleClass="footer-bar" alignment="CENTER" spacing="15">
         <padding>
-            <Insets top="15" right="30" bottom="15" left="30"/>
+            <Insets top="18" right="32" bottom="18" left="32"/>
         </padding>
-        <Button text="Fermer"
+        <Button text="🔄 Actualiser"
+
+                style="-fx-background-color: transparent; -fx-text-fill: #4facfe;
+                       -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand;
+                       -fx-border-color: #4facfe; -fx-border-radius: 12; -fx-border-width: 2;
+                       -fx-padding: 12 24; -fx-background-radius: 12;"
+                prefWidth="160"/>
+        <Button text="✕ Fermer"
                 onAction="#handleClose"
                 styleClass="close-btn"
                 prefWidth="200"/>

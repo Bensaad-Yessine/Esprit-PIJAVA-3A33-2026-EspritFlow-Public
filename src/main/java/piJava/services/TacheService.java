@@ -95,6 +95,8 @@ public class TacheService implements ICrud<tache> {
             } else  t.setDescription("pas de description");
             t.setDuree_estimee(rs.getInt("duree_estimee"));
             t.setPrediction(rs.getDouble("prediction"));
+            t.setCreated_at(rs.getTimestamp("created_at"));
+            t.setUpdated_at(rs.getTimestamp("updated_at"));
             taches.add(t);
         }
 
@@ -181,6 +183,8 @@ public class TacheService implements ICrud<tache> {
             } else  t.setDescription("pas de description");
             t.setDuree_estimee(rs.getInt("duree_estimee"));
             t.setPrediction(rs.getDouble("prediction"));
+            t.setCreated_at(rs.getTimestamp("created_at"));
+            t.setUpdated_at(rs.getTimestamp("updated_at"));
             taches.add(t);
         }
 
@@ -211,6 +215,8 @@ public class TacheService implements ICrud<tache> {
                 t.setDescription(rs.getString("description"));
                 t.setDuree_estimee(rs.getInt("duree_estimee"));
                 t.setPrediction(rs.getDouble("prediction"));
+                t.setCreated_at(rs.getTimestamp("created_at"));
+                t.setUpdated_at(rs.getTimestamp("updated_at"));
                 taches.add(t);
             }
         } catch (SQLException e) {
@@ -243,6 +249,8 @@ public class TacheService implements ICrud<tache> {
                 } else t.setDescription("pas de description");
                 t.setDuree_estimee(rs.getInt("duree_estimee"));
                 t.setPrediction(rs.getDouble("prediction"));
+                t.setCreated_at(rs.getTimestamp("created_at"));
+                t.setUpdated_at(rs.getTimestamp("updated_at"));
                 return t;
             } return null;
 
@@ -250,6 +258,40 @@ public class TacheService implements ICrud<tache> {
             System.out.println("DB Error: " + e.getMessage());
             return null;
         }
+    }
+
+    public tache getById(Integer tacheId) {
+        String sql = "SELECT * FROM tache WHERE id = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, tacheId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                tache t = new tache();
+                t.setId(rs.getInt("id"));
+                t.setTitre(rs.getString("titre"));
+                t.setType(rs.getString("type"));
+                t.setDate_debut(rs.getTimestamp("date_debut"));
+                t.setDate_fin(rs.getTimestamp("date_fin"));
+                t.setPriorite(rs.getString("priorite"));
+                t.setStatut(rs.getString("statut"));
+                t.setUser_id(rs.getInt("user_id"));
+                t.setDate_echeance(rs.getTimestamp("date_echeance"));
+                if (rs.getString("description") != null) {
+                    t.setDescription(rs.getString("description"));
+                } else  t.setDescription("pas de description");
+                t.setDuree_estimee(rs.getInt("duree_estimee"));
+                t.setPrediction(rs.getDouble("prediction"));
+                t.setCreated_at(rs.getTimestamp("created_at"));
+                t.setUpdated_at(rs.getTimestamp("updated_at"));
+                return t;
+            } return null;
+
+        } catch (SQLException e) {
+            System.out.println("DB Error: " + e.getMessage());
+            return null;
+        }
+
     }
 }
 

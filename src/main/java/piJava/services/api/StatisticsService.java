@@ -4,11 +4,9 @@ import piJava.entities.tache;
 import piJava.services.TacheService;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class StatisticsService {
 
@@ -73,37 +71,87 @@ public class StatisticsService {
         return result;
     }
 
-
     public Map<String, Map<String, Integer>> getProgressLastDays(int userId, int days) {
 
-        LocalDateTime since = LocalDateTime.now().minusDays(days - 1);
+        // Use LinkedHashMap to maintain insertion order (chronological)
+        Map<String, Map<String, Integer>> stats = new LinkedHashMap<>();
 
-        List<tache> tasks = tacheService.getTasksByUserSince(userId, since);
+        // Initialize all days with zero counts
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = endDate.minusDays(days - 1);
 
-        Map<String, Map<String, Integer>> result = new TreeMap<>();
+        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+            String dateStr = date.toString(); // Format: YYYY-MM-DD
+            Map<String, Integer> dayStats = new HashMap<>();
+            dayStats.put("created", 0);
+            dayStats.put("completed", 0);
+            dayStats.put("abandoned", 0);
+            stats.put(dateStr, dayStats);
+        }
 
-        for (tache t : tasks) {
+        // Get ALL tasks for this user (not filtered by date)
+        List<tache> allTasks;
+        try {
+            allTasks = tacheService.showUserTasks(userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return stats; // Return empty stats on error
+        }
 
-            String date = ((java.sql.Timestamp) t.getDate_debut())
-                    .toLocalDateTime()
-                    .toLocalDate()
-                    .toString();
+        // Process each task
+        for (tache task : allTasks) {
+            try {
+                // 1. Created Stats
+                Date createdDateRaw = task.getCreated_at() != null ? task.getCreated_at() : task.getDate_debut();
+                if (createdDateRaw != null) {
+                    LocalDate createdDate = convertToLocalDate(createdDateRaw);
+                    String createdDateStr = createdDate.toString();
+                    if (stats.containsKey(createdDateStr)) {
+                        Map<String, Integer> dayStats = stats.get(createdDateStr);
+                        dayStats.put("created", dayStats.get("created") + 1);
+                    }
+                }
 
-            result.putIfAbsent(date, new HashMap<>());
-            Map<String, Integer> day = result.get(date);
+                // 2. Completed Stats
+                if ("TERMINE".equals(task.getStatut())) {
+                    Date completedDateRaw = task.getUpdated_at() != null ? task.getUpdated_at() : task.getDate_fin();
+                    if (completedDateRaw != null) {
+                        LocalDate completedDate = convertToLocalDate(completedDateRaw);
+                        String completedDateStr = completedDate.toString();
+                        if (stats.containsKey(completedDateStr)) {
+                            Map<String, Integer> dayStats = stats.get(completedDateStr);
+                            dayStats.put("completed", dayStats.get("completed") + 1);
+                        }
+                    }
+                }
 
-            day.put("created", day.getOrDefault("created", 0) + 1);
-
-            if ("TERMINE".equals(t.getStatut())) {
-                day.put("completed", day.getOrDefault("completed", 0) + 1);
-            }
-
-            if ("ABANDON".equals(t.getStatut())) {
-                day.put("abandoned", day.getOrDefault("abandoned", 0) + 1);
+                // 3. Abandoned Stats
+                if ("ABANDON".equals(task.getStatut())) {
+                    Date abandonedDateRaw = task.getUpdated_at() != null ? task.getUpdated_at() : task.getDate_fin();
+                    if (abandonedDateRaw != null) {
+                        LocalDate abandonedDate = convertToLocalDate(abandonedDateRaw);
+                        String abandonedDateStr = abandonedDate.toString();
+                        if (stats.containsKey(abandonedDateStr)) {
+                            Map<String, Integer> dayStats = stats.get(abandonedDateStr);
+                            dayStats.put("abandoned", dayStats.get("abandoned") + 1);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Error processing stats for task " + task.getId() + ": " + e.getMessage());
             }
         }
 
-        return result;
+        return stats;
+    }
+
+    private LocalDate convertToLocalDate(Date date) {
+        if (date instanceof java.sql.Date) {
+            return ((java.sql.Date) date).toLocalDate();
+        }
+        return date.toInstant()
+                .atZone(java.time.ZoneId.systemDefault())
+                .toLocalDate();
     }
 
 }

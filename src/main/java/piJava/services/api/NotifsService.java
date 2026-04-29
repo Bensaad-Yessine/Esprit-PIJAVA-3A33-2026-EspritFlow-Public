@@ -236,7 +236,38 @@ public class NotifsService {
 
     public List<Notification> getUserNotifications(int userId) {
         try {
-            return ns.showUserNotifs(userId);
+            List<Notification> notifs = ns.showUserNotifs(userId);
+
+            // Sort newest first
+            notifs.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
+
+            Map<Integer, Notification> latestPerTask = new HashMap<>();
+            List<Notification> general = new ArrayList<>();
+
+            for (Notification n : notifs) {
+
+                Integer taskId = n.getTacheId();
+
+                if (taskId != null) {
+                    // keep only latest per task
+                    if (!latestPerTask.containsKey(taskId)) {
+                        latestPerTask.put(taskId, n);
+                    }
+                } else {
+                    // notifications without task
+                    general.add(n);
+                }
+            }
+
+            // merge both
+            List<Notification> result = new ArrayList<>(latestPerTask.values());
+            result.addAll(general);
+
+            // final sort again (important!)
+            result.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
+
+            return result;
+
         } catch (SQLException e) {
             System.out.println("Erreur getUserNotifications: " + e.getMessage());
             return new ArrayList<>();

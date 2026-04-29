@@ -5,6 +5,7 @@ import piJava.entities.Notification;
 import piJava.utils.MyDataBase;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class NotificationService implements ICrud<Notification>{
@@ -50,7 +51,31 @@ public class NotificationService implements ICrud<Notification>{
 
     @Override
     public void edit(Notification notification) throws SQLException {
-
+        String sql = "UPDATE notification SET message=?, type=?, is_read=?, created_at=?, user_id=?, tache_id=?, email=? WHERE id=?";
+        PreparedStatement sp = con.prepareStatement(sql);
+        sp.setString(1, notification.getMessage());
+        sp.setString(2, notification.getType());
+        sp.setBoolean(3, notification.isRead());
+        
+        if (notification.getCreatedAt() != null) {
+            sp.setTimestamp(4, Timestamp.valueOf(notification.getCreatedAt()));
+        } else {
+            sp.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+        }
+        
+        sp.setInt(5, notification.getUserId());
+        
+        if (notification.getTacheId() != null) {
+            sp.setInt(6, notification.getTacheId());
+        } else {
+            sp.setNull(6, Types.INTEGER);
+        }
+        
+        sp.setBoolean(7, notification.isEmail());
+        sp.setInt(8, notification.getId());
+        
+        sp.executeUpdate();
+        sp.close();
     }
 
     public List<Notification> showUserNotifs(int userId) throws SQLException {
