@@ -1,25 +1,32 @@
 package piJava.Controllers.backoffice.group;
 
-import javafx.animation.*;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.*;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.util.Duration;
 import piJava.entities.Groupe;
 import piJava.entities.PropositionReunion;
+
+
+import piJava.Controllers.group.GroupChatClient;
+import piJava.Controllers.group.GroupChatListener;
+import piJava.Controllers.group.GroupChatMessage;
+import piJava.Controllers.group.GroupChatServer;
+
 import piJava.services.PropositionReunionService;
+
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PropositionReunionController implements Initializable {
+public class PropositionReunionController implements Initializable, GroupChatListener {
 
     @FXML private Label groupNameBreadcrumb;
     @FXML private Label pageTitle;
@@ -34,25 +41,167 @@ public class PropositionReunionController implements Initializable {
 
     @FXML private Label footerLabel;
     @FXML private Button backBtn;
+    @FXML private TextField chatHostField;
+    @FXML private TextField chatPortField;
+    @FXML private TextField chatUsernameField;
+    @FXML private ListView<String> chatMessagesListView;
+    @FXML private TextField chatMessageField;
+    @FXML private Label chatStatusLabel;
 
     private StackPane contentArea;
     private Groupe currentGroupe;
     private final PropositionReunionService propositionService = new PropositionReunionService();
+
+
+    private final GroupChatClient groupChatClient = new GroupChatClient();
+
     private ObservableList<PropositionReunion> allPropositions = FXCollections.observableArrayList();
     private ObservableList<PropositionReunion> filtered = FXCollections.observableArrayList();
     private GroupContentController parentController;
 
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setupColumns();
+        setupListView();
         setupSearch();
+        setupChatUI();
+    }
+
+    private void setupChatUI() {
+        if (chatMessagesListView != null) {
+            chatMessagesListView.setItems(FXCollections.observableArrayList());
+        }
+        if (chatStatusLabel != null) {
+            chatStatusLabel.setText("Chat hors ligne");
+        }
+    }
+
+    private void setupListView() {
+        propositionsListView.setCellFactory(param -> new ListCell<PropositionReunion>() {
+            @Override
+            protected void updateItem(PropositionReunion prop, boolean empty) {
+                super.updateItem(prop, empty);
+                if (empty || prop == null) {
+                    setGraphic(null);
+                    return;
+                }
+                setGraphic(createPropositionCard(prop));
+            }
+        });
+    }
+
+    private VBox createPropositionCard(PropositionReunion prop) {
+        VBox card = new VBox();
+        card.setSpacing(14);
+        card.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #2D3A46, #1F2937); "
+                    + "-fx-background-radius: 14; -fx-padding: 18 20; "
+                    + "-fx-border-color: linear-gradient(from 0% 0% to 100% 100%, #3B4A5A, #2D3A46); "
+                    + "-fx-border-radius: 14; -fx-border-width: 1; "
+                    + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 12, 0, 0, 4), "
+                    + "dropshadow(gaussian, rgba(59,130,246,0.15), 20, 0, 0, 2); "
+                    + "-fx-fill-width: true; -fx-max-width: Infinity;");
+        card.setPadding(new Insets(18, 20, 18, 20));
+
+        HBox header = new HBox();
+        header.setSpacing(14);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        VBox priorityBar = new VBox();
+        String barColor = "En attente".equalsIgnoreCase(prop.getStatut()) ? 
+                         "linear-gradient(from 0% 100% to 0% 0%, #F59E0B, #D97706)" :
+                         "Acceptée".equalsIgnoreCase(prop.getStatut()) ?
+                         "linear-gradient(from 0% 100% to 0% 0%, #10B981, #059669)" :
+                         "linear-gradient(from 0% 100% to 0% 0%, #EF4444, #DC2626)";
+        priorityBar.setStyle("-fx-background-color: " + barColor + "; "
+                            + "-fx-pref-width: 6; -fx-background-radius: 3;");
+
+        VBox info = new VBox();
+        info.setSpacing(4);
+
+        Label titre = new Label(prop.getTitre());
+        titre.setStyle("-fx-text-fill: #F3F4F6; -fx-font-size: 16px; -fx-font-weight: bold;");
+
+        Label dateTime = new Label((prop.getDateReunion() != null ? prop.getDateReunion().toString() : "—") + 
+                                  " | " + (prop.getHeureDebut() != null ? prop.getHeureDebut().toString() : "—") + 
+                                  " - " + (prop.getHeureFin() != null ? prop.getHeureFin().toString() : "—"));
+        dateTime.setStyle("-fx-text-fill: #CBD5E1; -fx-font-size: 13px;");
+
+        info.getChildren().addAll(titre, dateTime);
+        header.getChildren().addAll(priorityBar, info);
+
+        HBox statsRow = new HBox();
+        statsRow.setSpacing(20);
+
+        VBox lieuBox = new VBox();
+        lieuBox.setSpacing(2);
+        Label lieuLabel = new Label("Lieu");
+        lieuLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #94A3B8;");
+        Label lieuValue = new Label(nvl(prop.getLieu(), "—"));
+        lieuValue.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #60A5FA;");
+        lieuBox.getChildren().addAll(lieuLabel, lieuValue);
+
+        VBox descBox = new VBox();
+        descBox.setSpacing(2);
+        Label descLabel = new Label("Description");
+        descLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #94A3B8;");
+        Label descValue = new Label(nvl(prop.getDescription(), "—"));
+        descValue.setStyle("-fx-font-size: 12px; -fx-text-fill: #CBD5E1; -fx-wrap-text: true;");
+        descBox.getChildren().addAll(descLabel, descValue);
+
+        VBox statusBox = new VBox();
+        statusBox.setSpacing(2);
+        Label statusLabel = new Label("Statut");
+        statusLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #94A3B8;");
+        Label statusValue = new Label(nvl(prop.getStatut(), "—"));
+        String statusColor = "En attente".equalsIgnoreCase(prop.getStatut()) ? 
+                            "linear-gradient(from 0% 0% to 100% 100%, #F59E0B, #D97706)" :
+                            "Acceptée".equalsIgnoreCase(prop.getStatut()) ?
+                            "linear-gradient(from 0% 0% to 100% 100%, #10B981, #059669)" :
+                            "linear-gradient(from 0% 0% to 100% 100%, #EF4444, #DC2626)";
+        statusValue.setStyle("-fx-padding: 5 12; -fx-background-radius: 20; -fx-font-size: 11px; -fx-font-weight: bold; "
+                           + "-fx-text-fill: #FFFFFF; -fx-background-color: " + statusColor + ";");
+        statusBox.getChildren().addAll(statusLabel, statusValue);
+
+        statsRow.getChildren().addAll(lieuBox, descBox, statusBox);
+
+        HBox actions = new HBox();
+        actions.setSpacing(8);
+        actions.setAlignment(Pos.CENTER_RIGHT);
+
+
+
+        Separator sep1 = new Separator();
+        sep1.setPrefHeight(1);
+        sep1.setStyle("-fx-background-color: #3B4A5A;");
+        actions.getChildren().add(sep1);
+
+        Button editBtn = new Button("✎ Modifier");
+        editBtn.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F59E0B, #D97706); "
+                        + "-fx-text-fill: #FFFFFF; -fx-background-radius: 8; -fx-padding: 8 16; "
+                        + "-fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand;");
+        editBtn.setOnAction(e -> handleEdit(prop));
+
+        Button delBtn = new Button("🗑 Supprimer");
+        delBtn.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #EF4444, #DC2626); "
+                      + "-fx-text-fill: #FFFFFF; -fx-background-radius: 8; -fx-padding: 8 16; "
+                      + "-fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand;");
+        delBtn.setOnAction(e -> handleDelete(prop));
+
+        actions.getChildren().addAll(editBtn, delBtn);
+
+        card.getChildren().addAll(header, statsRow, actions);
+
+        return card;
     }
 
     public void setCurrentGroupe(Groupe groupe) {
         this.currentGroupe = groupe;
         if (groupe != null) {
             groupNameBreadcrumb.setText(groupe.getNom());
-            pageTitle.setText("Propositions Réunion - " + groupe.getNom());
+            pageTitle.setText("📋 Propositions Réunion - " + groupe.getNom());
+            if (chatUsernameField != null && (chatUsernameField.getText() == null || chatUsernameField.getText().isBlank())) {
+                chatUsernameField.setText("Backoffice-" + groupe.getId());
+            }
             loadData();
         }
     }
@@ -63,69 +212,6 @@ public class PropositionReunionController implements Initializable {
     
     public void setContentArea(StackPane contentArea) {
         this.contentArea = contentArea;
-    }
-
-    // ── Column Setup ───────────────────────────────────────────
-    private void setupColumns() {
-        // ID
-        idCol.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().getId())));
-
-        // DATE
-        dateCol.setCellValueFactory(d -> new SimpleStringProperty(
-                d.getValue().getDateReunion() != null ? d.getValue().getDateReunion().toString() : "—"
-        ));
-
-        // HEURE (显示开始和结束时间)
-        heureCol.setCellValueFactory(d -> {
-            PropositionReunion prop = d.getValue();
-            String debut = prop.getHeureDebut() != null ? prop.getHeureDebut().toString() : "—";
-            String fin = prop.getHeureFin() != null ? prop.getHeureFin().toString() : "—";
-            return new SimpleStringProperty(debut + " - " + fin);
-        });
-
-        // LIEU
-        lieuCol.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getLieu(), "—")));
-
-        // STATUT
-        statusCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getStatut()));
-        statusCol.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setGraphic(null); return; }
-                Label badge = new Label(item);
-                String color = "En attente".equalsIgnoreCase(item) ? "#f59e0b" : 
-                              "Acceptée".equalsIgnoreCase(item) ? "#10b981" : "#ef4444";
-                badge.setStyle("-fx-padding:4px 12px; -fx-background-color:" + color + "; " +
-                              "-fx-text-fill:white; -fx-border-radius:12;");
-                setGraphic(badge);
-            }
-        });
-
-        // DESCRIPTION
-        descCol.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getDescription(), "—")));
-
-        // ACTIONS
-        actionsCol.setCellFactory(param -> new TableCell<>() {
-            private final Button editBtn = createActionButton("✎", "#8b5cf6");
-            private final Button delBtn = createActionButton("✕", "#ef4444");
-            private final HBox actions = new HBox(6, editBtn, delBtn);
-
-            {
-                actions.setAlignment(Pos.CENTER_LEFT);
-            }
-
-            @Override protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getIndex() < 0) {
-                    setGraphic(null);
-                    return;
-                }
-                PropositionReunion prop = getTableView().getItems().get(getIndex());
-                editBtn.setOnAction(e -> handleEdit(prop));
-                delBtn.setOnAction(e -> handleDelete(prop));
-                setGraphic(actions);
-            }
-        });
     }
 
     // ── Data Loading ───────────────────────────────────────────
@@ -146,7 +232,7 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
             allPropositions.clear();
             filtered.clear();
             updateStats();
-            updateTable();
+            updateList();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors du chargement: " + e.getMessage());
         }
     }
@@ -240,7 +326,6 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
         dialog.setTitle("Nouvelle Proposition de Réunion");
         dialog.setHeaderText("Ajouter une nouvelle proposition pour " + currentGroupe.getNom());
         
-        // Create form fields
         GridPane form = new GridPane();
         form.setHgap(12);
         form.setVgap(12);
@@ -267,7 +352,6 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
         descField.setPrefHeight(80);
         descField.setWrapText(true);
         
-        // Add to form
         form.add(new Label("Titre:"), 0, 0);
         form.add(titreField, 1, 0);
         
@@ -304,14 +388,12 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
                     return;
                 }
                 
-                // Validation: Titre doit commencer par une majuscule
                 String titre = titreField.getText().trim();
                 if (!Character.isUpperCase(titre.charAt(0))) {
                     showAlert(Alert.AlertType.WARNING, "Validation", "Le titre doit commencer par une majuscule.");
                     return;
                 }
                 
-                // Validation: Date doit être supérieure à aujourd'hui
                 java.time.LocalDate selectedDate = dateField.getValue();
                 java.time.LocalDate today = java.time.LocalDate.now();
                 if (selectedDate == null || !selectedDate.isAfter(today)) {
@@ -319,7 +401,6 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
                     return;
                 }
                 
-                // Validation: Date fin max 3 heures après début
                 java.time.LocalTime startTime = timeStringToLocalTime(debStart.getValue());
                 java.time.LocalTime endTime = timeStringToLocalTime(debEnd.getValue());
                 if (startTime != null && endTime != null) {
@@ -333,7 +414,6 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
                     }
                 }
                 
-                // Validation: Description minimum 10 caractères
                 String description = descField.getText();
                 if (description != null && !description.isEmpty() && description.trim().length() < 10) {
                     showAlert(Alert.AlertType.WARNING, "Validation", "La description doit contenir au moins 10 caractères.");
@@ -366,7 +446,6 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
         dialog.setTitle("Modifier Proposition de Réunion");
         dialog.setHeaderText("Éditer: " + proposition.getTitre());
         
-        // Create form fields
         GridPane form = new GridPane();
         form.setHgap(12);
         form.setVgap(12);
@@ -395,7 +474,6 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
         descField.setPrefHeight(80);
         descField.setWrapText(true);
         
-        // Add to form
         form.add(new Label("Titre:"), 0, 0);
         form.add(titreField, 1, 0);
         
@@ -425,14 +503,12 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
                     return;
                 }
                 
-                // Validation: Titre doit commencer par une majuscule
                 String titre = titreField.getText().trim();
                 if (!Character.isUpperCase(titre.charAt(0))) {
                     showAlert(Alert.AlertType.WARNING, "Validation", "Le titre doit commencer par une majuscule.");
                     return;
                 }
                 
-                // Validation: Date doit être supérieure à aujourd'hui
                 java.time.LocalDate selectedDate = dateField.getValue();
                 java.time.LocalDate today = java.time.LocalDate.now();
                 if (selectedDate == null || !selectedDate.isAfter(today)) {
@@ -440,7 +516,6 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
                     return;
                 }
                 
-                // Validation: Date fin max 3 heures après début
                 java.time.LocalTime startTime = timeStringToLocalTime(debStart.getValue());
                 java.time.LocalTime endTime = timeStringToLocalTime(debEnd.getValue());
                 if (startTime != null && endTime != null) {
@@ -454,7 +529,6 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
                     }
                 }
                 
-                // Validation: Description minimum 10 caractères
                 String description = descField.getText();
                 if (description != null && !description.isEmpty() && description.trim().length() < 10) {
                     showAlert(Alert.AlertType.WARNING, "Validation", "La description doit contenir au moins 10 caractères.");
@@ -537,22 +611,6 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
         return java.time.LocalTime.of(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
     }
 
-    private Button createActionButton(String text, String color) {
-        Button btn = new Button(text);
-        btn.setStyle("-fx-font-size:11px; -fx-padding:4px 8px; " +
-                   "-fx-background-color:" + color + "; -fx-text-fill:white; " +
-                   "-fx-border-radius:4; -fx-cursor:hand;");
-        return btn;
-    }
-
-    private void showInfo(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Information");
-        alert.setContentText(msg);
-        styleAlert(alert);
-        alert.showAndWait();
-    }
-
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
@@ -571,4 +629,11 @@ allPropositions.setAll(propositionService.getByGroupeId(currentGroupe.getId()));
         DialogPane pane = dialog.getDialogPane();
         pane.setStyle("-fx-background-color: #111318; -fx-border-color: #1e2130; -fx-border-width: 1;");
     }
+
+
+
+
+
+
+
 }

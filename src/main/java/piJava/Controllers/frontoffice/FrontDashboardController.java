@@ -78,17 +78,17 @@ public class FrontDashboardController implements Initializable {
     private void setupTable(List<user> users) {
         if (studentsTable == null) return;
         
-        nameCol.setCellValueFactory(d -> new SimpleStringProperty("#" + d.getValue().getId() + " - " + d.getValue().getPrenom() + " " + d.getValue().getNom()));
-        gradeCol.setCellValueFactory(d -> {
+        if (nameCol != null) nameCol.setCellValueFactory(d -> new SimpleStringProperty("#" + d.getValue().getId() + " - " + d.getValue().getPrenom() + " " + d.getValue().getNom()));
+        if (gradeCol != null) gradeCol.setCellValueFactory(d -> {
             String r = d.getValue().getRoles();
             if (r == null) return new SimpleStringProperty("Étudiant");
             if (r.contains("ROLE_ADMIN")) return new SimpleStringProperty("Admin");
             if (r.contains("ROLE_PROF")) return new SimpleStringProperty("Professeur");
             return new SimpleStringProperty("Étudiant");
         });
-        courseCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getEmail()));
-        attendanceCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNum_tel()));
-        statusCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getIs_banned() == 1 ? "Banni 🚫" : (d.getValue().getIs_verified() == 1 ? "Vérifié ✅" : "Non vérifié ❌")));
+        if (courseCol != null) courseCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getEmail()));
+        if (attendanceCol != null) attendanceCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNum_tel()));
+        if (statusCol != null) statusCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getIs_banned() == 1 ? "Banni 🚫" : (d.getValue().getIs_verified() == 1 ? "Vérifié ✅" : "Non vérifié ❌")));
         
         // Get 10 recent
         List<user> recent = users.stream()

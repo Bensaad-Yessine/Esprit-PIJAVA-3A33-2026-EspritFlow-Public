@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="piJava.Controllers.frontoffice.group.FrontPropositionReunionController"
+      stylesheets="@group.css"
+      styleClass="root-bg"
+      prefWidth="1200" prefHeight="800"
+      spacing="20">
+
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <!-- HEADER -->
+    <VBox spacing="8">
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Groupes" styleClass="breadcrumb-inactive"/>
+            <Label text="›" styleClass="breadcrumb-sep"/>
+            <Label fx:id="groupNameBreadcrumb" text="Propositions" styleClass="breadcrumb-active"/>
+        </HBox>
+        <Label fx:id="pageTitle" text="📋 Propositions Réunion" styleClass="page-title"/>
+        <Label text="Participez aux votes sur les propositions de réunion" styleClass="page-subtitle"/>
+    </VBox>
+
+    <!-- SEARCH & STATS ROW -->
+    <HBox spacing="20">
+        <TextField fx:id="searchField" 
+                   promptText="🔍 Rechercher une proposition..."
+                   prefWidth="300"
+                   styleClass="search-field"
+                   HBox.hgrow="ALWAYS"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <!-- STATS -->
+    <HBox spacing="20" styleClass="stats-row" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+            <Label text="📋 Total" styleClass="stat-label"/>
+            <Label fx:id="totalPropositionsLabel" text="0" styleClass="stat-number"/>
+            <Label text="Propositions" styleClass="stat-sub"/>
+        </VBox>
+
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+            <Label text="✓ Acceptées" styleClass="stat-label"/>
+            <Label fx:id="acceptedPropositionsLabel" text="0" styleClass="stat-number" style="-fx-text-fill: #10B981;"/>
+            <Label text="Validées" styleClass="stat-sub"/>
+        </VBox>
+
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+            <Label text="⏳ En attente" styleClass="stat-label"/>
+            <Label fx:id="pendingPropositionsLabel" text="0" styleClass="stat-number" style="-fx-text-fill: #F59E0B;"/>
+            <Label text="En cours" styleClass="stat-sub"/>
+        </VBox>
+
+    </HBox>
+
+    <!-- LIST VIEW -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+        <ListView fx:id="propositionsListView"
+                  style="-fx-control-inner-background: transparent; -fx-padding: 0;"
+                  prefHeight="400"/>
+    </ScrollPane>
+
+    <!-- FOOTER -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <Label fx:id="footerLabel" text="0 propositions"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="backBtn" text="← Retour aux Groupes" styleClass="btn-secondary" onAction="#handleBack"/>
+    </HBox>
+
+</VBox>

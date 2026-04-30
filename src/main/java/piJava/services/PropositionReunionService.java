@@ -10,6 +10,9 @@ import java.util.List;
 public class PropositionReunionService implements ICrud<PropositionReunion> {
 
     private final Connection con = MyDataBase.getInstance().getConnection();
+    private static final int MAX_TITRE_LENGTH = 60;
+    private static final int MAX_LIEU_LENGTH = 100;
+    private static final int MAX_DESCRIPTION_LENGTH = 240;
 
     // ─── SHOW (SELECT ALL) ───────────────────────────────────────
     @Override
@@ -59,12 +62,12 @@ public class PropositionReunionService implements ICrud<PropositionReunion> {
 
         try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, proposition.getPropositionId());
-            ps.setString(2, proposition.getTitre());
+            ps.setString(2, truncate(proposition.getTitre(), MAX_TITRE_LENGTH));
             ps.setDate(3, java.sql.Date.valueOf(proposition.getDateReunion()));
             ps.setTime(4, java.sql.Time.valueOf(proposition.getHeureDebut()));
             ps.setTime(5, java.sql.Time.valueOf(proposition.getHeureFin()));
-            ps.setString(6, proposition.getLieu());
-            ps.setString(7, proposition.getDescription());
+            ps.setString(6, truncate(proposition.getLieu(), MAX_LIEU_LENGTH));
+            ps.setString(7, truncate(proposition.getDescription(), MAX_DESCRIPTION_LENGTH));
             ps.setString(8, proposition.getStatut() != null ? proposition.getStatut() : "En attente");
             ps.setDate(9, proposition.getDateCreation() != null ? java.sql.Date.valueOf(proposition.getDateCreation()) : java.sql.Date.valueOf(java.time.LocalDate.now()));
             ps.setDate(10, proposition.getDateFinVote() != null ? java.sql.Date.valueOf(proposition.getDateFinVote()) : null);
@@ -167,5 +170,16 @@ public class PropositionReunionService implements ICrud<PropositionReunion> {
                     rs.getInt("id_groupe_id")
             );
         }
+    }
+
+    private static String truncate(String value, int maxLength) {
+        if (value == null) {
+            return null;
+        }
+        String cleaned = value.trim();
+        if (cleaned.length() <= maxLength) {
+            return cleaned;
+        }
+        return cleaned.substring(0, Math.max(0, maxLength - 3)).trim() + "...";
     }
 }

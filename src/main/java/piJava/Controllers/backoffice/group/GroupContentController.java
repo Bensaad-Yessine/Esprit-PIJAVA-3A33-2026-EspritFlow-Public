@@ -1,17 +1,12 @@
 package piJava.Controllers.backoffice.group;
 
-import javafx.animation.*;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.*;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.util.Duration;
 import piJava.Controllers.backoffice.SidebarController;
 import piJava.entities.Groupe;
 import piJava.services.GroupeService;
@@ -23,38 +18,20 @@ import java.util.stream.Collectors;
 
 public class GroupContentController implements Initializable {
 
-    // ── Header ─────────────────────────────────────────────────
     @FXML private TextField searchField;
     @FXML private Button    addGroupBtn;
 
-    // ── Mini stats ─────────────────────────────────────────────
     @FXML private Label totalGroupsLabel;
     @FXML private Label activeGroupsLabel;
     @FXML private Label totalMembersLabel;
     @FXML private Label coveredSubjectsLabel;
 
-    // ── Filters ────────────────────────────────────────────────
     @FXML private ComboBox<String> statusFilter;
     @FXML private Button           resetFilterBtn;
     @FXML private Label           resultCountLabel;
 
-    // ── Table ──────────────────────────────────────────────────
-    @FXML private TableView<Groupe>            groupTable;
-    @FXML private TableColumn<Groupe, String>  idCol;
-    @FXML private TableColumn<Groupe, String>  nameCol;
-    @FXML private TableColumn<Groupe, String>  projectCol;
-    @FXML private TableColumn<Groupe, String>  membersCol;
-    @FXML private TableColumn<Groupe, String>  statusCol;
-    @FXML private TableColumn<Groupe, String>  descCol;
-    @FXML private TableColumn<Groupe, Void>    actionsCol;
+    @FXML private ListView<Groupe> groupsListView;
 
-    // ── Footer ─────────────────────────────────────────────────
-    @FXML private Label  footerLabel;
-    @FXML private Button prevBtn;
-    @FXML private Label  pageLabel;
-    @FXML private Button nextBtn;
-
-    // ── State ──────────────────────────────────────────────────
     private final GroupeService groupeService = new GroupeService();
     private ObservableList<Groupe> allGroups = FXCollections.observableArrayList();
     private ObservableList<Groupe> filtered    = FXCollections.observableArrayList();
@@ -74,112 +51,122 @@ public class GroupContentController implements Initializable {
         this.sidebarController = sidebar;
     }
 
-    // ───────────────────────────────────────────────────────────
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setupColumns();
+        setupListView();
         loadData();
         setupSearch();
         setupFilters();
-        animateEntrance();
     }
 
-    // ── Column Setup ───────────────────────────────────────────
-    private void setupColumns() {
-
-        // # ID
-        idCol.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().getId())));
-        idCol.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setGraphic(null); return; }
-                Label lbl = new Label("#" + item);
-                lbl.setStyle("-fx-font-family:'Syne'; -fx-font-size:11px; "
-                           + "-fx-text-fill:#3a4060; -fx-font-weight:700;");
-                setGraphic(lbl);
-            }
-        });
-
-        // NOM
-        nameCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNom()));
-        nameCol.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setGraphic(null); return; }
-                Label lbl = new Label(item);
-                lbl.setStyle("-fx-font-size:14px; -fx-font-weight:600; -fx-text-fill:#eef0f8;");
-                setGraphic(lbl);
-            }
-        });
-
-        // PROJET
-        projectCol.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getProjet(), "—")));
-
-        // MEMBRES
-        membersCol.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().getNbreMembre())));
-        membersCol.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setGraphic(null); return; }
-                Label lbl = new Label(item);
-                lbl.setStyle("-fx-text-alignment:center; -fx-text-fill:#cbd5e0;");
-                setGraphic(lbl);
-            }
-        });
-
-        // STATUT
-        statusCol.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getStatut(), "—")));
-        statusCol.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setGraphic(null); return; }
-                Label badge = new Label(item);
-                badge.setStyle("-fx-padding:4px 12px; -fx-border-radius:12; "
-                           + ("Actif".equalsIgnoreCase(item)
-                                ? "-fx-background-color:#10b981; -fx-text-fill:#ffffff;"
-                                : "-fx-background-color:#6b7280; -fx-text-fill:#ffffff;"));
-                setGraphic(badge);
-            }
-        });
-
-        // DESCRIPTION
-        descCol.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getDescription(), "—")));
-
-        // ACTIONS
-        actionsCol.setCellFactory(param -> new TableCell<>() {
-            private final Button editBtn  = createActionButton("✎", "#8b5cf6");
-            private final Button proposBtn = createActionButton("📋", "#f59e0b");
-            private final Button delBtn   = createActionButton("✕", "#ef4444");
-            private final HBox actions    = new HBox(6, editBtn, proposBtn, delBtn);
-
-            {
-                actions.setAlignment(Pos.CENTER_LEFT);
-            }
-
-            @Override protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getIndex() < 0) {
+    private void setupListView() {
+        groupsListView.setCellFactory(param -> new ListCell<Groupe>() {
+            @Override
+            protected void updateItem(Groupe groupe, boolean empty) {
+                super.updateItem(groupe, empty);
+                if (empty || groupe == null) {
                     setGraphic(null);
                     return;
                 }
-                Groupe groupe = getTableView().getItems().get(getIndex());
-                editBtn.setOnAction(e -> handleEdit(groupe));
-                proposBtn.setOnAction(e -> handlePropositions(groupe));
-                delBtn.setOnAction(e -> handleDelete(groupe));
-                setGraphic(actions);
+                setGraphic(createGroupCard(groupe));
             }
         });
     }
 
-    private Button createActionButton(String text, String color) {
-        Button btn = new Button(text);
-        btn.setStyle("-fx-font-size:11px; -fx-padding:4px 8px; "
-                   + "-fx-background-color:" + color + "; -fx-text-fill:white; "
-                   + "-fx-border-radius:4; -fx-cursor:hand;");
-        return btn;
+    private VBox createGroupCard(Groupe groupe) {
+        VBox card = new VBox();
+        card.setSpacing(14);
+        card.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #2D3A46, #1F2937); "
+                    + "-fx-background-radius: 14; -fx-padding: 18 20; "
+                    + "-fx-border-color: linear-gradient(from 0% 0% to 100% 100%, #3B4A5A, #2D3A46); "
+                    + "-fx-border-radius: 14; -fx-border-width: 1; "
+                    + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 12, 0, 0, 4), "
+                    + "dropshadow(gaussian, rgba(59,130,246,0.15), 20, 0, 0, 2); "
+                    + "-fx-fill-width: true; -fx-max-width: Infinity;");
+        card.setPadding(new Insets(18, 20, 18, 20));
+
+        HBox header = new HBox();
+        header.setSpacing(14);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        VBox priorityBar = new VBox();
+        priorityBar.setStyle("-fx-background-color: linear-gradient(from 0% 100% to 0% 0%, #3B82F6, #1D4ED8); "
+                            + "-fx-pref-width: 6; -fx-background-radius: 3;");
+
+        VBox info = new VBox();
+        info.setSpacing(4);
+
+        Label name = new Label(groupe.getNom());
+        name.setStyle("-fx-text-fill: #F3F4F6; -fx-font-size: 16px; -fx-font-weight: bold;");
+
+        Label project = new Label(nvl(groupe.getProjet(), "—"));
+        project.setStyle("-fx-text-fill: #CBD5E1; -fx-font-size: 13px;");
+
+        info.getChildren().addAll(name, project);
+        header.getChildren().addAll(priorityBar, info);
+
+        HBox statsRow = new HBox();
+        statsRow.setSpacing(20);
+
+        VBox membersBox = new VBox();
+        membersBox.setSpacing(2);
+        Label membersLabel = new Label("Membres");
+        membersLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #94A3B8;");
+        Label membersValue = new Label(String.valueOf(groupe.getNbreMembre()));
+        membersValue.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #60A5FA;");
+        membersBox.getChildren().addAll(membersLabel, membersValue);
+
+        VBox descBox = new VBox();
+        descBox.setSpacing(2);
+        Label descLabel = new Label("Description");
+        descLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #94A3B8;");
+        Label descValue = new Label(nvl(groupe.getDescription(), "—"));
+        descValue.setStyle("-fx-font-size: 12px; -fx-text-fill: #CBD5E1; -fx-wrap-text: true;");
+        descBox.getChildren().addAll(descLabel, descValue);
+
+        VBox statusBox = new VBox();
+        statusBox.setSpacing(2);
+        Label statusLabel = new Label("Statut");
+        statusLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #94A3B8;");
+        Label statusValue = new Label(nvl(groupe.getStatut(), "—"));
+        String statusColor = "Actif".equalsIgnoreCase(groupe.getStatut()) ? 
+                            "linear-gradient(from 0% 0% to 100% 100%, #10B981, #059669)" :
+                            "linear-gradient(from 0% 0% to 100% 100%, #6B7280, #4B5563)";
+        statusValue.setStyle("-fx-padding: 5 12; -fx-background-radius: 20; -fx-font-size: 11px; -fx-font-weight: bold; "
+                           + "-fx-text-fill: #FFFFFF; -fx-background-color: " + statusColor + ";");
+        statusBox.getChildren().addAll(statusLabel, statusValue);
+
+        statsRow.getChildren().addAll(membersBox, descBox, statusBox);
+
+        HBox actions = new HBox();
+        actions.setSpacing(8);
+        actions.setAlignment(Pos.CENTER_RIGHT);
+
+        Button editBtn = new Button("✎ Modifier");
+        editBtn.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F59E0B, #D97706); "
+                        + "-fx-text-fill: #FFFFFF; -fx-background-radius: 8; -fx-padding: 8 16; "
+                        + "-fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand;");
+        editBtn.setOnAction(e -> handleEdit(groupe));
+
+        Button proposBtn = new Button("📋 Propositions");
+        proposBtn.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #3B82F6, #2563EB); "
+                          + "-fx-text-fill: #FFFFFF; -fx-background-radius: 8; -fx-padding: 8 16; "
+                          + "-fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand;");
+        proposBtn.setOnAction(e -> handlePropositions(groupe));
+
+        Button delBtn = new Button("🗑 Supprimer");
+        delBtn.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #EF4444, #DC2626); "
+                      + "-fx-text-fill: #FFFFFF; -fx-background-radius: 8; -fx-padding: 8 16; "
+                      + "-fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand;");
+        delBtn.setOnAction(e -> handleDelete(groupe));
+
+        actions.getChildren().addAll(editBtn, proposBtn, delBtn);
+
+        card.getChildren().addAll(header, statsRow, actions);
+
+        return card;
     }
 
-    // ── Data Loading ───────────────────────────────────────────
     private void loadData() {
         try {
             System.out.println("[DEBUG] Loading groups data...");
@@ -187,15 +174,14 @@ public class GroupContentController implements Initializable {
             System.out.println("[DEBUG] Loaded " + allGroups.size() + " groups");
             filtered.setAll(allGroups);
             updateStats();
-            updateTable();
+            updateList();
         } catch (SQLException e) {
             System.err.println("[ERROR] SQL Error loading groups: " + e.getMessage());
             e.printStackTrace();
-            // Set empty data so UI still shows even if DB fails
             allGroups.clear();
             filtered.clear();
             updateStats();
-            updateTable();
+            updateList();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors du chargement des groupes: " + e.getMessage());
         } catch (Exception e) {
             System.err.println("[ERROR] Unexpected error loading groups: " + e.getMessage());
@@ -203,7 +189,7 @@ public class GroupContentController implements Initializable {
             allGroups.clear();
             filtered.clear();
             updateStats();
-            updateTable();
+            updateList();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur inattendue: " + e.getMessage());
         }
     }
@@ -221,32 +207,21 @@ public class GroupContentController implements Initializable {
         avgMembersLabel.setText(String.format("%.1f", avgMembers));
     }
 
-    private void updateTable() {
-        int start = (currentPage - 1) * PAGE_SIZE;
-        int end = Math.min(start + PAGE_SIZE, filtered.size());
-        ObservableList<Groupe> page = FXCollections.observableArrayList(
-                filtered.subList(start, end)
-        );
-        groupTable.setItems(page);
-        pageLabel.setText(String.valueOf(currentPage));
-        footerLabel.setText(String.format("Affichage de %d-%d sur %d entrées",
-                filtered.isEmpty() ? 0 : start + 1, end, filtered.size()));
-        resultCountLabel.setText(filtered.size() + " résultat(s)");
+    private void updateList() {
+        groupsListView.setItems(filtered);
+        footerCountLabel.setText(filtered.size() + " groupes");
     }
 
-    // ── Search ─────────────────────────────────────────────────
     private void setupSearch() {
         searchField.textProperty().addListener((o, old, neu) -> applyFilters());
     }
 
-    // ── Filters ────────────────────────────────────────────────
     private void setupFilters() {
         statusFilter.setItems(FXCollections.observableArrayList("Actif", "Inactif"));
         statusFilter.valueProperty().addListener((o, old, neu) -> applyFilters());
     }
 
     private void applyFilters() {
-        currentPage = 1;
         String search = searchField.getText().toLowerCase();
         String status = statusFilter.getValue();
 
@@ -255,38 +230,17 @@ public class GroupContentController implements Initializable {
                 .filter(g -> status == null || status.isEmpty() || g.getStatut().equalsIgnoreCase(status))
                 .collect(Collectors.toList()));
 
-        resultCountLabel.setText(filtered.size() + " résultat(s)");
-        updateTable();
+        updateList();
     }
 
     @FXML
     private void handleResetFilters() {
         searchField.clear();
         statusFilter.setValue(null);
-        currentPage = 1;
         filtered.setAll(allGroups);
-        updateTable();
+        updateList();
     }
 
-    // ── Pagination ─────────────────────────────────────────────
-    @FXML
-    private void handlePrev() {
-        if (currentPage > 1) {
-            currentPage--;
-            updateTable();
-        }
-    }
-
-    @FXML
-    private void handleNext() {
-        int maxPage = (int) Math.ceil((double) filtered.size() / PAGE_SIZE);
-        if (currentPage < maxPage) {
-            currentPage++;
-            updateTable();
-        }
-    }
-
-    // ── Actions ────────────────────────────────────────────────
     @FXML
     private void handleAdd() {
         showGroupeDialog(null);
@@ -300,7 +254,6 @@ public class GroupContentController implements Initializable {
         try {
             System.out.println("[DEBUG] Loading propositions view for groupe: " + groupe.getNom());
             
-            // Load the PropositionReunion view
             javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
                     getClass().getResource("/backoffice/group/PropositionReunion.fxml")
             );
@@ -330,7 +283,25 @@ public class GroupContentController implements Initializable {
     }
 
     public void showGroupsView() {
-        loadData();
+        if (contentArea != null) {
+            try {
+                javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                        getClass().getResource("/backoffice/group/GroupContent.fxml")
+                );
+                javafx.scene.Parent view = loader.load();
+                
+                GroupContentController controller = loader.getController();
+                controller.setContentArea(contentArea);
+                controller.setSidebarController(sidebarController);
+                
+                contentArea.getChildren().setAll(view);
+            } catch (Exception e) {
+                System.err.println("[ERROR] Error navigating back: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            loadData();
+        }
     }
 
     private void handleDelete(Groupe groupe) {
@@ -353,7 +324,6 @@ public class GroupContentController implements Initializable {
         });
     }
 
-    // ── Dialog for Add / Edit ──────────────────────────────────
     private void showGroupeDialog(Groupe existing) {
         boolean isEdit = existing != null;
 
@@ -368,7 +338,6 @@ public class GroupContentController implements Initializable {
                 ButtonType.CANCEL
         );
 
-        // Style dialog buttons
         Button okBtn = (Button) pane.lookupButton(pane.getButtonTypes().get(0));
         okBtn.setStyle("-fx-background-color: #00e5c8; -fx-text-fill: #0d0f14; "
                      + "-fx-font-weight: 700; -fx-background-radius: 8; -fx-padding: 8 20;");
@@ -436,19 +405,16 @@ public class GroupContentController implements Initializable {
                 return;
             }
             
-            // Validation: Nom doit avoir minimum 3 caractères
             if (g.getNom().length() < 3) {
                 showAlert(Alert.AlertType.WARNING, "Validation", "Le nom doit contenir au moins 3 caractères.");
                 return;
             }
             
-            // Validation: Projet doit commencer par une majuscule
             if (!g.getProjet().isEmpty() && !Character.isUpperCase(g.getProjet().charAt(0))) {
                 showAlert(Alert.AlertType.WARNING, "Validation", "Le projet doit commencer par une majuscule.");
                 return;
             }
             
-            // Validation: Description minimum 10 caractères
             if (g.getDescription() != null && g.getDescription().length() > 0 && g.getDescription().length() < 10) {
                 showAlert(Alert.AlertType.WARNING, "Validation", "La description doit contenir au moins 10 caractères.");
                 return;
@@ -469,15 +435,6 @@ public class GroupContentController implements Initializable {
         });
     }
 
-    // ── Animation ──────────────────────────────────────────────
-    private void animateEntrance() {
-        FadeTransition fade = new FadeTransition(Duration.millis(300), groupTable);
-        fade.setFromValue(0);
-        fade.setToValue(1);
-        fade.play();
-    }
-
-    // ── Utilities ──────────────────────────────────────────────
     private static String nvl(String s, String fallback) {
         return (s != null && !s.isBlank()) ? s : fallback;
     }

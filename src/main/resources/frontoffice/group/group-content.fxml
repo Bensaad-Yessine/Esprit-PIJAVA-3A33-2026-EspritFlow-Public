@@ -4,12 +4,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="piJava.Controllers.frontoffice.group.GroupContentController"
-      stylesheets="/frontoffice/group/group.css"
+      stylesheets="@group.css"
       prefWidth="1500" prefHeight="900"
       styleClass="root-bg">
     <ScrollPane fitToWidth="true" styleClass="page-scroll" HBox.hgrow="ALWAYS">
@@ -21,6 +19,7 @@
                     <Label text="Mes Groupes" styleClass="title"/>
                     <Label text="ESPRIT Flow · Gestion des groupes de projet" styleClass="subtitle"/>
                 </VBox>
+                <Button fx:id="invitationsBtn" text="📩 Invitations" styleClass="btn-secondary" onAction="#handleInvitations"/>
                 <Button fx:id="addGroupBtn" text="＋ Nouveau Groupe" styleClass="btn-primary" onAction="#handleAdd"/>
             </HBox>
 

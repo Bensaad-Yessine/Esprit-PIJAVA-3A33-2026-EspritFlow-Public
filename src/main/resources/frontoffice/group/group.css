@@ -219,3 +219,105 @@
     -fx-text-fill: #1f2937;
     -fx-font-size: 12px;
 }
+
+/* ============================================================
+   ADDITIONAL CLASSES FOR PROPOSITIONS-REUNION.FXML
+   ============================================================ */
+
+/* Breadcrumbs */
+.breadcrumb-inactive {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 11px;
+}
+
+.breadcrumb-sep {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 11px;
+}
+
+.breadcrumb-active {
+    -fx-text-fill: #111827;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
+/* Page title aliases */
+.page-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #13151f;
+}
+
+.page-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6b7280;
+    -fx-font-weight: 600;
+}
+
+/* Stats row */
+.stats-row {
+    -fx-spacing: 20;
+}
+
+/* Stat card */
+.stat-card {
+    -fx-background-color: rgba(255,255,255,0.95);
+    -fx-background-radius: 12;
+    -fx-padding: 16;
+    -fx-spacing: 8;
+    -fx-border-color: rgba(255,255,255,0.5);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-alignment: center;
+}
+
+.stat-card:hover {
+    -fx-background-color: rgba(255,255,255,1);
+}
+
+/* Stat label */
+.stat-label {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
+
+/* Stat number */
+.stat-number {
+    -fx-text-fill: #111827;
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+}
+
+/* Stat subtext */
+.stat-sub {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 11px;
+}
+
+/* Secondary button (used by back button) */
+.btn-secondary {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f9fafb);
+    -fx-text-fill: #374151;
+    -fx-background-radius: 24;
+    -fx-padding: 12 24;
+    -fx-font-weight: 600;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 24;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);
+}
+
+.btn-secondary:hover {
+    -fx-background-color: linear-gradient(to bottom, #f9fafb, #f3f4f6);
+    -fx-border-color: #d1d5db;
+    -fx-text-fill: #111827;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);
+}
+
+.btn-secondary:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}

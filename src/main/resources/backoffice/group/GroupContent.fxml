@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<<<<<<< HEAD
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -29,11 +30,35 @@
 
         <HBox alignment="CENTER_LEFT" spacing="16" styleClass="page-header">
             <VBox HBox.hgrow="ALWAYS" spacing="4">
+=======
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="piJava.Controllers.backoffice.group.GroupContentController"
+            stylesheets="@group.css"
+            styleClass="dashboard-root">
+
+    <VBox styleClass="main-content"
+          spacing="24"
+          fillWidth="true"
+          AnchorPane.topAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0">
+
+        <!-- HEADER -->
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+
+            <VBox HBox.hgrow="ALWAYS" spacing="6">
+>>>>>>> a31490b (feat: complete group management with real-time chat, Giphy API, Groq AI, and voting system)
                 <HBox alignment="CENTER_LEFT" spacing="8">
                     <Label text="Backoffice" styleClass="breadcrumb-inactive"/>
                     <Label text="›" styleClass="breadcrumb-sep"/>
                     <Label text="Groupes" styleClass="breadcrumb-active"/>
                 </HBox>
+<<<<<<< HEAD
                 <Label text="Gestion des Groupes Projet" styleClass="page-title"/>
             </VBox>
             <TextField fx:id="searchField"
@@ -72,6 +97,63 @@
                 </VBox>
             </HBox>
         </HBox>
+=======
+                <Label text="👥 Gestion des Groupes" styleClass="page-title"/>
+                <Label text="Gestion des groupes de projet et propositions de réunion" styleClass="page-subtitle"/>
+            </VBox>
+
+            <Button fx:id="addGroupBtn" text="➕ Nouveau Groupe"
+                    onAction="#handleAdd"
+                    styleClass="btn-primary"/>
+        </HBox>
+
+        <!-- STATS -->
+        <HBox spacing="20" styleClass="stats-row" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="👥 Total" styleClass="stat-label"/>
+                <Label fx:id="totalGroupsLabel" text="0" styleClass="stat-number"/>
+                <Label text="Groupes" styleClass="stat-sub"/>
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="✓ Actifs" styleClass="stat-label"/>
+                <Label fx:id="activeGroupsLabel" text="0" styleClass="stat-number" style="-fx-text-fill: #10B981;"/>
+                <Label text="En cours" styleClass="stat-sub"/>
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="📊 Moyenne" styleClass="stat-label"/>
+                <Label fx:id="avgMembersLabel" text="0" styleClass="stat-number" style="-fx-text-fill: #F59E0B;"/>
+                <Label text="Membres" styleClass="stat-sub"/>
+            </VBox>
+
+        </HBox>
+
+        <!-- LIST CONTAINER -->
+        <VBox VBox.vgrow="ALWAYS" spacing="12" styleClass="list-container" maxWidth="Infinity">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Liste des groupes" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+                <Label text="Filtrage:" styleClass="filter-label"/>
+                <TextField fx:id="searchField" promptText="🔍 Rechercher..."
+                           styleClass="search-field"/>
+                <ComboBox fx:id="statusFilter" promptText="Statut" styleClass="filter-combo"/>
+                <Button fx:id="resetFilterBtn" text="Reset"
+                        onAction="#handleResetFilters"
+                        styleClass="btn-secondary"/>
+            </HBox>
+
+            <Label fx:id="footerCountLabel" text="0 groupes" styleClass="task-count"/>
+
+            <ListView fx:id="groupsListView"
+                      VBox.vgrow="ALWAYS"
+                      maxWidth="Infinity"
+                      maxHeight="Infinity"
+                      styleClass="task-list"/>
+
+        </VBox>
+>>>>>>> a31490b (feat: complete group management with real-time chat, Giphy API, Groq AI, and voting system)
 
         <HBox spacing="10" styleClass="filter-bar">
             <Label text="Filtrer :" styleClass="filter-label"/>
@@ -110,4 +192,9 @@
         </VBox>
 
     </VBox>
+<<<<<<< HEAD
 </ScrollPane>
+=======
+
+</AnchorPane>
+>>>>>>> a31490b (feat: complete group management with real-time chat, Giphy API, Groq AI, and voting system)

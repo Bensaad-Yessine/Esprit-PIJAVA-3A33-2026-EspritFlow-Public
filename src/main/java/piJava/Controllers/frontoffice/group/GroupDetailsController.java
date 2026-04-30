@@ -220,6 +220,7 @@ public class GroupDetailsController implements Initializable {
 
         DialogPane pane = dialog.getDialogPane();
         pane.getButtonTypes().addAll(new ButtonType("Creer", ButtonBar.ButtonData.OK_DONE), ButtonType.CANCEL);
+        styleDialog(pane);
 
         GridPane form = new GridPane();
         form.setHgap(12);
@@ -228,6 +229,7 @@ public class GroupDetailsController implements Initializable {
 
         TextField titreField = new TextField();
         titreField.setPromptText("Titre");
+        styleField(titreField);
         DatePicker dateField = new DatePicker(LocalDate.now().plusDays(1));
         ComboBox<String> startField = createTimeCombo();
         ComboBox<String> endField = createTimeCombo();
@@ -235,6 +237,7 @@ public class GroupDetailsController implements Initializable {
         endField.setValue("10:00");
         TextField lieuField = new TextField();
         lieuField.setPromptText("Salle / lieu");
+        styleField(lieuField);
         ComboBox<String> statusField = new ComboBox<>();
         statusField.getItems().addAll("En attente", "Acceptee", "Refusee");
         statusField.setValue("En attente");
@@ -242,6 +245,7 @@ public class GroupDetailsController implements Initializable {
         descriptionField.setPromptText("Description");
         descriptionField.setPrefRowCount(4);
         descriptionField.setWrapText(true);
+        styleArea(descriptionField);
 
         form.add(new Label("Titre"), 0, 0);
         form.add(titreField, 1, 0);
@@ -258,6 +262,7 @@ public class GroupDetailsController implements Initializable {
         form.add(new Label("Description"), 0, 6);
         form.add(descriptionField, 1, 6);
         pane.setContent(form);
+        styleDialogButtons(pane);
 
         dialog.showAndWait().ifPresent(result -> {
             if (result != ButtonType.OK && result.getButtonData() != ButtonBar.ButtonData.OK_DONE) {
@@ -379,7 +384,35 @@ public class GroupDetailsController implements Initializable {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        styleDialog(alert.getDialogPane());
+        styleDialogButtons(alert.getDialogPane());
         alert.showAndWait();
+    }
+
+    private void styleDialog(DialogPane pane) {
+        pane.setStyle("-fx-background-color: #ffffff; -fx-border-color: #bfdbfe; -fx-border-width: 1; -fx-background-radius: 12; -fx-border-radius: 12;");
+        pane.setMinWidth(460);
+    }
+
+    private void styleDialogButtons(DialogPane pane) {
+        for (ButtonType type : pane.getButtonTypes()) {
+            Button button = (Button) pane.lookupButton(type);
+            if (button == null) {
+                continue;
+            }
+            boolean primary = type.getButtonData() == ButtonBar.ButtonData.OK_DONE || type == ButtonType.OK;
+            button.setStyle(primary
+                    ? "-fx-background-color: linear-gradient(to right, #3b82f6, #1d4ed8); -fx-text-fill: white; -fx-font-weight: 800; -fx-background-radius: 10; -fx-padding: 8 18; -fx-cursor: hand;"
+                    : "-fx-background-color: #f8fafc; -fx-text-fill: #475569; -fx-font-weight: 700; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-radius: 10; -fx-padding: 8 18; -fx-cursor: hand;");
+        }
+    }
+
+    private void styleField(TextField field) {
+        field.setStyle("-fx-background-color: #ffffff; -fx-border-color: #bfdbfe; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 9 12; -fx-font-size: 13px;");
+    }
+
+    private void styleArea(TextArea area) {
+        area.setStyle("-fx-background-color: #ffffff; -fx-border-color: #bfdbfe; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-size: 13px;");
     }
 
     private static final class ProposalRecord {
