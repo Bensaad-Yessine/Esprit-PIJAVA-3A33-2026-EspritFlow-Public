@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
+import javafx.application.Platform;
 import piJava.entities.Classe;
 import piJava.entities.user;
 import piJava.services.ClasseService;
@@ -135,6 +136,43 @@ public class AjouterUser implements Initializable {
 
     @FXML
     void handleGmailRegister(ActionEvent event) {
+        piJava.services.GoogleAuthService googleAuthService = new piJava.services.GoogleAuthService();
+        googleAuthService.authenticate(new piJava.services.GoogleAuthService.AuthCallback() {
+            @Override
+            public void onSuccess(user loggedInUser) {
+                // Save to global session
+                piJava.utils.SessionManager.getInstance().login(loggedInUser);
+
+                // Route to appropriate view
+                Platform.runLater(() -> {
+                    showAlert(Alert.AlertType.INFORMATION, "Inscription reussie via Google !");
+                    // Route by role
+                    if (piJava.utils.SessionManager.getInstance().isAdmin()) {
+                        navigateTo(event, "/backoffice/main.fxml");
+                    } else {
+                        navigateTo(event, "/frontoffice/main.fxml");
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                Platform.runLater(() -> showAlert(Alert.AlertType.ERROR, message));
+            }
+        });
+    }
+
+    private void navigateTo(ActionEvent event, String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+            Stage stage = (Stage) email.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Navigation Error: " + e.getMessage());
+        }
     }
 
     @FXML

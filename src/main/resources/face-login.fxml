@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<!--
+  Face Recognition Login Screen
+  Pair with: FaceLoginController.java
+  Requires:  face-login.css  (or merge styles into your global CSS)
+-->
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="piJava.Controllers.frontoffice.FaceLoginController"
+      styleClass="face-login-root"
+      spacing="20"
+      alignment="CENTER">
+
+
+    <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
+
+    <!-- ── Header / Back button ───────────────────────────── -->
+    <HBox alignment="CENTER_LEFT" maxWidth="480" spacing="12">
+        <Button text="← Retour au login"
+                styleClass="btn-back-login"
+                onAction="#handleBackToLogin"/>
+    </HBox>
+
+    <!-- ── Title ──────────────────────────────────────────── -->
+    <Label text="🔐 Connexion par reconnaissance faciale"
+           styleClass="face-login-title"/>
+    <Label text="Positionnez votre visage face à la caméra, puis cliquez sur Capturer."
+           styleClass="face-login-subtitle"/>
+
+    <!-- ── Camera preview ─────────────────────────────────── -->
+    <StackPane styleClass="camera-frame" prefWidth="480" prefHeight="360">
+
+        <!-- Live feed -->
+        <ImageView fx:id="cameraPreview"
+                   fitWidth="480" fitHeight="360"
+                   preserveRatio="true"
+                   styleClass="camera-preview"/>
+
+        <!-- Placeholder when camera is off -->
+        <VBox alignment="CENTER" spacing="10" styleClass="camera-placeholder">
+            <Label text="📷" style="-fx-font-size:48px;"/>
+            <Label text="Caméra inactive" styleClass="placeholder-text"/>
+        </VBox>
+
+        <!-- Loading spinner overlay -->
+        <StackPane fx:id="loadingSpinner" styleClass="loading-overlay"
+                   visible="false" managed="false">
+            <VBox alignment="CENTER" spacing="12">
+                <Label text="⏳" style="-fx-font-size:36px;"/>
+                <Label text="Analyse en cours…" styleClass="loading-text"/>
+            </VBox>
+        </StackPane>
+
+    </StackPane>
+
+    <!-- ── Controls ───────────────────────────────────────── -->
+    <HBox spacing="16" alignment="CENTER">
+        <Button fx:id="startCameraBtn"
+                text="📷  Ouvrir la caméra"
+                styleClass="btn-camera-start"
+                onAction="#handleStartCamera"/>
+
+        <Button fx:id="captureBtn"
+                text="⚡  Capturer &amp; Identifier"
+                styleClass="btn-capture"
+                disable="true"
+                onAction="#handleCapture"/>
+
+        <Button fx:id="stopCameraBtn"
+                text="⛔  Arrêter"
+                styleClass="btn-camera-stop"
+                disable="true"
+                onAction="#handleStopCamera"/>
+    </HBox>
+
+    <!-- ── Status message ─────────────────────────────────── -->
+    <Label fx:id="statusLabel"
+           text=""
+           styleClass="status-info"
+           wrapText="true"
+           maxWidth="480"
+           alignment="CENTER"/>
+
+    <!-- ── Result card (hidden until recognition runs) ────── -->
+    <VBox fx:id="resultBox"
+          visible="false"
+          styleClass="result-card"
+          spacing="8"
+          alignment="CENTER"
+          maxWidth="400">
+        <padding><Insets top="16" right="24" bottom="16" left="24"/></padding>
+        <Label text="Utilisateur identifié" styleClass="result-header"/>
+        <Label fx:id="resultNameLabel" text="" styleClass="result-name"/>
+        <Label fx:id="resultEmailLabel" text="" styleClass="result-email"/>
+    </VBox>
+
+</VBox>

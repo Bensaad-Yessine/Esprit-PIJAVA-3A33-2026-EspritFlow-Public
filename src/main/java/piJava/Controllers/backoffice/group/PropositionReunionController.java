@@ -37,6 +37,7 @@ public class PropositionReunionController implements Initializable {
     private ObservableList<PropositionReunion> allPropositions = FXCollections.observableArrayList();
     private ObservableList<PropositionReunion> filtered = FXCollections.observableArrayList();
     private GroupContentController parentController;
+    private piJava.Controllers.backoffice.SidebarController sidebarController;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -49,6 +50,8 @@ public class PropositionReunionController implements Initializable {
             groupNameBreadcrumb.setText(groupe.getNom());
             pageTitle.setText("Propositions Réunion - " + groupe.getNom());
             loadData();
+        } else {
+            updateDisplay();
         }
     }
 
@@ -60,9 +63,13 @@ public class PropositionReunionController implements Initializable {
         this.contentArea = contentArea;
     }
 
+    public void setSidebarController(piJava.Controllers.backoffice.SidebarController sidebarController) {
+        this.sidebarController = sidebarController;
+    }
+
     // ── Data Loading ───────────────────────────────────────────
     private void loadData() {
-        if (propositionsContainer == null || footerLabel == null) {
+        if (currentGroupe == null || propositionsContainer == null || footerLabel == null) {
             return;
         }
 
@@ -84,12 +91,16 @@ public class PropositionReunionController implements Initializable {
     }
 
     private void updateStats() {
+        if (totalPropositionsLabel == null || acceptedPropositionsLabel == null || pendingPropositionsLabel == null) {
+            return;
+        }
+
         int total = allPropositions.size();
         int accepted = (int) allPropositions.stream()
-                .filter(p -> "Acceptée".equalsIgnoreCase(p.getStatut()))
+                .filter(p -> normalizeStatus(p.getStatut()).equals("acceptee"))
                 .count();
         int pending = (int) allPropositions.stream()
-                .filter(p -> "En attente".equalsIgnoreCase(p.getStatut()))
+                .filter(p -> normalizeStatus(p.getStatut()).equals("en attente"))
                 .count();
 
         totalPropositionsLabel.setText(String.valueOf(total));
@@ -98,6 +109,9 @@ public class PropositionReunionController implements Initializable {
     }
 
     private void updateDisplay() {
+        if (propositionsContainer == null || footerLabel == null) {
+            return;
+        }
         propositionsContainer.getChildren().clear();
         for (PropositionReunion prop : filtered) {
             propositionsContainer.getChildren().add(createPropositionCard(prop));
@@ -153,15 +167,19 @@ public class PropositionReunionController implements Initializable {
 
     // ── Search ─────────────────────────────────────────────────
     private void setupSearch() {
-        searchField.textProperty().addListener((o, old, neu) -> applyFilters());
+        if (searchField != null) {
+            searchField.textProperty().addListener((o, old, neu) -> applyFilters());
+        }
     }
 
     private void applyFilters() {
-        String search = searchField.getText() != null ? searchField.getText().toLowerCase() : "";
-        // ✅ FIXED: moved the closing ')' of setAll to after .collect()
+        String search = searchField == null || searchField.getText() == null
+                ? ""
+                : searchField.getText().trim().toLowerCase(Locale.ROOT);
         filtered.setAll(allPropositions.stream()
-                .filter(p -> (p.getDescription() != null && p.getDescription().toLowerCase().contains(search)) ||
-                        (p.getLieu() != null && p.getLieu().toLowerCase().contains(search)))
+                .filter(p -> nvl(p.getTitre(), "").toLowerCase(Locale.ROOT).contains(search)
+                        || nvl(p.getDescription(), "").toLowerCase(Locale.ROOT).contains(search)
+                        || nvl(p.getLieu(), "").toLowerCase(Locale.ROOT).contains(search))
                 .collect(Collectors.toList()));
         updateDisplay();
     }
@@ -169,6 +187,11 @@ public class PropositionReunionController implements Initializable {
     // ── Actions ────────────────────────────────────────────────
     @FXML
     private void handleAdd() {
+        if (currentGroupe == null) {
+            showAlert(Alert.AlertType.WARNING, "Attention", "Sélectionnez d'abord un groupe.");
+            return;
+        }
+
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Nouvelle Proposition de Réunion");
         dialog.setHeaderText("Ajouter une nouvelle proposition pour " + currentGroupe.getNom());
@@ -284,6 +307,10 @@ public class PropositionReunionController implements Initializable {
     }
 
     private void handleEdit(PropositionReunion proposition) {
+        if (proposition == null) {
+            return;
+        }
+
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Modifier Proposition de Réunion");
         dialog.setHeaderText("Éditer: " + proposition.getTitre());
@@ -391,6 +418,10 @@ public class PropositionReunionController implements Initializable {
     }
 
     private void handleDelete(PropositionReunion proposition) {
+        if (proposition == null) {
+            return;
+        }
+
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirmer la suppression");
         confirm.setHeaderText("Supprimer « " + proposition.getTitre() + " » ?");
@@ -417,6 +448,12 @@ public class PropositionReunionController implements Initializable {
             );
             javafx.scene.Parent view = loader.load();
 
+            GroupContentController controller = loader.getController();
+            if (controller != null) {
+                controller.setContentArea(contentArea);
+                controller.setSidebarController(sidebarController);
+            }
+
             if (contentArea != null) {
                 contentArea.getChildren().setAll(view);
             }
@@ -429,6 +466,16 @@ public class PropositionReunionController implements Initializable {
     // ── Utilities ──────────────────────────────────────────────
     private static String nvl(String s, String fallback) {
         return (s != null && !s.isBlank()) ? s : fallback;
+    }
+
+    private static String normalizeStatus(String status) {
+        return nvl(status, "en attente")
+                .trim()
+                .toLowerCase(Locale.ROOT)
+                .replace("é", "e")
+                .replace("è", "e")
+                .replace("ê", "e")
+                .replace("à", "a");
     }
 
     private ComboBox<String> createTimeCombo() {

@@ -43,8 +43,19 @@ public class loginService {
 
                 // ✅ Check password
                 if (BCrypt.checkpw(rawPassword, hash)) {
+                    int userId = rs.getInt("id");
+
+                    // ── Record last_login timestamp ──────────────────────────
+                    try (PreparedStatement upd = requireConnection()
+                            .prepareStatement("UPDATE `user` SET last_login = NOW() WHERE id = ?")) {
+                        upd.setInt(1, userId);
+                        upd.executeUpdate();
+                    } catch (SQLException ex) {
+                        System.err.println("⚠️ Could not update last_login: " + ex.getMessage());
+                    }
+
                     return new user(
-                            rs.getInt("id"),
+                            userId,
                             rs.getString("email"),
                             rs.getString("roles"),
                             hash,

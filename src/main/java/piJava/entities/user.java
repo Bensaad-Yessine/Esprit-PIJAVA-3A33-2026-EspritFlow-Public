@@ -19,6 +19,11 @@ public class user {
     private String banned_at;
     private String verification_token;
     private Integer classe_id; // nullable → Integer not int
+    private int currentStreak;
+    private int longestStreak;
+    private String lastStreakDate;
+    private int totalCoursesCompleted;
+    private String lastLogin; // ISO datetime string, set on each successful login
 
     // ─── Full Constructor ───────────────────────────────────────
     public user(int id, String email, String roles, String password,
@@ -119,6 +124,21 @@ public class user {
 
     public Integer getClasse_id() { return classe_id; }
     public void setClasse_id(Integer classe_id) { this.classe_id = classe_id; }
+
+    public int getCurrentStreak() { return currentStreak; }
+    public void setCurrentStreak(int currentStreak) { this.currentStreak = currentStreak; }
+
+    public int getLongestStreak() { return longestStreak; }
+    public void setLongestStreak(int longestStreak) { this.longestStreak = longestStreak; }
+
+    public String getLastStreakDate() { return lastStreakDate; }
+    public void setLastStreakDate(String lastStreakDate) { this.lastStreakDate = lastStreakDate; }
+
+    public int getTotalCoursesCompleted() { return totalCoursesCompleted; }
+    public void setTotalCoursesCompleted(int totalCoursesCompleted) { this.totalCoursesCompleted = totalCoursesCompleted; }
+
+    public String getLastLogin() { return lastLogin; }
+    public void setLastLogin(String lastLogin) { this.lastLogin = lastLogin; }
 
     // ─── toString (useful for debugging) ────────────────────────
     @Override

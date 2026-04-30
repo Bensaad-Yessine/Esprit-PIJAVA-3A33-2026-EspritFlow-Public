@@ -8,6 +8,19 @@
     -fx-background-color: #0d0f14;
 }
 
+.groups-scroll {
+    -fx-background: #0d0f14;
+    -fx-background-color: #0d0f14;
+}
+
+.groups-scroll > .viewport {
+    -fx-background-color: #0d0f14;
+}
+
+.groups-root {
+    -fx-background-color: #0d0f14;
+}
+
 .page-header {
     -fx-padding: 0 0 8 0;
 }
@@ -30,6 +43,33 @@
     -fx-font-size: 28px;
     -fx-font-weight: 700;
     -fx-text-fill: #eef0f8;
+}
+
+.stats-row {
+    -fx-padding: 0;
+}
+
+.stat-card {
+    -fx-background-color: #111318;
+    -fx-border-color: #1e2130;
+    -fx-border-width: 1;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-padding: 16 18 16 18;
+    -fx-alignment: center-left;
+}
+
+.stat-number {
+    -fx-font-family: 'Syne', sans-serif;
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #eef0f8;
+}
+
+.stat-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #3a4060;
+    -fx-font-weight: 600;
 }
 
 .search-bar,
@@ -212,6 +252,21 @@
 }
 .empty-sub    { -fx-font-size: 13px; -fx-text-fill: #272c3d; }
 
+.cards-section {
+    -fx-padding: 0;
+}
+
+.section-title {
+    -fx-font-family: 'Syne', sans-serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #eef0f8;
+}
+
+.propositions-flow {
+    -fx-padding: 4 0 10 0;
+}
+
 .table-footer {
     -fx-padding: 14 20 14 20;
     -fx-background-color: #13161e;
@@ -220,6 +275,13 @@
     -fx-background-radius: 0 0 16 16;
 }
 .footer-text { -fx-font-size: 12px; -fx-text-fill: #3a4060; }
+
+.page-label {
+    -fx-min-width: 30px;
+    -fx-alignment: center;
+    -fx-text-fill: #c8cfe8;
+    -fx-font-weight: 700;
+}
 
 .page-btn {
     -fx-background-color: #1e2130;
@@ -263,3 +325,20 @@
     -fx-border-width: 1;
 }
 .btn-delete:hover { -fx-background-color: #fb718560; }
+
+.btn-back {
+    -fx-background-color: transparent;
+    -fx-border-color: #38bdf840;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: #38bdf8;
+    -fx-font-size: 12px;
+    -fx-padding: 8 14 8 14;
+    -fx-cursor: hand;
+}
+
+.btn-back:hover {
+    -fx-background-color: #38bdf81a;
+}
+

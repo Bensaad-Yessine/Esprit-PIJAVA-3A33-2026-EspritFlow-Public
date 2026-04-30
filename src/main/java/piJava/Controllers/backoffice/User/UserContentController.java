@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import piJava.entities.Classe;
 import piJava.entities.user;
 import piJava.services.ClasseService;
+import piJava.services.StreakEngagementService;
 import piJava.services.UserServices;
 
 import java.io.File;
@@ -71,8 +72,9 @@ public class UserContentController implements Initializable {
     @FXML private Button nextBtn;
 
     // ── State ──────────────────────────────────────────────────
-    private final UserServices  userServices  = new UserServices();
-    private final ClasseService classeService = new ClasseService();
+    private final UserServices          userServices          = new UserServices();
+    private final ClasseService         classeService         = new ClasseService();
+    private final StreakEngagementService streakEngagementService = new StreakEngagementService();
 
     private ObservableList<user>   allUsers = FXCollections.observableArrayList();
     private ObservableList<user>   filtered = FXCollections.observableArrayList();
@@ -1024,5 +1026,55 @@ public class UserContentController implements Initializable {
         Alert a = new Alert(type);
         a.setTitle(title); a.setHeaderText(null); a.setContentText(msg);
         styleAlert(a); a.showAndWait();
+    }
+
+    // ── Streak Re-Engagement Emails ───────────────────────────────────────────
+    @FXML
+    private void handleSendStreakEmails() {
+        int inactiveDays = 1;
+        var targets = streakEngagementService.findInactiveStreakUsers(inactiveDays);
+
+        if (targets.isEmpty()) {
+            showAlert(Alert.AlertType.INFORMATION,
+                      "Aucun utilisateur ciblé",
+                      "Tous les utilisateurs actifs se sont connectés récemment.\n" +
+                      "Aucun email de re-engagement n'est nécessaire pour l'instant.");
+            return;
+        }
+
+        // Build confirmation list
+        StringBuilder sb = new StringBuilder();
+        sb.append(targets.size()).append(" utilisateur(s) ciblé(s) :\n\n");
+        int shown = 0;
+        for (var u : targets) {
+            if (shown >= 8) { sb.append("  … et ").append(targets.size() - shown).append(" autre(s)\n"); break; }
+            sb.append("  🔥 ").append(u.getPrenom()).append(" ").append(u.getNom())
+              .append(" (streak=").append(u.getCurrentStreak()).append(") — ").append(u.getEmail()).append("\n");
+            shown++;
+        }
+        sb.append("\nEnvoyer les emails de re-engagement maintenant ?");
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Envoyer les emails de streak");
+        confirm.setHeaderText("🔥 Re-Engagement des utilisateurs inactifs");
+        confirm.setContentText(sb.toString());
+        styleAlert(confirm);
+
+        confirm.showAndWait().ifPresent(btn -> {
+            if (btn != ButtonType.OK) return;
+
+            // Run in background thread so UI stays responsive
+            Thread emailThread = new Thread(() -> {
+                String summary = streakEngagementService.sendEngagementEmails(inactiveDays);
+                javafx.application.Platform.runLater(() ->
+                    showAlert(Alert.AlertType.INFORMATION,
+                              "Emails envoyés",
+                              "Résultat de l'envoi :\n" + summary.replace(",", "\n"))
+                );
+            });
+            emailThread.setDaemon(true);
+            emailThread.setName("streak-email-sender");
+            emailThread.start();
+        });
     }
 }

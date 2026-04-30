@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<!--
+  chat-widget.fxml
+  Floating academic chatbot overlay for EspritFlow frontoffice.
+  Placed as a StackPane overlay on top of the contentArea.
+-->
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piJava.Controllers.frontoffice.ChatController"
+           fx:id="chatRoot"
+           pickOnBounds="false"
+           stylesheets="@chat.css">
+
+    <!-- ── Floating panel + FAB anchored to bottom-right ── -->
+    <AnchorPane pickOnBounds="false" maxWidth="Infinity" maxHeight="Infinity">
+
+        <!-- ── Chat Panel (expanded view) ──────────────── -->
+        <VBox fx:id="chatPanel"
+              styleClass="chat-panel"
+              prefWidth="380" prefHeight="520"
+              maxWidth="380" maxHeight="520"
+              spacing="0"
+              AnchorPane.rightAnchor="24"
+              AnchorPane.bottomAnchor="90"
+              pickOnBounds="true">
+
+            <!-- Header -->
+            <HBox styleClass="chat-header" alignment="CENTER_LEFT" spacing="10">
+                <Label text="🤖" style="-fx-font-size: 22px;"/>
+                <VBox HBox.hgrow="ALWAYS" spacing="1">
+                    <Label text="EspritBot" styleClass="chat-header-title"/>
+                    <Label text="Assistant Académique IA · ESPRIT Flow" styleClass="chat-header-subtitle"/>
+                </VBox>
+                <Button fx:id="clearBtn" text="↺" styleClass="chat-close-btn"
+                        onAction="#handleClear" style="-fx-font-size:13px;"/>
+                <Button text="✕" styleClass="chat-close-btn"
+                        onAction="#toggleChat"/>
+            </HBox>
+
+            <!-- Messages area -->
+            <ScrollPane fx:id="messagesScroll"
+                        styleClass="chat-messages-scroll"
+                        fitToWidth="true"
+                        VBox.vgrow="ALWAYS"
+                        hbarPolicy="NEVER"
+                        vbarPolicy="AS_NEEDED">
+                <VBox fx:id="messagesArea" styleClass="chat-messages-area" spacing="10">
+                    <padding><Insets top="12" right="14" bottom="12" left="14"/></padding>
+                </VBox>
+            </ScrollPane>
+
+            <!-- Suggestion chips (shown before first message) -->
+            <HBox fx:id="suggestionsRow" spacing="6"
+                  style="-fx-padding: 6 14 4 14; -fx-background-color: rgba(15,17,26,0.95);">
+            </HBox>
+
+            <!-- Input area -->
+            <HBox styleClass="chat-input-area" spacing="8" alignment="CENTER">
+                <TextField fx:id="inputField"
+                           styleClass="chat-input-field"
+                           promptText="Posez votre question académique…"
+                           HBox.hgrow="ALWAYS"/>
+                <Button fx:id="sendBtn"
+                        text="➤"
+                        styleClass="chat-send-btn"
+                        onAction="#handleSend"/>
+            </HBox>
+
+        </VBox>
+
+        <!-- ── FAB Button ───────────────────────────────── -->
+        <Button fx:id="fabBtn"
+                text="💬"
+                styleClass="chat-fab"
+                onAction="#toggleChat"
+                AnchorPane.rightAnchor="24"
+                AnchorPane.bottomAnchor="24"/>
+
+    </AnchorPane>
+
+</StackPane>

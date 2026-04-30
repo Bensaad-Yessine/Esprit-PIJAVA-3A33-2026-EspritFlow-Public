@@ -13,6 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import piJava.Controllers.frontoffice.matieres.MatieresContentController;
+import piJava.Controllers.frontoffice.subscription.SubscriptionContentController;
 import piJava.entities.user;
 import piJava.utils.SessionManager;
 
@@ -32,6 +33,7 @@ import piJava.Controllers.frontoffice.preferencealerte.AlertesController;
 import piJava.Controllers.frontoffice.preferencealerte.AlerteDetailsController;
 import piJava.Controllers.frontoffice.preferencealerte.AlerteEditController;
 import piJava.Controllers.frontoffice.preferencealerte.AlerteNewController;
+import piJava.Controllers.frontoffice.courses.CoursesContentController;
 
 public class FrontSidebarController implements Initializable {
 
@@ -55,8 +57,10 @@ public class FrontSidebarController implements Initializable {
     @FXML private HBox dashboardBtn;
     @FXML private HBox tachesBtn;
     @FXML private HBox classesBtn;
+    @FXML private HBox subscriptionsBtn;
     @FXML private HBox groupBtn;
     @FXML private HBox matieresBtn;
+    @FXML private HBox coursesBtn;
     @FXML private HBox enseignantsBtn;
     @FXML private HBox emploiBtn;
     @FXML private HBox sallesBtn;
@@ -78,7 +82,7 @@ public class FrontSidebarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         allNavButtons = Arrays.asList(
-                dashboardBtn, tachesBtn, classesBtn, groupBtn, matieresBtn,
+                dashboardBtn, tachesBtn, classesBtn, subscriptionsBtn, groupBtn, matieresBtn, coursesBtn,
                 enseignantsBtn, emploiBtn, sallesBtn, ObjectifsSante, notificationsBtn
         );
         bindSessionData();
@@ -172,6 +176,12 @@ public class FrontSidebarController implements Initializable {
     }
 
     @FXML
+    public void goToSubscriptions() {
+        setActiveButton(subscriptionsBtn);
+        loadView("/frontoffice/subscription/subscription-content.fxml");
+    }
+
+    @FXML
     public void goToGroup() {
         setActiveButton(groupBtn);
         loadView("/frontoffice/group/group-content.fxml");
@@ -181,6 +191,12 @@ public class FrontSidebarController implements Initializable {
     public void goToMatieres() {
         setActiveButton(matieresBtn);
         loadView("/frontoffice/matieres/matieres-content.fxml");
+    }
+
+    @FXML
+    public void goToCourses() {
+        setActiveButton(coursesBtn);
+        loadView("/frontoffice/courses/courses-content.fxml");
     }
 
     @FXML
@@ -272,6 +288,15 @@ public class FrontSidebarController implements Initializable {
             if (controller instanceof MatieresContentController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
+            }
+
+            if (controller instanceof CoursesContentController c) {
+                c.setSidebarController(this);
+                c.setContentArea(contentArea);
+            }
+
+            if (controller instanceof SubscriptionContentController c) {
+                c.setSidebarController(this);
             }
             // ✅ Inject sidebar reference into taches controllers
             if (controller instanceof TachesController c) {

@@ -128,44 +128,45 @@ public class PropositionReunionService implements ICrud<PropositionReunion> {
 
     // ─── Result Set Mapper ────────────────────────────────────────
     private PropositionReunion mapResultSet(ResultSet rs) throws SQLException {
+        String statut = readStatus(rs);
+        return new PropositionReunion(
+                rs.getInt("id"),
+                rs.getInt("proposition_id"),
+                rs.getString("titre"),
+                rs.getDate("date_reunion") != null ? rs.getDate("date_reunion").toLocalDate() : null,
+                rs.getTime("heure_debut") != null ? rs.getTime("heure_debut").toLocalTime() : null,
+                rs.getTime("heure_fin") != null ? rs.getTime("heure_fin").toLocalTime() : null,
+                rs.getString("lieu"),
+                rs.getString("description"),
+                statut,
+                rs.getDate("date_creation") != null ? rs.getDate("date_creation").toLocalDate() : null,
+                rs.getDate("date_fin_vote") != null ? rs.getDate("date_fin_vote").toLocalDate() : null,
+                rs.getInt("nbr_vote_accept"),
+                rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
+                rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
+                rs.getInt("id_groupe_id")
+        );
+    }
+
+    private String readStatus(ResultSet rs) {
+        try {
+            String status = rs.getString("status");
+            if (status != null && !status.isBlank()) {
+                return status;
+            }
+        } catch (SQLException ignored) {
+            // column may not exist in older datasets
+        }
+
         try {
             String statut = rs.getString("statut");
-            return new PropositionReunion(
-                    rs.getInt("id"),
-                    rs.getInt("proposition_id"),
-                    rs.getString("titre"),
-                    rs.getDate("date_reunion") != null ? rs.getDate("date_reunion").toLocalDate() : null,
-                    rs.getTime("heure_debut") != null ? rs.getTime("heure_debut").toLocalTime() : null,
-                    rs.getTime("heure_fin") != null ? rs.getTime("heure_fin").toLocalTime() : null,
-                    rs.getString("lieu"),
-                    rs.getString("description"),
-                    statut,
-                    rs.getDate("date_creation") != null ? rs.getDate("date_creation").toLocalDate() : null,
-                    rs.getDate("date_fin_vote") != null ? rs.getDate("date_fin_vote").toLocalDate() : null,
-                    rs.getInt("nbr_vote_accept"),
-                    rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
-                    rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
-                    rs.getInt("id_groupe_id")
-            );
-        } catch (SQLException e) {
-            // If statut column doesn't exist, set default value
-            return new PropositionReunion(
-                    rs.getInt("id"),
-                    rs.getInt("proposition_id"),
-                    rs.getString("titre"),
-                    rs.getDate("date_reunion") != null ? rs.getDate("date_reunion").toLocalDate() : null,
-                    rs.getTime("heure_debut") != null ? rs.getTime("heure_debut").toLocalTime() : null,
-                    rs.getTime("heure_fin") != null ? rs.getTime("heure_fin").toLocalTime() : null,
-                    rs.getString("lieu"),
-                    rs.getString("description"),
-                    "En attente",
-                    rs.getDate("date_creation") != null ? rs.getDate("date_creation").toLocalDate() : null,
-                    rs.getDate("date_fin_vote") != null ? rs.getDate("date_fin_vote").toLocalDate() : null,
-                    rs.getInt("nbr_vote_accept"),
-                    rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
-                    rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
-                    rs.getInt("id_groupe_id")
-            );
+            if (statut != null && !statut.isBlank()) {
+                return statut;
+            }
+        } catch (SQLException ignored) {
+            // fallback below
         }
+
+        return "En attente";
     }
 }

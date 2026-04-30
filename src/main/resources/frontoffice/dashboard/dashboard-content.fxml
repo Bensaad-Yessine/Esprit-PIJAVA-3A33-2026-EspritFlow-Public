@@ -20,7 +20,7 @@
                     <Label text="Tableau de bord" styleClass="title"/>
                     <Label text="ESPRIT Flow · Année académique 2024–2025" styleClass="subtitle"/>
                 </VBox>
-                <Button text="＋ Nouvel étudiant" styleClass="btn-primary"/>
+                <Button fx:id="newStudentBtn" text="＋ Nouvel étudiant" styleClass="btn-primary"/>
             </HBox>
 
             <!-- 4 STAT CARDS
@@ -34,7 +34,7 @@
                       spacing="6" alignment="TOP_LEFT"
                       styleClass="red-card">
                     <Label text="👥  Total Étudiants" styleClass="card-label"/>
-                    <Label text="1 284"               styleClass="card-number"/>
+                    <Label fx:id="totalStudentsLbl" text="1 284"               styleClass="card-number"/>
                     <Label text="+24 ce mois-ci"       styleClass="card-sub"/>
                 </VBox>
 
@@ -42,7 +42,7 @@
                       spacing="6" alignment="TOP_LEFT"
                       styleClass="red-card-light">
                     <Label text="📚  Classes"          styleClass="card-label"/>
-                    <Label text="24"                   styleClass="card-number"/>
+                    <Label fx:id="activeClassesLbl" text="24"                   styleClass="card-number"/>
                     <Label text="+3 cette semaine"     styleClass="card-sub"/>
                 </VBox>
 
@@ -50,7 +50,7 @@
                       spacing="6" alignment="TOP_LEFT"
                       styleClass="red-card-mid">
                     <Label text="👨‍🏫  Enseignants"      styleClass="card-label"/>
-                    <Label text="86"                   styleClass="card-number"/>
+                    <Label fx:id="teachersLbl" text="86"                   styleClass="card-number"/>
                     <Label text="Permanents"           styleClass="card-sub"/>
                 </VBox>
 
@@ -58,7 +58,7 @@
                       spacing="6" alignment="TOP_LEFT"
                       styleClass="red-card-soft">
                     <Label text="📖  Matières"         styleClass="card-label"/>
-                    <Label text="32"                   styleClass="card-number"/>
+                    <Label fx:id="bannedUsersLbl" text="32"                   styleClass="card-number"/>
                     <Label text="Programmes actifs"   styleClass="card-sub"/>
                 </VBox>
 
@@ -131,18 +131,29 @@
             <VBox styleClass="panel">
                 <HBox alignment="CENTER_LEFT" spacing="12">
                     <Label text="Étudiants récents" styleClass="panel-title" HBox.hgrow="ALWAYS"/>
-                    <Button text="Voir tout →" styleClass="btn-ghost"/>
+                    <Button fx:id="viewAllBtn" text="Voir tout →" styleClass="btn-ghost"/>
                 </HBox>
 
                 <TableView fx:id="studentsTable" prefHeight="200" styleClass="table">
                     <columns>
-                        <TableColumn text="Nom"      prefWidth="220"/>
-                        <TableColumn text="Classe"   prefWidth="120"/>
-                        <TableColumn text="Filière"  prefWidth="180"/>
-                        <TableColumn text="Présence" prefWidth="120"/>
-                        <TableColumn text="Statut"   prefWidth="120"/>
+                        <TableColumn fx:id="nameCol" text="Nom"      prefWidth="220"/>
+                        <TableColumn fx:id="gradeCol" text="Classe"   prefWidth="120"/>
+                        <TableColumn fx:id="courseCol" text="Filière"  prefWidth="180"/>
+                        <TableColumn fx:id="attendanceCol" text="Présence" prefWidth="120"/>
+                        <TableColumn fx:id="statusCol" text="Statut"   prefWidth="120"/>
                     </columns>
                 </TableView>
+            </VBox>
+
+            <!-- 🏆 STREAK LEADERBOARD -->
+            <VBox styleClass="panel" spacing="12">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="🔥 Classement par Streak" styleClass="panel-title" HBox.hgrow="ALWAYS"/>
+                    <Label text="Top apprenants" style="-fx-font-size:11px; -fx-text-fill:#A1A1AA;"/>
+                </HBox>
+
+                <!-- Dynamic rows injected by controller -->
+                <VBox fx:id="leaderboardContainer" spacing="8"/>
             </VBox>
 
         </VBox>
