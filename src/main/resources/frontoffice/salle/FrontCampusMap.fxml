@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.web.WebView?>
+
+<AnchorPane prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="piJava.Controllers.frontoffice.salle.FrontCampusMapController">
+    
+    <VBox spacing="20.0" style="-fx-background-color: #fdfbfb; -fx-padding: 30;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="15.0">
+            <Label text="🗺 Plan du campus" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+        </HBox>
+        <Label text="Cliquez sur un bloc pour explorer ses salles et réserver un créneau de révision" style="-fx-text-fill: #64748b; -fx-font-size: 14px;"/>
+
+        <!-- Statistic Cards -->
+        <HBox spacing="20.0">
+             <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                 <Label text="6" style="-fx-text-fill: #1e3a8a; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                 <HBox alignment="CENTER_LEFT" spacing="8.0">
+                     <Label text="🏫"/>
+                     <Label text="Blocs ESPRIT" style="-fx-text-fill: #64748b; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                 </HBox>
+             </VBox>
+             <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                 <Label text="4" style="-fx-text-fill: #059669; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                 <HBox alignment="CENTER_LEFT" spacing="8.0">
+                     <Label text="✔"/>
+                     <Label text="Créneaux / jour" style="-fx-text-fill: #64748b; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                 </HBox>
+             </VBox>
+             <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                 <Label text="6" style="-fx-text-fill: #0ea5e9; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                 <HBox alignment="CENTER_LEFT" spacing="8.0">
+                     <Label text="📅"/>
+                     <Label text="Jours / semaine" style="-fx-text-fill: #64748b; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                 </HBox>
+             </VBox>
+             <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                 <Label text="Révision" style="-fx-text-fill: #8b5cf6; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                 <HBox alignment="CENTER_LEFT" spacing="8.0">
+                     <Label text="📖"/>
+                     <Label text="Type de séance" style="-fx-text-fill: #64748b; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                 </HBox>
+             </VBox>
+        </HBox>
+
+        <!-- Process banner -->
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #fef2f2; -fx-padding: 10 20; -fx-background-radius: 8; -fx-border-color: #fecaca; -fx-border-radius: 8;">
+            <Label text="1" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 2 6; -fx-font-weight: bold; -fx-font-size: 11px;"/>
+            <Label text="Cliquez sur un marqueur de bloc" style="-fx-text-fill: #1e293b; -fx-font-size: 12px;"/>
+            <Label text="›" style="-fx-text-fill: #cbd5e1;"/>
+            
+            <Label text="2" style="-fx-background-color: #f97316; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 2 6; -fx-font-weight: bold; -fx-font-size: 11px;"/>
+            <Label text="Choisissez une salle libre" style="-fx-text-fill: #1e293b; -fx-font-size: 12px;"/>
+            <Label text="›" style="-fx-text-fill: #cbd5e1;"/>
+            
+            <Label text="3" style="-fx-background-color: #f59e0b; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 2 6; -fx-font-weight: bold; -fx-font-size: 11px;"/>
+            <Label text="Sélectionnez un créneau disponible" style="-fx-text-fill: #1e293b; -fx-font-size: 12px;"/>
+            <Label text="›" style="-fx-text-fill: #cbd5e1;"/>
+            
+            <Label text="4" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 2 6; -fx-font-weight: bold; -fx-font-size: 11px;"/>
+            <Label text="Cliquez sur Réserver ✔" style="-fx-text-fill: #1e293b; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <!-- Main Content Area: Map and SidePanel -->
+        <HBox spacing="20" VBox.vgrow="ALWAYS">
+            
+            <!-- Map Container -->
+            <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
+                  HBox.hgrow="ALWAYS">
+                <WebView fx:id="webView" VBox.vgrow="ALWAYS"/>
+            </VBox>
+
+            <!-- Side Panel (Initially hidden) -->
+            <VBox fx:id="sidePanel" prefWidth="400" spacing="15" 
+                  style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-padding: 0;">
+                
+                <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #ef4444; -fx-background-radius: 15 15 0 0; -fx-padding: 15;">
+                    <Button text="←" onAction="#hideSidePanel" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-cursor: hand;"/>
+                    <Label fx:id="lblBlockTitle" text="Bloc D" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                </HBox>
+
+                <!-- Success notification inside panel -->
+                <Label fx:id="lblActionSuccess" text="✔ Séance de révision ajoutée" 
+                       style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-padding: 10; -fx-background-radius: 5; -fx-font-weight: bold;"
+                       wrapText="true" maxWidth="Infinity" VBox.vgrow="NEVER" visible="false" managed="false"/>
+
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                    <VBox fx:id="roomsContainer" spacing="15" style="-fx-padding: 15;"/>
+                </ScrollPane>
+            </VBox>
+        </HBox>
+
+    </VBox>
+</AnchorPane>

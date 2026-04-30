@@ -359,9 +359,23 @@ public class EmploiContentController implements Initializable {
 
                     VBox bloc = new VBox(2);
                     bloc.getStyleClass().add("seance-block");
-                    bloc.setStyle("-fx-background-color: " + color + ";");
                     
-                    Label mName = new Label(matiereMap.getOrDefault(s.getMatiereId(), "Inconnu"));
+                    // Couleur différente pour les séances de révision
+                    boolean isRevision = "Révision".equalsIgnoreCase(s.getTypeSeance());
+                    if (isRevision) {
+                        bloc.setStyle("-fx-background-color: #8b5cf6;"); // Violet pour les révisions
+                    } else {
+                        bloc.setStyle("-fx-background-color: " + color + ";");
+                    }
+                    
+                    // Titre : "Séance de révision" pour les révisions, sinon le nom de la matière
+                    String titleText;
+                    if (isRevision) {
+                        titleText = "Séance de révision";
+                    } else {
+                        titleText = matiereMap.getOrDefault(s.getMatiereId(), "Inconnu");
+                    }
+                    Label mName = new Label(titleText);
                     mName.getStyleClass().add("seance-title");
                     
                     String strTime = String.format("%02d:%02d - %02d:%02d", startH, startM, endH, endM);
@@ -422,6 +436,27 @@ public class EmploiContentController implements Initializable {
             a.setTitle("Erreur");
             a.setHeaderText("La génération PDF a échoué.");
             a.setContentText(e.getMessage());
+            a.showAndWait();
+        }
+    }
+
+    @FXML
+    private void handleScanQR(javafx.event.ActionEvent event) {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/frontoffice/emploi/ScanQRCode.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle("Scanner QR Code de Présence");
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Erreur");
+            a.setHeaderText(null);
+            a.setContentText("Impossible d'ouvrir le scanner QR.");
             a.showAndWait();
         }
     }

@@ -217,6 +217,22 @@ public class UserServices implements ICrud<user> {
         return null;
     }
 
+    public List<user> getUsersByClasse(int classeId) {
+        List<user> users = new ArrayList<>();
+        String sql = "SELECT * FROM `user` WHERE classe_id=?";
+        try (PreparedStatement ps = requireConnection().prepareStatement(sql)) {
+            ps.setInt(1, classeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapResultSet(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("getUsersByClasse error: " + e.getMessage());
+        }
+        return users;
+    }
+
     private Connection requireConnection() throws SQLException {
         con = MyDataBase.getInstance().getConnection();
         if (con == null) {

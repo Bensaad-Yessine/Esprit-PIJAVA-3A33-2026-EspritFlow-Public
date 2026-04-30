@@ -26,6 +26,7 @@
             <Label fx:id="lblInfos" text="0 séances programmées" textFill="#64748b" />
             <Region HBox.hgrow="ALWAYS" />
             <Button onAction="#handleToday" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-cursor: hand;" text="📅 Aujourd'hui" textFill="#b91c1c" />
+            <Button onAction="#handleScanQR" style="-fx-background-color: #8b5cf6; -fx-text-fill: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: bold; -fx-padding: 5 15;" text="📷 Scanner QR Code" />
             <Button focusTraversable="false" onAction="#exportToPdf" styleClass="btn-export" text="📄 Exporter PDF" />
          </HBox>
 

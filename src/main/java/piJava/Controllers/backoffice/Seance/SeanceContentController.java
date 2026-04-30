@@ -15,6 +15,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.fxml.FXMLLoader;
 import piJava.entities.Classe;
 import piJava.entities.Matiere;
 import piJava.entities.Salle;
@@ -107,6 +112,7 @@ public class SeanceContentController implements Initializable {
     private void setupColumns() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colId.setStyle("-fx-alignment: center-left; -fx-text-fill: white;");
+        colId.setVisible(false);
 
         colMatiere.setCellValueFactory(cell -> new SimpleStringProperty(matiereMap.getOrDefault(cell.getValue().getMatiereId(), "Unknown")));
         colMatiere.setStyle("-fx-font-weight: bold; -fx-text-fill: white;");
@@ -196,7 +202,15 @@ public class SeanceContentController implements Initializable {
                     Button btnQr = new Button("🔳");
                     btnQr.setStyle("-fx-background-color: #06b6d4; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5; -fx-min-width: 32px; -fx-min-height: 30px;");
                     btnQr.setOnAction(e -> {
-                        showAlert(Alert.AlertType.INFORMATION, "Information", "Scanner QR Code n'est pas encore disponible.");
+                        Seance s = getTableView().getItems().get(getIndex());
+                        handleGenerateQR(s);
+                    });
+
+                    Button btnDash = new Button("📊");
+                    btnDash.setStyle("-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand; -fx-background-radius: 5; -fx-min-width: 32px; -fx-min-height: 30px;");
+                    btnDash.setOnAction(e -> {
+                        Seance s = getTableView().getItems().get(getIndex());
+                        handleDashboard(s);
                     });
 
                     Button btnEdit = new Button("✎");
@@ -213,7 +227,7 @@ public class SeanceContentController implements Initializable {
                         handleDelete(s);
                     });
 
-                    box.getChildren().addAll(btnView, btnQr, btnEdit, btnDelete);
+                    box.getChildren().addAll(btnView, btnQr, btnDash, btnEdit, btnDelete);
                     setGraphic(box);
                 }
             }
@@ -424,8 +438,182 @@ public class SeanceContentController implements Initializable {
         salleCombo.setVisible(false);
 
         btnIa.setOnAction(e -> {
-            showAlert(Alert.AlertType.INFORMATION, "Information", "L'optimisation par IA n'est pas encore disponible.\nVeuillez choisir une salle manuellement.");
-            salleCombo.setVisible(true);
+            StringBuilder errorMsg = new StringBuilder();
+            if (matiereCombo.getValue() == null) errorMsg.append("- La matière est obligatoire.\n");
+            if (classeCombo.getValue() == null) errorMsg.append("- La classe est obligatoire.\n");
+            if (txtType.getText().trim().isEmpty()) errorMsg.append("- Le type est obligatoire.\n");
+            if (txtMode.getText().trim().isEmpty()) errorMsg.append("- Le mode est obligatoire.\n");
+            if (datePicker.getValue() == null) errorMsg.append("- La date est obligatoire.\n");
+            if (horaireCombo.getValue() == null) errorMsg.append("- L'horaire est obligatoire.\n");
+
+            if (errorMsg.length() > 0) {
+                showAlert(Alert.AlertType.WARNING, "Information Manquante", "L'IA a besoin des informations suivantes pour faire une prédiction :\n\n" + errorMsg.toString());
+                return;
+            }
+
+            try {
+                LocalDate date = datePicker.getValue();
+                String[] times = horaireCombo.getValue().split(" - ");
+                LocalTime tStart = LocalTime.parse(times[0]);
+                LocalTime tEnd = LocalTime.parse(times[1]);
+                LocalDateTime start = LocalDateTime.of(date, tStart);
+                int duration = (int) java.time.Duration.between(tStart, tEnd).toMinutes();
+
+                // Get available rooms for this slot
+                List<Salle> allRms = salleService.getAllSalles();
+                List<Seance> allS = seanceService.getAllSeances();
+                List<Salle> availableRms = new java.util.ArrayList<>();
+                for(Salle r : allRms) {
+                    boolean free = true;
+                    for(Seance s2 : allS) {
+                        if(s2.getSalleId() == r.getId() && s2.getHeureDebut() != null && s2.getHeureFin() != null) {
+                            LocalDateTime sStart = s2.getHeureDebut().toLocalDateTime();
+                            LocalDateTime sEnd = s2.getHeureFin().toLocalDateTime();
+                            if(start.isBefore(sEnd) && LocalDateTime.of(date, tEnd).isAfter(sStart)) {
+                                free = false;
+                                break;
+                            }
+                        }
+                    }
+                    if(free) availableRms.add(r);
+                }
+
+                if(availableRms.isEmpty()) {
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "Aucune salle n'est disponible à cet horaire.");
+                    return;
+                }
+
+                // Calcul du nombre d'étudiants réels dans la classe
+                piJava.services.UserServices us = new piJava.services.UserServices();
+                List<piJava.entities.user> classUsers = us.getUsersByClasse(classeCombo.getValue().getId());
+                int classSize = classUsers.size();
+                if (classSize == 0) classSize = 1; // Eviter 0
+
+                // Calcul de l'historique d'assiduité réel
+                piJava.services.AttendanceService attService = new piJava.services.AttendanceService();
+                double moyPresence = 0.85; // defaut
+                
+                List<Seance> history = allS.stream()
+                        .filter(s -> s.getClasseId() == classeCombo.getValue().getId() && s.getHeureDebut() != null
+                                && s.getHeureDebut().toLocalDateTime().isAfter(LocalDateTime.now().minusDays(30)))
+                        .toList();
+
+                if (!history.isEmpty()) {
+                    int totalExpected = 0;
+                    int totalPresent = 0;
+                    for (Seance s : history) {
+                        List<piJava.entities.Attendance> atts = attService.getBySeanceId(s.getId());
+                        if (!atts.isEmpty()) {
+                            totalExpected += classSize;
+                            totalPresent += atts.stream().filter(a -> "Présent".equalsIgnoreCase(a.getStatus())).count();
+                        }
+                    }
+                    if (totalExpected > 0) {
+                        moyPresence = (double) totalPresent / totalExpected;
+                    }
+                }
+                double tauxAbsence = 1.0 - moyPresence;
+
+                // Construction manuelle du JSON
+                StringBuilder json = new StringBuilder();
+                json.append("{\n");
+                json.append("  \"seance\": {\n");
+                json.append("    \"jour_semaine\": ").append(start.getDayOfWeek().getValue()).append(",\n");
+                json.append("    \"heure_debut\": ").append(start.getHour()).append(",\n");
+                json.append("    \"duree_min\": ").append(duration).append(",\n");
+                json.append("    \"type_seance\": \"").append(txtType.getText().trim()).append("\",\n");
+                json.append("    \"mode\": \"").append(txtMode.getText().trim()).append("\",\n");
+                json.append("    \"matiere\": \"").append(matiereCombo.getValue().getNom().replace("\"", "\\\"")).append("\",\n");
+                json.append("    \"groupe\": \"").append(classeCombo.getValue().getNom().replace("\"", "\\\"")).append("\",\n");
+                json.append("    \"salle_capacite_initiale\": ").append(classSize).append(",\n");
+                json.append("    \"moy_presence_groupe_30j\": ").append(String.format(java.util.Locale.US, "%.2f", moyPresence)).append(",\n");
+                json.append("    \"taux_absence_groupe_30j\": ").append(String.format(java.util.Locale.US, "%.2f", tauxAbsence)).append(",\n");
+                json.append("    \"presence_moyenne_matiere\": 0.85,\n");
+                json.append("    \"presence_moyenne_creneau\": 0.80\n");
+                json.append("  },\n");
+                json.append("  \"available_rooms\": [\n");
+
+                for (int i = 0; i < availableRms.size(); i++) {
+                    Salle r = availableRms.get(i);
+                    json.append("    {\n");
+                    json.append("      \"id\": \"").append(r.getName().replace("\"", "\\\"")).append("\",\n");
+                    json.append("      \"bloc\": \"").append(r.getBlock() != null ? r.getBlock() : "A").append("\",\n");
+                    json.append("      \"etage\": ").append(r.getEtage()).append(",\n");
+                    json.append("      \"capacite\": ").append(r.getCapacite()).append(",\n");
+                    json.append("      \"is_available\": true\n");
+                    json.append("    }");
+                    if (i < availableRms.size() - 1) json.append(",");
+                    json.append("\n");
+                }
+                json.append("  ],\n");
+                json.append("  \"margin_ratio\": 0.10\n");
+                json.append("}");
+
+                // Requete HTTP asynchrone
+                java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
+                java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
+                        .uri(java.net.URI.create("http://localhost:8003/recommend_room"))
+                        .header("Content-Type", "application/json")
+                        .POST(java.net.http.HttpRequest.BodyPublishers.ofString(json.toString()))
+                        .build();
+
+                client.sendAsync(request, java.net.http.HttpResponse.BodyHandlers.ofString())
+                        .thenAccept(response -> {
+                            if (response.statusCode() == 200) {
+                                String respBody = response.body();
+                                try {
+                                    String tempMsg = "Recommandation effectuée par l'IA";
+                                    if(respBody.contains("\"message\":")) {
+                                        tempMsg = respBody.split("\"message\":\\s*\"")[1].split("\"")[0];
+                                    }
+                                    final String msg = tempMsg;
+
+                                    if (respBody.contains("\"recommended_room\":null")) {
+                                        Platform.runLater(() -> {
+                                            salleCombo.setVisible(true);
+                                            Alert a = new Alert(Alert.AlertType.WARNING);
+                                            a.setTitle("⚠️ Attention IA");
+                                            a.setHeaderText("Aucune salle adéquate trouvée");
+                                            a.setContentText(msg + "\n\nVeuillez choisir manuellement une salle parmi celles disponibles.");
+                                            styleAlert(a);
+                                            a.showAndWait();
+                                        });
+                                    } else {
+                                        String idStr = respBody.split("\"id\":\\s*\"?")[1].split("\"?,|\\}")[0].trim();
+                                        String recName = idStr.replace("\"", "");
+
+                                        Salle recommended = allRms.stream().filter(r -> r.getName().equals(recName)).findFirst().orElse(availableRms.get(0));
+
+                                        Platform.runLater(() -> {
+                                            salleCombo.setValue(recommended);
+                                            salleCombo.setVisible(true);
+
+                                            Alert a = new Alert(Alert.AlertType.INFORMATION);
+                                            a.setTitle("✨ Recommandation IA");
+                                            a.setHeaderText("Analyse complète par Smart Room AI");
+                                            a.setContentText(msg + "\n\nLa salle a été automatiquement sélectionnée. Vous pouvez la valider ou la modifier manuellement.");
+                                            styleAlert(a);
+                                            a.showAndWait();
+                                        });
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                    final String errorDetails = "Erreur de lecture. Réponse: \n" + respBody + "\nException: " + ex.getMessage();
+                                    Platform.runLater(() -> showAlert(Alert.AlertType.ERROR, "Erreur Parse", errorDetails));
+                                }
+                            } else {
+                                Platform.runLater(() -> showAlert(Alert.AlertType.ERROR, "Erreur API", "Le serveur IA a retourné le code: " + response.statusCode()));
+                            }
+                        })
+                        .exceptionally(ex -> {
+                            Platform.runLater(() -> showAlert(Alert.AlertType.ERROR, "Erreur de Connexion", "Impossible de joindre l'API Python sur localhost:8003.\nVérifiez que le serveur uvicorn est bien lancé.\n\nDétails: " + ex.getMessage()));
+                            return null;
+                        });
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Erreur de Préparation", "Erreur lors de la préparation des données pour l'IA.");
+            }
         });
 
         aiBox.getChildren().addAll(btnIa, new Label("Ou sélectionner manuellement :"), salleCombo);
@@ -525,10 +713,37 @@ public class SeanceContentController implements Initializable {
 
         dialog.showAndWait().ifPresent(s -> {
             try {
+                String className = classeCombo.getValue() != null ? classeCombo.getValue().getNom() : "Unknown";
+                String salleName = salleCombo.getValue() != null ? salleCombo.getValue().getName() : "Unknown";
+                String matiereName = matiereCombo.getValue() != null ? matiereCombo.getValue().getNom() : "Unknown";
+                
+                piJava.services.UserServices us = new piJava.services.UserServices();
+                java.util.List<piJava.entities.user> students = us.getUsersByClasse(s.getClasseId());
+
                 if (isEdit) {
                     seanceService.edit(s);
+                    piJava.services.EmailService.sendSeanceNotificationAsync("Modification", s, className, salleName, students);
+                    
+                    // Update Google Calendar asynchronously
+                    java.util.concurrent.CompletableFuture.runAsync(() -> {
+                        piJava.services.GoogleCalendarService.updateEvent(s.getGoogleEventId(), s, matiereName, className, salleName);
+                    });
                 } else {
                     seanceService.add(s);
+                    piJava.services.EmailService.sendSeanceNotificationAsync("Création", s, className, salleName, students);
+                    
+                    // Create Google Calendar asynchronously and update the seance
+                    java.util.concurrent.CompletableFuture.runAsync(() -> {
+                        String eventId = piJava.services.GoogleCalendarService.createEvent(s, matiereName, className, salleName);
+                        if (eventId != null) {
+                            s.setGoogleEventId(eventId);
+                            try {
+                                seanceService.edit(s);
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
                 loadData();
             } catch (SQLException e) {
@@ -577,21 +792,23 @@ public class SeanceContentController implements Initializable {
         bQr.setStyle("-fx-background-color: #8b5cf6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
         bQr.addEventFilter(javafx.event.ActionEvent.ACTION, e -> {
             e.consume();
-            showAlert(Alert.AlertType.INFORMATION, "Information", "Génération de QR Code n'est pas encore disponible.");
+            dialog.close();
+            Platform.runLater(() -> handleGenerateQR(seance));
         });
 
         Button bPres = (Button) pane.lookupButton(btnPresences);
         bPres.setStyle("-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
         bPres.addEventFilter(javafx.event.ActionEvent.ACTION, e -> {
             e.consume();
-            showAlert(Alert.AlertType.INFORMATION, "Information", "La liste des présences n'est pas encore disponible.");
+            dialog.close();
+            Platform.runLater(() -> handleDashboard(seance));
         });
 
         Button bIa = (Button) pane.lookupButton(btnIa);
         bIa.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
         bIa.addEventFilter(javafx.event.ActionEvent.ACTION, e -> {
             e.consume();
-            showAlert(Alert.AlertType.INFORMATION, "Information", "L'optimisation par IA n'est pas encore disponible.");
+            showAlert(Alert.AlertType.INFORMATION, "Information", "L'optimisation par IA s'effectue lors de la création ou la modification de la séance.");
         });
 
         Button bModif = (Button) pane.lookupButton(btnModifier);
@@ -692,6 +909,21 @@ public class SeanceContentController implements Initializable {
                 try {
                     seanceService.delete(seance.getId());
                     loadData();
+
+                    // Notification par email
+                    String className = classes.stream().filter(c -> c.getId() == seance.getClasseId()).map(c -> c.getNom()).findFirst().orElse("Unknown");
+                    String salleName = salles.stream().filter(sa -> sa.getId() == seance.getSalleId()).map(sa -> sa.getName()).findFirst().orElse("Unknown");
+                    piJava.services.UserServices us = new piJava.services.UserServices();
+                    java.util.List<piJava.entities.user> students = us.getUsersByClasse(seance.getClasseId());
+                    piJava.services.EmailService.sendSeanceNotificationAsync("Suppression", seance, className, salleName, students);
+                    
+                    // Suppression de l'événement Google Calendar
+                    if (seance.getGoogleEventId() != null) {
+                        java.util.concurrent.CompletableFuture.runAsync(() -> {
+                            piJava.services.GoogleCalendarService.deleteEvent(seance.getGoogleEventId());
+                        });
+                    }
+
                 } catch (SQLException e) {
                     if (e.getMessage().contains("foreign key constraint") || e.getMessage().contains("a parent row")) {
                         showAlert(Alert.AlertType.ERROR, "Suppression Impossible", "Vous ne pouvez pas supprimer cette séance car elle est liée à d'autres données.");
@@ -728,5 +960,43 @@ public class SeanceContentController implements Initializable {
         a.setContentText(msg);
         styleAlert(a);
         a.showAndWait();
+    }
+
+    private void handleGenerateQR(Seance seance) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/backoffice/Seance/QRCodeDisplay.fxml"));
+            Parent root = loader.load();
+            
+            QRCodeDisplayController controller = loader.getController();
+            controller.initData(seance);
+            
+            Stage stage = new Stage();
+            stage.setTitle("QR Code - Séance #" + seance.getId());
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir l'affichage du QR Code.");
+        }
+    }
+
+    private void handleDashboard(Seance seance) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/backoffice/Seance/SeanceDashboard.fxml"));
+            Parent root = loader.load();
+            
+            SeanceDashboardController controller = loader.getController();
+            controller.initData(seance);
+            
+            Stage stage = new Stage();
+            stage.setTitle("Dashboard Présence - Séance #" + seance.getId());
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir le Dashboard.");
+        }
     }
 }

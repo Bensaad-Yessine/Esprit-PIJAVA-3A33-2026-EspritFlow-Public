@@ -60,6 +60,7 @@ public class SallesContentController implements Initializable {
     private void setupColumns() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colId.setStyle("-fx-alignment: center-left; -fx-text-fill: white;");
+        colId.setVisible(false);
 
         // Custom Salle column with Icon
         colSalle.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));

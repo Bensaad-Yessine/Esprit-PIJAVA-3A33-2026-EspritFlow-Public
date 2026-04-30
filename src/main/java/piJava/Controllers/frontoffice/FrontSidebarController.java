@@ -135,6 +135,7 @@ public class FrontSidebarController implements Initializable {
     @FXML public void goToEnseignants()    { setActiveButton(enseignantsBtn);   loadView("/piJava/Views/frontoffice/enseignants/enseignants-content.fxml"); }
     @FXML public void goToEmploi()         { setActiveButton(emploiBtn);        loadView("/frontoffice/emploi/EmploiContent.fxml"); }
     @FXML public void goToSalles()         { setActiveButton(sallesBtn);        loadView("/frontoffice/salle/FrontSallesContent.fxml"); }
+    @FXML public void goToCampusMap()      { setActiveButton(null);             loadView("/frontoffice/salle/FrontCampusMap.fxml"); }
     @FXML public void goToObjectifsSante() { setActiveButton(ObjectifsSante);   loadView("/frontoffice/objectifsante/AfficherObjectifs.fxml"); }
     @FXML public void goToObjectifs()      { goToObjectifsSante(); }
     @FXML public void goToNotifications()  { setActiveButton(notificationsBtn); loadView("/frontoffice/notifications/notif-content.fxml"); }
@@ -171,6 +172,10 @@ public class FrontSidebarController implements Initializable {
 
             // ✅ Inject sidebar reference into profileController for live refresh
             if (controller instanceof profileController c) {
+                c.setSidebarController(this);
+            }
+
+            if (controller instanceof piJava.Controllers.frontoffice.salle.FrontSallesController c) {
                 c.setSidebarController(this);
             }
 

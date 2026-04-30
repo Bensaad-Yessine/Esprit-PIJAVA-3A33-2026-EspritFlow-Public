@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Campus Map - ESPRIT</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: transparent;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            border-radius: 15px;
+        }
+
+        .error-msg {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            text-align: center;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <script>
+        let map;
+        let userMarker; // Marker pour la position actuelle de l'utilisateur
+        let userWatchId; // ID pour le watchPosition (mise à jour en temps réel)
+
+        // Coordinates based on user provided locations
+        const locations = [
+            { name: "Bloc A / B / C", lat: 36.898482, lng: 10.189762, color: "#ef4444" },
+            { name: "Bloc D", lat: 36.899313, lng: 10.188764, color: "#f59e0b" },
+            { name: "Bloc E", lat: 36.899738, lng: 10.189332, color: "#10b981" },
+            { name: "Bloc G", lat: 36.898124, lng: 10.187311, color: "#3b82f6" },
+            { name: "Bloc H", lat: 36.895393, lng: 10.188686, color: "#8b5cf6" },
+            { name: "Bloc I / J / K", lat: 36.901173, lng: 10.190473, color: "#ec4899" }
+        ];
+
+        function initMap() {
+            try {
+                const espritCenter = { lat: 36.898, lng: 10.189 };
+
+                // 1. Initialisation de la carte via l'API GOOGLE MAPS
+                // (Cela valide l'utilisation de la clé API)
+                map = new google.maps.Map(document.getElementById("map"), {
+                    center: espritCenter,
+                    zoom: 16,
+                    mapTypeControl: false,
+                    streetViewControl: false,
+                    fullscreenControl: false,
+                    backgroundColor: 'none'
+                });
+
+                // 2. CONTOURNEMENT DU BUG JAVAFX : Remplacement des images de fond
+                // Au lieu de laisser Google charger ses images WebP (qui font planter JavaFX),
+                // on insère les images PNG d'OpenStreetMap DANS le moteur Google Maps !
+                const osmMapType = new google.maps.ImageMapType({
+                    getTileUrl: function(coord, zoom) {
+                        return "https://tile.openstreetmap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+                    },
+                    tileSize: new google.maps.Size(256, 256),
+                    maxZoom: 19,
+                    name: "OSM"
+                });
+
+                map.mapTypes.set('osm', osmMapType);
+                map.setMapTypeId('osm');
+
+                const infoWindow = new google.maps.InfoWindow();
+
+                // Fonction pour créer ou mettre à jour le marqueur de position de l'utilisateur
+                function updateUserPosition(lat, lng) {
+                    // Créer ou mettre à jour le marqueur bleu pour la position de l'utilisateur
+                    const userIcon = {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 12,
+                        fillColor: "#0066ff", // Bleu
+                        fillOpacity: 1,
+                        strokeWeight: 3,
+                        strokeColor: "#ffffff"
+                    };
+
+                    if (userMarker) {
+                        // Le marqueur existe déjà, on met à jour sa position
+                        userMarker.setPosition({ lat: lat, lng: lng });
+                        userMarker.setIcon(userIcon);
+                        userMarker.setTitle("Votre position actuelle");
+                    } else {
+                        // Créer un nouveau marqueur
+                        userMarker = new google.maps.Marker({
+                            position: { lat: lat, lng: lng },
+                            map: map,
+                            title: "Votre position actuelle",
+                            icon: userIcon,
+                            zIndex: 1000, // Pour être au-dessus des autres marqueurs
+                            animation: google.maps.Animation.DROP // Animation d'apparition
+                        });
+
+                        // Ajouter un infobulle qui s'ouvre automatiquement
+                        const userContent = '<div style="font-weight:bold; padding:5px;">📍 Votre position actuelle</div>';
+                        const userWindow = new google.maps.InfoWindow({ content: userContent });
+                        userMarker.addListener("click", () => {
+                            userWindow.open(map, userMarker);
+                        });
+                        // Ouvrir l'infobulle automatiquement à la création
+                        userWindow.open(map, userMarker);
+                    }
+
+                    // Centrer la carte sur la position de l'utilisateur (avec un zoom approprié)
+                    map.setCenter({ lat: lat, lng: lng });
+                    map.setZoom(17); // Zoom rapproché pour voir la position en détail
+                }
+
+                // Récupérer et afficher la position actuelle de l'utilisateur
+                if (navigator.geolocation) {
+                    // Première demande de position
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            updateUserPosition(position.coords.latitude, position.coords.longitude);
+                        },
+                        (error) => {
+                            console.log("Erreur de géolocalisation: " + error.message);
+                            // La carte reste centrée sur Esprit par défaut
+                            alert("Impossible d'obtenir votre position GPS. Vérifiez que la géolocalisation est activée dans votre navigateur.");
+                        },
+                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                    );
+
+                    // Mise à jour automatique de la position en temps réel (optionnel)
+                    userWatchId = navigator.geolocation.watchPosition(
+                        (position) => {
+                            updateUserPosition(position.coords.latitude, position.coords.longitude);
+                        },
+                        (error) => {
+                            console.log("Erreur de mise à jour de position: " + error.message);
+                        },
+                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 }
+                    );
+                } else {
+                    console.log("La géolocalisation n'est pas supportée par ce navigateur.");
+                    alert("Votre navigateur ne supporte pas la géolocalisation.");
+                }
+
+                locations.forEach(loc => {
+                    const marker = new google.maps.Marker({
+                        position: { lat: loc.lat, lng: loc.lng },
+                        map: map,
+                        title: loc.name,
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 10,
+                            fillColor: loc.color,
+                            fillOpacity: 1,
+                            strokeWeight: 2,
+                            strokeColor: "#ffffff"
+                        }
+                    });
+
+                    marker.addListener("click", () => {
+                        infoWindow.setContent(`<div style='font-weight:bold; padding:5px;'>${loc.name}</div>`);
+                        infoWindow.open(map, marker);
+
+                        // Communicate with JavaFX Controller
+                        if (typeof javaConnector !== 'undefined') {
+                            javaConnector.onBlockClicked(loc.name);
+                        } else {
+                            console.log("Java connector not found. Clicked on " + loc.name);
+                        }
+                    });
+                });
+            } catch (e) {
+                document.getElementById('map').innerHTML = "<div class='error-msg'>Erreur de chargement Google Maps.<br>Avez-vous inséré une API KEY valide dans le fichier map.html ?</div>";
+            }
+        }
+
+        function gm_authFailure() {
+            document.getElementById('map').innerHTML = "<div class='error-msg'>Erreur d'authentification Google Maps.<br>La clé d'API (API KEY) est invalide ou manquante.</div>";
+        }
+    </script>
+
+    <!-- UTILISE L'API GOOGLE MAPS AVEC VOTRE CLÉ -->
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-rJTi6eTMy9EujIPFbhtAY5Lv3sPzDnA&callback=initMap"></script>
+</body>
+
+</html>

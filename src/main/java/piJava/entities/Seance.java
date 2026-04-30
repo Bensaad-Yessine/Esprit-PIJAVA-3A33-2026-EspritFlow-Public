@@ -16,10 +16,11 @@ public class Seance {
     private String qrToken;
     private Timestamp qrExpiresAt;
     private String qrUrl;
+    private String googleEventId;
 
     public Seance() {}
 
-    public Seance(int id, String jour, String typeSeance, String mode, Timestamp heureDebut, Timestamp heureFin, Timestamp createdAt, int salleId, int matiereId, int classeId, String qrToken, Timestamp qrExpiresAt, String qrUrl) {
+    public Seance(int id, String jour, String typeSeance, String mode, Timestamp heureDebut, Timestamp heureFin, Timestamp createdAt, int salleId, int matiereId, int classeId, String qrToken, Timestamp qrExpiresAt, String qrUrl, String googleEventId) {
         this.id = id;
         this.jour = jour;
         this.typeSeance = typeSeance;
@@ -33,6 +34,7 @@ public class Seance {
         this.qrToken = qrToken;
         this.qrExpiresAt = qrExpiresAt;
         this.qrUrl = qrUrl;
+        this.googleEventId = googleEventId;
     }
 
     public Seance(String jour, String typeSeance, String mode, Timestamp heureDebut, Timestamp heureFin, int salleId, int matiereId, int classeId) {
@@ -84,6 +86,9 @@ public class Seance {
 
     public String getQrUrl() { return qrUrl; }
     public void setQrUrl(String qrUrl) { this.qrUrl = qrUrl; }
+
+    public String getGoogleEventId() { return googleEventId; }
+    public void setGoogleEventId(String googleEventId) { this.googleEventId = googleEventId; }
 
     @Override
     public String toString() {

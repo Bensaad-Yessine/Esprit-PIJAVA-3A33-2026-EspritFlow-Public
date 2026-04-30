@@ -145,6 +145,8 @@
                 <Label text="Salles" styleClass="f-nav-item-label" HBox.hgrow="ALWAYS"/>
             </HBox>
 
+
+
             <HBox fx:id="ObjectifsSante" styleClass="f-nav-item" alignment="CENTER_LEFT"
                   spacing="9" onMouseClicked="#goToObjectifsSante">
                 <StackPane styleClass="f-nav-icon-wrap">

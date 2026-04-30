@@ -18,7 +18,15 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import piJava.Controllers.frontoffice.FrontSidebarController;
+
 public class FrontSallesController implements Initializable {
+
+    private FrontSidebarController sidebarController;
+
+    public void setSidebarController(FrontSidebarController sidebarController) {
+        this.sidebarController = sidebarController;
+    }
 
     @FXML private Label lblSessionEmail;
     @FXML private Label lblTotalSalles;
@@ -249,7 +257,11 @@ public class FrontSallesController implements Initializable {
 
     @FXML
     private void handleMapClick() {
-        showAlert(Alert.AlertType.INFORMATION, "Fonctionnalité en cours", "L'accès à la carte et la réservation sur la carte interactive (Map) ne sont pas encore disponibles.");
+        if (sidebarController != null) {
+            sidebarController.goToCampusMap();
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Le contrôleur principal n'est pas lié.");
+        }
     }
 
     private void showAlert(Alert.AlertType type, String title, String msg) {

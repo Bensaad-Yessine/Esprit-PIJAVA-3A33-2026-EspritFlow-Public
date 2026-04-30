@@ -126,7 +126,7 @@
                 <TableColumn fx:id="colJour" text="Jour" prefWidth="100"/>
                 <TableColumn fx:id="colHoraires" text="Horaires" prefWidth="120"/>
                 <TableColumn fx:id="colMode" text="Mode" prefWidth="120"/>
-                <TableColumn fx:id="colActions" text="Actions" prefWidth="180" style="-fx-alignment: center;"/>
+                <TableColumn fx:id="colActions" text="Actions" prefWidth="250" style="-fx-alignment: center;"/>
             </columns>
             <placeholder>
                 <Label text="Aucune séance trouvée." style="-fx-text-fill: #9ca3af; -fx-font-size: 14px;"/>
