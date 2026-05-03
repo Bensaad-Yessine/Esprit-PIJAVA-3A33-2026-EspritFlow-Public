@@ -313,8 +313,95 @@ public class TachesController implements Initializable {
 
         badges.getChildren().addAll(priorityBadge, statusBadge);
 
-        content.getChildren().addAll(title, desc, meta, badges);
+        // ═══════════════════════════════════════════════════════════════
+        // PREDICTION UI - COMPLETELY REDESIGNED
+        // ═══════════════════════════════════════════════════════════════
+        VBox predictionBox = new VBox(6);
+        predictionBox.getStyleClass().add("prediction-box");
 
+        if (t.getPrediction() > 0) {
+            double completionProb = 1 - t.getPrediction();
+            int percentage = (int)(completionProb * 100);
+
+            // Determine status
+            String statusClass;
+            String statusText;
+            String statusIcon;
+
+            if (completionProb >= 0.7) {
+                statusClass = "good";
+                statusText = "Très probable";
+                statusIcon = "✓";
+            } else if (completionProb >= 0.4) {
+                statusClass = "medium";
+                statusText = "Incertain";
+                statusIcon = "◐";
+            } else {
+                statusClass = "bad";
+                statusText = "Risque élevé";
+                statusIcon = "⚠";
+            }
+
+            // Top row: Label + Badge
+            HBox topRow = new HBox(10);
+            topRow.setAlignment(Pos.CENTER_LEFT);
+
+            Label predictionLabel = new Label("Probabilité d'achèvement");
+            predictionLabel.getStyleClass().add("prediction-label");
+
+            Label badge = new Label(statusText);
+            badge.getStyleClass().addAll("prediction-badge", statusClass);
+
+            topRow.getChildren().addAll(predictionLabel, badge);
+
+            // Middle row: Icon + ProgressBar + Percentage
+            HBox barRow = new HBox(10);
+            barRow.setAlignment(Pos.CENTER_LEFT);
+
+            Label iconLabel = new Label(statusIcon);
+            iconLabel.getStyleClass().addAll("prediction-icon", statusClass);
+
+            ProgressBar progressBar = new ProgressBar(0);
+            progressBar.setPrefHeight(14);
+            progressBar.setMaxHeight(14);
+            progressBar.setPrefWidth(200);
+            progressBar.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(progressBar, Priority.ALWAYS);
+
+            // THE KEY FIX: Add status class directly to ProgressBar for CSS targeting
+            progressBar.getStyleClass().add("prediction-" + statusClass);
+
+            Label percentLabel = new Label(percentage + "%");
+            percentLabel.getStyleClass().addAll("prediction-percentage", statusClass);
+
+            barRow.getChildren().addAll(iconLabel, progressBar, percentLabel);
+
+            // Animation
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO,
+                            new KeyValue(progressBar.progressProperty(), 0, javafx.animation.Interpolator.EASE_OUT)),
+                    new KeyFrame(Duration.millis(1000),
+                            new KeyValue(progressBar.progressProperty(), completionProb, javafx.animation.Interpolator.EASE_OUT))
+            );
+            timeline.play();
+
+            predictionBox.getChildren().addAll(topRow, barRow);
+
+        } else {
+            HBox unavailableRow = new HBox(8);
+            unavailableRow.setAlignment(Pos.CENTER_LEFT);
+
+            Label unavailableIcon = new Label("⊘");
+            unavailableIcon.setStyle("-fx-font-size: 14px; -fx-text-fill: #9ca3af;");
+
+            Label unavailable = new Label("Prédiction indisponible");
+            unavailable.getStyleClass().add("prediction-unavailable");
+
+            unavailableRow.getChildren().addAll(unavailableIcon, unavailable);
+            predictionBox.getChildren().add(unavailableRow);
+        }
+
+        content.getChildren().addAll(title, desc, meta, badges, predictionBox);
         // Actions
         HBox actions = new HBox(10);
         actions.setAlignment(Pos.CENTER_RIGHT);
@@ -875,6 +962,7 @@ public class TachesController implements Initializable {
             }
         });
     }
+
     private void handleNotificationAction(Notification notif, String action) {
         try {
             if (notif.getTacheId() == null) return;
@@ -961,5 +1049,11 @@ public class TachesController implements Initializable {
         notifScheduler.scheduleAtFixedRate(() -> {
             loadNotifications();
         }, 30, 30, TimeUnit.SECONDS);
+    }
+
+    private String getPredictionBarClass(double prob) {
+        if (prob >= 0.7) return "prediction-good";
+        if (prob >= 0.4) return "prediction-medium";
+        return "prediction-bad";
     }
 }

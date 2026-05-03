@@ -1,6 +1,7 @@
 package piJava.services;
 
 import piJava.entities.tache;
+import piJava.services.api.TaskPredictionService;
 import piJava.utils.MyDataBase;
 
 import java.sql.*;
@@ -292,6 +293,24 @@ public class TacheService implements ICrud<tache> {
             return null;
         }
 
+    }
+
+    /**
+     * Add task WITH prediction
+     */
+    public void addWithPrediction(tache t) throws SQLException {
+        // 1. Get prediction BEFORE saving
+        TaskPredictionService predictionService = new TaskPredictionService();
+        TaskPredictionService.TaskPredictionResponse prediction = predictionService.predictTaskCompletion(t);
+
+        // 2. Set prediction probability in task
+        t.setPrediction(prediction.getProbability_abandon());
+
+        // 3. Log prediction for user feedback
+        System.out.println("📊 Task Prediction: " + prediction);
+
+        // 4. Save task with prediction
+        add(t);
     }
 }
 

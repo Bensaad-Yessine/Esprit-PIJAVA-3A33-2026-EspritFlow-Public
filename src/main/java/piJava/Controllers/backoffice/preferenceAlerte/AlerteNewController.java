@@ -7,8 +7,11 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import piJava.Controllers.backoffice.SidebarController;
 import piJava.entities.preferenceAlerte;
+import piJava.entities.user;
 import piJava.services.AlerteService;
+import piJava.services.UserServices;
 import piJava.utils.PreferenceAlerteValidator;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,7 +20,7 @@ import java.util.*;
 
 public class AlerteNewController {
 
-    @FXML private TextField userIdField;
+    @FXML private ComboBox<user> cbUser;
     @FXML private TextField nomField;
     @FXML private TextArea descriptionField;
     @FXML private TextField delaiField;
@@ -50,9 +53,28 @@ public class AlerteNewController {
         nomField.textProperty().addListener((o, a, b) -> validateNom());
         descriptionField.textProperty().addListener((o, a, b) -> validateDescription());
         delaiField.textProperty().addListener((o, a, b) -> validateDelai());
-        userIdField.textProperty().addListener((o, a, b) -> validateUser());
+        cbUser.valueProperty().addListener((o, a, b) -> validateUser());
         debutField.textProperty().addListener((o, a, b) -> validateTimes());
         finField.textProperty().addListener((o, a, b) -> validateTimes());
+        chargerUsers();
+    }
+
+    private void chargerUsers() {
+        UserServices userServices = new UserServices();
+        List<user> users = userServices.show();
+        cbUser.getItems().addAll(users);
+
+        cbUser.setConverter(new StringConverter<user>() {
+            @Override
+            public String toString(user u) {
+                return u == null ? "" : u.getEmail();
+            }
+
+            @Override
+            public user fromString(String string) {
+                return null;
+            }
+        });
     }
 
     // ═══════════════════════════════════════════════
@@ -84,17 +106,10 @@ public class AlerteNewController {
     }
 
     private void validateUser() {
-        try {
-            if (userIdField.getText().isEmpty()) {
-                displayError(userIdField, userError, List.of("L'utilisateur est obligatoire."));
-            } else {
-                int userId = Integer.parseInt(userIdField.getText());
-                List<String> errors = PreferenceAlerteValidator.validateUser(userId);
-                displayError(userIdField, userError, errors);
-            }
-        } catch (NumberFormatException e) {
-            displayError(userIdField, userError, List.of("L'utilisateur doit être un nombre."));
-        }
+        user u = cbUser.getValue();
+        int userId = (u == null) ? 0 : u.getId();
+        List<String> errors = PreferenceAlerteValidator.validateUser(userId);
+        displayError(cbUser, userError, errors);
     }
 
     private void validateTimes() {
@@ -156,7 +171,11 @@ public class AlerteNewController {
             a.setDelai_rappel_min(Integer.parseInt(delaiField.getText()));
             a.setHeure_silence_debut(LocalTime.parse(debutField.getText()));
             a.setHeure_silence_fin(LocalTime.parse(finField.getText()));
-            a.setUser_id(Integer.parseInt(userIdField.getText()));
+            if (cbUser.getValue() != null) {
+                a.setUser_id(cbUser.getValue().getId());
+            } else {
+                a.setUser_id(0);
+            }
             a.setDate_creation(new Date());
             a.setDate_mise_ajour(new Date());
 
@@ -200,7 +219,7 @@ public class AlerteNewController {
             } else if (error.toLowerCase().contains("heure")) {
                 displayError(debutField, timeError, List.of(error));
             } else if (error.toLowerCase().contains("utilisateur")) {
-                displayError(userIdField, userError, List.of(error));
+                displayError(cbUser, userError, List.of(error));
             }
         }
     }
@@ -225,7 +244,7 @@ public class AlerteNewController {
 
         userError.setText("");
         userError.setVisible(false);
-        userIdField.getStyleClass().remove("error");
+        cbUser.getStyleClass().remove("error");
     }
 
     // ═══════════════════════════════════════════════

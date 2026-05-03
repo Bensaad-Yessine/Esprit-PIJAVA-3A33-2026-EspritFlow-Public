@@ -148,7 +148,7 @@
                             </StackPane>
                             <Label text="Tenue recommandée" styleClass="advice-title"/>
                         </HBox>
-                        <Label text="Portez des vêtements légers et respirants. La température est agréable aujourd'hui."
+                        <Label text="Entrain de réflaichir ... Merci d'attendre"
                                styleClass="advice-text"/>
                     </VBox>
 
@@ -160,7 +160,7 @@
                             </StackPane>
                             <Label text="Prévisions pluie" styleClass="advice-title"/>
                         </HBox>
-                        <Label text="Aucune précipitation prévue. Vous pouvez sortir sans parapluie."
+                        <Label text="Entrain de réflaichir ... Merci d'attendre"
                                styleClass="advice-text"/>
                     </VBox>
 
@@ -172,7 +172,7 @@
                             </StackPane>
                             <Label text="Activités recommandées" styleClass="advice-title"/>
                         </HBox>
-                        <Label text="Conditions idéales pour une promenade en plein air ou du jogging."
+                        <Label text="Entrain de réflaichir ... Merci d'attendre"
                                styleClass="advice-text"/>
                     </VBox>
                 </VBox>

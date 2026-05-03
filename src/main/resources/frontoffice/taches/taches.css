@@ -309,8 +309,6 @@
     -fx-border-width: 0 0 1 0;
 }
 
-
-
 .notifications-list .list-cell:filled:hover {
     -fx-background-color: #fef2f2;
 }
@@ -331,8 +329,8 @@
     -fx-translate-y: 0;
     -fx-opacity: 1;
 }
+
 /* ==================== STAT CARDS ==================== */
-/* ──── STAT CARDS ───────────────────────────────────────────── */
 
 .red-card {
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #E63946, #9D0208);
@@ -422,6 +420,7 @@
     -fx-text-fill: rgba(255,255,255,0.65);
     -fx-font-size: 11px;
 }
+
 /* -------------------- FILTER BAR -------------------- */
 .filter-bar {
     -fx-background-color: linear-gradient(to right, rgba(255,255,255,0.9), rgba(254,242,242,0.9));
@@ -498,8 +497,9 @@
 }
 
 .section-icon-container-archived {
-    -fx-background-color: linear-gradient(to bottom right, #dbeafe, #bfdbfe);
-    -fx-border-color: rgba(59,130,246,0.3);
+    -fx-background-color: linear-gradient(to bottom right, #e2e8f0, #cbd5e1);
+    -fx-border-color: #94a3b8;
+    -fx-opacity: 0.8;
 }
 
 .section-icon {
@@ -509,7 +509,9 @@
 }
 
 .section-icon-archived {
-    -fx-fill: #2563eb;
+    -fx-fill: #64748b;
+    -fx-scale-x: 0.9;
+    -fx-scale-y: 0.9;
 }
 
 .section-title {
@@ -519,7 +521,7 @@
 }
 
 .section-title-archived {
-    -fx-text-fill: #1e40af;
+    -fx-text-fill: #475569;
 }
 
 .count-badge {
@@ -532,8 +534,9 @@
 }
 
 .count-badge-archived {
-    -fx-background-color: linear-gradient(to right, #dbeafe, #bfdbfe);
-    -fx-border-color: rgba(59,130,246,0.3);
+    -fx-background-color: linear-gradient(to right, #e2e8f0, #cbd5e1);
+    -fx-border-color: #94a3b8;
+    -fx-opacity: 0.8;
 }
 
 .count-text {
@@ -543,7 +546,7 @@
 }
 
 .count-text-archived {
-    -fx-text-fill: #1e40af;
+    -fx-text-fill: #475569;
 }
 
 /* -------------------- TASKS CONTAINERS -------------------- */
@@ -562,9 +565,9 @@
 }
 
 .tasks-container-archived {
-    -fx-background-color: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+    -fx-background-color: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
     -fx-border-color: #cbd5e1;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 16, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.06), 16, 0, 0, 4);
 }
 
 .tasks-list {
@@ -608,18 +611,115 @@
     -fx-translate-x: 4;
 }
 
+/* ═══ ARCHIVED TASK ITEMS - DRAMATICALLY DIFFERENT ═══ */
 .task-item-archived {
-    -fx-background-color: #fafafa;
-    -fx-border-color: #e5e7eb;
-    -fx-opacity: 0.95;
+    -fx-background-color: linear-gradient(135deg, #f8fafc 0%, #f8fafc 48%, #f1f5f9 49%, #f1f5f9 51%, #f8fafc 52%, #f8fafc 100%);
+    -fx-background-size: 20 20;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 2;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-padding: 20;
+    -fx-spacing: 16;
+    -fx-opacity: 0.88;
+    -fx-effect: none;
 }
 
 .task-item-archived:hover {
     -fx-border-color: #94a3b8;
-    -fx-background-color: linear-gradient(to right, #fafafa, #f1f5f9);
-    -fx-opacity: 1;
+    -fx-background-color: linear-gradient(to right, #f1f5f9, #e2e8f0);
+    -fx-opacity: 0.95;
+    -fx-translate-x: 2;
+    -fx-effect: dropshadow(gaussian, rgba(100,116,139,0.1), 8, 0, 0, 2);
 }
 
+.task-item-archived .task-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #64748b;
+}
+
+.task-item-archived .task-description {
+    -fx-font-size: 13px;
+    -fx-text-fill: #94a3b8;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 2px;
+}
+
+.task-item-archived .task-meta-item {
+    -fx-padding: 6 12;
+    -fx-background-radius: 20;
+    -fx-spacing: 6;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+    -fx-background-color: #e2e8f0;
+    -fx-border-color: #cbd5e1;
+}
+
+.task-item-archived .task-meta-icon {
+    -fx-fill: #94a3b8;
+    -fx-scale-x: 0.7;
+    -fx-scale-y: 0.7;
+}
+
+.task-item-archived .task-meta-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: 500;
+}
+
+.task-item-archived .task-badge {
+    -fx-background-radius: 20;
+    -fx-padding: 4 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+    -fx-opacity: 0.8;
+}
+
+.task-item-archived .task-btn {
+    -fx-background-radius: 10;
+    -fx-padding: 10 18;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-min-width: 90;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-alignment: center;
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
+    -fx-opacity: 0.85;
+}
+
+.task-item-archived .task-btn:hover {
+    -fx-opacity: 1;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ═══ ARCHIVED ACTION BUTTONS ═══ */
+.task-btn-restore {
+    -fx-background-color: linear-gradient(to bottom, #dbeafe, #bfdbfe);
+    -fx-text-fill: #1e40af;
+    -fx-border-color: #93c5fd;
+}
+
+.task-btn-restore:hover {
+    -fx-background-color: linear-gradient(to bottom, #bfdbfe, #93c5fd);
+}
+
+.task-btn-delete-perm {
+    -fx-background-color: linear-gradient(to bottom, #fee2e2, #fecaca);
+    -fx-text-fill: #991b1b;
+    -fx-border-color: #fca5a5;
+}
+
+.task-btn-delete-perm:hover {
+    -fx-background-color: linear-gradient(to bottom, #fecaca, #fca5a5);
+}
+
+/* Priority Indicator */
 .task-priority-indicator {
     -fx-min-width: 48;
     -fx-min-height: 48;
@@ -647,6 +747,7 @@
 .task-priority-archived {
     -fx-background-color: linear-gradient(to bottom right, #e2e8f0, #cbd5e1);
     -fx-border-color: #94a3b8;
+    -fx-opacity: 0.7;
 }
 
 .task-content {
@@ -991,4 +1092,164 @@
     -fx-background-radius: 10;
     -fx-padding: 12;
     -fx-alignment: center;
+}
+
+/* ═══════════════════════════════════════════════════
+   PREDICTION BAR - COMPLETE OVERHAUL
+   ═══════════════════════════════════════════════════ */
+
+/* Container for the entire prediction section */
+.prediction-box {
+    -fx-spacing: 6;
+    -fx-padding: 10 0 4 0;
+    -fx-background-color: transparent;
+}
+
+/* Label above the bar */
+.prediction-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #4b5563;
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
+}
+
+/* Unavailable state */
+.prediction-unavailable {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9ca3af;
+    -fx-font-style: italic;
+    -fx-padding: 8 0;
+}
+
+/* ═══ BASE PROGRESS BAR STYLING ═══ */
+.progress-bar {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-pref-height: 14;
+    -fx-max-height: 14;
+}
+
+/* The track (background) of the progress bar */
+.progress-bar .track {
+    -fx-background-color: linear-gradient(to bottom, #e5e7eb, #d1d5db);
+    -fx-background-radius: 12;
+    -fx-background-insets: 0;
+    -fx-border-radius: 12;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.06), 4, 0, 0, 1);
+}
+
+/* The actual progress bar fill */
+.progress-bar .bar {
+    -fx-background-radius: 12;
+    -fx-background-insets: 2;
+    -fx-padding: 0;
+}
+
+/* ═══ PREDICTION-SPECIFIC CLASSES ═══ */
+
+/* HIGH PROBABILITY (>=70%) - Green Glow */
+.progress-bar.prediction-good .track {
+    -fx-background-color: linear-gradient(to bottom, #ecfdf5, #d1fae5);
+    -fx-border-color: #6ee7b7;
+}
+
+.progress-bar.prediction-good .bar {
+    -fx-background-color: linear-gradient(to right, #22c55e, #16a34a, #15803d);
+    -fx-effect: dropshadow(gaussian, rgba(34,197,94,0.45), 8, 0, 0, 2);
+}
+
+/* MEDIUM PROBABILITY (40-69%) - Amber Glow */
+.progress-bar.prediction-medium .track {
+    -fx-background-color: linear-gradient(to bottom, #fffbeb, #fef3c7);
+    -fx-border-color: #fcd34d;
+}
+
+.progress-bar.prediction-medium .bar {
+    -fx-background-color: linear-gradient(to right, #f59e0b, #d97706, #b45309);
+    -fx-effect: dropshadow(gaussian, rgba(245,158,11,0.45), 8, 0, 0, 2);
+}
+
+/* LOW PROBABILITY (<40%) - Red Glow */
+.progress-bar.prediction-bad .track {
+    -fx-background-color: linear-gradient(to bottom, #fef2f2, #fee2e2);
+    -fx-border-color: #fca5a5;
+}
+
+.progress-bar.prediction-bad .bar {
+    -fx-background-color: linear-gradient(to right, #ef4444, #dc2626, #b91c1c);
+    -fx-effect: dropshadow(gaussian, rgba(239,68,68,0.5), 10, 0, 0, 2);
+}
+
+/* ═══ PREDICTION PERCENTAGE LABEL ═══ */
+.prediction-percentage {
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
+}
+
+.prediction-percentage.good {
+    -fx-text-fill: #15803d;
+}
+
+.prediction-percentage.medium {
+    -fx-text-fill: #b45309;
+}
+
+.prediction-percentage.bad {
+    -fx-text-fill: #b91c1c;
+}
+
+/* ═══ PREDICTION ICON ═══ */
+.prediction-icon {
+    -fx-font-size: 14px;
+    -fx-min-width: 20;
+    -fx-min-height: 20;
+}
+
+.prediction-icon.good {
+    -fx-text-fill: #22c55e;
+}
+
+.prediction-icon.medium {
+    -fx-text-fill: #f59e0b;
+}
+
+.prediction-icon.bad {
+    -fx-text-fill: #ef4444;
+}
+
+/* ═══ PREDICTION BADGE (small pill next to bar) ═══ */
+.prediction-badge {
+    -fx-background-radius: 20;
+    -fx-padding: 3 10;
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
+}
+
+.prediction-badge.good {
+    -fx-background-color: linear-gradient(to right, #dcfce7, #bbf7d0);
+    -fx-text-fill: #166534;
+    -fx-border-color: #86efac;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+}
+
+.prediction-badge.medium {
+    -fx-background-color: linear-gradient(to right, #fef9c3, #fde68a);
+    -fx-text-fill: #854d0e;
+    -fx-border-color: #fcd34d;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+}
+
+.prediction-badge.bad {
+    -fx-background-color: linear-gradient(to right, #fee2e2, #fecaca);
+    -fx-text-fill: #991b1b;
+    -fx-border-color: #fca5a5;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
 }

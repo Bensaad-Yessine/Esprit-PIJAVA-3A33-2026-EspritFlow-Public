@@ -16,10 +16,8 @@ import piJava.entities.user;
 import piJava.services.NotificationService;
 import piJava.services.TacheService;
 import piJava.services.UserServices;
-import piJava.services.api.BehaviorAnalysisService;
-import piJava.services.api.NotifsService;
-import piJava.services.api.StatisticsService;
-import piJava.services.api.WeatherAiService;
+import piJava.services.api.*;
+
 public class TacheTest {
 
     private tache task;
@@ -126,7 +124,7 @@ public class TacheTest {
     @Test
     public void testBrevo() {
         NotifsService ns = new  NotifsService();
-        String testemail = "tahayassinesnoussi05@gmail.com";
+        String testemail = "tahayassine.snoussi@esprit.tn";
 
         String html = """
                         <html>
@@ -139,7 +137,11 @@ public class TacheTest {
 
     }
 
-
+    @Test
+    public void testApiKey() {
+        NotifsService ns = new  NotifsService();
+        System.out.println(ns.apikey());
+    }
 
     @Test
     public void testProgressData() {
@@ -288,5 +290,13 @@ public class TacheTest {
         }
 
         System.out.println("\n========== TEST COMPLETE ==========");
+    }
+
+    @Test
+    public void testFlaskAi () {
+        TaskPredictionService aiService = new TaskPredictionService();
+        tache t = this.createValidTask();
+        TaskPredictionService.TaskPredictionResponse response = aiService.predictTaskCompletion((t));
+        System.out.println( response.getProbability_complete()+ "\n"+response.getProbability_abandon());
     }
 }

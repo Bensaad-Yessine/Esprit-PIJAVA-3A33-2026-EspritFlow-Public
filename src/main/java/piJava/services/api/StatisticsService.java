@@ -95,7 +95,7 @@ public class StatisticsService {
             allTasks = tacheService.showUserTasks(userId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return stats; // Return empty stats on error
+            return stats;
         }
 
         // Process each task

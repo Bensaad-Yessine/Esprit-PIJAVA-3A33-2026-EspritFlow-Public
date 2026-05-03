@@ -25,8 +25,24 @@ public class NotifsService {
     private AlerteService as = new AlerteService();
     private NotificationService ns = new NotificationService();
 
-    Dotenv dotenv = Dotenv.load();
-    private String BREVO_API_KEY = dotenv.get("BREVO_API_KEY");
+    private String BREVO_API_KEY;
+
+    public NotifsService() {
+        try {
+            Dotenv dotenv = Dotenv.configure()
+                    .ignoreIfMalformed()
+                    .ignoreIfMissing()
+                    .load();
+            String key = dotenv.get("BREVO_API_KEY");
+            if (key != null) {
+                this.BREVO_API_KEY = key.trim();
+            } else {
+                System.err.println("⚠️ BREVO_API_KEY not found in .env file!");
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Error loading .env file: " + e.getMessage());
+        }
+    }
 
     public void runForUser(user user) {
         try {
@@ -218,6 +234,7 @@ public class NotifsService {
                     .uri(URI.create("https://api.brevo.com/v3/smtp/email"))
                     .header("api-key", BREVO_API_KEY)
                     .header("Content-Type", "application/json")
+                    .header("accept", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
 
@@ -227,6 +244,14 @@ public class NotifsService {
 
             System.out.println("EMAIL STATUS: " + response.statusCode());
             System.out.println("EMAIL RESPONSE: " + response.body());
+
+            if (response.statusCode() == 401) {
+                System.err.println("❌ Brevo Authentication Failed. Please check if your BREVO_API_KEY is valid and not expired.");
+                if (BREVO_API_KEY != null) {
+                    System.err.println("Key Length: " + BREVO_API_KEY.length());
+                    System.err.println("Key starts with: " + BREVO_API_KEY.substring(0, 8) + "...");
+                }
+            }
 
         } catch (Exception e) {
             System.out.println("EMAIL ERROR: " + e.getMessage());
@@ -272,6 +297,11 @@ public class NotifsService {
             System.out.println("Erreur getUserNotifications: " + e.getMessage());
             return new ArrayList<>();
         }
+    }
+
+
+    public String apikey() {
+        return this.BREVO_API_KEY;
     }
 
 }

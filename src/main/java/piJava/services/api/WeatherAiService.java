@@ -92,7 +92,8 @@ public class WeatherAiService {
     }
 
     private String callGroqApi(String prompt) {
-        try {JSONObject body = new JSONObject()
+        try {
+            JSONObject body = new JSONObject()
                 .put("model", "llama-3.1-8b-instant")
                 .put("messages", new JSONArray()
                         .put(new JSONObject()

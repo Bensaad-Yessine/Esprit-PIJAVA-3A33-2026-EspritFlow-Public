@@ -132,7 +132,7 @@ public class AlerteNewController implements Initializable {
             a.setHeure_silence_fin(LocalTime.parse(finField.getText()));
             a.setDate_creation(new Date());
             a.setDate_mise_ajour(new Date());
-            a.setUser_id(1);
+            a.setUser_id(currentUserId);
             service.add(a);
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Préférence ajoutée avec succès ✔");
 

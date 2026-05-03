@@ -82,6 +82,7 @@ public class BehaviorAnalysisService {
             return null;
         }
     }
+
     private Map<String, Object> computeBehaviorMetrics(List<tache> tasks, List<suiviTache> suivis) {
 
         Map<String, Object> metrics = new HashMap<>();
@@ -379,7 +380,7 @@ public class BehaviorAnalysisService {
 
             JSONObject parsed = new JSONObject(content);
 
-// ✅ HANDLE SUMMARY
+            // ✅ HANDLE SUMMARY
             String summary;
 
             if (parsed.has("weeklyProductivitySummary")) {
@@ -389,7 +390,7 @@ public class BehaviorAnalysisService {
                 summary = parsed.toString(2);
             }
 
-// ✅ HANDLE ADVICE
+            // ✅ HANDLE ADVICE
             String advice;
 
             if (parsed.has("behavioralAdvice")) {
