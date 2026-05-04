@@ -34,11 +34,11 @@
                 <!-- USER ID -->
                 <VBox spacing="4">
                     <HBox spacing="8" alignment="CENTER_LEFT">
-                        <Label text="ID Utilisateur" styleClass="form-label-highlight"/>
+                        <Label text="Utilisateur" styleClass="form-label-highlight"/>
                         <Label text="*" styleClass="required-star"/>
                     </HBox>
-                    <TextField fx:id="userIdField"
-                               promptText="Entrez l'ID utilisateur (ex: 1)"
+                    <ComboBox fx:id="cbUser"
+                               promptText="Sélectionner un utilisateur..."
                                styleClass="input"/>
                     <Label fx:id="userError" styleClass="error-label"/>
                 </VBox>

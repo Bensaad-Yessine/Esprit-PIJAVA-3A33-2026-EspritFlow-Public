@@ -6,8 +6,11 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import piJava.Controllers.backoffice.SidebarController;
 import piJava.entities.preferenceAlerte;
+import piJava.entities.user;
 import piJava.services.AlerteService;
+import piJava.services.UserServices;
 import piJava.utils.PreferenceAlerteValidator;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -16,7 +19,7 @@ import java.util.*;
 
 public class AlerteEditController {
 
-    @FXML private TextField userIdField;
+    @FXML private ComboBox<user> cbUser;
     @FXML private TextField nomField;
     @FXML private TextArea descriptionField;
     @FXML private TextField delaiField;
@@ -59,9 +62,28 @@ public class AlerteEditController {
         nomField.textProperty().addListener((o, a, b) -> validateNom());
         descriptionField.textProperty().addListener((o, a, b) -> validateDescription());
         delaiField.textProperty().addListener((o, a, b) -> validateDelai());
-        userIdField.textProperty().addListener((o, a, b) -> validateUser());
+        cbUser.valueProperty().addListener((o, a, b) -> validateUser());
         debutField.textProperty().addListener((o, a, b) -> validateTimes());
         finField.textProperty().addListener((o, a, b) -> validateTimes());
+        chargerUsers();
+    }
+
+    private void chargerUsers() {
+        UserServices userServices = new UserServices();
+        List<user> users = userServices.show();
+        cbUser.getItems().addAll(users);
+
+        cbUser.setConverter(new StringConverter<user>() {
+            @Override
+            public String toString(user u) {
+                return u == null ? "" : u.getEmail();
+            }
+
+            @Override
+            public user fromString(String string) {
+                return null;
+            }
+        });
     }
 
     // ═══════════════════════════════════════════════
@@ -73,7 +95,15 @@ public class AlerteEditController {
 
         nomField.setText(alerte.getNom());
         descriptionField.setText(alerte.getDescription());
-        userIdField.setText(String.valueOf(alerte.getUser_id()));
+        
+        // Find the user object with the matching ID
+        for (user u : cbUser.getItems()) {
+            if (u.getId() == alerte.getUser_id()) {
+                cbUser.setValue(u);
+                break;
+            }
+        }
+        
         delaiField.setText(String.valueOf(alerte.getDelai_rappel_min()));
 
         if (alerte.getHeure_silence_debut() != null)
@@ -118,17 +148,10 @@ public class AlerteEditController {
     }
 
     private void validateUser() {
-        try {
-            if (userIdField.getText().isEmpty()) {
-                displayError(userIdField, userError, List.of("L'utilisateur est obligatoire."));
-            } else {
-                int userId = Integer.parseInt(userIdField.getText());
-                List<String> errors = PreferenceAlerteValidator.validateUser(userId);
-                displayError(userIdField, userError, errors);
-            }
-        } catch (NumberFormatException e) {
-            displayError(userIdField, userError, List.of("L'utilisateur doit être un nombre."));
-        }
+        user u = cbUser.getValue();
+        int userId = (u == null) ? 0 : u.getId();
+        List<String> errors = PreferenceAlerteValidator.validateUser(userId);
+        displayError(cbUser, userError, errors);
     }
 
     private void validateTimes() {
@@ -188,7 +211,11 @@ public class AlerteEditController {
             alerte.setDelai_rappel_min(Integer.parseInt(delaiField.getText()));
             alerte.setHeure_silence_debut(LocalTime.parse(debutField.getText()));
             alerte.setHeure_silence_fin(LocalTime.parse(finField.getText()));
-            alerte.setUser_id(Integer.parseInt(userIdField.getText()));
+            if (cbUser.getValue() != null) {
+                alerte.setUser_id(cbUser.getValue().getId());
+            } else {
+                alerte.setUser_id(0);
+            }
             alerte.setDate_mise_ajour(new Date());
 
         } catch (NumberFormatException e) {
@@ -231,7 +258,7 @@ public class AlerteEditController {
             } else if (error.toLowerCase().contains("heure")) {
                 displayError(debutField, timeError, List.of(error));
             } else if (error.toLowerCase().contains("utilisateur")) {
-                displayError(userIdField, userError, List.of(error));
+                displayError(cbUser, userError, List.of(error));
             }
         }
     }
@@ -256,7 +283,7 @@ public class AlerteEditController {
 
         userError.setText("");
         userError.setVisible(false);
-        userIdField.getStyleClass().remove("error");
+        cbUser.getStyleClass().remove("error");
     }
 
     // ═══════════════════════════════════════════════

@@ -1,24 +1,24 @@
 /* ============================================
-   ESPRIT FLOW - MODERN RED & WHITE THEME
+   ESPRIT FLOW — MODERN RED & WHITE THEME
    ============================================ */
 
-/* ==================== ROOT & VARIABLES ==================== */
+/* -------------------- ROOT -------------------- */
 .root-container {
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
     -fx-background-color: linear-gradient(to bottom right, #efd5d5, #ffffff, #cc9393);
 }
 
-/* ==================== GLASSMORPHISM HEADER ==================== */
+/* -------------------- HEADER -------------------- */
 .app-header {
     -fx-padding: 20 40;
     -fx-background-color: linear-gradient(to right, rgba(255,255,255,0.95), rgba(254,242,242,0.95));
     -fx-background-radius: 0 0 24 24;
     -fx-border-color: #fecaca;
     -fx-border-width: 0 0 2 0;
-    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.15), 20, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.12), 20, 0, 0, 4);
 }
 
-/* Logo Area */
+/* Logo */
 .logo-container {
     -fx-min-width: 44;
     -fx-min-height: 44;
@@ -26,7 +26,7 @@
     -fx-pref-height: 44;
     -fx-background-color: linear-gradient(to bottom right, #dc2626, #991b1b);
     -fx-background-radius: 12;
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.4), 12, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.35), 12, 0, 0, 4);
     -fx-padding: 10;
 }
 
@@ -116,7 +116,7 @@
     -fx-text-fill: #374151;
 }
 
-/* ==================== CONTENT AREA ==================== */
+/* -------------------- CONTENT -------------------- */
 .content-wrapper {
     -fx-padding: 0 40 40 40;
 }
@@ -158,7 +158,7 @@
     -fx-padding: 0 8 0 0;
 }
 
-/* ==================== PAGE HEADER ==================== */
+/* -------------------- PAGE HEADER -------------------- */
 .page-header {
     -fx-padding: 8 0;
 }
@@ -192,8 +192,7 @@
     -fx-text-fill: #6b7280;
 }
 
-/* ==================== BUTTONS ==================== */
-Button.btn-primary,
+/* -------------------- BUTTONS -------------------- */
 .btn-primary {
     -fx-background-color: linear-gradient(to right, #dc2626, #b91c1c);
     -fx-text-fill: white;
@@ -206,25 +205,22 @@ Button.btn-primary,
     -fx-border-color: rgba(255,255,255,0.2);
     -fx-border-radius: 28;
     -fx-border-width: 2;
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.35), 16, 0, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.30), 16, 0, 0, 6);
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
-Button.btn-primary:hover,
 .btn-primary:hover {
     -fx-background-color: linear-gradient(to right, #ef4444, #dc2626);
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.5), 20, 0, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.45), 20, 0, 0, 8);
 }
 
-Button.btn-primary:pressed,
 .btn-primary:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
-Button.btn-secondary,
 .btn-secondary {
     -fx-background-color: linear-gradient(to bottom, #ffffff, #f9fafb);
     -fx-text-fill: #374151;
@@ -240,7 +236,6 @@ Button.btn-secondary,
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
-Button.btn-secondary:hover,
 .btn-secondary:hover {
     -fx-background-color: linear-gradient(to bottom, #f9fafb, #f3f4f6);
     -fx-border-color: #d1d5db;
@@ -250,7 +245,6 @@ Button.btn-secondary:hover,
     -fx-scale-y: 1.02;
 }
 
-Button.btn-secondary:pressed,
 .btn-secondary:pressed {
     -fx-scale-x: 0.97;
     -fx-scale-y: 0.97;
@@ -267,31 +261,56 @@ Button.btn-secondary:pressed,
     -fx-scale-y: 0.9;
 }
 
-.btn-secondary {
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #f9fafb);
-    -fx-text-fill: #374151;
-    -fx-background-radius: 24;
+.btn-weather {
+    -fx-background-color: linear-gradient(to right, #2672b5, #194f51);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 28;
     -fx-padding: 12 24;
-    -fx-font-weight: 600;
-    -fx-font-size: 13px;
     -fx-cursor: hand;
-    -fx-border-color: #e5e7eb;
-    -fx-border-radius: 24;
-    -fx-border-width: 2;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);
+    -fx-font-size: 14px;
+    -fx-graphic-text-gap: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0.2, 0, 2);
 }
 
-.btn-secondary:hover {
-    -fx-background-color: linear-gradient(to bottom, #f9fafb, #f3f4f6);
-    -fx-border-color: #d1d5db;
-    -fx-text-fill: #111827;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);
+.btn-weather:hover {
+    -fx-opacity: 0.92;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
 }
 
-/* ==================== NOTIFICATION ==================== */
+.btn-weather:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* -------------------- NOTIFICATION -------------------- */
 .notification-area {
-    -fx-min-height: 0;
-    -fx-pref-height: 0;
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-border-color: #fecaca;
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.08), 15, 0, 0, 5);
+}
+
+.notifications-list {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.notifications-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 10 12;
+    -fx-border-color: #f3f4f6;
+    -fx-border-width: 0 0 1 0;
+}
+
+.notifications-list .list-cell:filled:hover {
+    -fx-background-color: #fef2f2;
 }
 
 .notification-toast {
@@ -301,7 +320,7 @@ Button.btn-secondary:pressed,
     -fx-background-radius: 16;
     -fx-font-size: 14px;
     -fx-font-weight: 600;
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.4), 20, 0, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.35), 20, 0, 0, 8);
     -fx-translate-y: -20;
     -fx-opacity: 0;
 }
@@ -312,7 +331,6 @@ Button.btn-secondary:pressed,
 }
 
 /* ==================== STAT CARDS ==================== */
-/* ──── STAT CARDS ───────────────────────────────────────────── */
 
 .red-card {
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #E63946, #9D0208);
@@ -402,7 +420,8 @@ Button.btn-secondary:pressed,
     -fx-text-fill: rgba(255,255,255,0.65);
     -fx-font-size: 11px;
 }
-/* ==================== FILTER BAR ==================== */
+
+/* -------------------- FILTER BAR -------------------- */
 .filter-bar {
     -fx-background-color: linear-gradient(to right, rgba(255,255,255,0.9), rgba(254,242,242,0.9));
     -fx-background-radius: 24;
@@ -411,11 +430,10 @@ Button.btn-secondary:pressed,
     -fx-border-color: #fecaca;
     -fx-border-radius: 24;
     -fx-border-width: 2;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 16, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 16, 0, 0, 4);
 }
 
-.search-field,
-TextField.search-field {
+.search-field {
     -fx-background-color: white;
     -fx-background-radius: 16;
     -fx-border-color: #e5e7eb;
@@ -428,15 +446,13 @@ TextField.search-field {
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
-.search-field:focused,
-TextField.search-field:focused {
+.search-field:focused {
     -fx-border-color: #f87171;
     -fx-background-color: white;
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.2), 16, 0, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.18), 16, 0, 0, 6);
 }
 
-.filter-combo,
-ComboBox.filter-combo {
+.filter-combo {
     -fx-background-color: white;
     -fx-background-radius: 16;
     -fx-border-color: #e5e7eb;
@@ -449,19 +465,17 @@ ComboBox.filter-combo {
     -fx-text-fill: #111827;
 }
 
-.filter-combo:focused,
-ComboBox.filter-combo:focused {
+.filter-combo:focused {
     -fx-border-color: #f87171;
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.15), 12, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.12), 12, 0, 0, 4);
 }
 
-.filter-combo .list-cell,
-ComboBox.filter-combo .list-cell {
+.filter-combo .list-cell {
     -fx-padding: 8 12;
     -fx-text-fill: #111827;
 }
 
-/* ==================== TASKS SECTIONS ==================== */
+/* -------------------- TASKS SECTIONS -------------------- */
 .tasks-section {
     -fx-spacing: 16;
 }
@@ -483,8 +497,9 @@ ComboBox.filter-combo .list-cell {
 }
 
 .section-icon-container-archived {
-    -fx-background-color: linear-gradient(to bottom right, #dbeafe, #bfdbfe);
-    -fx-border-color: rgba(59,130,246,0.3);
+    -fx-background-color: linear-gradient(to bottom right, #e2e8f0, #cbd5e1);
+    -fx-border-color: #94a3b8;
+    -fx-opacity: 0.8;
 }
 
 .section-icon {
@@ -494,7 +509,9 @@ ComboBox.filter-combo .list-cell {
 }
 
 .section-icon-archived {
-    -fx-fill: #2563eb;
+    -fx-fill: #64748b;
+    -fx-scale-x: 0.9;
+    -fx-scale-y: 0.9;
 }
 
 .section-title {
@@ -504,7 +521,7 @@ ComboBox.filter-combo .list-cell {
 }
 
 .section-title-archived {
-    -fx-text-fill: #1e40af;
+    -fx-text-fill: #475569;
 }
 
 .count-badge {
@@ -517,8 +534,9 @@ ComboBox.filter-combo .list-cell {
 }
 
 .count-badge-archived {
-    -fx-background-color: linear-gradient(to right, #dbeafe, #bfdbfe);
-    -fx-border-color: rgba(59,130,246,0.3);
+    -fx-background-color: linear-gradient(to right, #e2e8f0, #cbd5e1);
+    -fx-border-color: #94a3b8;
+    -fx-opacity: 0.8;
 }
 
 .count-text {
@@ -528,10 +546,10 @@ ComboBox.filter-combo .list-cell {
 }
 
 .count-text-archived {
-    -fx-text-fill: #1e40af;
+    -fx-text-fill: #475569;
 }
 
-/* ==================== TASKS CONTAINERS ==================== */
+/* -------------------- TASKS CONTAINERS -------------------- */
 .tasks-container {
     -fx-background-radius: 24;
     -fx-border-radius: 24;
@@ -543,41 +561,37 @@ ComboBox.filter-combo .list-cell {
 .tasks-container-active {
     -fx-background-color: linear-gradient(to bottom, #ffffff, #fafbfc);
     -fx-border-color: #e5e7eb;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 24, 0, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 24, 0, 0, 8);
 }
 
 .tasks-container-archived {
-    -fx-background-color: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+    -fx-background-color: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
     -fx-border-color: #cbd5e1;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 16, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.06), 16, 0, 0, 4);
 }
 
-.tasks-list,
-ListView.tasks-list {
+.tasks-list {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
     -fx-padding: 8;
     -fx-control-inner-background: transparent;
 }
 
-.tasks-list .list-cell,
-ListView.tasks-list .list-cell {
+.tasks-list .list-cell {
     -fx-background-color: transparent;
     -fx-padding: 6 0;
     -fx-text-fill: #111827;
 }
 
-.tasks-list .list-cell:empty,
-ListView.tasks-list .list-cell:empty {
+.tasks-list .list-cell:empty {
     -fx-padding: 0;
 }
 
-.tasks-list .list-cell:filled:hover,
-ListView.tasks-list .list-cell:filled:hover {
+.tasks-list .list-cell:filled:hover {
     -fx-background-color: transparent;
 }
 
-/* ==================== TASK ITEM CARDS ==================== */
+/* -------------------- TASK ITEMS -------------------- */
 .task-item {
     -fx-background-color: white;
     -fx-background-radius: 16;
@@ -587,28 +601,125 @@ ListView.tasks-list .list-cell:filled:hover {
     -fx-padding: 20;
     -fx-spacing: 16;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 8, 0, 0, 2);
 }
 
 .task-item:hover {
     -fx-border-color: #fca5a5;
     -fx-background-color: linear-gradient(to right, #ffffff, #fef2f2);
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.15), 16, 0, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.12), 16, 0, 0, 6);
     -fx-translate-x: 4;
 }
 
+/* ═══ ARCHIVED TASK ITEMS - DRAMATICALLY DIFFERENT ═══ */
 .task-item-archived {
-    -fx-background-color: #fafafa;
-    -fx-border-color: #e5e7eb;
-    -fx-opacity: 0.95;
+    -fx-background-color: linear-gradient(135deg, #f8fafc 0%, #f8fafc 48%, #f1f5f9 49%, #f1f5f9 51%, #f8fafc 52%, #f8fafc 100%);
+    -fx-background-size: 20 20;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 2;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-padding: 20;
+    -fx-spacing: 16;
+    -fx-opacity: 0.88;
+    -fx-effect: none;
 }
 
 .task-item-archived:hover {
     -fx-border-color: #94a3b8;
-    -fx-background-color: linear-gradient(to right, #fafafa, #f1f5f9);
-    -fx-opacity: 1;
+    -fx-background-color: linear-gradient(to right, #f1f5f9, #e2e8f0);
+    -fx-opacity: 0.95;
+    -fx-translate-x: 2;
+    -fx-effect: dropshadow(gaussian, rgba(100,116,139,0.1), 8, 0, 0, 2);
 }
 
+.task-item-archived .task-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #64748b;
+}
+
+.task-item-archived .task-description {
+    -fx-font-size: 13px;
+    -fx-text-fill: #94a3b8;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 2px;
+}
+
+.task-item-archived .task-meta-item {
+    -fx-padding: 6 12;
+    -fx-background-radius: 20;
+    -fx-spacing: 6;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+    -fx-background-color: #e2e8f0;
+    -fx-border-color: #cbd5e1;
+}
+
+.task-item-archived .task-meta-icon {
+    -fx-fill: #94a3b8;
+    -fx-scale-x: 0.7;
+    -fx-scale-y: 0.7;
+}
+
+.task-item-archived .task-meta-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: 500;
+}
+
+.task-item-archived .task-badge {
+    -fx-background-radius: 20;
+    -fx-padding: 4 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+    -fx-opacity: 0.8;
+}
+
+.task-item-archived .task-btn {
+    -fx-background-radius: 10;
+    -fx-padding: 10 18;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-min-width: 90;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-alignment: center;
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
+    -fx-opacity: 0.85;
+}
+
+.task-item-archived .task-btn:hover {
+    -fx-opacity: 1;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ═══ ARCHIVED ACTION BUTTONS ═══ */
+.task-btn-restore {
+    -fx-background-color: linear-gradient(to bottom, #dbeafe, #bfdbfe);
+    -fx-text-fill: #1e40af;
+    -fx-border-color: #93c5fd;
+}
+
+.task-btn-restore:hover {
+    -fx-background-color: linear-gradient(to bottom, #bfdbfe, #93c5fd);
+}
+
+.task-btn-delete-perm {
+    -fx-background-color: linear-gradient(to bottom, #fee2e2, #fecaca);
+    -fx-text-fill: #991b1b;
+    -fx-border-color: #fca5a5;
+}
+
+.task-btn-delete-perm:hover {
+    -fx-background-color: linear-gradient(to bottom, #fecaca, #fca5a5);
+}
+
+/* Priority Indicator */
 .task-priority-indicator {
     -fx-min-width: 48;
     -fx-min-height: 48;
@@ -636,6 +747,7 @@ ListView.tasks-list .list-cell:filled:hover {
 .task-priority-archived {
     -fx-background-color: linear-gradient(to bottom right, #e2e8f0, #cbd5e1);
     -fx-border-color: #94a3b8;
+    -fx-opacity: 0.7;
 }
 
 .task-content {
@@ -690,7 +802,7 @@ ListView.tasks-list .list-cell:filled:hover {
     -fx-font-weight: 500;
 }
 
-/* Badges */
+/* -------------------- BADGES -------------------- */
 .task-badge {
     -fx-background-radius: 20;
     -fx-padding: 4 12;
@@ -742,8 +854,7 @@ ListView.tasks-list .list-cell:filled:hover {
     -fx-border-color: #94a3b8;
 }
 
-/* Action Buttons */
-Button.task-btn,
+/* -------------------- ACTION BUTTONS -------------------- */
 .task-btn {
     -fx-background-radius: 10;
     -fx-padding: 10 18;
@@ -757,67 +868,58 @@ Button.task-btn,
     -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
 }
 
-Button.task-btn-details,
 .task-btn-details {
     -fx-background-color: linear-gradient(to bottom, #dbeafe, #bfdbfe);
     -fx-text-fill: #1e40af;
     -fx-border-color: #93c5fd;
 }
 
-Button.task-btn-details:hover,
 .task-btn-details:hover {
     -fx-background-color: linear-gradient(to bottom, #bfdbfe, #93c5fd);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
-Button.task-btn-details:pressed,
 .task-btn-details:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
-Button.task-btn-edit,
 .task-btn-edit {
     -fx-background-color: linear-gradient(to bottom, #fef3c7, #fde68a);
     -fx-text-fill: #92400e;
     -fx-border-color: #fcd34d;
 }
 
-Button.task-btn-edit:hover,
 .task-btn-edit:hover {
     -fx-background-color: linear-gradient(to bottom, #fde68a, #fcd34d);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
-Button.task-btn-edit:pressed,
 .task-btn-edit:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
-Button.task-btn-delete,
 .task-btn-delete {
     -fx-background-color: linear-gradient(to bottom, #fee2e2, #fecaca);
     -fx-text-fill: #dc2626;
     -fx-border-color: #fca5a5;
 }
 
-Button.task-btn-delete:hover,
 .task-btn-delete:hover {
     -fx-background-color: linear-gradient(to bottom, #fecaca, #fca5a5);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
-Button.task-btn-delete:pressed,
 .task-btn-delete:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
 
-/* ==================== EMPTY STATE ==================== */
+/* -------------------- EMPTY STATE -------------------- */
 .empty-state {
     -fx-alignment: center;
     -fx-padding: 60 40;
@@ -852,7 +954,7 @@ Button.task-btn-delete:pressed,
     -fx-text-fill: #6b7280;
 }
 
-/* ==================== SCROLLBAR STYLING ==================== */
+/* -------------------- SCROLLBARS -------------------- */
 .scroll-bar:horizontal .track,
 .scroll-bar:vertical .track {
     -fx-background-color: transparent;
@@ -871,7 +973,7 @@ Button.task-btn-delete:pressed,
     -fx-background-color: linear-gradient(to bottom, #ef4444, #dc2626);
 }
 
-/* ==================== FOCUS STYLES ==================== */
+/* -------------------- FOCUS & SELECTION -------------------- */
 .text-field:focused,
 .combo-box:focused,
 .button:focused {
@@ -879,7 +981,6 @@ Button.task-btn-delete:pressed,
     -fx-faint-focus-color: transparent;
 }
 
-/* ==================== SELECTION STYLES ==================== */
 .list-view:focused .list-cell:filled:selected {
     -fx-background-color: transparent;
 }
@@ -887,5 +988,268 @@ Button.task-btn-delete:pressed,
 .list-view:focused .list-cell:filled:selected .task-item {
     -fx-border-color: #dc2626;
     -fx-background-color: linear-gradient(to right, #ffffff, #fef2f2);
-    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.25), 20, 0, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(220,38,38,0.22), 20, 0, 0, 8);
+}
+
+/* charts */
+
+.charts-section {
+    padding: 10 0 20 0;
+}
+
+.chart-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.chart {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 10;
+}
+
+.notification-overlay {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 4);
+}
+
+/* Notification Panel Container */
+.notification-panel {
+    -fx-background-color: linear-gradient(to bottom, #fef2f2, #ffffff);
+    -fx-background-radius: 16 0 0 16;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 20, 0, -5, 0);
+    -fx-min-width: 360;
+    -fx-pref-width: 360;
+    -fx-max-width: 400;
+}
+
+/* Scrollbar styling for notification list */
+.notification-list .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8;
+}
+
+.notification-list .scroll-bar:vertical .thumb {
+    -fx-background-color: #fca5a5;
+    -fx-background-radius: 4;
+}
+
+.notification-list .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #f87171;
+}
+
+.notification-list .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+/* Empty list styling */
+.notification-list .list-cell:empty {
+    -fx-background-color: transparent;
+}
+
+/* Header styling */
+.notification-header {
+    -fx-background-color: linear-gradient(to right, #dc2626, #b91c1c);
+    -fx-padding: 16;
+    -fx-background-radius: 16 0 0 0;
+}
+
+.notification-header-label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Badge styling */
+.notification-badge {
+    -fx-background-color: #fbbf24;
+    -fx-text-fill: #92400e;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 8;
+    -fx-background-radius: 10;
+}
+
+/* Main content blur overlay */
+.blur-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Animation for slide in */
+@keyframes slideIn {
+    from { -fx-translate-x: 400; }
+    to { -fx-translate-x: 0; }
+}
+.notifications-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(to right, #4facfe, #00f2fe);
+    -fx-background-radius: 10;
+    -fx-padding: 12;
+    -fx-alignment: center;
+}
+
+/* ═══════════════════════════════════════════════════
+   PREDICTION BAR - COMPLETE OVERHAUL
+   ═══════════════════════════════════════════════════ */
+
+/* Container for the entire prediction section */
+.prediction-box {
+    -fx-spacing: 6;
+    -fx-padding: 10 0 4 0;
+    -fx-background-color: transparent;
+}
+
+/* Label above the bar */
+.prediction-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #4b5563;
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
+}
+
+/* Unavailable state */
+.prediction-unavailable {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9ca3af;
+    -fx-font-style: italic;
+    -fx-padding: 8 0;
+}
+
+/* ═══ BASE PROGRESS BAR STYLING ═══ */
+.progress-bar {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-pref-height: 14;
+    -fx-max-height: 14;
+}
+
+/* The track (background) of the progress bar */
+.progress-bar .track {
+    -fx-background-color: linear-gradient(to bottom, #e5e7eb, #d1d5db);
+    -fx-background-radius: 12;
+    -fx-background-insets: 0;
+    -fx-border-radius: 12;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.06), 4, 0, 0, 1);
+}
+
+/* The actual progress bar fill */
+.progress-bar .bar {
+    -fx-background-radius: 12;
+    -fx-background-insets: 2;
+    -fx-padding: 0;
+}
+
+/* ═══ PREDICTION-SPECIFIC CLASSES ═══ */
+
+/* HIGH PROBABILITY (>=70%) - Green Glow */
+.progress-bar.prediction-good .track {
+    -fx-background-color: linear-gradient(to bottom, #ecfdf5, #d1fae5);
+    -fx-border-color: #6ee7b7;
+}
+
+.progress-bar.prediction-good .bar {
+    -fx-background-color: linear-gradient(to right, #22c55e, #16a34a, #15803d);
+    -fx-effect: dropshadow(gaussian, rgba(34,197,94,0.45), 8, 0, 0, 2);
+}
+
+/* MEDIUM PROBABILITY (40-69%) - Amber Glow */
+.progress-bar.prediction-medium .track {
+    -fx-background-color: linear-gradient(to bottom, #fffbeb, #fef3c7);
+    -fx-border-color: #fcd34d;
+}
+
+.progress-bar.prediction-medium .bar {
+    -fx-background-color: linear-gradient(to right, #f59e0b, #d97706, #b45309);
+    -fx-effect: dropshadow(gaussian, rgba(245,158,11,0.45), 8, 0, 0, 2);
+}
+
+/* LOW PROBABILITY (<40%) - Red Glow */
+.progress-bar.prediction-bad .track {
+    -fx-background-color: linear-gradient(to bottom, #fef2f2, #fee2e2);
+    -fx-border-color: #fca5a5;
+}
+
+.progress-bar.prediction-bad .bar {
+    -fx-background-color: linear-gradient(to right, #ef4444, #dc2626, #b91c1c);
+    -fx-effect: dropshadow(gaussian, rgba(239,68,68,0.5), 10, 0, 0, 2);
+}
+
+/* ═══ PREDICTION PERCENTAGE LABEL ═══ */
+.prediction-percentage {
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
+}
+
+.prediction-percentage.good {
+    -fx-text-fill: #15803d;
+}
+
+.prediction-percentage.medium {
+    -fx-text-fill: #b45309;
+}
+
+.prediction-percentage.bad {
+    -fx-text-fill: #b91c1c;
+}
+
+/* ═══ PREDICTION ICON ═══ */
+.prediction-icon {
+    -fx-font-size: 14px;
+    -fx-min-width: 20;
+    -fx-min-height: 20;
+}
+
+.prediction-icon.good {
+    -fx-text-fill: #22c55e;
+}
+
+.prediction-icon.medium {
+    -fx-text-fill: #f59e0b;
+}
+
+.prediction-icon.bad {
+    -fx-text-fill: #ef4444;
+}
+
+/* ═══ PREDICTION BADGE (small pill next to bar) ═══ */
+.prediction-badge {
+    -fx-background-radius: 20;
+    -fx-padding: 3 10;
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+    -fx-font-family: 'Inter', 'Segoe UI', 'System', sans-serif;
+}
+
+.prediction-badge.good {
+    -fx-background-color: linear-gradient(to right, #dcfce7, #bbf7d0);
+    -fx-text-fill: #166534;
+    -fx-border-color: #86efac;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+}
+
+.prediction-badge.medium {
+    -fx-background-color: linear-gradient(to right, #fef9c3, #fde68a);
+    -fx-text-fill: #854d0e;
+    -fx-border-color: #fcd34d;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+}
+
+.prediction-badge.bad {
+    -fx-background-color: linear-gradient(to right, #fee2e2, #fecaca);
+    -fx-text-fill: #991b1b;
+    -fx-border-color: #fca5a5;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
 }

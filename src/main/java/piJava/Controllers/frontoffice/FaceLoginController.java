@@ -68,11 +68,13 @@ public class FaceLoginController implements Initializable {
     private final UserServices           userServices = new UserServices();
 
     // ── Camera state ──────────────────────────────────────────
-    private VideoCapture            camera;
+    private VideoCapture             camera;
     private ScheduledExecutorService cameraTimer;
-    private volatile Mat            latestFrame;         // holds the most recent camera frame
-    private volatile boolean        cameraRunning = false;
-    
+    private volatile Mat             latestFrame;          // holds the most recent camera frame
+    private volatile boolean         cameraRunning = false;
+    private volatile int             warmupFrameCount = 0; // frames received since camera opened
+    private static final int         WARMUP_FRAMES = 20;   // ~660ms at 30fps — wait for stable feed
+
     private int failedAttempts = 0;
     private static final int MAX_FAILED_ATTEMPTS = 3;
 
@@ -110,8 +112,9 @@ public class FaceLoginController implements Initializable {
             return;
         }
 
-        cameraRunning = true;
-        latestFrame   = new Mat();
+        cameraRunning    = true;
+        warmupFrameCount = 0;
+        latestFrame      = new Mat();
 
         // Capture a frame every ~33 ms → ~30 fps preview
         cameraTimer = Executors.newSingleThreadScheduledExecutor(r -> {
@@ -123,9 +126,9 @@ public class FaceLoginController implements Initializable {
 
         startCameraBtn.setDisable(true);
         stopCameraBtn.setDisable(false);
-        setCaptureEnabled(true);
+        setCaptureEnabled(false); // disabled until warmup completes
         resultBox.setVisible(false);
-        setStatus("📷 Caméra active. Positionnez votre visage puis cliquez « Capturer ».", "info");
+        setStatus("⏳ Initialisation de la caméra…", "info");
     }
 
     @FXML
@@ -290,6 +293,17 @@ public class FaceLoginController implements Initializable {
             latestFrame = frame;
             Image fxImage = matToFxImage(frame);
             Platform.runLater(() -> cameraPreview.setImage(fxImage));
+
+            // Enable Capture only after camera has warmed up (avoids black-frame captures)
+            if (warmupFrameCount < WARMUP_FRAMES) {
+                warmupFrameCount++;
+                if (warmupFrameCount == WARMUP_FRAMES) {
+                    Platform.runLater(() -> {
+                        setCaptureEnabled(true);
+                        setStatus("📷 Caméra active. Positionnez votre visage puis cliquez « Capturer ».", "info");
+                    });
+                }
+            }
         }
     }
 

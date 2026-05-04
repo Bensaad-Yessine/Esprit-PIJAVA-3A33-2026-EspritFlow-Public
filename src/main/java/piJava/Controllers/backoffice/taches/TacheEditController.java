@@ -10,6 +10,9 @@ import piJava.services.TacheService;
 import piJava.utils.TacheValidator;
 import piJava.utils.ValidationHelper;
 
+import piJava.entities.user;
+import piJava.services.UserServices;
+import javafx.util.StringConverter;
 import java.io.IOException;
 import java.time.*;
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ public class TacheEditController {
     @FXML private ComboBox<String> cbStatut;
     @FXML private TextArea txtDescription;
     @FXML private TextField txtDuree;
-    @FXML private ComboBox<Integer> cbUser;
+    @FXML private ComboBox<user> cbUser;
 
     // error labels (IMPORTANT)
     @FXML private Label lblTitreError;
@@ -67,7 +70,7 @@ public class TacheEditController {
         cbPriorite.getItems().addAll("FAIBLE", "MOYEN", "ELEVEE");
         cbStatut.getItems().addAll("A_FAIRE", "EN_COURS", "TERMINE", "EN_RETARD", "PAUSED", "ABANDON");
 
-        cbUser.getItems().addAll(1, 2, 3, 4, 5);
+        chargerUsers();
 
         // init error labels
         ValidationHelper.initializeErrorLabel(lblTitreError);
@@ -81,6 +84,24 @@ public class TacheEditController {
         ValidationHelper.initializeErrorLabel(lblDureeError);
 
         setupValidation();
+    }
+
+    private void chargerUsers() {
+        UserServices userServices = new UserServices();
+        List<user> users = userServices.show();
+        cbUser.getItems().addAll(users);
+
+        cbUser.setConverter(new StringConverter<user>() {
+            @Override
+            public String toString(user u) {
+                return u == null ? "" : u.getEmail();
+            }
+
+            @Override
+            public user fromString(String string) {
+                return null;
+            }
+        });
     }
 
     private void setupValidation() {
@@ -129,9 +150,10 @@ public class TacheEditController {
     }
 
     private void validateUser() {
-        Integer id = cbUser.getValue();
+        user u = cbUser.getValue();
+        int id = (u == null) ? 0 : u.getId();
         ValidationHelper.showFieldErrors(cbUser, lblUserError,
-                TacheValidator.validateUser(id == null ? 0 : id));
+                TacheValidator.validateUser(id));
     }
 
     private void validateDates() {
@@ -169,7 +191,14 @@ public class TacheEditController {
         cbType.setValue(currentTache.getType());
         cbPriorite.setValue(currentTache.getPriorite());
         cbStatut.setValue(currentTache.getStatut());
-        cbUser.setValue(currentTache.getUser_id());
+
+        // Find the user object with the matching ID
+        for (user u : cbUser.getItems()) {
+            if (u.getId() == currentTache.getUser_id()) {
+                cbUser.setValue(u);
+                break;
+            }
+        }
 
         LocalDateTime d1 = LocalDateTime.ofInstant(currentTache.getDate_debut().toInstant(), ZoneId.systemDefault());
         LocalDateTime d2 = LocalDateTime.ofInstant(currentTache.getDate_fin().toInstant(), ZoneId.systemDefault());
@@ -194,7 +223,8 @@ public class TacheEditController {
         errors.addAll(TacheValidator.validateType(cbType.getValue()));
         errors.addAll(TacheValidator.validatePriorite(cbPriorite.getValue()));
         errors.addAll(TacheValidator.validateStatut(cbStatut.getValue()));
-        errors.addAll(TacheValidator.validateUser(cbUser.getValue() == null ? 0 : cbUser.getValue()));
+        user u_sel = cbUser.getValue();
+        errors.addAll(TacheValidator.validateUser(u_sel == null ? 0 : u_sel.getId()));
 
         Date d1 = parseDate(dpDateDebut, txtHeureDebut);
         Date d2 = parseDate(dpDateFin, txtHeureFin);
@@ -212,7 +242,9 @@ public class TacheEditController {
             currentTache.setType(cbType.getValue());
             currentTache.setPriorite(cbPriorite.getValue());
             currentTache.setStatut(cbStatut.getValue());
-            currentTache.setUser_id(cbUser.getValue());
+            if (cbUser.getValue() != null) {
+                currentTache.setUser_id(cbUser.getValue().getId());
+            }
 
 
             currentTache.setDate_debut(d1);

@@ -69,6 +69,20 @@
                 <padding>
                     <Insets top="25" right="30" bottom="30" left="30"/>
                 </padding>
+                
+                <!-- Description Section - Glass Card -->
+                <VBox spacing="15" styleClass="glass-card">
+                    <padding>
+                        <Insets top="25" right="25" bottom="25" left="25"/>
+                    </padding>
+                    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="section-header">
+                        <Label text="📝" styleClass="section-icon"/>
+                        <Label text="Description" styleClass="section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Rectangle width="40" height="3" styleClass="section-accent-line"/>
+                    </HBox>
+                    <Label fx:id="lblDescription" text="Description de l'alerte..." styleClass="field-value" wrapText="true"/>
+                </VBox>
 
                 <!-- Canaux de Notification Section - Glass Card -->
                 <VBox spacing="15" styleClass="glass-card">

@@ -42,7 +42,7 @@
                    styleClass="camera-preview"/>
 
         <!-- Placeholder when camera is off -->
-        <VBox alignment="CENTER" spacing="10" styleClass="camera-placeholder">
+        <VBox fx:id="cameraPlaceholder" alignment="CENTER" spacing="10" styleClass="camera-placeholder">
             <Label text="📷" style="-fx-font-size:48px;"/>
             <Label text="Caméra inactive" styleClass="placeholder-text"/>
         </VBox>

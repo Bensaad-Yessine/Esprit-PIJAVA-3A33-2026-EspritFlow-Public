@@ -7,6 +7,8 @@ import piJava.entities.suiviTache;
 import piJava.entities.tache;
 import piJava.services.SuiviTacheService;
 import piJava.services.TacheService;
+import piJava.services.api.TaskPredictionService;
+import piJava.services.api.TaskPredictionService.TaskPredictionResponse;
 import piJava.utils.SessionManager;
 import piJava.utils.TacheValidator;
 import piJava.utils.ValidationHelper;
@@ -40,7 +42,11 @@ public class TacheNewController {
     @FXML private Label lblDateFinError;
     @FXML private Label lblDureeError;
 
+    // NEW: Prediction display label (add this to your FXML)
+    @FXML private Label lblPrediction;
+
     private FrontSidebarController sidebarController;
+    private TaskPredictionService predictionService;
 
     public void setSidebarController(FrontSidebarController sidebarController) {
         this.sidebarController = sidebarController;
@@ -48,6 +54,9 @@ public class TacheNewController {
 
     @FXML
     public void initialize() {
+
+        // Initialize prediction service
+        predictionService = new TaskPredictionService();
 
         // initialize error labels
         ValidationHelper.initializeErrorLabel(lblTitreError);
@@ -58,6 +67,12 @@ public class TacheNewController {
         ValidationHelper.initializeErrorLabel(lblDateDebutError);
         ValidationHelper.initializeErrorLabel(lblDateFinError);
         ValidationHelper.initializeErrorLabel(lblDureeError);
+
+        // Initialize prediction label
+        if (lblPrediction != null) {
+            lblPrediction.setText("");
+            lblPrediction.setVisible(false);
+        }
 
         // validation listeners (same behavior as backoffice)
         setupValidation();
@@ -140,13 +155,13 @@ public class TacheNewController {
         return Date.from(dt.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    // ───────────────────────── ADD TASK ─────────────────────────
+    // ───────────────────────── ADD TASK WITH PREDICTION ─────────────────────────
 
     @FXML
     private void handleAdd() {
 
         try {
-            // build object
+            // 1. BUILD TASK OBJECT
             tache t = new tache();
             t.setTitre(txtTitre.getText());
             t.setType(cbType.getValue());
@@ -163,12 +178,9 @@ public class TacheNewController {
 
             t.setCreated_at(new Date());
             t.setUpdated_at(new Date());
+            t.setUser_id(current_userId);
 
-            // 🚨 no user selection in frontoffice
-            t.setUser_id(current_userId); // replace later with logged-in user
-            t.setPrediction(0);
-
-            // FULL VALIDATION (same as backoffice)
+            // 2. VALIDATE TASK
             List<String> errors = TacheValidator.validate(t);
 
             if (!errors.isEmpty()) {
@@ -180,28 +192,40 @@ public class TacheNewController {
                 return;
             }
 
-            // save
+            // 3. GET PREDICTION FROM ML MODEL
+            TaskPredictionResponse prediction = null;
+            try {
+                System.out.println("🔮 Requesting prediction from Flask API...");
+                prediction = predictionService.predictTaskCompletion(t);
+
+                // Set prediction in task
+                t.setPrediction(prediction.getProbability_abandon());
+
+                System.out.println("✅ Prediction received: " + prediction);
+
+            } catch (Exception e) {
+                System.err.println("⚠️ Prediction failed, using default: " + e.getMessage());
+                t.setPrediction(0.5); // Default prediction if API fails
+            }
+
+            // 4. SAVE TASK TO DATABASE
             TacheService ts = new TacheService();
             ts.add(t);
 
-            // suivi
+            // 5. ADD SUIVI (TRACKING)
             SuiviTacheService st = new SuiviTacheService();
             suiviTache s = new suiviTache();
             s.setTache(t);
             s.setAncienStatut("");
             s.setNouveauStatut(t.getStatut());
-            s.setCommentaire("");
+            s.setCommentaire("Tâche créée");
             s.setDateAction(new Date());
             st.add(s);
 
-            // Success alert
-            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-            successAlert.setTitle("Succès");
-            successAlert.setHeaderText("Tâche ajoutée avec succès");
-            successAlert.setContentText("La tâche '" + t.getTitre() + "' a été ajoutée.");
-            successAlert.showAndWait();
+            // 6. SHOW SUCCESS WITH PREDICTION INFO
+            showSuccessWithPrediction(t, prediction);
 
-            // Redirect back to tasks page
+            // 7. REDIRECT BACK TO TASKS PAGE
             if (sidebarController != null) {
                 sidebarController.goToTaches();
             }
@@ -213,7 +237,88 @@ public class TacheNewController {
             alert.setContentText("Détails de l'erreur: " + e.getMessage());
             alert.showAndWait();
             System.err.println("Error adding task: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    /**
+     * Show success alert with prediction information
+     */
+    private void showSuccessWithPrediction(tache t, TaskPredictionResponse prediction) {
+        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+        successAlert.setTitle("✅ Succès");
+        successAlert.setHeaderText("Tâche ajoutée avec succès");
+
+        if (prediction != null) {
+            String riskEmoji = getRiskEmoji(prediction.getRisk_level());
+            String riskColor = getRiskColor(prediction.getRisk_level());
+
+            String message = String.format(
+                    "Tâche: %s\n\n" +
+                            "📊 Analyse Prédictive:\n" +
+                            "%s Risque d'abandon: %.1f%%\n" +
+                            "✅ Probabilité de complétion: %.1f%%\n" +
+                            "🎯 Niveau de risque: %s\n\n" +
+                            "%s",
+                    t.getTitre(),
+                    riskEmoji,
+                    prediction.getProbability_abandon() * 100,
+                    prediction.getProbability_complete() * 100,
+                    prediction.getRisk_level(),
+                    getRiskAdvice(prediction.getRisk_level())
+            );
+
+            successAlert.setContentText(message);
+
+            // Style the header based on risk level
+            successAlert.setHeaderText(
+                    prediction.getRisk_level().equals("HIGH")
+                            ? "⚠️ Tâche créée - Risque élevé détecté"
+                            : "✅ Tâche créée avec succès"
+            );
+
+        } else {
+            successAlert.setContentText("La tâche '" + t.getTitre() + "' a été ajoutée.");
+        }
+
+        successAlert.showAndWait();
+    }
+
+    /**
+     * Get emoji based on risk level
+     */
+    private String getRiskEmoji(String riskLevel) {
+        return switch (riskLevel) {
+            case "HIGH" -> "🔴";
+            case "MEDIUM" -> "🟡";
+            case "LOW" -> "🟢";
+            default -> "ℹ️";
+        };
+    }
+
+    /**
+     * Get color code for risk level
+     */
+    private String getRiskColor(String riskLevel) {
+        return switch (riskLevel) {
+            case "HIGH" -> "#d32f2f";
+            case "MEDIUM" -> "#f57c00";
+            case "LOW" -> "#388e3c";
+            default -> "#1976d2";
+        };
+    }
+
+    /**
+     * Get advice based on risk level
+     */
+    private String getRiskAdvice(String riskLevel) {
+        return switch (riskLevel) {
+            case "HIGH" -> "💡 Conseil: Cette tâche a un risque élevé d'abandon. " +
+                    "Envisagez de la décomposer en sous-tâches ou de réduire sa durée.";
+            case "MEDIUM" -> "💡 Conseil: Restez attentif à votre progression sur cette tâche.";
+            case "LOW" -> "💡 Excellent! Cette tâche a de bonnes chances d'être complétée.";
+            default -> "";
+        };
     }
 
     @FXML

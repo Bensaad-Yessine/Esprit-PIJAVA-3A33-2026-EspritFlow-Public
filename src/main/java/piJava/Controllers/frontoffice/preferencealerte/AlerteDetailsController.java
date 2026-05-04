@@ -36,6 +36,9 @@ public class AlerteDetailsController implements Initializable {
     private Label lblNom;
 
     @FXML
+    private Label lblDescription;
+
+    @FXML
     private Label lblStatus;
 
     @FXML
@@ -102,6 +105,11 @@ public class AlerteDetailsController implements Initializable {
 
         // Nom de l'alerte
         lblNom.setText(alerte.getNom() != null ? alerte.getNom() : "Sans nom");
+
+        // Description
+        if (lblDescription != null) {
+            lblDescription.setText(alerte.getDescription() != null ? alerte.getDescription() : "Aucune description");
+        }
 
         // Status actif/inactif
         if (alerte.getIs_active() != null && alerte.getIs_active()) {

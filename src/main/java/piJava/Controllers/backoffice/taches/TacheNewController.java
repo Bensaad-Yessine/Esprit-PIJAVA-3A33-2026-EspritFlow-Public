@@ -12,6 +12,9 @@ import piJava.services.TacheService;
 import piJava.utils.TacheValidator;
 import piJava.utils.ValidationHelper;
 
+import piJava.entities.user;
+import piJava.services.UserServices;
+import javafx.util.StringConverter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,7 +25,7 @@ import java.util.List;
 
 public class TacheNewController {
 
-    @FXML private ComboBox<Integer> cbUser;
+    @FXML private ComboBox<user> cbUser;
     @FXML private TextField txtTitre;
     @FXML private ComboBox<String> cbType;
     @FXML private DatePicker dpDateDebut;
@@ -64,7 +67,25 @@ public class TacheNewController {
         // Setup real-time validation
         setupValidationListeners();
         initComboBoxes();
-        cbUser.getItems().addAll(1, 2, 3, 4, 5);
+        chargerUsers();
+    }
+
+    private void chargerUsers() {
+        UserServices userServices = new UserServices();
+        List<user> users = userServices.show();
+        cbUser.getItems().addAll(users);
+
+        cbUser.setConverter(new StringConverter<user>() {
+            @Override
+            public String toString(user u) {
+                return u == null ? "" : u.getEmail();
+            }
+
+            @Override
+            public user fromString(String string) {
+                return null; // Not needed
+            }
+        });
     }
 
     private void initComboBoxes() {
@@ -196,8 +217,9 @@ public class TacheNewController {
     }
 
     private void validateUserField() {
-        Integer userId = cbUser.getValue();
-        List<String> errors = TacheValidator.validateUser(userId == null ? 0 : userId);
+        user u = cbUser.getValue();
+        int userId = (u == null) ? 0 : u.getId();
+        List<String> errors = TacheValidator.validateUser(userId);
         ValidationHelper.showFieldErrors(cbUser, lblUserError, errors);
     }
 
@@ -324,7 +346,9 @@ public class TacheNewController {
             t.setDuree_estimee(txtDuree.getText().isEmpty() ? 0 : Integer.parseInt(txtDuree.getText()));
             t.setCreated_at(new Date());
             t.setUpdated_at(new Date());
-            t.setUser_id(cbUser.getValue());
+            if (cbUser.getValue() != null) {
+                t.setUser_id(cbUser.getValue().getId());
+            }
             t.setPrediction(0.5);
 
             // Double-check with full validation (safety net)
