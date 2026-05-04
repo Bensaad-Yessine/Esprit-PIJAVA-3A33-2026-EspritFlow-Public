@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="piJava.Controllers.frontoffice.objectifsante.AfficherArchivesObjectifsController"
+            stylesheets="@style.css"
+            styleClass="archive-page-root">
+
+    <center>
+        <ScrollPane fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    pannable="true"
+                    styleClass="archive-scroll">
+
+            <content>
+                <VBox spacing="24" styleClass="archive-page-wrapper">
+                    <padding>
+                        <Insets top="24" right="24" bottom="24" left="24"/>
+                    </padding>
+
+                    <!-- HEADER -->
+                    <HBox spacing="18" alignment="CENTER_LEFT" styleClass="page-card">
+                        <Button text="← Retour"
+                                onAction="#retour"
+                                styleClass="back-button"/>
+
+                        <VBox spacing="6">
+                            <Label text="Objectifs archivés" styleClass="page-title"/>
+                            <Label text="Historique des objectifs terminés et archivés"
+                                   styleClass="page-subtitle"/>
+                        </VBox>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+                    </HBox>
+
+                    <!-- TABLE CARD -->
+                    <VBox spacing="18" styleClass="page-card">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="Liste des archives" styleClass="section-title"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="lblNbArchives" text="0 archive(s)" styleClass="count-badge"/>
+                        </HBox>
+
+                        <TableView fx:id="tableArchives"
+                                   prefHeight="520"
+                                   VBox.vgrow="ALWAYS"
+                                   styleClass="archive-table">
+
+                            <columns>
+                                <TableColumn fx:id="colTitre" text="Titre" prefWidth="220"/>
+                                <TableColumn fx:id="colType" text="Type" prefWidth="120"/>
+                                <TableColumn fx:id="colCible" text="Cible" prefWidth="90"/>
+                                <TableColumn fx:id="colDebut" text="Début" prefWidth="130"/>
+                                <TableColumn fx:id="colFin" text="Fin" prefWidth="130"/>
+                                <TableColumn fx:id="colPriorite" text="Priorité" prefWidth="130"/>
+                                <TableColumn fx:id="colStatutFinal" text="Statut final" prefWidth="150"/>
+                                <TableColumn fx:id="colArchivedAt" text="Archivé le" prefWidth="170"/>
+                                <TableColumn fx:id="colPdf" text="PDF" prefWidth="90"/>
+                                <TableColumn fx:id="colRetourAction" text="Retour" prefWidth="100"/>
+                                <TableColumn fx:id="colSupprimer" text="Supprimer" prefWidth="110"/>
+                            </columns>
+
+                            <placeholder>
+                                <Label text="Aucun objectif archivé pour le moment."
+                                       styleClass="table-placeholder"/>
+                            </placeholder>
+                        </TableView>
+                    </VBox>
+
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

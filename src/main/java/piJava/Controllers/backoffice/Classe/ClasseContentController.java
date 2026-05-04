@@ -82,7 +82,7 @@ public class ClasseContentController implements Initializable {
                 if (empty || item == null) { setGraphic(null); return; }
                 Label lbl = new Label("#" + item);
                 lbl.setStyle("-fx-font-family: 'Syne'; -fx-font-size: 11px; "
-                           + "-fx-text-fill: #3a4060; -fx-font-weight: 700;");
+                        + "-fx-text-fill: #3a4060; -fx-font-weight: 700;");
                 setGraphic(lbl);
             }
         });
@@ -94,7 +94,7 @@ public class ClasseContentController implements Initializable {
                 if (empty || item == null) { setGraphic(null); return; }
                 Label lbl = new Label(item);
                 lbl.setStyle("-fx-font-family: 'DM Sans'; -fx-font-size: 14px; "
-                           + "-fx-font-weight: 600; -fx-text-fill: #eef0f8;");
+                        + "-fx-font-weight: 600; -fx-text-fill: #eef0f8;");
                 setGraphic(lbl);
             }
         });
@@ -156,7 +156,7 @@ public class ClasseContentController implements Initializable {
             updateStats();
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur de chargement",
-                      "Impossible de charger les classes : " + e.getMessage());
+                    "Impossible de charger les classes : " + e.getMessage());
         }
     }
 
@@ -213,14 +213,14 @@ public class ClasseContentController implements Initializable {
         String annee   = anneeFilter.getValue();
 
         List<Classe> result = allClasses.stream()
-            .filter(c -> search.isEmpty()
-                || (c.getNom() != null && c.getNom().toLowerCase().contains(search))
-                || (c.getFiliere() != null && c.getFiliere().toLowerCase().contains(search))
-                || (c.getNiveau() != null && c.getNiveau().toLowerCase().contains(search)))
-            .filter(c -> niveau  == null || niveau.equals(c.getNiveau()))
-            .filter(c -> filiere == null || filiere.equals(c.getFiliere()))
-            .filter(c -> annee   == null || annee.equals(c.getAnneeUniversitaire()))
-            .collect(Collectors.toList());
+                .filter(c -> search.isEmpty()
+                        || (c.getNom() != null && c.getNom().toLowerCase().contains(search))
+                        || (c.getFiliere() != null && c.getFiliere().toLowerCase().contains(search))
+                        || (c.getNiveau() != null && c.getNiveau().toLowerCase().contains(search)))
+                .filter(c -> niveau  == null || niveau.equals(c.getNiveau()))
+                .filter(c -> filiere == null || filiere.equals(c.getFiliere()))
+                .filter(c -> annee   == null || annee.equals(c.getAnneeUniversitaire()))
+                .collect(Collectors.toList());
 
         filtered.setAll(result);
         resultCountLabel.setText(result.size() + " résultat(s)");
@@ -303,12 +303,12 @@ public class ClasseContentController implements Initializable {
         // Style dialog buttons
         Button okBtn = (Button) pane.lookupButton(pane.getButtonTypes().get(0));
         okBtn.setStyle("-fx-background-color: #00e5c8; -fx-text-fill: #0d0f14; "
-                     + "-fx-font-weight: 700; -fx-background-radius: 8; -fx-padding: 8 20;");
+                + "-fx-font-weight: 700; -fx-background-radius: 8; -fx-padding: 8 20;");
 
         Button cancelBtn = (Button) pane.lookupButton(ButtonType.CANCEL);
         cancelBtn.setStyle("-fx-background-color: #1e2130; -fx-text-fill: #6b7394; "
-                         + "-fx-background-radius: 8; -fx-border-color: #272c3d; "
-                         + "-fx-border-width: 1; -fx-border-radius: 8; -fx-padding: 8 20;");
+                + "-fx-background-radius: 8; -fx-border-color: #272c3d; "
+                + "-fx-border-width: 1; -fx-border-radius: 8; -fx-padding: 8 20;");
 
         GridPane grid = new GridPane();
         grid.setHgap(16);
@@ -400,9 +400,9 @@ public class ClasseContentController implements Initializable {
         // Simple fade label as toast feedback
         Label toast = new Label("✓  " + message);
         toast.setStyle("-fx-background-color: #00e5c820; -fx-border-color: #00e5c850; "
-                     + "-fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; "
-                     + "-fx-text-fill: #00e5c8; -fx-font-size: 13px; -fx-font-weight: 600; "
-                     + "-fx-padding: 10 20; -fx-translate-x: 0;");
+                + "-fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; "
+                + "-fx-text-fill: #00e5c8; -fx-font-size: 13px; -fx-font-weight: 600; "
+                + "-fx-padding: 10 20; -fx-translate-x: 0;");
         // In a real app, add this to a StackPane overlay; here we log it
         System.out.println("[TOAST] " + message);
     }
@@ -415,11 +415,11 @@ public class ClasseContentController implements Initializable {
                 if (empty || item == null || item.isBlank()) { setGraphic(null); return; }
                 Label badge = new Label(item);
                 badge.setStyle(
-                    "-fx-background-color: " + bg + "; " +
-                    "-fx-border-color: " + border + "; " +
-                    "-fx-border-width: 1; -fx-border-radius: 6; -fx-background-radius: 6; " +
-                    "-fx-text-fill: " + fg + "; " +
-                    "-fx-font-size: 11px; -fx-font-weight: 700; -fx-padding: 3 10;"
+                        "-fx-background-color: " + bg + "; " +
+                                "-fx-border-color: " + border + "; " +
+                                "-fx-border-width: 1; -fx-border-radius: 6; -fx-background-radius: 6; " +
+                                "-fx-text-fill: " + fg + "; " +
+                                "-fx-font-size: 11px; -fx-font-weight: 700; -fx-padding: 3 10;"
                 );
                 setGraphic(badge);
             }
@@ -442,21 +442,21 @@ public class ClasseContentController implements Initializable {
 
     private String dialogFieldStyle() {
         return "-fx-background-color: #161921; -fx-border-color: #1e2130; "
-             + "-fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; "
-             + "-fx-text-fill: #c8cfe8; -fx-prompt-text-fill: #3a4060; "
-             + "-fx-font-size: 13px; -fx-padding: 8 12;";
+                + "-fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; "
+                + "-fx-text-fill: #c8cfe8; -fx-prompt-text-fill: #3a4060; "
+                + "-fx-font-size: 13px; -fx-padding: 8 12;";
     }
 
     private Label dialogLabel(String text) {
         Label lbl = new Label(text);
         lbl.setStyle("-fx-font-size: 12px; -fx-text-fill: #6b7394; "
-                   + "-fx-font-weight: 600; -fx-min-width: 150;");
+                + "-fx-font-weight: 600; -fx-min-width: 150;");
         return lbl;
     }
 
     private void styleAlert(Alert alert) {
         alert.getDialogPane().setStyle(
-            "-fx-background-color: #111318; -fx-border-color: #1e2130; -fx-border-width: 1;"
+                "-fx-background-color: #111318; -fx-border-color: #1e2130; -fx-border-width: 1;"
         );
     }
 

@@ -1,0 +1,285 @@
+/* ═══════════════════════════════════════════════════════════════
+   ESPRIT FLOW — Premium Sidebar Stylesheet
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Root sidebar ──────────────────────────────────────────── */
+.sidebar {
+    -fx-background-color: #0f1117;
+    -fx-pref-width: 270px;
+    -fx-min-width: 270px;
+    -fx-max-width: 270px;
+}
+
+/* ─── Logo ───────────────────────────────────────────────────── */
+.logo-container {
+    -fx-background-color: #0f1117;
+    -fx-padding: 18 18 16 18;
+    -fx-border-color: transparent transparent rgba(255,255,255,0.06) transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.logo-mark {
+    -fx-background-color: #3b2fc9;
+    -fx-background-radius: 9;
+    -fx-min-width: 34;
+    -fx-min-height: 34;
+    -fx-max-width: 34;
+    -fx-max-height: 34;
+}
+
+.logo-mark-text {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.logo-title {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.logo-subtitle {
+    -fx-text-fill: rgba(255,255,255,0.3);
+    -fx-font-size: 10px;
+}
+
+/* ─── Profile Section ────────────────────────────────────────── */
+.profile-section {
+    -fx-background-color: #0f1117;
+    -fx-padding: 14 14 14 14;
+    -fx-border-color: transparent transparent rgba(255,255,255,0.06) transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.avatar-circle {
+    -fx-fill: #3b2fc9;
+    -fx-stroke: rgba(59,47,201,0.6);
+    -fx-stroke-width: 2;
+}
+
+.avatar-initials {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.online-dot {
+    -fx-fill: #22c55e;
+    -fx-stroke: #0f1117;
+    -fx-stroke-width: 2;
+}
+
+.profile-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Role badge */
+.role-badge {
+    -fx-background-color: rgba(59,47,201,0.25);
+    -fx-border-color: rgba(100,90,220,0.4);
+    -fx-border-width: 0.5;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 3 7 3 7;
+}
+
+.badge-dot {
+    -fx-fill: #8b82f6;
+}
+
+.badge-text {
+    -fx-text-fill: #a5a0f0;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+/* Info cells */
+.info-cell {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-border-color: rgba(255,255,255,0.07);
+    -fx-border-width: 0.5;
+    -fx-border-radius: 7;
+    -fx-background-radius: 7;
+    -fx-padding: 6 9 6 9;
+    -fx-spacing: 2;
+}
+
+.info-label {
+    -fx-text-fill: rgba(255,255,255,0.3);
+    -fx-font-size: 9px;
+}
+
+.info-value {
+    -fx-text-fill: rgba(255,255,255,0.75);
+    -fx-font-size: 11px;
+}
+
+.info-value-green {
+    -fx-text-fill: #86efac;
+    -fx-font-size: 11px;
+}
+
+.session-live-dot {
+    -fx-fill: #22c55e;
+}
+
+/* ─── Navigation scroll pane ─────────────────────────────────── */
+.nav-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.nav-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.nav-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 4;
+}
+
+.nav-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-background-radius: 2;
+}
+
+.nav-scroll .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.nav-scroll .increment-button,
+.nav-scroll .decrement-button {
+    -fx-background-color: transparent;
+    -fx-pref-height: 0;
+}
+
+/* ─── Nav container ──────────────────────────────────────────── */
+.nav-container {
+    -fx-background-color: #0f1117;
+    -fx-padding: 8 10 8 10;
+}
+
+.nav-section-title {
+    -fx-text-fill: rgba(255,255,255,0.2);
+    -fx-font-size: 9px;
+    -fx-padding: 8 8 4 8;
+}
+
+/* ─── Nav items ──────────────────────────────────────────────── */
+.nav-item {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 6 10 6 6;
+    -fx-cursor: hand;
+    -fx-pref-height: 40;
+    -fx-min-height: 40;
+}
+
+.nav-item:hover {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-border-color: rgba(255,255,255,0.07);
+}
+
+.nav-item-active {
+    -fx-background-color: rgba(59,47,201,0.22);
+    -fx-border-color: rgba(100,90,220,0.35);
+}
+
+.nav-item-active .nav-item-label {
+    -fx-text-fill: #d4d0fb;
+    -fx-font-weight: bold;
+}
+
+.nav-item-active .nav-icon-wrap {
+    -fx-background-color: rgba(59,47,201,0.4);
+}
+
+.nav-item-active .nav-icon-label {
+    -fx-text-fill: #a5a0f0;
+}
+
+/* Nav icon wrap */
+.nav-icon-wrap {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-background-radius: 7;
+    -fx-min-width: 28;
+    -fx-min-height: 28;
+    -fx-max-width: 28;
+    -fx-max-height: 28;
+}
+
+.nav-icon-label {
+    -fx-text-fill: rgba(255,255,255,0.45);
+    -fx-font-size: 13px;
+}
+
+.nav-item-label {
+    -fx-text-fill: rgba(255,255,255,0.55);
+    -fx-font-size: 12.5px;
+}
+
+/* Badges */
+.nav-badge {
+    -fx-background-color: rgba(59,47,201,0.25);
+    -fx-text-fill: #a5a0f0;
+    -fx-border-color: rgba(100,90,220,0.35);
+    -fx-border-width: 0.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 2 6 2 6;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+.nav-badge-red {
+    -fx-background-color: rgba(220,38,38,0.2);
+    -fx-text-fill: #fca5a5;
+    -fx-border-color: rgba(220,38,38,0.3);
+}
+
+/* ─── Logout ─────────────────────────────────────────────────── */
+.logout-section {
+    -fx-background-color: #0f1117;
+    -fx-padding: 10 10 12 10;
+    -fx-border-color: rgba(255,255,255,0.06) transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.logout-item {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(255,255,255,0.07);
+    -fx-border-width: 0.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 6 10 6 6;
+    -fx-cursor: hand;
+    -fx-pref-height: 40;
+    -fx-min-height: 40;
+}
+
+.logout-item:hover {
+    -fx-background-color: rgba(239,68,68,0.1);
+    -fx-border-color: rgba(239,68,68,0.3);
+}
+
+.logout-icon-wrap {
+    -fx-background-color: rgba(239,68,68,0.1);
+}
+
+.logout-icon-label {
+    -fx-text-fill: #f87171 !important;
+}
+
+.logout-label {
+    -fx-text-fill: #f87171;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}

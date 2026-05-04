@@ -1,0 +1,380 @@
+/* ============================================================
+   ESPRIT FLOW — tache-details.css (Modern & Enhanced)
+   Task Details Page Styles
+   ============================================================ */
+
+/* ── ROOT & BACKGROUND ────────────────────────────────────── */
+.root-bg {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F5F5F6, rgba(253, 120, 120, 0.94));
+}
+
+.main-container {
+    -fx-padding: 32;
+    -fx-background-color: transparent;
+}
+
+.page-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.page-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.content-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.content-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ── TYPOGRAPHY ───────────────────────────────────────────── */
+.title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #18181B;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 1);
+}
+
+.subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #71717A;
+    -fx-font-weight: 500;
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #18181B;
+    -fx-border-color: transparent transparent #F0F0F1 transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-padding: 0 0 12 0;
+}
+
+.field-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #71717A;
+    -fx-letter-spacing: 0.5px;
+}
+
+.field-value {
+    -fx-font-size: 15px;
+    -fx-text-fill: #3F3F46;
+    -fx-wrap-text: true;
+}
+
+.title-value {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #18181B;
+}
+
+.description-value {
+    -fx-line-spacing: 4px;
+    -fx-font-size: 14px;
+}
+
+.prediction-text {
+    -fx-font-weight: bold;
+}
+
+/* ── BUTTONS ──────────────────────────────────────────────── */
+.btn-back {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #71717A;
+    -fx-background-radius: 28;
+    -fx-padding: 8 22;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: #E4E4E7;
+    -fx-border-radius: 28;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 4, 0, 0, 1);
+}
+
+.btn-back:hover {
+    -fx-background-color: #F4F4F5;
+    -fx-text-fill: #3F3F46;
+    -fx-border-color: #D4D4D8;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.btn-back:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* ── INFO CARDS (Glassmorphism) ───────────────────────────── */
+.info-card {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-background-radius: 24;
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-radius: 24;
+    -fx-border-width: 1;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 16, 0, 0, 6);
+    -fx-spacing: 16;
+}
+
+/* ── BADGES (Status & Priority) ───────────────────────────── */
+.badge {
+    -fx-background-radius: 20;
+    -fx-padding: 6 16;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-max-width: Infinity;
+}
+
+/* Status styles */
+.status-todo {
+    -fx-background-color: #E0E7FF;
+    -fx-text-fill: #4F46E5;
+}
+
+.status-inprogress {
+    -fx-background-color: #FEF3C7;
+    -fx-text-fill: #D97706;
+}
+
+.status-done {
+    -fx-background-color: #D1FAE5;
+    -fx-text-fill: #059669;
+}
+
+.status-overdue {
+    -fx-background-color: #FEE2E4;
+    -fx-text-fill: #C1121F;
+}
+
+.status-abandoned {
+    -fx-background-color: #F3F4F6;
+    -fx-text-fill: #6B7280;
+}
+
+/* Priority styles */
+.priority-high {
+    -fx-background-color: #FEE2E4;
+    -fx-text-fill: #C1121F;
+}
+
+.priority-medium {
+    -fx-background-color: #FEF3C7;
+    -fx-text-fill: #D97706;
+}
+
+.priority-low {
+    -fx-background-color: #D1FAE5;
+    -fx-text-fill: #059669;
+}
+
+/* Type badge (if needed) */
+.type-badge {
+    -fx-background-color: #E4E4E7;
+    -fx-text-fill: #3F3F46;
+}
+
+/* ── PROGRESS BAR ─────────────────────────────────────────── */
+.progress-bar {
+    -fx-background-radius: 10;
+    -fx-background-color: #F1F5F9;
+    -fx-pref-height: 12;
+}
+
+.progress-bar .bar {
+    -fx-background-radius: 10;
+    -fx-background-color: #10B981;
+}
+
+.progress-low .bar {
+    -fx-background-color: #E63946;
+}
+
+.progress-medium .bar {
+    -fx-background-color: #F59E0B;
+}
+
+.progress-high .bar {
+    -fx-background-color: #10B981;
+}
+
+/* ── HISTORY LISTVIEW ─────────────────────────────────────── */
+.history-list {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 16;
+}
+
+.history-list .list-cell {
+    -fx-background-color: #FAFAFA;
+    -fx-padding: 12 16;
+    -fx-border-color: transparent transparent #F0F0F1 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-font-size: 13px;
+    -fx-text-fill: #3F3F46;
+}
+
+.history-list .list-cell:hover {
+    -fx-background-color: #FEF2F2;
+}
+
+.history-list .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.history-list .scroll-bar:vertical .thumb {
+    -fx-background-color: #FECDD3;
+    -fx-background-radius: 8;
+}
+
+.history-list .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #FDA4AF;
+}
+
+/* ── GLOBAL SCROLLBAR STYLE ───────────────────────────────── */
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #FECDD3;
+    -fx-background-radius: 8;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #FDA4AF;
+}
+
+.scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* Action Buttons Container on the right */
+.action-buttons-container {
+    -fx-min-width: 180px;
+    -fx-max-width: 180px;
+    -fx-padding: 10 0 10 20;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 0 1;
+}
+
+/* Base Action Button Style */
+.action-btn {
+    -fx-min-width: 160px;
+    -fx-pref-height: 38px;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 3, 0, 0, 1);
+    -fx-alignment: CENTER_LEFT;
+    -fx-graphic-text-gap: 8;
+}
+
+.action-btn:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 5, 0, 0, 2);
+    -fx-translate-y: -1;
+}
+
+.action-btn:pressed {
+    -fx-translate-y: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}
+
+/* Button Icon */
+.button-icon {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Start Button - Green */
+.start-btn {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+}
+
+.start-btn:hover {
+    -fx-background-color: #218838;
+}
+
+.start-btn:pressed {
+    -fx-background-color: #1e7e34;
+}
+
+.start-btn .button-icon {
+    -fx-text-fill: white;
+}
+
+/* Pause Button - Orange/Warning */
+.pause-btn {
+    -fx-background-color: #ffc107;
+    -fx-text-fill: #212529;
+}
+
+.pause-btn:hover {
+    -fx-background-color: #e0a800;
+}
+
+.pause-btn:pressed {
+    -fx-background-color: #d39e00;
+}
+
+.pause-btn .button-icon {
+    -fx-text-fill: #212529;
+}
+
+/* Finish Button - Blue/Primary */
+.finish-btn {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+}
+
+.finish-btn:hover {
+    -fx-background-color: #0069d9;
+}
+
+.finish-btn:pressed {
+    -fx-background-color: #0056b3;
+}
+
+.finish-btn .button-icon {
+    -fx-text-fill: white;
+}
+
+/* Abandon Button - Red/Danger */
+.abandon-btn {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+}
+
+.abandon-btn:hover {
+    -fx-background-color: #c82333;
+}
+
+.abandon-btn:pressed {
+    -fx-background-color: #bd2130;
+}
+
+.abandon-btn .button-icon {
+    -fx-text-fill: white;
+}
+
+/* No Action Button - Gray/Disabled */
+.no-action-btn {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-opacity: 0.65;
+}
+
+.no-action-btn .button-icon {
+    -fx-text-fill: white;
+}

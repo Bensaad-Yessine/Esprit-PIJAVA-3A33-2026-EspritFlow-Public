@@ -1,6 +1,7 @@
 package piJava.entities;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class ObjectifSante {
 
@@ -15,11 +16,17 @@ public class ObjectifSante {
     private int userId;
     private String userNom;
     private String userPrenom;
+    private Timestamp archiveEmailSentAt;
+    private Timestamp archivedAt;
+    private String archivePdfPath;
+    private String shareToken;
+    private Timestamp shareExpiresAt;
 
     public ObjectifSante() {
     }
 
-    public ObjectifSante(int id, String titre, String type, int valeurCible, Date dateDebut, Date dateFin, String priorite, String statut, int userId) {
+    public ObjectifSante(int id, String titre, String type, int valeurCible, Date dateDebut, Date dateFin,
+                         String priorite, String statut, int userId) {
         this.id = id;
         this.titre = titre;
         this.type = type;
@@ -31,7 +38,8 @@ public class ObjectifSante {
         this.userId = userId;
     }
 
-    public ObjectifSante(String titre, String type, int valeurCible, Date dateDebut, Date dateFin, String priorite, String statut, int userId) {
+    public ObjectifSante(String titre, String type, int valeurCible, Date dateDebut, Date dateFin,
+                         String priorite, String statut, int userId) {
         this.titre = titre;
         this.type = type;
         this.valeurCible = valeurCible;
@@ -113,6 +121,7 @@ public class ObjectifSante {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
     public String getUserNom() {
         return userNom;
     }
@@ -128,6 +137,45 @@ public class ObjectifSante {
     public void setUserPrenom(String userPrenom) {
         this.userPrenom = userPrenom;
     }
+    public Timestamp getArchiveEmailSentAt() {
+        return archiveEmailSentAt;
+    }
+
+    public void setArchiveEmailSentAt(Timestamp archiveEmailSentAt) {
+        this.archiveEmailSentAt = archiveEmailSentAt;
+    }
+
+    public Timestamp getArchivedAt() {
+        return archivedAt;
+    }
+
+    public void setArchivedAt(Timestamp archivedAt) {
+        this.archivedAt = archivedAt;
+    }
+
+    public String getArchivePdfPath() {
+        return archivePdfPath;
+    }
+
+    public void setArchivePdfPath(String archivePdfPath) {
+        this.archivePdfPath = archivePdfPath;
+    }
+
+    public String getShareToken() {
+        return shareToken;
+    }
+
+    public void setShareToken(String shareToken) {
+        this.shareToken = shareToken;
+    }
+
+    public Timestamp getShareExpiresAt() {
+        return shareExpiresAt;
+    }
+
+    public void setShareExpiresAt(Timestamp shareExpiresAt) {
+        this.shareExpiresAt = shareExpiresAt;
+    }
 
     @Override
     public String toString() {
@@ -141,6 +189,7 @@ public class ObjectifSante {
                 ", priorite='" + priorite + '\'' +
                 ", statut='" + statut + '\'' +
                 ", userId=" + userId +
+                ", archivedAt=" + archivedAt +
                 '}';
     }
 }

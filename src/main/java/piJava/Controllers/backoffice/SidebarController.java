@@ -246,8 +246,11 @@ public class SidebarController implements Initializable {
             Parent view = loader.load();
             Object controller = loader.getController();
 
-            // Injection pour Objectifs santé
             if (controller instanceof piJava.Controllers.backoffice.group.GroupContentController c) {
+                c.setSidebarController(this);
+                c.setContentArea(contentArea);
+            }
+            if (controller instanceof piJava.Controllers.backoffice.group.PropositionReunionController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
             }
