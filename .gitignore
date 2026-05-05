@@ -37,3 +37,4 @@ build/
 ### Mac OS ###
 .DS_Storesrc/main/resources/credentials.json
 tokens/
+src/main/resources/credentials.json

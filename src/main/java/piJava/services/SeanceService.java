@@ -106,7 +106,7 @@ public class SeanceService implements ICrud<Seance> {
         // Les ? représentent les valeurs à injecter
         String sql = "INSERT INTO seance (jour, type_seance, mode, heure_debut, heure_fin, created_at, " +
                    "salle_id, matiere_id, classe_id, qr_token, qr_expires_at, qr_url, google_event_id) " +
-                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement ps = requireConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             // ----------------------------------------------------------------

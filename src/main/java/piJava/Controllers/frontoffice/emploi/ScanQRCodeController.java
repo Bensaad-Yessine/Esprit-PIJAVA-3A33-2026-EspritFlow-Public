@@ -141,30 +141,36 @@ public class ScanQRCodeController implements Initializable {
                 return;
             }
             
-            // Verifier si deja present
+            // Validate schedule times exist
+            if (seance.getHeureDebut() == null || seance.getHeureFin() == null) {
+                showResult("Erreur Données", "Les horaires de cette séance ne sont pas définis.", "error");
+                return;
+            }
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime debut = seance.getHeureDebut().toLocalDateTime();
+            LocalDateTime fin = seance.getHeureFin().toLocalDateTime();
+            String status;
+            // Determine attendance status based on scan time relative to seance schedule
+            if (now.isBefore(fin)) {
+                long minutesFromStart = ChronoUnit.MINUTES.between(debut, now);
+                if (minutesFromStart <= 30) {
+                    status = "PRESENT"; // within first 30 minutes (or before start)
+                } else if (minutesFromStart > 30 && minutesFromStart >= 0) {
+                    status = "RETARD"; // after 30 minutes but still during session
+                } else {
+                    // Scan before the official start time (negative diff) treated as PRESENT
+                    status = "PRESENT";
+                }
+            } else {
+                status = "ABSENT"; // after session end
+            }
             Attendance exist = attendanceService.getBySeanceAndUser(seanceId, currentUser.getId());
             if (exist != null) {
                 showResult("Déjà Scanné", "Votre présence a déjà été enregistrée (Statut: " + exist.getStatus() + ").", "warning");
                 return;
             }
             
-            // Determiner Statut (PRESENT, RETARD, ABSENT)
-            LocalDateTime now = LocalDateTime.now();
-            LocalDateTime debut = seance.getHeureDebut().toLocalDateTime();
-            LocalDateTime fin = seance.getHeureFin().toLocalDateTime();
-            
-            String status = "ABSENT";
-            
-            if (now.isBefore(fin)) {
-                long minutesDiff = ChronoUnit.MINUTES.between(debut, now);
-                if (minutesDiff <= 30) {
-                    status = (minutesDiff <= 0) ? "PRESENT" : "RETARD";
-                } else {
-                    status = "ABSENT"; // Apres 30 mins, c'est consideré comme absent
-                }
-            } else {
-                status = "ABSENT"; // Séance terminée
-            }
+
             
             // Enregistrer
             Attendance att = new Attendance(seanceId, currentUser.getId(), status, Timestamp.valueOf(now));
@@ -180,7 +186,7 @@ public class ScanQRCodeController implements Initializable {
             
         } catch (Exception e) {
             e.printStackTrace();
-            showResult("Erreur", "Une erreur est survenue lors du traitement.", "error");
+            showResult("Erreur", "Une erreur est survenue lors du traitement: " + e.getMessage(), "error");
         }
     }
 

@@ -18,7 +18,7 @@ public class loginService {
     }
 
     public user login(String email, String rawPassword) {
-        String normalizedEmail = email == null ? "" : email.trim().toLowerCase();
+        String normalizedEmail = email == null ? "" : email.trim();
         String sql = "SELECT * FROM `user` WHERE email=?";
         try (PreparedStatement ps = requireConnection().prepareStatement(sql)) {
             ps.setString(1, normalizedEmail);

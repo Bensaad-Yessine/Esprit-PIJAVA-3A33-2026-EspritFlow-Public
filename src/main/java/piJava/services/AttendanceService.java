@@ -25,19 +25,21 @@ public class AttendanceService implements ICrud<Attendance> {
     }
 
     private void createTableIfNotExists() {
-        String sql = "CREATE TABLE IF NOT EXISTS attendance (" +
+        try (Statement st = requireConnection().createStatement()) {
+            String sql = "CREATE TABLE IF NOT EXISTS attendance (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
                 "seance_id INT NOT NULL, " +
                 "user_id INT NOT NULL, " +
                 "status VARCHAR(50) NOT NULL, " +
                 "scanned_at DATETIME, " +
                 "FOREIGN KEY (seance_id) REFERENCES seance(id) ON DELETE CASCADE, " +
-                "FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE" +
+                "FOREIGN KEY (user_id) REFERENCES `user`(id) ON DELETE CASCADE" +
                 ")";
-        try (Statement st = requireConnection().createStatement()) {
             st.execute(sql);
+            System.out.println("✅ Table 'attendance' prête.");
+            
         } catch (SQLException e) {
-            System.out.println("Error creating attendance table: " + e.getMessage());
+            System.err.println("❌ Erreur critique lors de la création de la table : " + e.getMessage());
         }
     }
 
