@@ -2,14 +2,21 @@ package piJava.Controllers.frontoffice.classe;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.stage.FileChooser;
+import piJava.api.ExportApi;
 import piJava.entities.Classe;
 import piJava.entities.ClasseStats;
+import piJava.entities.Matiere;
 import piJava.entities.user;
 import piJava.services.ClasseService;
+import piJava.services.MatiereService;
 import piJava.utils.SessionManager;
 
+import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ClasseContentController implements Initializable {
@@ -24,6 +31,8 @@ public class ClasseContentController implements Initializable {
     @FXML private Label lblStatsComplexite;
 
     private final ClasseService classeService = new ClasseService();
+    private final MatiereService matiereService = new MatiereService();
+    private Classe currentClasse;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -51,6 +60,7 @@ public class ClasseContentController implements Initializable {
                 showEmptyState("Classe introuvable pour l’identifiant " + classId + ".");
                 return;
             }
+            this.currentClasse = classe;
 
             lblClassName.setText(nvl(classe.getNom(), "—"));
             lblClassLevel.setText(nvl(classe.getNiveau(), "—"));
@@ -79,6 +89,53 @@ public class ClasseContentController implements Initializable {
         loadCurrentUserClass();
     }
 
+    @FXML
+    public void handleExportPDF() {
+        if (currentClasse == null) {
+            showAlert("Erreur", "Aucune classe chargée.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        try {
+            // Déterminer le chemin du Bureau (gère OneDrive)
+            String userHome = System.getProperty("user.home");
+            File desktop = new File(userHome, "Desktop");
+            if (!desktop.exists()) {
+                desktop = new File(userHome, "OneDrive" + File.separator + "Bureau");
+            }
+            if (!desktop.exists()) {
+                desktop = new File(userHome, "OneDrive" + File.separator + "Desktop");
+            }
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Enregistrer le bulletin PDF");
+            if (desktop.exists()) {
+                fileChooser.setInitialDirectory(desktop);
+            }
+
+            fileChooser.setInitialFileName("Bulletin_" + currentClasse.getNom() + ".pdf");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
+            
+            File file = fileChooser.showSaveDialog(null);
+            if (file != null) {
+                List<Matiere> matieres = matiereService.getMatieresByClasseId(currentClasse.getId());
+                ExportApi.exportClasseToPdf(currentClasse, matieres, file.getAbsolutePath());
+                showAlert("Succès", "Le bulletin PDF a été généré avec succès à l'emplacement :\n" + file.getAbsolutePath(), Alert.AlertType.INFORMATION);
+            }
+        } catch (Exception e) {
+            showAlert("Erreur", "Erreur lors de la génération du PDF: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    private void showAlert(String title, String content, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
     private void showEmptyState(String message) {
         lblClassName.setText("—");
         lblClassLevel.setText("—");
@@ -94,6 +151,3 @@ public class ClasseContentController implements Initializable {
         return (value != null && !value.isBlank()) ? value : fallback;
     }
 }
-
-
-

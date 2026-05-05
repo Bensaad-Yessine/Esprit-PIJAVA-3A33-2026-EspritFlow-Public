@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="piJava.Controllers.backoffice.quiz.QuizContentController"
+      spacing="24"
+      styleClass="main-content"
+      stylesheets="/backoffice/Matiere/matieres.css">
+
+    <!-- ── Header ── -->
+    <HBox alignment="CENTER_LEFT" spacing="16" styleClass="page-header">
+        <Button text="←" onAction="#handleBack" styleClass="page-btn"/>
+        <VBox HBox.hgrow="ALWAYS" spacing="4">
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="Backoffice" styleClass="breadcrumb-inactive"/>
+                <Label text="›" styleClass="breadcrumb-sep"/>
+                <Label text="Quiz" styleClass="breadcrumb-inactive"/>
+                <Label text="›" styleClass="breadcrumb-sep"/>
+                <Label fx:id="lblMatiereName" text="..." styleClass="breadcrumb-active"/>
+            </HBox>
+            <Label text="Gestion du Quiz" styleClass="page-title"/>
+        </VBox>
+        <Label fx:id="lblStatus" text="" styleClass="badge-coeff"/>
+    </HBox>
+
+    <!-- ── SECTION : AUCUN QUIZ ── -->
+    <VBox fx:id="createQuizBox" spacing="20" alignment="CENTER" styleClass="table-panel" VBox.vgrow="ALWAYS" visible="false" managed="false">
+        <padding><Insets top="60" right="60" bottom="60" left="60"/></padding>
+        <Label text="📝" styleClass="empty-icon" style="-fx-font-size: 64px;"/>
+        <VBox spacing="8" alignment="CENTER">
+            <Label text="Aucun quiz pour cette matière" styleClass="empty-title" style="-fx-font-size: 22px;"/>
+            <Label text="Créez un quiz pour commencer à évaluer vos étudiants." styleClass="empty-sub"/>
+        </VBox>
+        
+        <VBox spacing="12" maxWidth="450" alignment="CENTER_LEFT">
+            <Label text="Titre du Quiz" styleClass="filter-label"/>
+            <TextField fx:id="txtQuizTitle" promptText="Ex: Quiz Final - Algorithmique" styleClass="search-bar" prefWidth="450"/>
+            
+            <Label text="Description" styleClass="filter-label">
+                <padding><Insets top="8" /></padding>
+            </Label>
+            <TextArea fx:id="txtQuizDesc" prefRowCount="3" promptText="Décrivez brièvement le but du quiz..." styleClass="search-bar" style="-fx-pref-height: 100;"/>
+            
+            <Button text="＋  Créer le Quiz maintenant" onAction="#handleCreateQuiz" styleClass="btn-add" prefWidth="Infinity">
+                <VBox.margin><Insets top="12" /></VBox.margin>
+            </Button>
+        </VBox>
+    </VBox>
+
+    <!-- ── SECTION : QUIZ EXISTANT ── -->
+    <VBox fx:id="manageQuizBox" spacing="24" VBox.vgrow="ALWAYS" visible="false" managed="false">
+        
+        <!-- Quiz Info Card -->
+        <HBox spacing="20" alignment="CENTER_LEFT" styleClass="filter-bar">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label fx:id="lblQuizTitle" styleClass="page-title" style="-fx-font-size: 20px;"/>
+                <Label fx:id="lblQuizDesc" styleClass="text-muted" style="-fx-text-fill: #6b7394; -fx-font-size: 13px;"/>
+            </VBox>
+            <Button text="🗑  Supprimer le Quiz" onAction="#handleDeleteQuiz" styleClass="btn-reset" style="-fx-text-fill: #ff4d6d; -fx-border-color: #ff4d6d40;"/>
+        </HBox>
+
+        <HBox spacing="24" VBox.vgrow="ALWAYS">
+            
+            <!-- Questions Table -->
+            <VBox spacing="12" styleClass="table-panel" HBox.hgrow="ALWAYS">
+                <HBox alignment="CENTER_LEFT" styleClass="table-footer" style="-fx-background-radius: 16 16 0 0; -fx-border-width: 0 0 1 0;">
+                    <Label text="LISTE DES QUESTIONS" styleClass="breadcrumb-inactive" style="-fx-font-weight: 800; -fx-letter-spacing: 0.1em;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="questionCountLabel" text="0 questions" styleClass="result-count"/>
+                </HBox>
+                
+                <TableView fx:id="questionTable" styleClass="matiere-table" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="qPosCol" text="ORDRE" prefWidth="70"/>
+                        <TableColumn fx:id="qTextCol" text="QUESTION" prefWidth="400"/>
+                        <TableColumn fx:id="qActionCol" text="ACTIONS" prefWidth="120"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <!-- Add Question Sidebar -->
+            <VBox spacing="16" styleClass="table-panel" prefWidth="420" alignment="TOP_LEFT">
+                <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+                
+                <Label text="Ajouter une Question" styleClass="page-title" style="-fx-font-size: 18px;"/>
+                
+                <VBox spacing="8">
+                    <Label text="Énoncé de la question" styleClass="filter-label"/>
+                    <TextField fx:id="txtQuestion" promptText="Ex: Quelle est la complexité de..." styleClass="search-bar"/>
+                </VBox>
+                
+                <VBox spacing="10">
+                    <Label text="Options de réponse" styleClass="filter-label"/>
+                    <TextField fx:id="txtAnswer1" promptText="Réponse 1" styleClass="search-bar" style="-fx-padding: 8 12;"/>
+                    <TextField fx:id="txtAnswer2" promptText="Réponse 2" styleClass="search-bar" style="-fx-padding: 8 12;"/>
+                    <TextField fx:id="txtAnswer3" promptText="Réponse 3" styleClass="search-bar" style="-fx-padding: 8 12;"/>
+                    <TextField fx:id="txtAnswer4" promptText="Réponse 4" styleClass="search-bar" style="-fx-padding: 8 12;"/>
+                </VBox>
+                
+                <VBox spacing="8">
+                    <Label text="Bonne réponse" styleClass="filter-label"/>
+                    <ComboBox fx:id="cbCorrect" prefWidth="Infinity" promptText="Choisir l'index correct..." styleClass="filter-combo"/>
+                </VBox>
+                
+                <Button text="＋  Ajouter au Quiz" onAction="#handleAddQuestion" styleClass="btn-add" prefWidth="Infinity" style="-fx-padding: 12;">
+                    <VBox.margin><Insets top="10"/></VBox.margin>
+                </Button>
+            </VBox>
+        </HBox>
+    </VBox>
+
+</VBox>

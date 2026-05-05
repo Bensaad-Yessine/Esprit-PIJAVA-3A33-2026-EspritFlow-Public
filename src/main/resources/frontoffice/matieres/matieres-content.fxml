@@ -19,6 +19,7 @@
                     <Label text="ESPRIT Flow · Matières liées à votre classe" styleClass="subtitle"/>
                 </VBox>
                 <Button text="↻ Rafraîchir" onAction="#handleRefresh" styleClass="btn-primary"/>
+                <Button text="📗 Export Excel" onAction="#handleExportExcel" styleClass="btn-primary" style="-fx-background-color: #10b981;"/>
             </HBox>
 
             <HBox fx:id="heroCard" spacing="20" styleClass="hero-card">
@@ -93,10 +94,13 @@
                         <TableColumn fx:id="coeffCol" text="Coefficient" prefWidth="130.0"/>
                         <TableColumn fx:id="heuresCol" text="Charge horaire" prefWidth="140.0"/>
                         <TableColumn fx:id="complexiteCol" text="Complexité" prefWidth="130.0"/>
-                        <TableColumn fx:id="descCol" text="Description" prefWidth="430.0"/>
+                        <TableColumn fx:id="descCol" text="Description" prefWidth="330.0"/>
+                        <TableColumn fx:id="wikiCol" text="Wiki" prefWidth="100.0"/>
+                        <TableColumn fx:id="quizCol" text="Quiz" prefWidth="120.0"/>
                     </columns>
                 </TableView>
             </VBox>
+
 
         </VBox>
     </ScrollPane>

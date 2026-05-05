@@ -6,3 +6,4 @@ CREATE TABLE IF NOT EXISTS groupe_projet (
     statut VARCHAR(50) DEFAULT 'Actif',
     description TEXT
 );
+

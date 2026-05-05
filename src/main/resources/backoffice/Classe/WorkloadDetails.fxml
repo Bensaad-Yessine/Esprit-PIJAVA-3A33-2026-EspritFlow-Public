@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<VBox prefWidth="900.0" spacing="32.0" styleClass="main-content" stylesheets="@classes.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="piJava.Controllers.backoffice.Classe.WorkloadDetailsController">
+    <padding>
+        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+    </padding>
+    <children>
+        <!-- Header Section -->
+        <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="page-header">
+            <children>
+                <Button onAction="#handleBack" styleClass="btn-reset" text="← Retour à la liste" />
+                <VBox spacing="4.0">
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="Gestion des Classes" styleClass="breadcrumb-inactive"/>
+                        <Label text="›" styleClass="breadcrumb-sep"/>
+                        <Label text="Planificateur de Charge" styleClass="breadcrumb-active"/>
+                    </HBox>
+                    <HBox spacing="10.0" alignment="CENTER_LEFT">
+                        <Label text="Analyse de la classe :" styleClass="page-title" />
+                        <Label fx:id="lblClasseName" text="Nom Classe" styleClass="page-title" textFill="#00e5c8" />
+                    </HBox>
+                </VBox>
+            </children>
+        </HBox>
+
+        <!-- Stats Cards Section -->
+        <HBox spacing="24.0">
+            <children>
+                <!-- Numeric Statistics Card -->
+                <VBox spacing="20.0" styleClass="mini-stats" HBox.hgrow="ALWAYS" prefWidth="450">
+                    <children>
+                        <Label text="METRIQUES DE PERFORMANCE" styleClass="mini-stat-label" style="-fx-font-weight: 700; -fx-text-fill: #3a4060;"/>
+
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                            <children>
+                                <Label text="📅" style="-fx-font-size: 24px;"/>
+                                <VBox>
+                                    <Label text="Charge de travail brute" styleClass="mini-stat-label" />
+                                    <Label fx:id="lblChargeBrute" text="0.0h" styleClass="mini-stat-number" />
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                            <children>
+                                <Label text="⚖" style="-fx-font-size: 24px;"/>
+                                <VBox>
+                                    <Label text="Indice de complexité cumulé" styleClass="mini-stat-label" />
+                                    <Label fx:id="lblChargePonderee" text="0.0" styleClass="mini-stat-number" />
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                            <children>
+                                <Label text="🔥" style="-fx-font-size: 24px;"/>
+                                <VBox>
+                                    <Label text="Indice de pression académique" styleClass="mini-stat-label" />
+                                    <Label fx:id="lblIndicePression" text="0.0" styleClass="mini-stat-number" textFill="#00e5c8" />
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- Status Card -->
+                <VBox alignment="CENTER" spacing="16.0" styleClass="mini-stats" HBox.hgrow="ALWAYS" prefWidth="300">
+                    <children>
+                        <Label text="ÉTAT DE SANTÉ" styleClass="mini-stat-label" style="-fx-font-weight: 700; -fx-text-fill: #3a4060;"/>
+                        <StackPane>
+                            <children>
+                                <Circle fx:id="statusCircle" radius="45.0" fill="#1e2130" stroke="#1e2130" strokeWidth="4.0" />
+                                <Label fx:id="statusIconLabel" text="⚠" style="-fx-font-size: 32px;" textFill="WHITE"/>
+                            </children>
+                        </StackPane>
+                        <Label fx:id="lblStatus" text="ANALYSE..." styleClass="page-title" style="-fx-font-size: 18px;" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <!-- Recommendation Section -->
+        <VBox spacing="16.0" styleClass="mini-stats" style="-fx-border-color: #00e5c840; -fx-background-color: #00e5c805;">
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                    <children>
+                        <Label text="💡" style="-fx-font-size: 20px;"/>
+                        <Label text="RECOMMANDATIONS DU SYSTÈME" styleClass="mini-stat-label" style="-fx-font-weight: 700; -fx-text-fill: #00e5c8;"/>
+                    </children>
+                </HBox>
+                <Label fx:id="lblSuggestion" text="Le moteur d'analyse examine les pondérations des matières liées à cette classe..."
+                       wrapText="true" style="-fx-font-family: 'DM Sans'; -fx-font-size: 15px; -fx-text-fill: #c8cfe8; -fx-line-spacing: 5px;">
+                </Label>
+            </children>
+        </VBox>
+    </children>
+</VBox>
+
+
+

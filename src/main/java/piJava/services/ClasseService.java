@@ -2,6 +2,8 @@ package piJava.services;
 
 import piJava.entities.Classe;
 import piJava.entities.ClasseStats;
+import piJava.entities.Matiere;
+import piJava.entities.WorkloadStats;
 import piJava.utils.MyDataBase;
 
 import java.sql.*;
@@ -174,6 +176,60 @@ public class ClasseService implements ICrud<Classe> {
                 rs.getString("filiere"),
                 rs.getObject("user_id", Integer.class)
         );
+    }
+
+    public WorkloadStats getWorkloadStats(int classeId) throws SQLException {
+        MatiereService matiereService = new MatiereService();
+        List<Matiere> matieres = matiereService.getMatieresByClasseId(classeId);
+        
+        WorkloadStats stats = new WorkloadStats();
+        stats.setClasseId(classeId);
+        
+        double totalChargeBrute = 0;
+        double totalChargePonderee = 0;
+        double totalIndicePression = 0;
+        
+        Matiere maxImpactMatiere = null;
+        double maxImpact = -1;
+
+        for (Matiere m : matieres) {
+            double ch = m.getChargehoraire();
+            double coeff = m.getCoefficient();
+            double complex = m.getScorecomplexite();
+            
+            totalChargeBrute += ch;
+            totalChargePonderee += (ch * complex);
+            totalIndicePression += (ch * coeff * complex);
+            
+            double impact = ch * coeff * complex;
+            if (impact > maxImpact) {
+                maxImpact = impact;
+                maxImpactMatiere = m;
+            }
+        }
+        
+        stats.setChargeBruteTotale(totalChargeBrute);
+        stats.setChargePonderee(totalChargePonderee);
+        stats.setIndicePression(totalIndicePression);
+        
+        if (totalChargeBrute < 25) {
+            stats.setAlerteNiveau("VERT");
+            stats.setSuggestion("Classe bien équilibrée.");
+        } else if (totalChargeBrute <= 35) {
+            stats.setAlerteNiveau("ORANGE");
+            stats.setSuggestion("Charge modérée, à surveiller.");
+        } else {
+            stats.setAlerteNiveau("ROUGE");
+            if (maxImpactMatiere != null) {
+                stats.setRecommendationMatiere(maxImpactMatiere.getNom());
+                stats.setSuggestion("Surcharge détectée ! La matière '" + maxImpactMatiere.getNom() + 
+                    "' est celle qui pèse le plus sur l'indice de pression. Envisagez de réduire sa charge horaire.");
+            } else {
+                stats.setSuggestion("Surcharge détectée !");
+            }
+        }
+        
+        return stats;
     }
 
     // ─── STATISTIQUES PAR CLASSE ──────────────────────────────────

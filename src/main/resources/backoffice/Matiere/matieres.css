@@ -334,3 +334,62 @@
                 -fx-border-width:1; -fx-border-radius:6; -fx-background-radius:6;
                 -fx-text-fill:#a78bfa; -fx-font-size:11px; -fx-font-weight:700; -fx-padding:3 10; }
 
+
+.btn-quiz {
+    -fx-background-color: #1e2130;
+    -fx-border-color: #3b82f640;
+    -fx-border-width: 1;
+    -fx-border-radius: 7;
+    -fx-background-radius: 7;
+    -fx-text-fill: #3b82f6;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-padding: 5 12;
+    -fx-cursor: hand;
+}
+.btn-quiz:hover {
+    -fx-background-color: #3b82f615;
+    -fx-border-color: #3b82f680;
+    -fx-scale-x: 1.04; -fx-scale-y: 1.04;
+    -fx-effect: dropshadow(gaussian, #3b82f630, 10, 0, 0, 0);
+}
+
+/* ── Wikipedia Panel ────────────────────────────────────────── */
+.wiki-panel {
+    -fx-background-color: #161921;
+    -fx-border-color: #a78bfa30;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-margin: 0 20 20 20;
+}
+
+.wiki-title {
+    -fx-font-family: 'Syne', sans-serif;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #eef0f8;
+}
+
+.wiki-subtitle {
+    -fx-font-size: 11px;
+    -fx-text-fill: #a78bfa;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 0.05em;
+}
+
+.wiki-content {
+    -fx-font-size: 13px;
+    -fx-text-fill: #9ba3c4;
+    -fx-line-spacing: 1.4;
+}
+
+.wiki-link {
+    -fx-text-fill: #a78bfa;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-underline: false;
+}
+.wiki-link:hover {
+    -fx-text-fill: #c4b5fd;
+}

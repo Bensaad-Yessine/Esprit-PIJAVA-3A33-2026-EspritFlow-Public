@@ -48,5 +48,3 @@ Invoke-RestMethod http://localhost:8085/api/classes/stats
 Invoke-RestMethod http://localhost:8085/api/classes/1/stats
 Invoke-RestMethod http://localhost:8085/api/matieres/stats
 ```
-
-

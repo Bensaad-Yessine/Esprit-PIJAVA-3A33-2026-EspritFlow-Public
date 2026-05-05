@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="piJava.Controllers.frontoffice.quiz.QuizAttemptController"
+      spacing="20" styleClass="main-container"
+      stylesheets="/frontoffice/classe/classe.css"
+      style="-fx-background-color: #f9fafb; -fx-padding: 30;">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <Button text="← Retour" onAction="#handleBack" styleClass="btn-secondary"/>
+        <VBox HBox.hgrow="ALWAYS">
+            <Label fx:id="lblMatiereName" text="Matière" styleClass="title" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Label text="Passer le quiz" styleClass="subtitle" style="-fx-text-fill: #6b7280;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Quiz Info Card -->
+    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+        <Label fx:id="lblQuizTitle" text="Titre du Quiz" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
+        <Label fx:id="lblQuizDesc" text="Description" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" wrapText="true"/>
+    </VBox>
+
+    <!-- Questions Container -->
+    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+        <VBox fx:id="questionsContainer" spacing="15" style="-fx-padding: 5;">
+            <!-- Questions injected here -->
+        </VBox>
+    </ScrollPane>
+
+    <!-- Footer / Actions -->
+    <VBox spacing="15" alignment="CENTER">
+        <Label fx:id="lblResult" visible="false" />
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="btnSubmit" text="Valider mes réponses" onAction="#handleSubmit" styleClass="btn-primary" style="-fx-font-size: 16px; -fx-padding: 10 30;"/>
+            <Button fx:id="btnRetry" text="🔄 Repasser le quiz" onAction="#handleRetry" visible="false" managed="false" styleClass="btn-secondary" style="-fx-font-size: 16px; -fx-padding: 10 30; -fx-background-color: #6366f1; -fx-text-fill: white;"/>
+        </HBox>
+    </VBox>
+
+</VBox>

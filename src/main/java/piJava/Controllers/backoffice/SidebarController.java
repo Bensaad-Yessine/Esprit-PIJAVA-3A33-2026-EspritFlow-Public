@@ -246,6 +246,9 @@ public class SidebarController implements Initializable {
             Parent view = loader.load();
             Object controller = loader.getController();
 
+            if (controller instanceof piJava.Controllers.backoffice.Matiere.MatiereContentController c) {
+                c.setContentArea(contentArea);
+            }
             if (controller instanceof piJava.Controllers.backoffice.group.GroupContentController c) {
                 c.setSidebarController(this);
                 c.setContentArea(contentArea);
@@ -293,6 +296,11 @@ public class SidebarController implements Initializable {
                 c.setSidebarController(this);
             }
 
+            // AJOUT DE L'INJECTION POUR LES CLASSES
+            if (controller instanceof piJava.Controllers.backoffice.Classe.ClasseContentController c) {
+                c.setContentArea(contentArea);
+            }
+
             contentArea.getChildren().setAll(view);
 
         } catch (Exception e) {
@@ -330,3 +338,4 @@ public class SidebarController implements Initializable {
         return "Utilisateur";
     }
 }
+

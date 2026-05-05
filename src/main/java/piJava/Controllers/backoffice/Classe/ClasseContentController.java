@@ -1,9 +1,11 @@
 package piJava.Controllers.backoffice.Classe;
 
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -62,6 +64,12 @@ public class ClasseContentController implements Initializable {
 
     private static final int PAGE_SIZE = 10;
     private int currentPage = 1;
+
+    private StackPane contentArea;
+
+    public void setContentArea(StackPane contentArea) {
+        this.contentArea = contentArea;
+    }
 
     // ───────────────────────────────────────────────────────────
     @Override
@@ -122,14 +130,19 @@ public class ClasseContentController implements Initializable {
         });
 
         actionsCol.setCellFactory(col -> new TableCell<>() {
-            final Button editBtn   = styledBtn("✏  Modifier",  "btn-edit");
-            final Button deleteBtn = styledBtn("🗑  Suppr.",   "btn-delete");
-            final HBox   box       = new HBox(8, editBtn, deleteBtn);
+            final Button editBtn   = styledBtn("✏",  "btn-edit");
+            final Button deleteBtn = styledBtn("🗑", "btn-delete");
+            final Button planBtn   = styledBtn("📅 Planifier", "btn-plan");
+            final HBox   box       = new HBox(8, planBtn, editBtn, deleteBtn);
 
             {
                 box.setAlignment(Pos.CENTER_LEFT);
                 box.setPadding(new Insets(0, 8, 0, 8));
 
+                planBtn.setOnAction(e -> {
+                    Classe c = getTableView().getItems().get(getIndex());
+                    Platform.runLater(() -> handleWorkloadPlanner(c));
+                });
                 editBtn.setOnAction(e -> {
                     Classe c = getTableView().getItems().get(getIndex());
                     handleEdit(c);
@@ -254,6 +267,24 @@ public class ClasseContentController implements Initializable {
 
     private void handleEdit(Classe classe) {
         showClasseDialog(classe);
+    }
+
+    private void handleWorkloadPlanner(Classe classe) {
+        if (contentArea == null) return;
+        try {
+            URL resource = getClass().getResource("/backoffice/Classe/WorkloadDetails.fxml");
+            FXMLLoader loader = new FXMLLoader(resource);
+            Region view = loader.load();
+
+            WorkloadDetailsController controller = loader.getController();
+            controller.initData(classe);
+            controller.setContentArea(contentArea);
+
+            contentArea.getChildren().setAll(view);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger le planificateur : " + e.getMessage());
+        }
     }
 
     private void handleDelete(Classe classe) {
@@ -429,6 +460,7 @@ public class ClasseContentController implements Initializable {
     private Button styledBtn(String text, String styleClass) {
         Button btn = new Button(text);
         btn.getStyleClass().add(styleClass);
+        // On laisse le CSS gérer le min-width et le padding pour un rendu propre
         return btn;
     }
 
@@ -469,3 +501,4 @@ public class ClasseContentController implements Initializable {
         a.showAndWait();
     }
 }
+

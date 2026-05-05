@@ -95,7 +95,7 @@
                 <TableColumn fx:id="filiereCol" text="FILIÈRE"          prefWidth="160"/>
                 <TableColumn fx:id="anneeCol"   text="ANNÉE UNIV."      prefWidth="140"/>
                 <TableColumn fx:id="descCol"    text="DESCRIPTION"      prefWidth="220"/>
-                <TableColumn fx:id="actionsCol" text="ACTIONS"          prefWidth="180"/>
+                <TableColumn fx:id="actionsCol" text="ACTIONS"          prefWidth="280"/>
             </columns>
             <placeholder>
                 <VBox alignment="CENTER" spacing="12" styleClass="empty-state">

@@ -46,6 +46,12 @@ public class MatiereContentController implements Initializable {
     @FXML private TableColumn<Matiere, String>  descCol;
     @FXML private TableColumn<Matiere, Void>    actionsCol;
 
+    // ── Wikipedia Area ──────────────────────────────────────────
+    @FXML private VBox wikipediaBox;
+    @FXML private Label wikiSubjectLabel;
+    @FXML private Label wikiContentLabel;
+    @FXML private Hyperlink wikiLinkLabel;
+
     // ── Footer ─────────────────────────────────────────────────
     @FXML private Label  footerLabel;
     @FXML private Button prevBtn;
@@ -57,8 +63,14 @@ public class MatiereContentController implements Initializable {
     private ObservableList<Matiere> allMatieres = FXCollections.observableArrayList();
     private ObservableList<Matiere> filtered    = FXCollections.observableArrayList();
 
+    private StackPane contentArea;
+
     private static final int PAGE_SIZE = 10;
     private int currentPage = 1;
+
+    public void setContentArea(StackPane contentArea) {
+        this.contentArea = contentArea;
+    }
 
     // ───────────────────────────────────────────────────────────
     @Override
@@ -68,6 +80,44 @@ public class MatiereContentController implements Initializable {
         setupSearch();
         setupFilters();
         animateEntrance();
+        
+        // Cacher la zone Wikipedia au début
+        if (wikipediaBox != null) {
+            wikipediaBox.setVisible(false);
+            wikipediaBox.setManaged(false);
+        }
+
+        // Action lors du clic sur une ligne
+        matiereTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                showWikipediaInfo(newSelection);
+            }
+        });
+    }
+
+    private void showWikipediaInfo(Matiere m) {
+        if (wikipediaBox == null) return;
+
+        wikiSubjectLabel.setText(m.getNom());
+        wikiContentLabel.setText("Chargement des informations depuis Wikipédia...");
+        wikipediaBox.setVisible(true);
+        wikipediaBox.setManaged(true);
+
+        // Appel API asynchrone pour ne pas bloquer l'UI
+        new Thread(() -> {
+            String summary = piJava.api.WikipediaApi.getSummary(m.getNom());
+            javafx.application.Platform.runLater(() -> {
+                wikiContentLabel.setText(summary);
+                wikiLinkLabel.setOnAction(e -> {
+                    try {
+                        String url = "https://fr.wikipedia.org/wiki/" + java.net.URLEncoder.encode(m.getNom().replace(" ", "_"), "UTF-8");
+                        new ProcessBuilder("rundll32", "url.dll,FileProtocolHandler", url).start();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            });
+        }).start();
     }
 
     // ── Column Setup ───────────────────────────────────────────
@@ -146,12 +196,14 @@ public class MatiereContentController implements Initializable {
         actionsCol.setCellFactory(col -> new TableCell<>() {
             final Button editBtn   = actionBtn("✏  Modifier", "btn-edit");
             final Button deleteBtn = actionBtn("🗑  Suppr.",  "btn-delete");
-            final HBox   box       = new HBox(8, editBtn, deleteBtn);
+            final Button quizBtn   = actionBtn("📝 Quiz",  "btn-quiz");
+            final HBox   box       = new HBox(8, editBtn, deleteBtn, quizBtn);
             {
                 box.setAlignment(Pos.CENTER_LEFT);
                 box.setPadding(new Insets(0, 8, 0, 8));
                 editBtn.setOnAction(e   -> handleEdit(getTableView().getItems().get(getIndex())));
                 deleteBtn.setOnAction(e -> handleDelete(getTableView().getItems().get(getIndex())));
+                quizBtn.setOnAction(e   -> handleManageQuiz(getTableView().getItems().get(getIndex())));
             }
             @Override protected void updateItem(Void v, boolean empty) {
                 super.updateItem(v, empty);
@@ -293,6 +345,26 @@ public class MatiereContentController implements Initializable {
                 }
             }
         });
+    }
+
+    private void handleManageQuiz(Matiere m) {
+        if (contentArea == null) {
+            System.err.println("contentArea is null in MatiereContentController.");
+            return;
+        }
+        try {
+            java.net.URL resource = getClass().getResource("/backoffice/quiz/QuizContent.fxml");
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(resource);
+            javafx.scene.layout.Region view = loader.load();
+
+            piJava.Controllers.backoffice.quiz.QuizContentController controller = loader.getController();
+            controller.setContentArea(contentArea);
+            controller.initData(m);
+
+            contentArea.getChildren().setAll(view);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // ── Add / Edit Dialog ──────────────────────────────────────

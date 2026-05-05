@@ -19,6 +19,7 @@
                     <Label text="ESPRIT Flow · Votre classe connectée" styleClass="subtitle"/>
                 </VBox>
                 <Button text="↻ Rafraîchir" onAction="#handleRefresh" styleClass="btn-primary"/>
+                <Button text="📄 PDF Bulletin" onAction="#handleExportPDF" styleClass="btn-primary" style="-fx-background-color: #e11d48;"/>
             </HBox>
 
             <HBox fx:id="heroCard" spacing="20" styleClass="hero-card">
@@ -96,5 +97,4 @@
     </ScrollPane>
 
 </HBox>
-
 
