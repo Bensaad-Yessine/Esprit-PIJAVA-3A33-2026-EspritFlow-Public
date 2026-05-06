@@ -95,6 +95,8 @@ public class ModifierObjectifController {
 
             ObjectifSanteService service = new ObjectifSanteService();
             service.modifier(objectif);
+            service.mettreAJourApresModificationArchive(objectif);
+            service.mettreAJourEtArchiverObjectifsDepasses();
 
             if (afficherObjectifsController != null) {
                 afficherObjectifsController.chargerObjectifs();

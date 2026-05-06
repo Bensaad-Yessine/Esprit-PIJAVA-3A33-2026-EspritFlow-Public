@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
+
+<!--
+  Courses Content — Premium Red & White Edition
+  Pair with: courses.css
+  Controller: piJava.Controllers.frontoffice.courses.CoursesContentController
+-->
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="piJava.Controllers.frontoffice.courses.CoursesContentController"
+      stylesheets="@courses.css"
+      prefWidth="1400" prefHeight="860"
+      styleClass="root-bg">
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- OUTER SCROLL                                                 -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+
+    <ScrollPane fitToWidth="true"
+                styleClass="page-scroll"
+                HBox.hgrow="ALWAYS">
+
+        <VBox spacing="0" styleClass="main-container">
+
+            <!-- ════════════════════════════════════════════════════ -->
+            <!-- HERO SECTION                                         -->
+            <!-- ════════════════════════════════════════════════════ -->
+
+            <VBox fx:id="heroSection" spacing="20" styleClass="hero-section">
+
+                <!-- Eyebrow badge -->
+                <HBox alignment="CENTER_LEFT">
+                    <HBox styleClass="eyebrow-badge" alignment="CENTER_LEFT" spacing="8">
+                        <Circle fx:id="eyebrowDot" radius="4" styleClass="eyebrow-dot"/>
+                        <Label text="FREE UDEMY COURSES" styleClass="eyebrow-text"/>
+                    </HBox>
+                </HBox>
+
+                <!-- Title, Description & Streak Badge -->
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="📚 Course Catalog" styleClass="title"/>
+                        <Label text="Discover free Coursera courses and boost your learning streak"
+                               styleClass="subtitle"/>
+                    </VBox>
+                    <HBox alignment="CENTER" styleClass="streak-badge">
+                        <Label fx:id="streakLabel" text="🔥 0 Day Streak!" styleClass="streak-text"/>
+                    </HBox>
+                </HBox>
+
+                <!-- ─── Search Row ─── -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+
+                    <!-- Search field wrapper -->
+                    <HBox fx:id="searchWrap"
+                          styleClass="search-wrap"
+                          alignment="CENTER_LEFT"
+                          prefWidth="420"
+                          minHeight="46">
+                        <padding><Insets left="14" right="6"/></padding>
+                        <Label text="🔍" style="-fx-font-size:14px; -fx-text-fill:#BBBBBB;"/>
+                        <TextField fx:id="searchField"
+                                   promptText="Search 2,400+ courses…"
+                                   styleClass="search-field"
+                                   HBox.hgrow="ALWAYS"/>
+                    </HBox>
+
+                    <Button fx:id="searchBtn"
+                            text="Search"
+                            styleClass="btn-primary"
+                            onAction="#handleSearch"/>
+
+                    <Button fx:id="trendingBtn"
+                            text="⭐  Trending Now"
+                            styleClass="btn-secondary"
+                            onAction="#handleTrending"/>
+
+                </HBox>
+
+                <!-- ─── Category Chips ─── -->
+                <HBox fx:id="chipsRow" spacing="10" alignment="CENTER_LEFT">
+                    <Label text="BROWSE:" styleClass="label-filter"/>
+                    <Button fx:id="chipAll"        text="All"          styleClass="chip-active" onAction="#handleChip"/>
+                    <Button fx:id="chipDev"        text="Development"  styleClass="chip"        onAction="#handleChip"/>
+                    <Button fx:id="chipDesign"     text="Design"       styleClass="chip"        onAction="#handleChip"/>
+                    <Button fx:id="chipBusiness"   text="Business"     styleClass="chip"        onAction="#handleChip"/>
+                    <Button fx:id="chipData"       text="Data Science" styleClass="chip"        onAction="#handleChip"/>
+
+                    <!-- Legacy ComboBox kept for controller compatibility (hidden) -->
+                    <ComboBox fx:id="categoryCombo"
+                              prefWidth="0"
+                              maxWidth="0"
+                              visible="false"
+                              managed="false"
+                              styleClass="combo-category"/>
+                </HBox>
+
+                <!-- ─── Stats Bar ─── -->
+                <HBox styleClass="stats-bar" spacing="24" alignment="CENTER_LEFT">
+                    <VBox alignment="CENTER_LEFT" spacing="2">
+                        <Label text="2,418"   styleClass="stat-number"/>
+                        <Label text="Free Courses" styleClass="stat-label"/>
+                    </VBox>
+
+                    <Rectangle width="1" height="32" styleClass="stat-divider"/>
+
+                    <VBox alignment="CENTER_LEFT" spacing="2">
+                        <Label text="140K+"   styleClass="stat-number"/>
+                        <Label text="Learners" styleClass="stat-label"/>
+                    </VBox>
+
+                    <Rectangle width="1" height="32" styleClass="stat-divider"/>
+
+                    <VBox alignment="CENTER_LEFT" spacing="2">
+                        <Label text="98%"         styleClass="stat-number"/>
+                        <Label text="Satisfaction" styleClass="stat-label"/>
+                    </VBox>
+
+                    <HBox HBox.hgrow="ALWAYS"/>
+
+                    <!-- Status text pushed to the right -->
+                    <Label fx:id="statusLabel"
+                           text="Loading courses…"
+                           styleClass="label-status"/>
+                </HBox>
+
+                <!-- ─── Shimmer Loading Bar ─── -->
+                <StackPane fx:id="loadingBarPane" prefHeight="3" maxHeight="3">
+                    <!-- Track -->
+                    <Rectangle fx:id="loadingBarTrack"
+                               height="3"
+                               styleClass="loading-bar-track"
+                               StackPane.alignment="CENTER_LEFT">
+                        <StackPane.margin><Insets/></StackPane.margin>
+                    </Rectangle>
+                    <!-- Fill (width animated in controller) -->
+                    <Rectangle fx:id="loadingBarFill"
+                               width="0"
+                               height="3"
+                               styleClass="loading-bar-fill"
+                               StackPane.alignment="CENTER_LEFT"/>
+                </StackPane>
+
+            </VBox>
+
+            <!-- ════════════════════════════════════════════════════ -->
+            <!-- LOADING SPINNER (center, hidden by default)          -->
+            <!-- ════════════════════════════════════════════════════ -->
+
+            <HBox alignment="CENTER" style="-fx-padding: 12 0 4 0;">
+                <ProgressIndicator fx:id="loadingSpinner"
+                                   prefWidth="44"
+                                   prefHeight="44"
+                                   visible="false"
+                                   styleClass="progress-indicator"/>
+            </HBox>
+
+            <!-- ════════════════════════════════════════════════════ -->
+            <!-- SECTION DIVIDER                                      -->
+            <!-- ════════════════════════════════════════════════════ -->
+
+            <HBox fx:id="sectionDivider"
+                  alignment="CENTER"
+                  spacing="16"
+                  style="-fx-padding: 12 0 20 0;">
+
+                <Line startX="0" endX="0"
+                      styleClass="section-divider-line"
+                      HBox.hgrow="ALWAYS"
+                      style="-fx-start-x:0; -fx-end-x:200;"/>
+
+                <Label fx:id="sectionLabel"
+                       text="FEATURED COURSES"
+                       styleClass="section-divider-label"/>
+
+                <Line startX="0" endX="0"
+                      styleClass="section-divider-line"
+                      HBox.hgrow="ALWAYS"
+                      style="-fx-start-x:0; -fx-end-x:200;"/>
+            </HBox>
+
+            <!-- ════════════════════════════════════════════════════ -->
+            <!-- COURSES GRID (FlowPane, cards built in controller)   -->
+            <!-- ════════════════════════════════════════════════════ -->
+
+            <ScrollPane fx:id="coursesScroll"
+                        fitToWidth="true"
+                        HBox.hgrow="ALWAYS"
+                        VBox.vgrow="ALWAYS"
+                        styleClass="courses-scroll"
+                        minHeight="420">
+
+                <FlowPane fx:id="coursesContainer"
+                          prefWrapLength="0"
+                          hgap="20"
+                          vgap="20"
+                          styleClass="courses-grid">
+                    <padding><Insets top="4" right="4" bottom="24" left="4"/></padding>
+                </FlowPane>
+
+            </ScrollPane>
+
+            <!-- ════════════════════════════════════════════════════ -->
+            <!-- EMPTY STATE (shown when no results)                  -->
+            <!-- ════════════════════════════════════════════════════ -->
+
+            <VBox fx:id="emptyState"
+                  styleClass="empty-state"
+                  alignment="CENTER"
+                  spacing="10"
+                  visible="false"
+                  managed="false">
+                <Label text="📭" styleClass="empty-state-icon"/>
+                <Label text="No courses found" styleClass="empty-state-title"/>
+                <Label text="Try a different search or category"
+                       styleClass="empty-state-sub"/>
+            </VBox>
+
+        </VBox>
+
+    </ScrollPane>
+
+</HBox>

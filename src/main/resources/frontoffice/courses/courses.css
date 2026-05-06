@@ -1,0 +1,534 @@
+/**
+ * Courses Page Styling — Premium Red & White Edition
+ * Theme: Luxury Editorial · Red #C62828 · Clean White
+ * Pair with: courses-content.fxml
+ */
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* FONT FACE — Fallback to Georgia/serif if custom font not bundled            */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+/* If you add Playfair Display .ttf to resources/fonts/, uncomment this block:
+@font-face {
+    font-family: 'Playfair Display';
+    src: url('@/fonts/PlayfairDisplay-Bold.ttf');
+    font-weight: 700;
+}
+*/
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* ROOT & LAYOUT                                                                */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.root-bg {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 0;
+}
+
+.page-scroll {
+    -fx-padding: 0;
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+}
+
+.page-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.main-container {
+    -fx-padding: 36 44 44 44;
+    -fx-background-color: transparent;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* HERO HEADER                                                                  */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.hero-section {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 8 0;
+}
+
+/* Eyebrow pill badge above title */
+.eyebrow-badge {
+    -fx-background-color: #FFEBEE;
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(198,40,40,0.25);
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    -fx-padding: 5 14 5 14;
+}
+
+.eyebrow-dot {
+    -fx-fill: #C62828;
+    -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.6), 6, 0.5, 0, 0);
+}
+
+.eyebrow-text {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C62828;
+    -fx-letter-spacing: 0.08em;
+}
+
+/* Main page title — serif display font */
+.title {
+    -fx-font-family: "Georgia Bold";
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A0A0A;
+}
+
+.title-accent {
+    -fx-font-family: "Georgia Bold";
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C62828;
+}
+
+.subtitle {
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #787878;
+    -fx-line-spacing: 4;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* STATS BAR                                                                    */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.stats-bar {
+    -fx-background-color: #FAF7F5;
+    -fx-background-radius: 12;
+    -fx-border-color: #F0E8E8;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 14 20 14 20;
+}
+
+.stat-number {
+    -fx-font-family: "Georgia Bold";
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C62828;
+}
+
+.stat-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #888888;
+    -fx-font-weight: normal;
+}
+
+.stat-divider {
+    -fx-fill: #E0E0E0;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* SEARCH & FILTER                                                              */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.search-wrap {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 0, 2);
+}
+
+.search-field {
+    -fx-font-size: 13.5px;
+    -fx-padding: 12 14 12 44;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: #1A0A0A;
+    -fx-prompt-text-fill: #AAAAAA;
+    -fx-font-family: "DM Sans", "Segoe UI", sans-serif;
+}
+
+.search-field:focused {
+    -fx-border-color: transparent;
+}
+
+.search-wrap:focused-within {
+    -fx-border-color: #C62828;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.15), 12, 0, 0, 0);
+}
+
+.label-filter {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #888888;
+    -fx-letter-spacing: 0.07em;
+}
+
+/* Filter / category chips */
+.chip {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 7 16 7 16;
+    -fx-background-color: white;
+    -fx-text-fill: #555555;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+}
+
+.chip:hover {
+    -fx-border-color: #C62828;
+    -fx-text-fill: #C62828;
+    -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.12), 8, 0, 0, 2);
+}
+
+.chip-active {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 7 16 7 16;
+    -fx-background-color: #C62828;
+    -fx-text-fill: white;
+    -fx-border-color: #C62828;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.3), 8, 0, 0, 3);
+}
+
+/* ComboBox */
+.combo-category {
+    -fx-font-size: 13px;
+    -fx-padding: 10 14 10 14;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-background-color: white;
+    -fx-control-inner-background: white;
+    -fx-cursor: hand;
+}
+
+.combo-category:focused,
+.combo-category:showing {
+    -fx-border-color: #C62828;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.15), 10, 0, 0, 0);
+}
+
+.combo-category .list-cell {
+    -fx-font-size: 13px;
+    -fx-text-fill: #333333;
+    -fx-padding: 6 12 6 12;
+}
+
+.combo-category .list-view {
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 16, 0, 0, 4);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* BUTTONS                                                                      */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.btn-primary {
+    -fx-font-size: 13.5px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 24 12 24;
+    -fx-background-color: #C62828;
+    -fx-text-fill: white;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.28), 10, 0, 0, 3);
+}
+
+.btn-primary:hover {
+    -fx-background-color: #8B0000;
+    -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.45), 16, 0, 0, 5);
+    -fx-translate-y: -1;
+}
+
+.btn-primary:pressed {
+    -fx-background-color: #6A0000;
+    -fx-translate-y: 0;
+    -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.2), 6, 0, 0, 1);
+}
+
+.btn-secondary {
+    -fx-font-size: 13.5px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 22 12 22;
+    -fx-background-color: white;
+    -fx-text-fill: #C62828;
+    -fx-border-color: #C62828;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #FFEBEE;
+    -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.15), 10, 0, 0, 3);
+    -fx-translate-y: -1;
+}
+
+.btn-secondary:pressed {
+    -fx-background-color: #FFCDD2;
+    -fx-translate-y: 0;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* SECTION DIVIDER                                                              */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.section-divider-line {
+    -fx-stroke: #EBEBEB;
+    -fx-stroke-width: 1;
+}
+
+.section-divider-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C62828;
+    -fx-letter-spacing: 0.1em;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* COURSES GRID & SCROLL                                                        */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.courses-scroll {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-padding: 0;
+    -fx-background: transparent;
+}
+
+.courses-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.courses-grid {
+    -fx-padding: 4 0 4 0;
+    -fx-background-color: transparent;
+    -fx-hgap: 20;
+    -fx-vgap: 20;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* COURSE CARD                                                                  */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.course-card {
+    -fx-background-color: white;
+    -fx-border-color: #F0E6E6;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.06), 12, 0, 0, 4);
+}
+
+.course-card:hover {
+    -fx-border-color: #C62828;
+    -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.22), 22, 0, 0, 8);
+    /* Lift handled via TranslateTransition in controller */
+}
+
+/* Thumbnail area */
+.course-thumbnail {
+    -fx-background-radius: 14 14 0 0;
+    -fx-min-height: 148;
+    -fx-pref-height: 148;
+}
+
+/* Badge overlays on thumbnail */
+.badge-corner {
+    -fx-background-color: rgba(255,255,255,0.92);
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 4 10 4 10;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C62828;
+    -fx-letter-spacing: 0.04em;
+}
+
+.badge-free {
+    -fx-background-color: #C62828;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 4 10 4 10;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* Card body */
+.card-body {
+    -fx-padding: 16 16 14 16;
+    -fx-background-color: transparent;
+}
+
+.course-category {
+    -fx-font-size: 10.5px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #EF5350;
+    -fx-letter-spacing: 0.08em;
+}
+
+.course-title {
+    -fx-font-size: 14.5px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A0A0A;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 2;
+}
+
+.course-description {
+    -fx-font-size: 12.5px;
+    -fx-text-fill: #787878;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 2;
+}
+
+/* Card footer */
+.card-footer {
+    -fx-padding: 10 16 14 16;
+    -fx-border-color: #F5F0F0 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-background-color: transparent;
+}
+
+.course-rating {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C62828;
+}
+
+.course-students {
+    -fx-font-size: 12px;
+    -fx-text-fill: #AAAAAA;
+}
+
+.card-arrow {
+    -fx-font-size: 18px;
+    -fx-text-fill: #C62828;
+    /* Arrow slide handled via TranslateTransition on hover in controller */
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* HOVER OVERLAY ON THUMBNAIL                                                  */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.thumb-overlay {
+    -fx-background-color: rgba(139,0,0,0.55);
+    -fx-background-radius: 14 14 0 0;
+    /* Opacity animated via FadeTransition in controller */
+}
+
+.thumb-overlay-label {
+    -fx-font-size: 12.5px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-letter-spacing: 0.07em;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* LOADING SHIMMER BAR                                                         */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.loading-bar-track {
+    -fx-fill: #F5F0F0;
+    -fx-arc-width: 4;
+    -fx-arc-height: 4;
+}
+
+.loading-bar-fill {
+    -fx-fill: linear-gradient(to right, #C62828, #EF5350, #C62828);
+    -fx-arc-width: 4;
+    -fx-arc-height: 4;
+    /* Width animated via Timeline in controller */
+}
+
+.progress-indicator {
+    -fx-progress-color: #C62828;
+    -fx-accent: #C62828;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* STATUS LABEL                                                                */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.label-status {
+    -fx-font-size: 12px;
+    -fx-text-fill: #AAAAAA;
+    -fx-padding: 4 0 0 0;
+}
+
+.label-status-loading {
+    -fx-font-size: 12px;
+    -fx-text-fill: #C62828;
+    -fx-padding: 4 0 0 0;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* EMPTY STATE                                                                 */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.empty-state-icon {
+    -fx-font-size: 48px;
+    -fx-text-fill: #FFCDD2;
+}
+
+.empty-state-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C62828;
+}
+
+.empty-state-sub {
+    -fx-font-size: 13px;
+    -fx-text-fill: #AAAAAA;
+}
+
+.empty-state {
+    -fx-padding: 60 0 60 0;
+    -fx-background-color: transparent;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* UTILITY                                                                     */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.error-message  { -fx-text-fill: #C62828; -fx-font-size: 12px; }
+.success-message{ -fx-text-fill: #2E7D32; -fx-font-size: 12px; }
+.warning-message {
+    -fx-text-fill: #ff9800;
+    -fx-font-size: 12px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════ */
+/* STREAK BADGE */
+/* ════════════════════════════════════════════════════════════════════════════ */
+
+.streak-badge {
+    -fx-background-color: #ffebee;
+    -fx-border-color: #d32f2f;
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 8 16 8 16;
+    -fx-effect: dropshadow(gaussian, rgba(211,47,47,0.3), 8, 0, 0, 2);
+}
+
+.streak-text {
+    -fx-text-fill: #d32f2f;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}

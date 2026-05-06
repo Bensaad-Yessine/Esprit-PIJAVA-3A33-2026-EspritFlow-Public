@@ -221,7 +221,7 @@ public class NotifsService {
             String json = "{"
                     + "\"sender\":{"
                     + "\"name\":\"Task App\","
-                    + "\"email\":\"tahayassinesnoussi05@gmail.com\""
+                    + "\"email\":\"yassinebensaad567@gmail.com\""
                     + "},"
                     + "\"to\":[{"
                     + "\"email\":\"" + to + "\""

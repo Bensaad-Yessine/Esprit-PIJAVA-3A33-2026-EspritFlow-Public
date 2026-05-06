@@ -56,24 +56,24 @@ public class NotificationService implements ICrud<Notification>{
         sp.setString(1, notification.getMessage());
         sp.setString(2, notification.getType());
         sp.setBoolean(3, notification.isRead());
-        
+
         if (notification.getCreatedAt() != null) {
             sp.setTimestamp(4, Timestamp.valueOf(notification.getCreatedAt()));
         } else {
             sp.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
         }
-        
+
         sp.setInt(5, notification.getUserId());
-        
+
         if (notification.getTacheId() != null) {
             sp.setInt(6, notification.getTacheId());
         } else {
             sp.setNull(6, Types.INTEGER);
         }
-        
+
         sp.setBoolean(7, notification.isEmail());
         sp.setInt(8, notification.getId());
-        
+
         sp.executeUpdate();
         sp.close();
     }

@@ -1,0 +1,238 @@
+/* ============================================================
+   ESPRIT FLOW — chat.css
+   Floating academic chatbot widget styles
+   ============================================================ */
+
+/* ── FAB Toggle Button ────────────────────────────────────── */
+.chat-fab {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6366F1, #4338CA);
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-background-radius: 50;
+    -fx-min-width: 56; -fx-max-width: 56;
+    -fx-min-height: 56; -fx-max-height: 56;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.55), 20, 0, 0, 6);
+    -fx-alignment: CENTER;
+}
+
+.chat-fab:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #818CF8, #6366F1);
+    -fx-scale-x: 1.10; -fx-scale-y: 1.10;
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.75), 28, 0, 0, 8);
+}
+
+.chat-fab:pressed {
+    -fx-scale-x: 0.95; -fx-scale-y: 0.95;
+}
+
+/* ── Chat Panel Container ─────────────────────────────────── */
+.chat-panel {
+    -fx-background-color: rgba(15, 17, 26, 0.97);
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(99,102,241,0.35);
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.50), 40, 0, -4, 12);
+}
+
+/* ── Chat Header ──────────────────────────────────────────── */
+.chat-header {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #3730A3, #6366F1);
+    -fx-background-radius: 20 20 0 0;
+    -fx-padding: 14 18;
+}
+
+.chat-header-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+}
+
+.chat-header-subtitle {
+    -fx-font-size: 11px;
+    -fx-text-fill: rgba(255,255,255,0.70);
+}
+
+.chat-close-btn {
+    -fx-background-color: rgba(255,255,255,0.12);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 50;
+    -fx-min-width: 28; -fx-max-width: 28;
+    -fx-min-height: 28; -fx-max-height: 28;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+    -fx-padding: 0;
+}
+
+.chat-close-btn:hover {
+    -fx-background-color: rgba(255,255,255,0.25);
+}
+
+/* ── Messages Area ────────────────────────────────────────── */
+.chat-messages-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.chat-messages-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.chat-messages-area {
+    -fx-background-color: transparent;
+    -fx-padding: 12 14;
+    -fx-spacing: 10;
+}
+
+/* ── Individual Message Bubbles ───────────────────────────── */
+.msg-bot {
+    -fx-background-color: rgba(55,48,163,0.25);
+    -fx-border-color: rgba(99,102,241,0.30);
+    -fx-border-width: 1;
+    -fx-background-radius: 4 16 16 16;
+    -fx-border-radius: 4 16 16 16;
+    -fx-padding: 10 14;
+    -fx-max-width: 310;
+    -fx-text-fill: #E2E8F0;
+    -fx-font-size: 13px;
+    -fx-wrap-text: true;
+}
+
+.msg-user {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #4338CA, #6366F1);
+    -fx-background-radius: 16 4 16 16;
+    -fx-padding: 10 14;
+    -fx-max-width: 280;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 13px;
+    -fx-wrap-text: true;
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.30), 8, 0, 0, 2);
+}
+
+.msg-sender-label {
+    -fx-font-size: 10px;
+    -fx-text-fill: rgba(148,163,184,0.80);
+    -fx-font-weight: bold;
+}
+
+/* Typing indicator */
+.msg-typing {
+    -fx-background-color: rgba(55,48,163,0.18);
+    -fx-border-color: rgba(99,102,241,0.25);
+    -fx-border-width: 1;
+    -fx-background-radius: 4 16 16 16;
+    -fx-border-radius: 4 16 16 16;
+    -fx-padding: 10 14;
+    -fx-text-fill: rgba(148,163,184,0.80);
+    -fx-font-size: 12px;
+}
+
+/* ── Input Area ───────────────────────────────────────────── */
+.chat-input-area {
+    -fx-background-color: rgba(30, 32, 48, 0.95);
+    -fx-background-radius: 0 0 20 20;
+    -fx-padding: 10 14;
+    -fx-border-color: rgba(99,102,241,0.25) transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.chat-input-field {
+    -fx-background-color: rgba(255,255,255,0.07);
+    -fx-border-color: rgba(99,102,241,0.35);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-text-fill: #E2E8F0;
+    -fx-prompt-text-fill: rgba(148,163,184,0.55);
+    -fx-font-size: 13px;
+    -fx-padding: 8 12;
+}
+
+.chat-input-field:focused {
+    -fx-border-color: #6366F1;
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.35), 10, 0, 0, 0);
+}
+
+.chat-send-btn {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #6366F1, #4338CA);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-background-radius: 12;
+    -fx-min-width: 40; -fx-max-width: 40;
+    -fx-min-height: 36; -fx-max-height: 36;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+    -fx-padding: 0;
+}
+
+.chat-send-btn:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #818CF8, #6366F1);
+    -fx-scale-x: 1.06; -fx-scale-y: 1.06;
+}
+
+.chat-send-btn:pressed {
+    -fx-scale-x: 0.94; -fx-scale-y: 0.94;
+}
+
+/* Clear button */
+.chat-clear-btn {
+    -fx-background-color: rgba(239,68,68,0.12);
+    -fx-border-color: rgba(239,68,68,0.35);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: #F87171;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+    -fx-padding: 4 10;
+}
+
+.chat-clear-btn:hover {
+    -fx-background-color: rgba(239,68,68,0.22);
+}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+.chat-messages-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(99,102,241,0.40);
+    -fx-background-radius: 4;
+}
+.chat-messages-scroll .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+.chat-messages-scroll .scroll-bar .increment-button,
+.chat-messages-scroll .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* ── Unread badge on FAB ──────────────────────────────────── */
+.chat-unread-badge {
+    -fx-background-color: #EF4444;
+    -fx-background-radius: 50;
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-min-width: 18; -fx-max-width: 18;
+    -fx-min-height: 18; -fx-max-height: 18;
+    -fx-alignment: CENTER;
+}
+
+/* ── Suggestion chips ─────────────────────────────────────── */
+.suggestion-chip {
+    -fx-background-color: rgba(99,102,241,0.12);
+    -fx-border-color: rgba(99,102,241,0.35);
+    -fx-border-width: 1;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+    -fx-text-fill: #A5B4FC;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+    -fx-padding: 4 12;
+}
+
+.suggestion-chip:hover {
+    -fx-background-color: rgba(99,102,241,0.25);
+    -fx-text-fill: #C7D2FE;
+}

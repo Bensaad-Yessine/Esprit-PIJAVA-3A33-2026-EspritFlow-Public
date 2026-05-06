@@ -11,8 +11,18 @@
     <!-- Sidebar included once, reused on every page -->
     <fx:include fx:id="frontsidebar" source="sidebar.fxml"/>
 
-    <!-- This StackPane swaps content on navigation -->
-    <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS"
-               style="-fx-background-color: #212121;"/>
+    <!--
+        StackPane wraps the content area + the floating chat widget.
+        The chat widget is overlaid on top of whatever page is loaded.
+    -->
+    <StackPane HBox.hgrow="ALWAYS" style="-fx-background-color: #212121;">
+
+        <!-- Page content swapped on navigation -->
+        <StackPane fx:id="contentArea"/>
+
+        <!-- Floating AI Chatbot overlay — always visible in frontoffice -->
+        <fx:include fx:id="chatWidget" source="chat-widget.fxml"/>
+
+    </StackPane>
 
 </HBox>

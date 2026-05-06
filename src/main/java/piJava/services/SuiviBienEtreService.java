@@ -278,4 +278,23 @@ public class SuiviBienEtreService {
 
         return suivis;
     }
+    public SuiviBienEtre getDernierSuiviByObjectifId(int objectifId) throws SQLException {
+        String sql = "SELECT id, date_saisie, humeur, qualite_sommeil, niveau_energie, " +
+                "niveau_stress, qualite_alimentation, notes_libres, score, objectif_id " +
+                "FROM suivi_bien_etre " +
+                "WHERE objectif_id = ? " +
+                "ORDER BY date_saisie DESC, id DESC " +
+                "LIMIT 1";
+
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, objectifId);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return mapResultSetToSuivi(rs);
+        }
+
+        return null;
+    }
 }

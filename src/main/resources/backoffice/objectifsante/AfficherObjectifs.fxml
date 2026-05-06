@@ -67,6 +67,9 @@
                                 <Button text="Ajouter objectif" styleClass="primary-button" onAction="#ouvrirAjouterObjectif"/>
                                 <Button text="Modifier objectif" styleClass="secondary-button" onAction="#ouvrirModifierObjectif"/>
                                 <Button text="Supprimer objectif" styleClass="danger-button" onAction="#supprimerObjectif"/>
+                                <Button text="Archives"
+                                        styleClass="secondary-button"
+                                        onAction="#ouvrirArchives"/>
                             </children>
                         </HBox>
 

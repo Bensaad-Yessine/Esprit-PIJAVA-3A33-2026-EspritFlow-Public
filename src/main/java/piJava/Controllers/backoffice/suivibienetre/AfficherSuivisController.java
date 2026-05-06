@@ -22,7 +22,8 @@ import piJava.Controllers.backoffice.SidebarController;
 import piJava.Controllers.backoffice.objectifsante.AfficherObjectifsController;
 import piJava.entities.SuiviBienEtre;
 import piJava.services.SuiviBienEtreService;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import java.sql.Date;
 import java.sql.SQLException;
 
@@ -87,7 +88,13 @@ public class AfficherSuivisController {
         cbTri.setValue("Par défaut");
         cbTri.valueProperty().addListener((obs, oldVal, newVal) -> appliquerTri());
     }
-
+    private void afficherMessage(String titre, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
     private void appliquerStylesColonnes() {
         colDateSaisie.setCellFactory(column -> new TableCell<SuiviBienEtre, Date>() {
             private final Label badge = new Label();
@@ -381,7 +388,18 @@ public class AfficherSuivisController {
             SuiviBienEtre suiviSelectionne = tableSuivis.getSelectionModel().getSelectedItem();
 
             if (suiviSelectionne == null) {
-                System.out.println("Aucun suivi sélectionné.");
+                afficherMessage("Suppression", "Aucun suivi sélectionné.");
+                return;
+            }
+
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirmer la suppression");
+            confirm.setHeaderText(null);
+            confirm.setContentText("Voulez-vous vraiment supprimer ce suivi ?");
+
+            ButtonType resultat = confirm.showAndWait().orElse(ButtonType.CANCEL);
+
+            if (resultat != ButtonType.OK) {
                 return;
             }
 
@@ -389,9 +407,12 @@ public class AfficherSuivisController {
             service.supprimer(suiviSelectionne.getId());
             chargerSuivisParObjectif();
 
+            afficherMessage("Succès", "Le suivi a été supprimé avec succès.");
+
         } catch (Exception e) {
             System.out.println("Erreur lors de la suppression : " + e.getMessage());
             e.printStackTrace();
+            afficherMessage("Erreur", "Erreur lors de la suppression du suivi.");
         }
     }
 
@@ -401,13 +422,27 @@ public class AfficherSuivisController {
                 return;
             }
 
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirmer la suppression");
+            confirm.setHeaderText(null);
+            confirm.setContentText("Voulez-vous vraiment supprimer ce suivi ?");
+
+            ButtonType resultat = confirm.showAndWait().orElse(ButtonType.CANCEL);
+
+            if (resultat != ButtonType.OK) {
+                return;
+            }
+
             SuiviBienEtreService service = new SuiviBienEtreService();
             service.supprimer(suiviSelectionne.getId());
             chargerSuivisParObjectif();
 
+            afficherMessage("Succès", "Le suivi a été supprimé avec succès.");
+
         } catch (Exception e) {
             System.out.println("Erreur lors de la suppression : " + e.getMessage());
             e.printStackTrace();
+            afficherMessage("Erreur", "Erreur lors de la suppression du suivi.");
         }
     }
 

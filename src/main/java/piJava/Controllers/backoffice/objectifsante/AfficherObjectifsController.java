@@ -23,7 +23,8 @@ import piJava.Controllers.backoffice.SidebarController;
 import piJava.Controllers.backoffice.suivibienetre.AfficherSuivisController;
 import piJava.entities.ObjectifSante;
 import piJava.services.ObjectifSanteService;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import java.sql.SQLException;
 
 public class AfficherObjectifsController {
@@ -117,7 +118,26 @@ public class AfficherObjectifsController {
 
         chargerObjectifs();
     }
+    @FXML
+    public void ouvrirArchives() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/backoffice/objectifsante/AfficherArchivesObjectifs.fxml"));
+            Parent root = loader.load();
 
+            AfficherArchivesObjectifsController controller = loader.getController();
+            controller.setSidebarController(sidebarController);
+            controller.setContentArea(contentArea);
+            controller.chargerArchives();
+
+            if (contentArea != null) {
+                contentArea.getChildren().setAll(root);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'ouverture des archives : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
     private void appliquerBadges() {
         colType.setCellFactory(column -> new TableCell<>() {
             private final Label badge = new Label();
@@ -434,7 +454,18 @@ public class AfficherObjectifsController {
             ObjectifSante objectifSelectionne = tableObjectifs.getSelectionModel().getSelectedItem();
 
             if (objectifSelectionne == null) {
-                System.out.println("Aucun objectif sélectionné.");
+                afficherMessage("Suppression", "Aucun objectif sélectionné.");
+                return;
+            }
+
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirmer la suppression");
+            confirm.setHeaderText(null);
+            confirm.setContentText("Voulez-vous vraiment supprimer cet objectif actif ?");
+
+            ButtonType resultat = confirm.showAndWait().orElse(ButtonType.CANCEL);
+
+            if (resultat != ButtonType.OK) {
                 return;
             }
 
@@ -442,9 +473,12 @@ public class AfficherObjectifsController {
             service.supprimer(objectifSelectionne.getId());
             chargerObjectifs();
 
+            afficherMessage("Succès", "L'objectif a été supprimé avec succès.");
+
         } catch (Exception e) {
             System.out.println("Erreur lors de la suppression : " + e.getMessage());
             e.printStackTrace();
+            afficherMessage("Erreur", "Erreur lors de la suppression de l'objectif.");
         }
     }
 
@@ -507,7 +541,13 @@ public class AfficherObjectifsController {
             e.printStackTrace();
         }
     }
-
+    private void afficherMessage(String titre, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
     private void ouvrirAfficherSuivisDepuisLigne(ObjectifSante objectifSelectionne) {
         try {
             if (objectifSelectionne == null) {
@@ -566,16 +606,29 @@ public class AfficherObjectifsController {
                 return;
             }
 
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirmer la suppression");
+            confirm.setHeaderText(null);
+            confirm.setContentText("Voulez-vous vraiment supprimer cet objectif actif ?");
+
+            ButtonType resultat = confirm.showAndWait().orElse(ButtonType.CANCEL);
+
+            if (resultat != ButtonType.OK) {
+                return;
+            }
+
             ObjectifSanteService service = new ObjectifSanteService();
             service.supprimer(objectifSelectionne.getId());
             chargerObjectifs();
 
+            afficherMessage("Succès", "L'objectif a été supprimé avec succès.");
+
         } catch (Exception e) {
             System.out.println("Erreur lors de la suppression : " + e.getMessage());
             e.printStackTrace();
+            afficherMessage("Erreur", "Erreur lors de la suppression de l'objectif.");
         }
     }
-
     @FXML
     public void appliquerRechercheEtTri() {
         ObjectifSanteService service = new ObjectifSanteService();

@@ -4,11 +4,9 @@ import javafx.animation.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.*;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
@@ -30,8 +28,8 @@ public class GroupContentController implements Initializable {
     // ── Mini stats ─────────────────────────────────────────────
     @FXML private Label totalGroupsLabel;
     @FXML private Label activeGroupsLabel;
-    //@FXML private Label totalMembersLabel;
-    @FXML private Label avgMembersLabel;
+    @FXML private Label totalMembersLabel;
+    @FXML private Label coveredSubjectsLabel;
 
     // ── Filters ────────────────────────────────────────────────
     @FXML private ComboBox<String> statusFilter;
@@ -86,6 +84,37 @@ public class GroupContentController implements Initializable {
 
     // ── Column Setup ───────────────────────────────────────────
     private void setupColumns() {
+        if (groupTable == null) {
+            System.err.println("[ERROR] groupTable was not injected from GroupContent.fxml");
+            return;
+        }
+
+        if ((idCol == null || nameCol == null || projectCol == null || membersCol == null
+                || statusCol == null || descCol == null || actionsCol == null)
+                && groupTable.getColumns().size() >= 7) {
+            @SuppressWarnings("unchecked")
+            TableColumn<Groupe, String> recoveredIdCol = (TableColumn<Groupe, String>) groupTable.getColumns().get(0);
+            @SuppressWarnings("unchecked")
+            TableColumn<Groupe, String> recoveredNameCol = (TableColumn<Groupe, String>) groupTable.getColumns().get(1);
+            @SuppressWarnings("unchecked")
+            TableColumn<Groupe, String> recoveredProjectCol = (TableColumn<Groupe, String>) groupTable.getColumns().get(2);
+            @SuppressWarnings("unchecked")
+            TableColumn<Groupe, String> recoveredMembersCol = (TableColumn<Groupe, String>) groupTable.getColumns().get(3);
+            @SuppressWarnings("unchecked")
+            TableColumn<Groupe, String> recoveredDescCol = (TableColumn<Groupe, String>) groupTable.getColumns().get(4);
+            @SuppressWarnings("unchecked")
+            TableColumn<Groupe, String> recoveredStatusCol = (TableColumn<Groupe, String>) groupTable.getColumns().get(5);
+            @SuppressWarnings("unchecked")
+            TableColumn<Groupe, Void> recoveredActionsCol = (TableColumn<Groupe, Void>) groupTable.getColumns().get(6);
+
+            if (idCol == null) idCol = recoveredIdCol;
+            if (nameCol == null) nameCol = recoveredNameCol;
+            if (projectCol == null) projectCol = recoveredProjectCol;
+            if (membersCol == null) membersCol = recoveredMembersCol;
+            if (descCol == null) descCol = recoveredDescCol;
+            if (statusCol == null) statusCol = recoveredStatusCol;
+            if (actionsCol == null) actionsCol = recoveredActionsCol;
+        }
 
         // # ID
         idCol.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().getId())));
@@ -209,55 +238,74 @@ public class GroupContentController implements Initializable {
     }
 
     private void updateStats() {
+        if (totalGroupsLabel == null || activeGroupsLabel == null
+                || totalMembersLabel == null || coveredSubjectsLabel == null) {
+            return;
+        }
+
         int total = allGroups.size();
-        int active = (int) allGroups.stream()
-                .filter(g -> "Actif".equalsIgnoreCase(g.getStatut()))
+        int active = (int) allGroups.stream().filter(g -> "Actif".equalsIgnoreCase(g.getStatut())).count();
+        int totalMembers = allGroups.stream().mapToInt(Groupe::getNbreMembre).sum();
+        int coveredSubjects = (int) allGroups.stream()
+                .map(Groupe::getProjet)
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .distinct()
                 .count();
-        double avgMembers = allGroups.isEmpty() ? 0 : allGroups.stream()
-                .mapToInt(Groupe::getNbreMembre)
-                .average()
-                .orElse(0);
-        int totalMembers = allGroups.stream()
-                .mapToInt(Groupe::getNbreMembre)
-                .sum();
 
         totalGroupsLabel.setText(String.valueOf(total));
         activeGroupsLabel.setText(String.valueOf(active));
-        //totalMembersLabel.setText(String.valueOf(totalMembers));       // ✅ total members
-        avgMembersLabel.setText(String.format("%.1f", avgMembers)); // ✅ avg members
+        totalMembersLabel.setText(String.valueOf(totalMembers));
+        coveredSubjectsLabel.setText(String.valueOf(coveredSubjects));
     }
 
     private void updateTable() {
+        if (groupTable == null || pageLabel == null || footerLabel == null || resultCountLabel == null) {
+            return;
+        }
+
+        if (filtered.isEmpty()) {
+            groupTable.setItems(FXCollections.observableArrayList());
+            pageLabel.setText("0");
+            footerLabel.setText("Affichage de 0-0 sur 0 entrées");
+            resultCountLabel.setText("0 résultat(s)");
+            return;
+        }
+
+        int maxPage = (int) Math.ceil((double) filtered.size() / PAGE_SIZE);
+        currentPage = Math.max(1, Math.min(currentPage, maxPage));
         int start = (currentPage - 1) * PAGE_SIZE;
         int end = Math.min(start + PAGE_SIZE, filtered.size());
-        ObservableList<Groupe> page = FXCollections.observableArrayList(
-                filtered.subList(start, end)
-        );
+        ObservableList<Groupe> page = FXCollections.observableArrayList(filtered.subList(start, end));
         groupTable.setItems(page);
         pageLabel.setText(String.valueOf(currentPage));
-        footerLabel.setText(String.format("Affichage de %d-%d sur %d entrées",
-                filtered.isEmpty() ? 0 : start + 1, end, filtered.size()));
+        footerLabel.setText(String.format("Affichage de %d-%d sur %d entrées", start + 1, end, filtered.size()));
         resultCountLabel.setText(filtered.size() + " résultat(s)");
     }
 
     // ── Search ─────────────────────────────────────────────────
     private void setupSearch() {
-        searchField.textProperty().addListener((o, old, neu) -> applyFilters());
+        if (searchField != null) {
+            searchField.textProperty().addListener((o, old, neu) -> applyFilters());
+        }
     }
 
     // ── Filters ────────────────────────────────────────────────
     private void setupFilters() {
-        statusFilter.setItems(FXCollections.observableArrayList("Actif", "Inactif"));
-        statusFilter.valueProperty().addListener((o, old, neu) -> applyFilters());
+        if (statusFilter != null) {
+            statusFilter.setItems(FXCollections.observableArrayList("Actif", "Inactif"));
+            statusFilter.valueProperty().addListener((o, old, neu) -> applyFilters());
+        }
     }
 
     private void applyFilters() {
         currentPage = 1;
-        String search = searchField.getText().toLowerCase();
+        String search = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase(Locale.ROOT);
         String status = statusFilter.getValue();
 
         filtered.setAll(allGroups.stream()
-                .filter(g -> g.getNom().toLowerCase().contains(search))
+                .filter(g -> nvl(g.getNom(), "").toLowerCase(Locale.ROOT).contains(search))
                 .filter(g -> status == null || status.isEmpty() || g.getStatut().equalsIgnoreCase(status))
                 .collect(Collectors.toList()));
 
@@ -319,11 +367,16 @@ public class GroupContentController implements Initializable {
             
             PropositionReunionController controller = loader.getController();
             System.out.println("[DEBUG] Controller obtained: " + (controller != null ? "OK" : "NULL"));
+
+            if (controller == null) {
+                throw new IllegalStateException("PropositionReunionController not injected by FXMLLoader");
+            }
+
+            controller.setContentArea(contentArea);
+            controller.setSidebarController(sidebarController);
+            controller.setParentController(this);
             
             controller.setCurrentGroupe(groupe);
-            controller.setParentController(this);
-            controller.setSidebarController(sidebarController);
-            controller.setContentArea(contentArea);
             
             if (contentArea != null) {
                 contentArea.getChildren().setAll(view);
@@ -478,6 +531,9 @@ public class GroupContentController implements Initializable {
 
     // ── Animation ──────────────────────────────────────────────
     private void animateEntrance() {
+        if (groupTable == null) {
+            return;
+        }
         FadeTransition fade = new FadeTransition(Duration.millis(300), groupTable);
         fade.setFromValue(0);
         fade.setToValue(1);

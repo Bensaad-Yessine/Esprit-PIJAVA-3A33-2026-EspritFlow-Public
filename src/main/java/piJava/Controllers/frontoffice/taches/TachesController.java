@@ -1032,7 +1032,7 @@ public class TachesController implements Initializable {
 
                 javafx.application.Platform.runLater(() -> {
                     notificationsList.getItems().setAll(unreadNotifs);
-                    
+
                     // Show dot if there are unread notifications
                     notificationDot.setVisible(!unreadNotifs.isEmpty());
                 });

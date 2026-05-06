@@ -91,6 +91,10 @@
              <Region HBox.hgrow="ALWAYS"/>
              <HBox spacing="12">
                  <Button fx:id="filterBtn" text="  Filtres" styleClass="btn-filter" onAction="#toggleFilters"/>
+                 <Button text="🔥 Streak Reminders" styleClass="btn-streak-email" onAction="#handleSendStreakEmails"
+                         style="-fx-background-color:linear-gradient(to right,#f59e0b,#d97706); -fx-text-fill:#fff;
+                                -fx-font-weight:700; -fx-font-size:13px; -fx-background-radius:8;
+                                -fx-padding:8 18; -fx-cursor:hand;"/>
                  <Button fx:id="addUserBtn" text="＋ Ajouter un utilisateur" styleClass="btn-add-text" onAction="#handleAdd"/>
              </HBox>
         </HBox>

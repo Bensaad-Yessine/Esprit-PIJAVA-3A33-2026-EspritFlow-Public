@@ -351,3 +351,132 @@
     -fx-background-color: transparent;
     -fx-padding: 0;
 }
+
+
+/* ── STREAK LEADERBOARD ───────────────────────────────────── */
+
+.leaderboard-row {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12;
+    -fx-border-color: #F0F0F1;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 10 16;
+    -fx-cursor: hand;
+}
+
+.leaderboard-row:hover {
+    -fx-background-color: #FFF4F4;
+    -fx-border-color: #FECDD3;
+    -fx-scale-x: 1.008;
+    -fx-scale-y: 1.008;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.12), 12, 0, 0, 3);
+}
+
+/* Podium top-3 */
+.row-gold {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #FFFBEB, #FEF3C7);
+    -fx-background-radius: 12;
+    -fx-border-color: #F59E0B;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-padding: 10 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(245,158,11,0.18), 10, 0, 0, 3);
+}
+.row-gold:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #FEF3C7, #FDE68A);
+    -fx-scale-x: 1.008;
+    -fx-scale-y: 1.008;
+}
+
+.row-silver {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #F8FAFC, #F1F5F9);
+    -fx-background-radius: 12;
+    -fx-border-color: #94A3B8;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-padding: 10 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(148,163,184,0.18), 10, 0, 0, 3);
+}
+.row-silver:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #F1F5F9, #E2E8F0);
+    -fx-scale-x: 1.008;
+    -fx-scale-y: 1.008;
+}
+
+.row-bronze {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #FFF7ED, #FFEDD5);
+    -fx-background-radius: 12;
+    -fx-border-color: #C2760C;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-padding: 10 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(194,118,12,0.18), 10, 0, 0, 3);
+}
+.row-bronze:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #FFEDD5, #FED7AA);
+    -fx-scale-x: 1.008;
+    -fx-scale-y: 1.008;
+}
+
+/* Rank badge circle */
+.rank-badge-gold   { -fx-font-size: 20px; }
+.rank-badge-silver { -fx-font-size: 20px; }
+.rank-badge-bronze { -fx-font-size: 20px; }
+.rank-badge-other  {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #71717A;
+    -fx-background-color: #F4F4F5;
+    -fx-background-radius: 50;
+    -fx-min-width: 28; -fx-max-width: 28;
+    -fx-min-height: 28; -fx-max-height: 28;
+    -fx-alignment: CENTER;
+}
+
+/* Avatar initials circle */
+.avatar-ldr {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 50;
+    -fx-min-width: 36; -fx-max-width: 36;
+    -fx-min-height: 36; -fx-max-height: 36;
+    -fx-alignment: CENTER;
+}
+
+/* Name / subtitle */
+.ldr-name { -fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #18181B; }
+.ldr-sub  { -fx-font-size: 11px; -fx-text-fill: #71717A; }
+
+/* Streak badge on the right */
+.streak-chip {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #FF6B35, #E63946);
+    -fx-background-radius: 50;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 12;
+    -fx-effect: dropshadow(gaussian, rgba(230,57,70,0.30), 8, 0, 0, 2);
+}
+
+/* "You" highlight chip */
+.streak-chip-you {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #6366F1, #4338CA);
+    -fx-background-radius: 50;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 10;
+}
+
+/* Empty state */
+.ldr-empty {
+    -fx-font-size: 13px;
+    -fx-text-fill: #A1A1AA;
+    -fx-alignment: CENTER;
+    -fx-padding: 20;
+}

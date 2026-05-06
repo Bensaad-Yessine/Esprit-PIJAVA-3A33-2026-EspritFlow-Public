@@ -111,6 +111,14 @@
                 <Label text="Classes" styleClass="f-nav-item-label" HBox.hgrow="ALWAYS"/>
             </HBox>
 
+            <HBox fx:id="subscriptionsBtn" styleClass="f-nav-item" alignment="CENTER_LEFT"
+                  spacing="9" onMouseClicked="#goToSubscriptions">
+                <StackPane styleClass="f-nav-icon-wrap">
+                    <Label styleClass="f-nav-icon-label" text="💳"/>
+                </StackPane>
+                <Label text="Abonnements" styleClass="f-nav-item-label" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
             <HBox fx:id="groupBtn" styleClass="f-nav-item" alignment="CENTER_LEFT"
                   spacing="9" onMouseClicked="#goToGroup">
                 <StackPane styleClass="f-nav-icon-wrap">
@@ -125,6 +133,14 @@
                     <Label styleClass="f-nav-icon-label" text="&#128218;"/>
                 </StackPane>
                 <Label text="Cours et Programmes" styleClass="f-nav-item-label" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <HBox fx:id="coursesBtn" styleClass="f-nav-item" alignment="CENTER_LEFT"
+                  spacing="9" onMouseClicked="#goToCourses">
+                <StackPane styleClass="f-nav-icon-wrap">
+                    <Label styleClass="f-nav-icon-label" text="📚"/>
+                </StackPane>
+                <Label text="Mes Formations" styleClass="f-nav-item-label" HBox.hgrow="ALWAYS"/>
             </HBox>
 
             <HBox fx:id="enseignantsBtn" styleClass="f-nav-item" alignment="CENTER_LEFT"

@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MyDataBase {
-    private static final String USERNAME = "root";
-    private static final String URL = "jdbc:mysql://localhost:3306/pidev";
-    private static final String PASSWORD = "";
+    private static final String DEFAULT_USERNAME = "root";
+    private static final String DEFAULT_URL = "jdbc:mysql://localhost:3306/pidev";
+    private static final String DEFAULT_PASSWORD = "";
 
     private Connection connection;
     private String lastErrorMessage;
@@ -41,13 +41,17 @@ public class MyDataBase {
 
     private void reconnect() {
         try {
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            String url = EnvConfig.get("DB_URL", DEFAULT_URL);
+            String username = EnvConfig.get("DB_USER", DEFAULT_USERNAME);
+            String password = EnvConfig.get("DB_PASSWORD", DEFAULT_PASSWORD);
+
+            connection = DriverManager.getConnection(url, username, password);
             lastErrorMessage = null;
             System.out.println("Connected to database successfully");
         } catch (SQLException e) {
             connection = null;
             lastErrorMessage = e.getMessage();
-            System.out.println("Database connection unavailable: " + e.getMessage());
+            System.err.println("Database connection unavailable: " + e.getMessage());
         }
     }
 }
