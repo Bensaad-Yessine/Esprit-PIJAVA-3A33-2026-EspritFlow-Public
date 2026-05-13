@@ -47,6 +47,15 @@ public class AlertesController implements Initializable {
     private Label lblDefaultCount;
 
     @FXML
+    private Label lblResultCount;
+
+    @FXML
+    private Label lblUserInfo;
+
+    @FXML
+    private Label lblFooter;
+
+    @FXML
     private TextField txtSearch;
 
     @FXML
@@ -54,6 +63,9 @@ public class AlertesController implements Initializable {
 
     @FXML
     private ComboBox<String> sortCombo;
+
+    @FXML
+    private Button btnResetFilters;
 
     private SidebarController sidebarController;
     private ObservableList<preferenceAlerte> allAlertes = FXCollections.observableArrayList();
@@ -117,7 +129,6 @@ public class AlertesController implements Initializable {
         HBox root = new HBox(20);
         root.setAlignment(Pos.CENTER_LEFT);
         root.getStyleClass().add("alerte-item");
-        root.setStyle("-fx-background-color: #2D3A46; -fx-background-radius: 20; -fx-border-color: #3B4A5A; -fx-border-radius: 20; -fx-border-width: 1; -fx-padding: 22; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 10, 0, 0, 4);");
 
         // ─── Status bar ───────────────────────────────
         VBox statusBar = new VBox();
@@ -282,41 +293,30 @@ public class AlertesController implements Initializable {
         }
     }
 
-    private void setupFilters() {
-        statusFilter.getItems().addAll("Tous", "Actif", "Inactif");
-        sortCombo.getItems().addAll("Nom (A-Z)", "Nom (Z-A)", "Date création (récent)", "Date création (ancien)");
-        statusFilter.valueProperty().addListener((obs, old, newVal) -> applyFilters());
-        sortCombo.valueProperty().addListener((obs, old, newVal) -> applyFilters());
-        txtSearch.textProperty().addListener((obs, old, newVal) -> applyFilters());
+    @FXML
+    private void resetFilters() {
+        txtSearch.clear();
+        statusFilter.getSelectionModel().clearSelection();
+        sortCombo.getSelectionModel().clearSelection();
+        applyFilters();
     }
 
-    private void updateStats() {
-        long total = allAlertes.size();
-        long active = allAlertes.stream().filter(a -> a.getIs_active()).count();
-        long inactive = total - active;
-        long defaults = allAlertes.stream().filter(a -> a.getIs_default()).count();
-
-        lblAlertesCount.setText(total + " préférence(s)");
-        lblActiveCount.setText(String.valueOf(active));
-        lblInactiveCount.setText(String.valueOf(inactive));
-        lblDefaultCount.setText(String.valueOf(defaults));
-    }
-
+    @FXML
     private void applyFilters() {
         List<preferenceAlerte> filtered = allAlertes.stream()
-            .filter(a -> {
-                String query = txtSearch.getText().toLowerCase();
-                if (!query.isEmpty() && !a.getNom().toLowerCase().contains(query)) return false;
+                .filter(a -> {
+                    String query = txtSearch.getText().toLowerCase();
+                    if (!query.isEmpty() && !a.getNom().toLowerCase().contains(query)) return false;
 
-                String status = statusFilter.getValue();
-                if (status != null && !"Tous".equals(status)) {
-                    boolean isActive = "Actif".equals(status);
-                    if (a.getIs_active() != isActive) return false;
-                }
+                    String status = statusFilter.getValue();
+                    if (status != null && !"Tous".equals(status) && !"Tous les statuts".equals(status)) {
+                        boolean isActive = "Actif".equals(status);
+                        if (a.getIs_active() != isActive) return false;
+                    }
 
-                return true;
-            })
-            .collect(Collectors.toList());
+                    return true;
+                })
+                .collect(Collectors.toList());
 
         // Sort
         String sort = sortCombo.getValue();
@@ -338,6 +338,34 @@ public class AlertesController implements Initializable {
         }
 
         filteredAlertes.setAll(filtered);
+
+        // Update result count label and footer
+        if (lblResultCount != null) {
+            lblResultCount.setText(filtered.size() + " alerte(s) trouvée(s)");
+        }
+        if (lblFooter != null) {
+            lblFooter.setText("© 2026 ESPRIT École d'Ingénieurs. Gestion des Alertes - " + filtered.size() + " alerte(s)");
+        }
+    }
+
+    private void setupFilters() {
+        statusFilter.getItems().addAll("Tous", "Actif", "Inactif");
+        sortCombo.getItems().addAll("Nom (A-Z)", "Nom (Z-A)", "Date création (récent)", "Date création (ancien)");
+        statusFilter.valueProperty().addListener((obs, old, newVal) -> applyFilters());
+        sortCombo.valueProperty().addListener((obs, old, newVal) -> applyFilters());
+        txtSearch.textProperty().addListener((obs, old, newVal) -> applyFilters());
+    }
+
+    private void updateStats() {
+        long total = allAlertes.size();
+        long active = allAlertes.stream().filter(a -> a.getIs_active()).count();
+        long inactive = total - active;
+        long defaults = allAlertes.stream().filter(a -> a.getIs_default()).count();
+
+        lblAlertesCount.setText(String.valueOf(total));
+        lblActiveCount.setText(String.valueOf(active));
+        lblInactiveCount.setText(String.valueOf(inactive));
+        lblDefaultCount.setText(String.valueOf(defaults));
     }
 
     private class AlerteListCell extends ListCell<preferenceAlerte> {

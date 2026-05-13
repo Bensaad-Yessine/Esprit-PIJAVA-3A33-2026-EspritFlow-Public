@@ -1,14 +1,17 @@
-/* ROOT */
+/* ============================================================
+   TACHE DETAILS - Enhanced Modern Professional Styling
+   (Matching Taches Template Dark Theme)
+   ============================================================ */
+
+/* ── ROOT ──────────────────────────────────────────────── */
 .dashboard-root {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0F172A, #1E293B, #0F172A);
-    -fx-background-image:
-            radial-gradient(center 20% 20%, radius 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-            radial-gradient(center 80% 80%, radius 50%, rgba(30, 58, 138, 0.1) 0%, transparent 50%);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(8, 12, 19, 0.84), #11161b);
 }
 
+/* ── SCROLLPANE ──────────────────────────────────────────── */
 .scroll-pane {
     -fx-background-color: transparent;
-    -fx-background: transparent;
+    -fx-border-color: transparent;
 }
 
 .scroll-pane > .viewport {
@@ -17,347 +20,213 @@
 
 .scroll-pane .scroll-bar:vertical,
 .scroll-pane .scroll-bar:horizontal {
-    -fx-background-color: rgba(31, 41, 55, 0.8);
+    -fx-background-color: transparent;
 }
 
 .scroll-pane .corner {
     -fx-background-color: transparent;
 }
 
-/* LAYOUT */
-.main-content {
-    -fx-padding: 32 40;
-    -fx-spacing: 24;
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10;
 }
 
-/* TITLES */
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6a11cb, #2575fc);
+    -fx-background-radius: 5;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #7c3aed, #3b82f6);
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-background-radius: 5;
+}
+
+/* ── HEADER SECTION ─────────────────────────────────────── */
+.header-section {
+    -fx-padding: 24 32 16 32;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(15, 23, 42, 0.84), #11161b);
+    -fx-border-color: linear-gradient(from 0% 0% to 100% 0%, transparent, #6a11cb, transparent);
+    -fx-border-width: 0 0 2 0;
+    -fx-spacing: 6;
+}
+
 .page-title {
-    -fx-text-fill: linear-gradient(from 0% 0% to 100% 0%, #60A5FA, #3B82F6, #2563EB);
-    -fx-font-size: 32px;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.4), 10, 0, 0, 2);
 }
 
 .page-subtitle {
-    -fx-text-fill: linear-gradient(from 0% 0% to 100% 0%, #94A3B8, #64748B);
-    -fx-font-size: 14px;
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 13px;
     -fx-font-weight: 500;
 }
 
-.section-title {
-    -fx-text-fill: linear-gradient(from 0% 0% to 100% 0%, #BFDBFE, #60A5FA);
-    -fx-font-size: 16px;
+/* ── MAIN CONTENT ──────────────────────────────────────── */
+.main-content {
+    -fx-padding: 24 32;
+    -fx-spacing: 20;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(15, 23, 42, 0.84), #11161b);
+}
+
+/* ── SECTION HEADERS ───────────────────────────────────── */
+.section-header {
+    -fx-text-fill: #a78bfa;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
-    -fx-padding: 0 0 8 0;
-    -fx-border-color: linear-gradient(from 0% 0% to 100% 0%, transparent, #3B82F6, transparent);
+    -fx-padding: 16 0 8 0;
+    -fx-border-color: transparent transparent linear-gradient(from 0% 0% to 100% 0%, #6a11cb, transparent) transparent;
     -fx-border-width: 0 0 2 0;
 }
 
-/* CARD */
-.task-card {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #2D3A46, #1F2937);
+/* ── CARDS ─────────────────────────────────────────────── */
+.form-card {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #1a2533, #243447);
     -fx-background-radius: 16;
-    -fx-padding: 24;
+    -fx-padding: 28;
     -fx-spacing: 16;
-    -fx-border-color: linear-gradient(from 0% 0% to 100% 100%, #3B82F6, #1E40AF, #3B82F6);
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1;
     -fx-border-radius: 16;
-    -fx-border-width: 1.5;
-    -fx-effect:
-            dropshadow(gaussian, rgba(0, 0, 0, 0.4), 20, 0, 0, 8),
-            dropshadow(gaussian, rgba(59, 130, 246, 0.2), 30, 0, 0, 4),
-            innershadow(gaussian, rgba(59, 130, 246, 0.1), 20, 0, 0, -2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 20, 0, 0, 8);
 }
 
-/* TEXT */
+/* ── TEXT CONTENT ──────────────────────────────────────── */
 .task-title {
-    -fx-text-fill: linear-gradient(from 0% 0% to 100% 0%, #ECFDF5, #A7F3D0);
-    -fx-font-size: 22px;
+    -fx-text-fill: #6EE7B7;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.3), 8, 0, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.4), 8, 0, 0, 1);
 }
 
 .task-desc {
-    -fx-text-fill: linear-gradient(from 0% 0% to 100% 0%, #E2E8F0, #CBD5E1);
+    -fx-text-fill: #e2e8f0;
     -fx-font-size: 14px;
     -fx-line-spacing: 4;
     -fx-wrap-text: true;
 }
 
-/* USER */
+/* ── USER ──────────────────────────────────────────────── */
 .task-user {
-    -fx-text-fill: linear-gradient(from 0% 0% to 100% 0%, #60A5FA, #3B82F6);
+    -fx-text-fill: #93C5FD;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
-    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.4), 6, 0, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.5), 6, 0, 0, 1);
 }
 
-/* BADGES */
+/* ── BADGES ────────────────────────────────────────────── */
 .badge-status {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #1E40AF, #1E3A8A, #172554);
-    -fx-text-fill: linear-gradient(from 0% 0% to 100% 0%, #DBEAFE, #BFDBFE);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6a11cb, #2575fc);
+    -fx-text-fill: white;
     -fx-padding: 6 14;
     -fx-background-radius: 20;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
-    -fx-effect:
-            dropshadow(gaussian, rgba(30, 64, 175, 0.5), 8, 0, 0, 2),
-            innershadow(gaussian, rgba(255, 255, 255, 0.1), 5, 0, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(106, 17, 203, 0.5), 8, 0, 0, 2);
 }
 
 .badge-priority {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #374151, #1F2937, #111827);
-    -fx-text-fill: linear-gradient(from 0% 0% to 100% 0%, #F3F4F6, #E5E7EB);
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-text-fill: #e2e8f0;
     -fx-padding: 6 14;
     -fx-background-radius: 20;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
-    -fx-border-color: linear-gradient(from 0% 0% to 100% 100%, #4B5563, #374151);
+    -fx-border-color: rgba(255, 255, 255, 0.2);
     -fx-border-radius: 20;
-    -fx-border-width: 1;
+    -fx-border-width: 2;
 }
 
-/* LIST */
+/* ── LIST VIEW ─────────────────────────────────────────── */
 .list-view {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #1F2937, #111827);
+    -fx-background-color: rgba(0, 0, 0, 0.3);
     -fx-control-inner-background: transparent;
-    -fx-border-color: linear-gradient(from 0% 0% to 100% 100%, #3B82F6, #1E40AF);
+    -fx-border-color: rgba(255, 255, 255, 0.2);
     -fx-background-radius: 12;
     -fx-border-radius: 12;
-    -fx-border-width: 1.5;
+    -fx-border-width: 2;
     -fx-padding: 8;
-    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 2);
 }
 
 .list-view .list-cell {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #2D3A46, #1F2937);
-    -fx-text-fill: #CBD5E1;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #1a2533, #243447);
+    -fx-text-fill: #e2e8f0;
     -fx-padding: 12 16;
     -fx-background-radius: 8;
     -fx-border-radius: 8;
-    -fx-margin: 4 0;
     -fx-border-color: transparent;
     -fx-border-width: 1;
 }
 
 .list-view .list-cell:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #3B4A5A, #2D3A46);
-    -fx-border-color: linear-gradient(from 0% 0% to 100% 100%, #60A5FA, #3B82F6);
-    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.3), 8, 0, 0, 2);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, rgba(106,17,203,0.2), rgba(37,117,252,0.1));
+    -fx-text-fill: #a78bfa;
+    -fx-border-color: rgba(106, 17, 203, 0.5);
 }
 
 .list-view .list-cell:selected {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #1E40AF, #1E3A8A);
-    -fx-text-fill: #FFFFFF;
-    -fx-border-color: linear-gradient(from 0% 0% to 100% 100%, #60A5FA, #3B82F6);
-    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.5), 10, 0, 0, 3);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, rgba(106,17,203,0.4), rgba(37,117,252,0.2));
+    -fx-text-fill: #a78bfa;
+    -fx-font-weight: bold;
+    -fx-border-color: #a78bfa;
 }
 
-/* SEPARATOR */
+/* ── SEPARATOR ─────────────────────────────────────────── */
 .separator {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, transparent, #3B82F6, transparent);
-    -fx-padding: 12 0;
-    -fx-opacity: 0.6;
+    -fx-background-color: transparent;
+    -fx-padding: 10 0;
 }
 
 .separator .line {
-    -fx-border-color: linear-gradient(from 0% 0% to 100% 0%, transparent, #3B82F6, #60A5FA, #3B82F6, transparent);
-    -fx-border-width: 2;
+    -fx-border-color: linear-gradient(from 0% 0% to 100% 0%, #6a11cb, transparent);
+    -fx-border-width: 1 0 0 0;
 }
 
-/* PROGRESS BAR */
+/* ── PROGRESS BAR ──────────────────────────────────────── */
 .progress-bar {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #1F2937, #111827);
+    -fx-background-color: rgba(0, 0, 0, 0.3);
     -fx-background-radius: 10;
     -fx-border-radius: 10;
-    -fx-border-color: linear-gradient(from 0% 0% to 100% 100%, #374151, #1F2937);
-    -fx-border-width: 1;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-width: 2;
     -fx-padding: 2;
-    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.4), 5, 0, 0, 1);
 }
 
 .progress-bar .bar {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #3B82F6, #2563EB, #1D4ED8);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6a11cb, #2575fc);
     -fx-background-radius: 8;
-    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.6), 10, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(106, 17, 203, 0.6), 10, 0, 0, 0);
 }
 
 .progress-bar .track {
     -fx-background-color: transparent;
 }
 
-/* LABELS */
+/* ── LABELS ────────────────────────────────────────────── */
 .label {
-    -fx-text-fill: #94A3B8;
+    -fx-text-fill: #94a3b8;
     -fx-font-size: 13px;
 }
 
 .label-info {
-    -fx-text-fill: linear-gradient(from 0% 0% to 100% 0%, #E2E8F0, #CBD5E1);
+    -fx-text-fill: #e2e8f0;
     -fx-font-size: 14px;
     -fx-font-weight: 500;
 }
 
 .label-prediction {
-    -fx-text-fill: linear-gradient(from 0% 0% to 100% 0%, #60A5FA, #3B82F6);
+    -fx-text-fill: #a78bfa;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.4), 8, 0, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(106, 17, 203, 0.4), 8, 0, 0, 1);
 }
 
-/* BUTTONS */
-.btn-primary {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #3B82F6, #2563EB, #1D4ED8);
-    -fx-text-fill: white;
-    -fx-background-radius: 10;
-    -fx-padding: 12 24;
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-cursor: hand;
-    -fx-effect:
-            dropshadow(gaussian, rgba(59, 130, 246, 0.5), 12, 0, 0, 4),
-            dropshadow(gaussian, rgba(37, 99, 235, 0.3), 20, 0, 0, 8);
-    -fx-transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #60A5FA, #3B82F6, #2563EB);
-    -fx-effect:
-            dropshadow(gaussian, rgba(96, 165, 250, 0.6), 15, 0, 0, 6),
-            dropshadow(gaussian, rgba(59, 130, 246, 0.4), 25, 0, 0, 10);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-}
-
-.btn-primary:pressed {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #1D4ED8, #1E40AF);
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
-.btn-edit {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F59E0B, #D97706, #B45309);
-    -fx-text-fill: white;
-    -fx-background-radius: 10;
-    -fx-padding: 12 24;
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-cursor: hand;
-    -fx-effect:
-            dropshadow(gaussian, rgba(245, 158, 11, 0.5), 12, 0, 0, 4),
-            dropshadow(gaussian, rgba(217, 119, 6, 0.3), 20, 0, 0, 8);
-}
-
-.btn-edit:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #FBBF24, #F59E0B, #D97706);
-    -fx-effect:
-            dropshadow(gaussian, rgba(251, 191, 36, 0.6), 15, 0, 0, 6),
-            dropshadow(gaussian, rgba(245, 158, 11, 0.4), 25, 0, 0, 10);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-}
-
-.btn-edit:pressed {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #B45309, #92400E);
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
-.btn-delete {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #EF4444, #DC2626, #B91C1C);
-    -fx-text-fill: white;
-    -fx-background-radius: 10;
-    -fx-padding: 12 24;
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-cursor: hand;
-    -fx-effect:
-            dropshadow(gaussian, rgba(239, 68, 68, 0.5), 12, 0, 0, 4),
-            dropshadow(gaussian, rgba(220, 38, 38, 0.3), 20, 0, 0, 8);
-}
-
-.btn-delete:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F87171, #EF4444, #DC2626);
-    -fx-effect:
-            dropshadow(gaussian, rgba(248, 113, 113, 0.6), 15, 0, 0, 6),
-            dropshadow(gaussian, rgba(239, 68, 68, 0.4), 25, 0, 0, 10);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-}
-
-.btn-delete:pressed {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #B91C1C, #991B1B);
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
-.btn-details {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #10B981, #059669, #047857);
-    -fx-text-fill: white;
-    -fx-background-radius: 10;
-    -fx-padding: 12 24;
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-cursor: hand;
-    -fx-effect:
-            dropshadow(gaussian, rgba(16, 185, 129, 0.5), 12, 0, 0, 4),
-            dropshadow(gaussian, rgba(5, 150, 105, 0.3), 20, 0, 0, 8);
-}
-
-.btn-details:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #34D399, #10B981, #059669);
-    -fx-effect:
-            dropshadow(gaussian, rgba(52, 211, 153, 0.6), 15, 0, 0, 6),
-            dropshadow(gaussian, rgba(16, 185, 129, 0.4), 25, 0, 0, 10);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-}
-
-.btn-details:pressed {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #047857, #065F46);
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
-.btn-disabled {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #374151, #1F2937);
-    -fx-text-fill: #6B7280;
-    -fx-background-radius: 10;
-    -fx-padding: 12 24;
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-opacity: 0.7;
-}
-
-/* SCROLLBAR */
-.scroll-bar:vertical {
-    -fx-background-color: transparent;
-    -fx-pref-width: 12;
-}
-
-.scroll-bar:vertical .thumb {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #3B82F6, #1E40AF);
-    -fx-background-radius: 6;
-    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.4), 4, 0, 0, 1);
-}
-
-.scroll-bar:vertical .thumb:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #60A5FA, #3B82F6);
-}
-
-.scroll-bar:vertical .track {
-    -fx-background-color: rgba(31, 41, 55, 0.5);
-    -fx-background-radius: 6;
-}
-
-/* HEADER SECTION */
-.header-section {
-    -fx-padding: 24 40 16 40;
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(30, 58, 138, 0.3), transparent);
-    -fx-border-color: linear-gradient(from 0% 0% to 100% 0%, transparent, #3B82F6, transparent);
-    -fx-border-width: 0 0 2 0;
-}
-
-/* INFO ROW */
+/* ── INFO ROWS ─────────────────────────────────────────── */
 .info-row {
     -fx-padding: 8 0;
     -fx-spacing: 12;
@@ -365,34 +234,131 @@
 }
 
 .info-label {
-    -fx-text-fill: #64748B;
+    -fx-text-fill: #94a3b8;
     -fx-font-size: 13px;
     -fx-font-weight: 600;
     -fx-min-width: 120;
 }
 
 .info-value {
-    -fx-text-fill: linear-gradient(from 0% 0% to 100% 0%, #E2E8F0, #CBD5E1);
+    -fx-text-fill: #F3F4F6;
     -fx-font-size: 14px;
     -fx-font-weight: 500;
 }
 
-/* AI SECTION */
+/* ── AI SECTION ────────────────────────────────────────── */
 .ai-section {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(59, 130, 246, 0.1), rgba(30, 58, 138, 0.05));
+    -fx-background-color: rgba(0, 0, 0, 0.3);
     -fx-background-radius: 12;
     -fx-padding: 16;
-    -fx-border-color: linear-gradient(from 0% 0% to 100% 100%, #3B82F6, #1E40AF);
+    -fx-border-color: rgba(255, 255, 255, 0.2);
     -fx-border-radius: 12;
-    -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.2), 15, 0, 0, 4);
+    -fx-border-width: 2;
 }
 
-/* BUTTON CONTAINER */
+/* ── BUTTONS ───────────────────────────────────────────── */
+.btn-primary {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6a11cb, #2575fc);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 10;
+    -fx-padding: 12 24;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(106, 17, 203, 0.4), 12, 0, 0, 4);
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #7c3aed, #3b82f6);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(106, 17, 203, 0.6), 16, 0, 0, 6);
+}
+
+.btn-primary:pressed {
+    -fx-translate-y: 0;
+}
+
+.btn-edit {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F59E0B, #D97706, #B45309);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 10;
+    -fx-padding: 12 24;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(245, 158, 11, 0.5), 12, 0, 0, 4);
+}
+
+.btn-edit:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #FBBF24, #F59E0B, #D97706);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(251, 191, 36, 0.6), 15, 0, 0, 6);
+}
+
+.btn-edit:pressed {
+    -fx-translate-y: 0;
+}
+
+.btn-delete {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #EF4444, #DC2626, #B91C1C);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 10;
+    -fx-padding: 12 24;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(239, 68, 68, 0.5), 12, 0, 0, 4);
+}
+
+.btn-delete:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #F87171, #EF4444, #DC2626);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(248, 113, 113, 0.6), 15, 0, 0, 6);
+}
+
+.btn-delete:pressed {
+    -fx-translate-y: 0;
+}
+
+.btn-details {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #10B981, #059669, #047857);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 10;
+    -fx-padding: 12 24;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.5), 12, 0, 0, 4);
+}
+
+.btn-details:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #34D399, #10B981, #059669);
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, rgba(52, 211, 153, 0.6), 15, 0, 0, 6);
+}
+
+.btn-details:pressed {
+    -fx-translate-y: 0;
+}
+
+.btn-disabled {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-text-fill: #6B7280;
+    -fx-background-radius: 10;
+    -fx-padding: 12 24;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-opacity: 0.7;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+}
+
+/* ── BUTTON CONTAINER ──────────────────────────────────── */
 .button-container {
-    -fx-padding: 20 40;
+    -fx-padding: 20 32;
     -fx-spacing: 12;
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.9));
-    -fx-border-color: linear-gradient(from 0% 0% to 100% 0%, transparent, #374151, transparent);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(15, 23, 42, 0.84), #11161b);
+    -fx-border-color: linear-gradient(from 0% 0% to 100% 0%, transparent, #6a11cb, transparent);
     -fx-border-width: 2 0 0 0;
 }

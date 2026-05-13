@@ -613,7 +613,7 @@
 
 /* ═══ ARCHIVED TASK ITEMS - DRAMATICALLY DIFFERENT ═══ */
 .task-item-archived {
-    -fx-background-color: linear-gradient(135deg, #f8fafc 0%, #f8fafc 48%, #f1f5f9 49%, #f1f5f9 51%, #f8fafc 52%, #f8fafc 100%);
+    -fx-background-color: linear-gradient(135deg, #f8fafc 0%, #f8fafc 48%, rgba(241, 245, 249, 0.78) 49%, #f1f5f9 51%, #f8fafc 52%, #f8fafc 100%);
     -fx-background-size: 20 20;
     -fx-border-color: #e2e8f0;
     -fx-border-width: 2;

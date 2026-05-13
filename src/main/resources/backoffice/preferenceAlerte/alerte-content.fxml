@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -9,75 +10,194 @@
             stylesheets="@alerte.css"
             styleClass="dashboard-root">
 
-    <VBox styleClass="main-content"
-          spacing="24"
-          fillWidth="true"
-          AnchorPane.topAnchor="0"
-          AnchorPane.bottomAnchor="0"
-          AnchorPane.leftAnchor="0"
-          AnchorPane.rightAnchor="0">
+    <ScrollPane styleClass="main-scroll"
+                fitToWidth="true"
+                fitToHeight="false"
+                hbarPolicy="NEVER"
+                vbarPolicy="AS_NEEDED"
+                AnchorPane.topAnchor="0"
+                AnchorPane.bottomAnchor="0"
+                AnchorPane.leftAnchor="0"
+                AnchorPane.rightAnchor="0">
+        <VBox styleClass="main-content"
+              spacing="20"
+              fillWidth="true">
 
-        <!-- HEADER -->
-        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+            <!-- HEADER -->
+            <VBox styleClass="header" maxWidth="Infinity" spacing="8">
+                <HBox alignment="CENTER_LEFT" spacing="16" maxWidth="Infinity">
+                    <HBox styleClass="page-title-icon" alignment="CENTER">
+                        <Label text="🔔" styleClass="page-title-icon-text"/>
+                    </HBox>
+                    <VBox HBox.hgrow="ALWAYS" spacing="4">
+                        <Label text="Gestion des Alertes" styleClass="page-title"/>
+                        <Label text="Préférences d'alerte utilisateurs" styleClass="page-subtitle"/>
+                    </VBox>
+                    <Button text="➕ Nouvelle Alerte"
+                            onAction="#addAlerte"
+                            styleClass="btn-primary"/>
+                </HBox>
 
-            <VBox HBox.hgrow="ALWAYS" spacing="6">
-                <Label text="🔔 Gestion des Alertes" styleClass="page-title"/>
-                <Label text="Préférences d'alerte utilisateurs" styleClass="page-subtitle"/>
+                <!-- Breadcrumb -->
+                <HBox alignment="CENTER_LEFT" spacing="8" styleClass="breadcrumb-bar">
+                    <Label text="Dashboard" styleClass="breadcrumb-item"/>
+                    <Label text="›" styleClass="breadcrumb-separator"/>
+                    <Label text="Alertes" styleClass="breadcrumb-active"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="lblUserInfo" text="Connecté en tant que: User" styleClass="user-info-text"/>
+                </HBox>
             </VBox>
 
-            <Button text="➕ Nouvelle Alerte"
-                    onAction="#addAlerte"
-                    styleClass="btn-primary"/>
-        </HBox>
+            <!-- STATS ROW -->
+            <HBox spacing="20" styleClass="stats-row" maxWidth="Infinity" HBox.hgrow="ALWAYS">
 
-        <!-- STATS -->
-        <HBox spacing="20" styleClass="stats-row" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                <VBox styleClass="stat-card card-1" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                    <HBox alignment="CENTER" spacing="12">
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label fx:id="lblAlertesCount" text="0" styleClass="stat-number"/>
+                            </HBox>
+                            <Label text="Total Préférences" styleClass="stat-label"/>
+                        </VBox>
+                        <VBox styleClass="stat-icon card-1-icon" alignment="CENTER">
+                            <Label text="📋" styleClass="stat-icon-text"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
 
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
-                <Label text="📋 Total" styleClass="stat-label"/>
-                <Label fx:id="lblAlertesCount" text="0" styleClass="stat-number"/>
-                <Label text="Préférences" styleClass="stat-sub"/>
-            </VBox>
+                <VBox styleClass="stat-card card-2" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                    <HBox alignment="CENTER" spacing="12">
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label fx:id="lblActiveCount" text="0" styleClass="stat-number"/>
+                                <Label text="✅" styleClass="stat-trend-up"/>
+                            </HBox>
+                            <Label text="Actives" styleClass="stat-label"/>
+                            <ProgressBar progress="0.65" styleClass="stat-progress"/>
+                        </VBox>
+                        <VBox styleClass="stat-icon card-2-icon" alignment="CENTER">
+                            <Label text="✅" styleClass="stat-icon-text"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
 
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
-                <Label text="✅ Actives" styleClass="stat-label"/>
-                <Label fx:id="lblActiveCount" text="--" styleClass="stat-number" style="-fx-text-fill: #10B981;"/>
-                <Label text="En cours" styleClass="stat-sub"/>
-            </VBox>
+                <VBox styleClass="stat-card card-3" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                    <HBox alignment="CENTER" spacing="12">
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label fx:id="lblInactiveCount" text="0" styleClass="stat-number"/>
+                                <Label text="⏸️" styleClass="stat-trend-up"/>
+                            </HBox>
+                            <Label text="Inactives" styleClass="stat-label"/>
+                            <ProgressBar progress="0.35" styleClass="stat-progress"/>
+                        </VBox>
+                        <VBox styleClass="stat-icon card-3-icon" alignment="CENTER">
+                            <Label text="⏸️" styleClass="stat-icon-text"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
 
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
-                <Label text="⏸ Inactives" styleClass="stat-label"/>
-                <Label fx:id="lblInactiveCount" text="--" styleClass="stat-number" style="-fx-text-fill: #EF4444;"/>
-                <Label text="Désactivées" styleClass="stat-sub"/>
-            </VBox>
+                <VBox styleClass="stat-card card-4" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                    <HBox alignment="CENTER" spacing="12">
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label fx:id="lblDefaultCount" text="0" styleClass="stat-number"/>
+                                <Label text="⭐" styleClass="stat-trend-up"/>
+                            </HBox>
+                            <Label text="Par défaut" styleClass="stat-label"/>
+                            <ProgressBar progress="0.45" styleClass="stat-progress"/>
+                        </VBox>
+                        <VBox styleClass="stat-icon card-4-icon" alignment="CENTER">
+                            <Label text="⭐" styleClass="stat-icon-text"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
 
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
-                <Label text="⭐ Par défaut" styleClass="stat-label"/>
-                <Label fx:id="lblDefaultCount" text="--" styleClass="stat-number" style="-fx-text-fill: #F59E0B;"/>
-                <Label text="Préférées" styleClass="stat-sub"/>
-            </VBox>
-
-        </HBox>
-
-        <!-- LIST CONTAINER -->
-        <VBox VBox.vgrow="ALWAYS" spacing="12" styleClass="list-container" maxWidth="Infinity">
-
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label text="Liste des préférences d'alerte" styleClass="section-title" HBox.hgrow="ALWAYS"/>
-                <TextField fx:id="txtSearch" promptText="🔍 Rechercher..."
-                           styleClass="search-field"/>
-                <ComboBox fx:id="statusFilter" promptText="Statut" styleClass="filter-combo"/>
-                <ComboBox fx:id="sortCombo" promptText="Trier par" styleClass="filter-combo"/>
             </HBox>
 
-            <ListView fx:id="alertesListView"
-                      VBox.vgrow="ALWAYS"
-                      maxWidth="Infinity"
-                      maxHeight="Infinity"
-                      styleClass="alerte-list"/>
+            <!-- FILTER CONTAINER -->
+            <VBox styleClass="filter-container-card" spacing="16" maxWidth="Infinity">
+
+                <!-- Filter Header -->
+                <HBox alignment="CENTER_LEFT" spacing="12" styleClass="filter-header">
+                    <HBox styleClass="filter-title-icon" alignment="CENTER">
+                        <Label text="⚙" styleClass="filter-title-icon-text"/>
+                    </HBox>
+                    <Label text="Filtres, Tri &amp; Recherche" styleClass="filter-title" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <!-- Filter Grid -->
+                <HBox spacing="16" styleClass="filter-grid" maxWidth="Infinity">
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="RECHERCHE PAR NOM" styleClass="filter-label"/>
+                        <HBox styleClass="filter-input-group" alignment="CENTER_LEFT">
+                            <Label text="🔍" styleClass="input-icon"/>
+                            <TextField fx:id="txtSearch"
+                                       promptText="Rechercher une alerte..."
+                                       styleClass="filter-input"/>
+                        </HBox>
+                    </VBox>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="STATUT" styleClass="filter-label"/>
+                        <ComboBox fx:id="statusFilter"
+                                  promptText="Tous les statuts"
+                                  styleClass="filter-select"/>
+                    </VBox>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="TRI PAR" styleClass="filter-label"/>
+                        <ComboBox fx:id="sortCombo"
+                                  promptText="Nom (A-Z)"
+                                  styleClass="filter-select"/>
+                    </VBox>
+
+                </HBox>
+
+                <!-- Filter Actions -->
+                <HBox alignment="CENTER_LEFT" spacing="12" styleClass="filter-actions">
+                    <HBox styleClass="results-info" alignment="CENTER_LEFT" spacing="8">
+                        <Label text="ⓘ" styleClass="results-info-icon"/>
+                        <Label fx:id="lblResultCount" text="0 alertes trouvées" styleClass="results-count"/>
+                    </HBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <HBox spacing="8" alignment="CENTER_RIGHT">
+                        <Button fx:id="btnResetFilters"
+                                text="🗑 Effacer filtres"
+                                onAction="#resetFilters"
+                                styleClass="btn-clear"/>
+                        <Button text="✓ Appliquer"
+                                onAction="#applyFilters"
+                                styleClass="btn-apply"/>
+                    </HBox>
+                </HBox>
+
+            </VBox>
+
+            <!-- LIST CONTAINER -->
+            <VBox VBox.vgrow="ALWAYS" spacing="12" styleClass="table-container" maxWidth="Infinity">
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="📋 Liste des Préférences d'Alerte" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <ListView fx:id="alertesListView"
+                          VBox.vgrow="ALWAYS"
+                          maxWidth="Infinity"
+                          maxHeight="Infinity"
+                          styleClass="alerte-list"/>
+
+            </VBox>
+
+            <!-- FOOTER -->
+            <HBox styleClass="footer" alignment="CENTER" maxWidth="Infinity">
+                <Label fx:id="lblFooter"
+                       text="© 2026 ESPRIT École d'Ingénieurs. Gestion des Alertes"
+                       styleClass="footer-text"/>
+            </HBox>
 
         </VBox>
-
-    </VBox>
+    </ScrollPane>
 
 </AnchorPane>

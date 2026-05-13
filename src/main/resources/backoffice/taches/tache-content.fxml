@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -9,81 +10,212 @@
             stylesheets="@tache.css"
             styleClass="dashboard-root">
 
-    <VBox styleClass="main-content"
-          spacing="24"
-          fillWidth="true"
-          AnchorPane.topAnchor="0"
-          AnchorPane.bottomAnchor="0"
-          AnchorPane.leftAnchor="0"
-          AnchorPane.rightAnchor="0">
+    <ScrollPane styleClass="main-scroll"
+                fitToWidth="true"
+                fitToHeight="false"
+                hbarPolicy="NEVER"
+                vbarPolicy="AS_NEEDED"
+                AnchorPane.topAnchor="0"
+                AnchorPane.bottomAnchor="0"
+                AnchorPane.leftAnchor="0"
+                AnchorPane.rightAnchor="0">
+        <VBox styleClass="main-content"
+              spacing="20"
+              fillWidth="true">
 
-        <!-- HEADER -->
-        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+            <!-- HEADER -->
+            <VBox styleClass="header" maxWidth="Infinity" spacing="8">
+                <HBox alignment="CENTER_LEFT" spacing="16" maxWidth="Infinity">
+                    <HBox styleClass="page-title-icon" alignment="CENTER">
+                        <Label text="☑" styleClass="page-title-icon-text"/>
+                    </HBox>
+                    <VBox HBox.hgrow="ALWAYS" spacing="4">
+                        <Label text="Gestion des Tâches" styleClass="page-title"/>
+                        <Label text="Liste complète des tâches ESPRIT" styleClass="page-subtitle"/>
+                    </VBox>
+                    <Button text="➕ Nouvelle Tâche"
+                            onAction="#addTask"
+                            styleClass="btn-new-task"/>
+                </HBox>
 
-            <VBox HBox.hgrow="ALWAYS" spacing="6">
-                <Label text="📋 Gestion des Tâches" styleClass="page-title"/>
-                <Label text="Suivi global et gestion des tâches assignées" styleClass="page-subtitle"/>
+                <!-- Breadcrumb / User info -->
+                <HBox alignment="CENTER_LEFT" spacing="8" styleClass="breadcrumb-bar">
+                    <Label text="Dashboard" styleClass="breadcrumb-item"/>
+                    <Label text="›" styleClass="breadcrumb-separator"/>
+                    <Label text="Tâches" styleClass="breadcrumb-active"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="lblUserInfo" text="Connecté en tant que: User" styleClass="user-info-text"/>
+                </HBox>
+            </VBox>
+            <!-- STATS ROW -->
+            <HBox spacing="20" styleClass="stats-row" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+
+                <!-- Purple card -->
+                <VBox styleClass="stat-card stat-card-purple" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                    <HBox alignment="CENTER" spacing="12">
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label fx:id="lblTotalCount" text="0" styleClass="stat-number"/>
+                                <Label text="↑ 8%" styleClass="stat-trend-up"/>
+                            </HBox>
+                            <Label text="Total Tâches" styleClass="stat-label"/>
+                            <ProgressBar progress="0.85" styleClass="stat-progress"/>
+                        </VBox>
+                        <VBox styleClass="stat-icon" alignment="CENTER">
+                            <Label text="☑" styleClass="stat-icon-text"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Pink card -->
+                <VBox styleClass="stat-card stat-card-pink" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                    <HBox alignment="CENTER" spacing="12">
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label fx:id="lblActiveCount" text="0" styleClass="stat-number"/>
+                                <Label text="↑ 2%" styleClass="stat-trend-up"/>
+                            </HBox>
+                            <Label text="En cours" styleClass="stat-label"/>
+                            <ProgressBar progress="0.65" styleClass="stat-progress"/>
+                        </VBox>
+                        <VBox styleClass="stat-icon" alignment="CENTER">
+                            <Label text="◷" styleClass="stat-icon-text"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Orange/Yellow card -->
+                <VBox styleClass="stat-card stat-card-orange" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                    <HBox alignment="CENTER" spacing="12">
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label fx:id="lblUrgentCount" text="0" styleClass="stat-number"/>
+                                <Label text="↑ 3%" styleClass="stat-trend-up"/>
+                            </HBox>
+                            <Label text="Urgentes" styleClass="stat-label"/>
+                            <ProgressBar progress="0.45" styleClass="stat-progress"/>
+                        </VBox>
+                        <VBox styleClass="stat-icon" alignment="CENTER">
+                            <Label text="⚠" styleClass="stat-icon-text"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Blue/Teal card -->
+                <VBox styleClass="stat-card stat-card-teal" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="8">
+                    <HBox alignment="CENTER" spacing="12">
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label fx:id="lblCompletedCount" text="0" styleClass="stat-number"/>
+                                <Label text="↑ 5%" styleClass="stat-trend-up"/>
+                            </HBox>
+                            <Label text="Terminées" styleClass="stat-label"/>
+                            <ProgressBar progress="0.90" styleClass="stat-progress"/>
+                        </VBox>
+                        <VBox styleClass="stat-icon" alignment="CENTER">
+                            <Label text="✓" styleClass="stat-icon-text"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+            </HBox>
+            <!-- FILTER CONTAINER -->
+            <VBox styleClass="filter-container-card" spacing="16" maxWidth="Infinity">
+
+                <!-- Filter Header -->
+                <HBox alignment="CENTER_LEFT" spacing="12" styleClass="filter-header">
+                    <HBox styleClass="filter-title-icon" alignment="CENTER">
+                        <Label text="⚙" styleClass="filter-title-icon-text"/>
+                    </HBox>
+                    <Label text="Filtres, Tri &amp; Recherche" styleClass="filter-title" HBox.hgrow="ALWAYS"/>
+                    <Button text="➕ Nouvelle Tâche"
+                            onAction="#addTask"
+                            styleClass="btn-new-task-small"/>
+                </HBox>
+
+                <!-- Filter Grid -->
+                <HBox spacing="16" styleClass="filter-grid" maxWidth="Infinity">
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="RECHERCHE PAR TITRE" styleClass="filter-label"/>
+                        <HBox styleClass="filter-input-group" alignment="CENTER_LEFT">
+                            <Label text="T" styleClass="input-icon"/>
+                            <TextField fx:id="txtSearch"
+                                       promptText="Saisir un titre..."
+                                       styleClass="filter-input"/>
+                        </HBox>
+                    </VBox>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="PRIORITÉ" styleClass="filter-label"/>
+                        <ComboBox fx:id="cmbPriority"
+                                  promptText="Toutes les priorités"
+                                  styleClass="filter-select"/>
+                    </VBox>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="TRI PAR" styleClass="filter-label"/>
+                        <ComboBox fx:id="cmbSort"
+                                  promptText="Date la plus éloignée"
+                                  styleClass="filter-select"/>
+                    </VBox>
+
+                </HBox>
+
+                <!-- Filter Actions -->
+                <HBox alignment="CENTER_LEFT" spacing="12" styleClass="filter-actions">
+                    <HBox styleClass="results-info" alignment="CENTER_LEFT" spacing="8">
+                        <Label text="ⓘ" styleClass="results-info-icon"/>
+                        <Label fx:id="lblTaskCount" text="0 tâches trouvées" styleClass="results-count"/>
+                    </HBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <HBox spacing="8" alignment="CENTER_RIGHT">
+                        <Button fx:id="btnResetFilters"
+                                text="🗑 Effacer filtres"
+                                onAction="#resetFilters"
+                                styleClass="btn-clear"/>
+                        <Button text="✓ Appliquer"
+                                onAction="#applyFilters"
+                                styleClass="btn-apply"/>
+                    </HBox>
+                </HBox>
+
             </VBox>
 
-            <Button text="➕ Nouvelle Tâche"
-                    onAction="#addTask"
-                    styleClass="btn-primary"/>
-        </HBox>
+            <!-- TABLE CONTAINER -->
+            <VBox VBox.vgrow="ALWAYS" spacing="12" styleClass="table-container" maxWidth="Infinity">
 
-        <!-- STATS -->
-        <HBox spacing="20" styleClass="stats-row" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="📋 Liste des Tâches" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+                </HBox>
 
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
-                <Label text="📊 Total" styleClass="stat-label"/>
-                <Label fx:id="lblTotalCount" text="128" styleClass="stat-number"/>
-                <Label text="↑ 12%" styleClass="stat-trend"/>
+                <TableView fx:id="tasksTableView"
+                           VBox.vgrow="ALWAYS"
+                           maxWidth="Infinity"
+                           maxHeight="Infinity"
+                           styleClass="task-table">
+                    <columns>
+                        <TableColumn fx:id="colId" text="ID" prefWidth="60" styleClass="col-id"/>
+                        <TableColumn fx:id="colTitre" text="Titre" prefWidth="200" styleClass="col-titre"/>
+                        <TableColumn fx:id="colType" text="Type" prefWidth="100" styleClass="col-type"/>
+                        <TableColumn fx:id="colDates" text="Dates" prefWidth="250" styleClass="col-dates"/>
+                        <TableColumn fx:id="colPriorite" text="Priorité" prefWidth="100" styleClass="col-priorite"/>
+                        <TableColumn fx:id="colStatut" text="Statut" prefWidth="100" styleClass="col-statut"/>
+                        <TableColumn fx:id="colUser" text="Utilisateur" prefWidth="120" styleClass="col-user"/>
+                        <TableColumn fx:id="colActions" text="Actions" prefWidth="150" styleClass="col-actions"/>
+                    </columns>
+                </TableView>
+
             </VBox>
 
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
-                <Label text="⚡ En cours" styleClass="stat-label"/>
-                <Label fx:id="lblActiveCount" text="54" styleClass="stat-number" style="-fx-text-fill: #3B82F6;"/>
-                <Label text="Actives" styleClass="stat-sub"/>
-            </VBox>
-
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
-                <Label text="✓ Terminées" styleClass="stat-label"/>
-                <Label fx:id="lblCompletedCount" text="60" styleClass="stat-number" style="-fx-text-fill: #10B981;"/>
-                <Label text="+8 ce mois" styleClass="stat-trend"/>
-            </VBox>
-
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
-                <Label text="⏸ En pause" styleClass="stat-label"/>
-                <Label fx:id="lblPausedCount" text="14" styleClass="stat-number" style="-fx-text-fill: #F59E0B;"/>
-                <Label text="En attente" styleClass="stat-sub"/>
-            </VBox>
-
-        </HBox>
-
-        <!-- LIST CONTAINER -->
-        <VBox VBox.vgrow="ALWAYS" spacing="12" styleClass="list-container" maxWidth="Infinity">
-
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label text="Liste des tâches" styleClass="section-title" HBox.hgrow="ALWAYS"/>
-                <TextField fx:id="txtSearch" promptText="🔍 Rechercher..."
-                           styleClass="search-field"/>
-                <ComboBox fx:id="cmbPriority" promptText="Priorité" styleClass="filter-combo"/>
-                <ComboBox fx:id="cmbSort" promptText="Trier par" styleClass="filter-combo"/>
-                <Button fx:id="btnResetFilters"
-                        text="Reset"
-                        onAction="#resetFilters"
-                        styleClass="btn-secondary"/>
+            <!-- FOOTER -->
+            <HBox styleClass="footer" alignment="CENTER" maxWidth="Infinity">
+                <Label fx:id="lblFooter"
+                       text="© 2026 ESPRIT École d'Ingénieurs. Gestion des Tâches - 0 tâches | 0 en cours"
+                       styleClass="footer-text"/>
             </HBox>
 
-            <Label fx:id="lblTaskCount" text="128 tâches au total" styleClass="task-count"/>
-
-            <ListView fx:id="tasksListView"
-                      VBox.vgrow="ALWAYS"
-                      maxWidth="Infinity"
-                      maxHeight="Infinity"
-                      styleClass="task-list"/>
-
         </VBox>
-
-    </VBox>
+    </ScrollPane>
 
 </AnchorPane>

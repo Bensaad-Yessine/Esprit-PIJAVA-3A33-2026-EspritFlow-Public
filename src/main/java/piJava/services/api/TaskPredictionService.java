@@ -23,7 +23,7 @@ import piJava.services.TacheService;
 
 public class TaskPredictionService {
 
-    private static final String FLASK_API_URL = "http://localhost:5000/predict";
+    private static final String FLASK_API_URL = "http://localhost:5001/predict";
     private final ObjectMapper mapper = new ObjectMapper();
 
     private final StudentIntelligenceProfileService profileService;

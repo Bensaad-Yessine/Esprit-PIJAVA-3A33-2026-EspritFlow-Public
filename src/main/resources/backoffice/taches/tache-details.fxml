@@ -21,14 +21,14 @@
     <ScrollPane styleClass="scroll-pane" fitToWidth="true" VBox.vgrow="ALWAYS">
 
         <!-- WRAP BOTH PANELS IN ONE HBOX -->
-        <HBox spacing="28" styleClass="main-content">
+        <HBox spacing="20" styleClass="main-content">
 
             <!-- LEFT PANEL - Task Information -->
-            <VBox spacing="18" styleClass="task-card" prefWidth="460" minWidth="400">
+            <VBox spacing="16" styleClass="form-card" prefWidth="460" minWidth="400">
 
                 <!-- Title Section -->
                 <VBox spacing="10">
-                    <Label text="Task Title" styleClass="section-title"/>
+                    <Label text="Task Title" styleClass="section-header"/>
                     <Label fx:id="lblTitle" styleClass="task-title" wrapText="true"/>
                 </VBox>
 
@@ -36,7 +36,7 @@
 
                 <!-- Description Section -->
                 <VBox spacing="10">
-                    <Label text="Description" styleClass="section-title"/>
+                    <Label text="Description" styleClass="section-header"/>
                     <Label fx:id="lblDescription" wrapText="true" styleClass="task-desc"
                            maxHeight="120" minHeight="60"/>
                 </VBox>
@@ -71,22 +71,22 @@
                 </VBox>
 
                 <!-- Metadata Footer -->
-                <HBox spacing="15" style="-fx-padding: 12 0 0 0; -fx-border-color: linear-gradient(from 0% 0% to 100% 0%, transparent, #3B4A5A, transparent); -fx-border-width: 1 0 0 0;">
+                <HBox spacing="15" style="-fx-padding: 12 0 0 0; -fx-border-color: linear-gradient(from 0% 0% to 100% 0%, transparent, #6a11cb, transparent); -fx-border-width: 1 0 0 0;">
                     <Label text="Created: " styleClass="info-label"/>
                     <Label fx:id="lblCreatedAt" text="--" styleClass="info-value"/>
                     <Region HBox.hgrow="ALWAYS"/>
                     <Label text="ID: " styleClass="info-label"/>
-                    <Label fx:id="lblTaskId" text="#0000" styleClass="info-value" style="-fx-text-fill: #64748B;"/>
+                    <Label fx:id="lblTaskId" text="#0000" styleClass="info-value" style="-fx-text-fill: #94a3b8;"/>
                 </HBox>
 
             </VBox>
 
             <!-- RIGHT PANEL - Timeline & AI -->
-            <VBox spacing="20" styleClass="task-card" HBox.hgrow="ALWAYS">
+            <VBox spacing="16" styleClass="form-card" HBox.hgrow="ALWAYS">
 
                 <!-- Timeline Section -->
                 <VBox spacing="14">
-                    <Label text="Timeline et Scheduling" styleClass="section-title"/>
+                    <Label text="Timeline et Scheduling" styleClass="section-header"/>
 
                     <GridPane vgap="12" hgap="20">
                         <columnConstraints>
@@ -113,7 +113,7 @@
                 <!-- AI Prediction Section -->
                 <VBox spacing="12" styleClass="ai-section">
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="🤖 AI Prediction" style="-fx-text-fill: #60A5FA; -fx-font-weight: bold; -fx-font-size: 15px;"/>
+                        <Label text="🤖 AI Prediction" style="-fx-text-fill: #a78bfa; -fx-font-weight: bold; -fx-font-size: 15px;"/>
                         <Region HBox.hgrow="ALWAYS"/>
                         <Label fx:id="lblPrediction" styleClass="label-prediction"/>
                     </HBox>
@@ -122,9 +122,9 @@
                         <ProgressBar fx:id="progressPrediction" prefWidth="400" maxWidth="Infinity" progress="0.75"/>
                         <HBox spacing="10" alignment="CENTER_LEFT">
                             <Label text="Confidence:" styleClass="info-label" style="-fx-font-size: 11px;"/>
-                            <Label fx:id="lblConfidence" text="85%" style="-fx-text-fill: #60A5FA; -fx-font-weight: bold; -fx-font-size: 11px;"/>
+                            <Label fx:id="lblConfidence" text="85%" style="-fx-text-fill: #a78bfa; -fx-font-weight: bold; -fx-font-size: 11px;"/>
                             <Region HBox.hgrow="ALWAYS"/>
-                            <Label text="Last updated: Just now" style="-fx-text-fill: #64748B; -fx-font-size: 10px;"/>
+                            <Label text="Last updated: Just now" style="-fx-text-fill: #94a3b8; -fx-font-size: 10px;"/>
                         </HBox>
                     </VBox>
                 </VBox>
@@ -134,7 +134,7 @@
                 <!-- History Section -->
                 <VBox spacing="10" VBox.vgrow="ALWAYS">
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Activity History" styleClass="section-title" style="-fx-border-width: 0;"/>
+                        <Label text="Activity History" styleClass="section-header" style="-fx-border-width: 0;"/>
                         <Region HBox.hgrow="ALWAYS"/>
                         <Button text="🔄 Refresh" styleClass="btn-primary" style="-fx-padding: 6 12; -fx-font-size: 11px;"/>
                     </HBox>
