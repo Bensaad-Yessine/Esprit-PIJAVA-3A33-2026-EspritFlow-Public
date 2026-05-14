@@ -1,643 +1,146 @@
-# Esprit Flow — Application JavaFX
+# Esprit Flow – Application Desktop JavaFX
 
-![Java](https://img.shields.io/badge/Java-17-orange)
-![JavaFX](https://img.shields.io/badge/JavaFX-21.0.2-blue)
-![Maven](https://img.shields.io/badge/Maven-Project-red)
-![MySQL](https://img.shields.io/badge/Database-MySQL-lightgrey)
-![Status](https://img.shields.io/badge/Academic%20Project-PIDEV-success)
+## Présentation générale
 
-## Description du projet
+**Esprit Flow** est une application Java / JavaFX conçue pour gérer et améliorer l’expérience pédagogique au sein d’une école. Elle regroupe un ensemble de modules pour l’administration et les étudiants : gestion des cours et des classes, tâches et notifications, groupes, objectifs de santé, suivi bien‑être, abonnement et paiement, ainsi qu’un assistant intelligent. Le projet s’interface avec plusieurs services web (Groq, OpenWeatherMap, Spoonacular, WorkoutAPI, Stripe, Brevo, RapidAPI, Google OAuth) pour enrichir l’expérience utilisateur et offrir des conseils personnalisés.
 
-**Esprit Flow** est une application desktop développée en **JavaFX** dans le cadre du projet académique **PIDEV 3A**. L’application propose une plateforme de gestion scolaire et de bien-être destinée aux étudiants et aux administrateurs.
+## Objectifs et principes
 
-La partie JavaFX contient deux espaces principaux :
-
-- **Front Office** : espace utilisateur/étudiant permettant de consulter ses informations, ses tâches, sa classe, ses matières, ses objectifs santé, ses suivis bien-être, ses groupes et ses alertes.
-- **Back Office** : espace administrateur permettant de gérer les utilisateurs, classes, matières, salles, séances, tâches, groupes, réunions, objectifs santé, suivis et préférences d’alerte.
-
-Le projet applique une architecture organisée autour des **entités**, **services**, **contrôleurs JavaFX**, fichiers **FXML**, feuilles de style **CSS**, et intégrations avec des **API externes**.
-
----
-
-## Objectifs du projet
-
-- Centraliser la gestion scolaire dans une application desktop moderne.
-- Séparer l’espace administrateur et l’espace étudiant.
-- Faciliter la gestion des classes, matières, salles, séances et utilisateurs.
-- Permettre le suivi des tâches, alertes, groupes et réunions.
-- Ajouter un module santé avec objectifs, suivis bien-être, coaching IA, recettes et exercices.
-- Utiliser une base de données MySQL via JDBC.
-- Intégrer des API externes pour enrichir l’expérience utilisateur.
-- Proposer une interface professionnelle basée sur JavaFX, FXML et CSS.
-
----
+Le but d’Esprit Flow est de proposer une application tout‑en‑un où l’administrateur peut gérer l’ensemble des ressources (profils, classes, matières, salles, sessions, tâches, alertes, groupes, abonnements…), et où les étudiants disposent d’un tableau de bord complet : emploi du temps, tâches, groupes, propositions de réunions, objectifs de santé, recettes et exercices suggérés, suivi bien‑être, cours en ligne et chatbot. L’architecture repose sur des services spécialisés, chaque module étant découpé en entités (modèles), services (logique métier et appels API) et contrôleurs (logique UI et interaction avec FXML).
 
 ## Fonctionnalités principales
 
-### Authentification et gestion de session
+### Authentification et sécurité
+
+- **Inscription & connexion** : gestion des utilisateurs avec hachage de mot de passe (BCrypt) et vérification des rôles (admin, enseignant, étudiant). 
+- **OAuth Google** : intégration du service `GoogleAuthService` pour se connecter via Google. 
+- **Réinitialisation de mot de passe** : envoi d’e‑mails de réinitialisation via Brevo et sécurité par jeton. 
+- **Gestion des sanctions** : `BanNotificationService` envoie des notifications de bannissement/debannissement par e‑mail.
+
+### Back‑office (administration)
 
-- Connexion par email et mot de passe.
-- Gestion du rôle utilisateur : administrateur ou étudiant.
-- Redirection automatique vers le Back Office ou le Front Office selon le rôle.
-- Option **Remember Me** pour mémoriser l’email.
-- Gestion globale de l’utilisateur connecté avec `SessionManager`.
-- Sécurité du mot de passe avec **BCrypt**.
+L’interface d’administration permet de gérer toutes les données : 
 
-### Back Office
+- **Utilisateurs, classes, matières, salles et séances**.  
+- **Tâches et préférences d’alerte** (rappels programmés).  
+- **Groupes et propositions de réunion**.  
+- **Objectifs de santé et suivi bien‑être**.  
+- **Abonnements et packs** (avec intégration Stripe pour le paiement).  
+- **Quiz/questions** et **posts de groupes**.  
+- **Dashboard** avec statistiques et filtrage.
+
+### Front‑office (étudiant)
 
-L’espace Back Office permet à l’administrateur de gérer les différentes parties du système :
-
-- **Dashboard administrateur** : statistiques générales, nombre d’étudiants, enseignants, classes et données de suivi.
-- **Gestion des utilisateurs** : affichage et administration des comptes.
-- **Gestion des classes** : ajout, modification, suppression, recherche, filtres et pagination.
-- **Gestion des matières** : gestion des coefficients, charge horaire, complexité et description.
-- **Gestion des salles** : gestion des espaces physiques.
-- **Gestion des séances** : organisation des séances et emplois du temps.
-- **Gestion des tâches** : création, modification, détails, priorités, statuts et suivi.
-- **Gestion des préférences d’alerte** : création, modification et consultation des alertes.
-- **Gestion des groupes** : consultation et gestion des groupes de travail.
-- **Gestion des propositions de réunion** : création et suivi des propositions.
-- **Gestion des objectifs santé** : CRUD complet, recherche, tri, suivi et archivage.
-- **Gestion des suivis bien-être** : consultation, ajout, modification et analyse des suivis.
-- **Archives santé** : consultation des objectifs archivés avec statut final.
-
-### Front Office
-
-L’espace Front Office est destiné à l’étudiant :
-
-- **Dashboard étudiant** : vue d’ensemble personnalisée.
-- **Profil utilisateur** : consultation des informations personnelles.
-- **Classe connectée** : affichage de la classe associée à l’étudiant connecté.
-- **Matières** : consultation des matières liées à la classe.
-- **Emploi du temps** : consultation des séances.
-- **Tâches** : consultation, création, modification et détails des tâches.
-- **Alertes** : gestion des préférences d’alerte personnelles.
-- **Groupes** : consultation des groupes et détails.
-- **Objectifs santé** : création, modification, consultation et archivage.
-- **Suivis bien-être** : ajout et modification des suivis liés aux objectifs.
-- **Détail objectif** : affichage des informations de l’objectif, suivis, coaching IA, recettes ou exercices selon le type d’objectif.
-
----
-
-## Module Objectif Santé et Bien-être
-
-Le module santé permet de suivre l’évolution personnelle de l’étudiant à travers des objectifs et des suivis.
-
-### Objectif Santé
-
-Un objectif santé peut contenir :
-
-- titre ;
-- type : `SOMMEIL`, `SPORT`, `ALIMENTATION` ;
-- valeur cible ;
-- date de début ;
-- date de fin ;
-- statut : `EN_COURS`, `ATTEINT`, `ABANDONNE` ;
-- priorité : `BASSE`, `MOYENNE`, `HAUTE` ;
-- utilisateur associé ;
-- date d’archivage ;
-- chemin du PDF d’archive.
-
-### Suivi Bien-être
-
-Un suivi permet d’évaluer l’état de l’utilisateur selon plusieurs indicateurs :
-
-- humeur ;
-- qualité du sommeil ;
-- niveau d’énergie ;
-- niveau de stress ;
-- qualité d’alimentation ;
-- notes libres ;
-- score calculé ;
-- objectif associé.
-
-### Coaching intelligent
-
-Le projet intègre un service de coaching privé basé sur l’API **Groq**. Le coaching analyse l’objectif et ses suivis pour générer :
-
-- un message de motivation ;
-- un résumé d’analyse ;
-- un niveau global ;
-- une tendance ;
-- un point fort ;
-- un point faible ;
-- des conseils personnalisés ;
-- un message de confiance.
-
-### Recettes et exercices
-
-Selon le type d’objectif, l’application peut afficher :
-
-- des **recettes saines** via l’API Spoonacular pour les objectifs de type alimentation ;
-- des **exercices sportifs** via Workout API pour les objectifs de type sport.
-
-### Archivage PDF
-
-Le service `PdfArchiveObjectifService` permet de générer un PDF d’archive pour un objectif terminé. Les fichiers PDF sont stockés dans le dossier :
-
-```txt
-archives_pdf/
-```
-
-L’envoi d’email avec PDF attaché est géré par `BrevoEmailService`.
-
----
-
-## APIs externes utilisées
-
-| API | Utilisation | Classe Java |
-|---|---|---|
-| Groq API | Coaching intelligent privé | `GroqClient`, `CoachingPriveService` |
-| Spoonacular API | Recherche de recettes saines | `SpoonacularClient` |
-| Workout API | Suggestions d’exercices sportifs | `WorkoutApiExerciseClient` |
-| Brevo API | Envoi d’emails avec pièce jointe PDF | `BrevoEmailService` |
-| iText PDF | Génération des fichiers PDF d’archive | `PdfArchiveObjectifService` |
-
----
-
-## Technologies utilisées
-
-| Technologie | Rôle |
-|---|---|
-| Java 17 | Langage principal |
-| JavaFX 21.0.2 | Interface graphique desktop |
-| FXML | Structure des vues |
-| CSS | Design et styles des interfaces |
-| Maven | Gestion du projet et des dépendances |
-| MySQL | Base de données relationnelle |
-| JDBC | Connexion entre Java et MySQL |
-| BCrypt | Hachage et vérification des mots de passe |
-| org.json | Traitement des réponses JSON |
-| dotenv-java | Chargement des variables d’environnement |
-| iTextPDF | Génération de PDF |
-| IntelliJ IDEA | Environnement de développement |
-| SceneBuilder | Conception des interfaces FXML |
-
----
-
-## Architecture du projet
-
-```txt
-pjava/
-├── pom.xml
-├── README.md
-├── .env.example
-├── run-javafx.ps1
-├── archives_pdf/
-├── src/
-│   └── main/
-│       ├── java/
-│       │   └── piJava/
-│       │       ├── Controllers/
-│       │       │   ├── backoffice/
-│       │       │   ├── frontoffice/
-│       │       │   ├── AjouterUser.java
-│       │       │   └── loginController.java
-│       │       ├── entities/
-│       │       ├── services/
-│       │       │   └── api/
-│       │       ├── utils/
-│       │       ├── testes/
-│       │       └── mains/
-│       └── resources/
-│           ├── backoffice/
-│           ├── frontoffice/
-│           ├── images/
-│           ├── login.fxml
-│           ├── login.css
-│           ├── register.css
-│           └── AjouterUser.fxml
-```
-
----
-
-## Rôle des principaux packages
-
-### `piJava.Controllers`
-
-Contient les contrôleurs JavaFX qui relient les vues FXML avec la logique métier.
-
-- `backoffice/` : contrôleurs de l’espace administrateur.
-- `frontoffice/` : contrôleurs de l’espace étudiant.
-- `loginController.java` : gestion de la connexion.
-- `AjouterUser.java` : inscription utilisateur.
-
-### `piJava.entities`
-
-Contient les classes modèles représentant les tables ou objets métier :
-
-- `user`
-- `Classe`
-- `Matiere`
-- `Salle`
-- `Seance`
-- `tache`
-- `suiviTache`
-- `preferenceAlerte`
-- `Groupe`
-- `PropositionReunion`
-- `ObjectifSante`
-- `SuiviBienEtre`
-- `Recette`
-- `ExerciceSport`
-
-### `piJava.services`
-
-Contient les services responsables de la logique métier et des opérations CRUD avec la base de données.
-
-Exemples :
-
-- `UserServices`
-- `ClasseService`
-- `MatiereService`
-- `SalleService`
-- `SeanceService`
-- `TacheService`
-- `AlerteService`
-- `GroupeService`
-- `ObjectifSanteService`
-- `SuiviBienEtreService`
-
-### `piJava.services.api`
-
-Contient les services liés aux API externes :
-
-- `GroqClient`
-- `CoachingPriveService`
-- `SpoonacularClient`
-- `WorkoutApiExerciseClient`
-- `BrevoEmailService`
-- `PdfArchiveObjectifService`
-
-### `piJava.utils`
-
-Contient les classes utilitaires :
-
-- `MyDataBase` : connexion MySQL Singleton.
-- `SessionManager` : gestion de l’utilisateur connecté.
-- `ValidationHelper` : validation des formulaires.
-- `TacheValidator` : validation des tâches.
-- `PreferenceAlerteValidator` : validation des préférences d’alerte.
-- `SchemaDumper` : outil de diagnostic de schéma.
-
-### `src/main/resources`
-
-Contient toutes les vues FXML, fichiers CSS et ressources graphiques.
-
----
-
-## Prérequis
-
-Avant de lancer le projet, il faut installer :
-
-- JDK 17 ou supérieur ;
-- Maven ;
-- MySQL Server ;
-- IntelliJ IDEA ;
-- SceneBuilder, optionnel mais utile pour modifier les interfaces FXML.
-
-Vérification :
-
-```bash
-java -version
-mvn -version
-```
-
----
-
-## Installation du projet
-
-### 1. Cloner le dépôt
-
-```bash
-git clone https://github.com/Bensaad-Yessine/Esprit-PIJAVA-3A33-2026-EspritFlow-Public.git
-cd Esprit-PIJAVA-3A33-2026-EspritFlow-Public
-```
-
-### 2. Installer les dépendances Maven
-
-```bash
-mvn clean install
-```
-
-### 3. Configurer la base de données
-
-Créer une base MySQL nommée :
-
-```sql
-CREATE DATABASE pidev;
-```
-
-La connexion utilisée dans `MyDataBase.java` est :
-
-```txt
-URL      : jdbc:mysql://localhost:3306/pidev
-Username : root
-Password : vide
-```
-
-Si votre configuration MySQL est différente, modifier le fichier :
-
-```txt
-src/main/java/piJava/utils/MyDataBase.java
-```
-
----
-
-## Configuration du fichier `.env`
-
-Créer un fichier `.env` à la racine du projet.
-
-Exemple :
-
-```env
-GROQ_API_KEY=your_groq_api_key
-GROQ_MODEL=llama-3.1-8b-instant
-SPOONACULAR_API_KEY=your_spoonacular_api_key
-WORKOUT_API_KEY=your_workout_api_key
-BREVO_API_KEY=your_brevo_api_key
-MAIL_FROM=your_email@example.com
-```
-
-Important : le fichier `.env` contient des clés privées. Il ne doit jamais être publié sur GitHub.
-
-Le fichier `.gitignore` doit contenir :
-
-```gitignore
-.env
-target/
-.idea/
-archives_pdf/
-```
-
----
-
-## Lancement de l’application
-
-### Méthode 1 : Maven
-
-```bash
-mvn javafx:run
-```
-
-La classe principale configurée dans le `pom.xml` est :
-
-```txt
-piJava.mains.Launcher
-```
-
-Cette classe lance ensuite :
-
-```txt
-piJava.mains.mainFX
-```
-
-L’écran de départ est :
-
-```txt
-/login.fxml
-```
-
-### Méthode 2 : IntelliJ IDEA
-
-1. Ouvrir le projet avec IntelliJ IDEA.
-2. Attendre le chargement Maven.
-3. Vérifier que le JDK du projet est Java 17.
-4. Ouvrir `piJava.mains.Launcher`.
-5. Cliquer sur **Run**.
-
-### Méthode 3 : script Windows PowerShell
-
-Le projet contient un script :
-
-```powershell
-./run-javafx.ps1
-```
-
-Ce script lance l’application avec les dépendances JavaFX présentes dans le repository Maven local.
-
----
-
-## Identifiants et rôles
-
-L’application redirige l’utilisateur selon son rôle :
-
-- administrateur : `/backoffice/main.fxml`
-- étudiant/utilisateur : `/frontoffice/main.fxml`
-
-La vérification se fait après connexion dans :
-
-```txt
-loginController.java
-SessionManager.java
-loginService.java
-```
-
----
-
-## Structure des vues principales
-
-### Back Office
-
-```txt
-src/main/resources/backoffice/
-├── main.fxml
-├── sidebar.fxml
-├── dashboard/
-├── User/
-├── Classe/
-├── Matiere/
-├── Salle/
-├── Seance/
-├── taches/
-├── preferenceAlerte/
-├── group/
-├── objectifsante/
-└── suivibienetre/
-```
-
-### Front Office
-
-```txt
-src/main/resources/frontoffice/
-├── main.fxml
-├── sidebar.fxml
-├── dashboard/
-├── user/
-├── classe/
-├── matieres/
-├── emploi/
-├── salle/
-├── taches/
-├── preferenceAlerte/
-├── group/
-├── objectifsante/
-└── suivibienetre/
-```
-
----
-
-## Design et interface
-
-L’interface utilise :
-
-- JavaFX pour les composants graphiques ;
-- FXML pour structurer les pages ;
-- CSS pour les thèmes visuels ;
-- cartes, tableaux, badges, boutons d’action et dashboards ;
-- séparation claire entre pages Back Office et pages Front Office.
-
-Les fichiers CSS sont organisés par module afin de garder un design cohérent et facile à maintenir.
-
----
-
-## Sécurité et bonnes pratiques
-
-- Les mots de passe sont protégés avec **BCrypt**.
-- Les clés API sont chargées depuis `.env` avec `dotenv-java`.
-- Le fichier `.env` ne doit pas être poussé sur GitHub.
-- La session utilisateur est centralisée avec `SessionManager`.
-- Les validations sont séparées dans des classes utilitaires.
-- Le projet suit une séparation logique : entités, services, contrôleurs, vues et styles.
-
----
-
-## Dépendances Maven principales
-
-```xml
-<dependency>
-    <groupId>com.mysql</groupId>
-    <artifactId>mysql-connector-j</artifactId>
-    <version>8.0.32</version>
-</dependency>
-
-<dependency>
-    <groupId>org.openjfx</groupId>
-    <artifactId>javafx-controls</artifactId>
-    <version>21.0.2</version>
-</dependency>
-
-<dependency>
-    <groupId>org.openjfx</groupId>
-    <artifactId>javafx-fxml</artifactId>
-    <version>21.0.2</version>
-</dependency>
-
-<dependency>
-    <groupId>org.mindrot</groupId>
-    <artifactId>jbcrypt</artifactId>
-    <version>0.4</version>
-</dependency>
-
-<dependency>
-    <groupId>org.json</groupId>
-    <artifactId>json</artifactId>
-    <version>20240303</version>
-</dependency>
-
-<dependency>
-    <groupId>io.github.cdimascio</groupId>
-    <artifactId>dotenv-java</artifactId>
-    <version>3.2.0</version>
-</dependency>
-```
-
----
-
-## Tests et classes de diagnostic
-
-Le projet contient quelques classes de test dans :
-
-```txt
-src/main/java/piJava/testes/
-```
-
-Exemples :
-
-- `TestBrevo.java` : test d’envoi d’email via Brevo.
-- `TestGroq.java` : test de connexion à Groq.
-- `TestCoachingPrive.java` : test de génération de coaching.
-
----
-
-## Problèmes fréquents et solutions
-
-### Erreur de connexion MySQL
-
-Vérifier :
-
-- que MySQL est lancé ;
-- que la base `pidev` existe ;
-- que le port est `3306` ;
-- que le nom d’utilisateur et le mot de passe sont corrects dans `MyDataBase.java`.
-
-### Erreur JavaFX au lancement
-
-Vérifier :
-
-- que Java 17 est sélectionné ;
-- que Maven a bien téléchargé les dépendances ;
-- que la classe principale est `piJava.mains.Launcher` ;
-- que les fichiers FXML existent bien dans `src/main/resources`.
-
-### Erreur avec les APIs externes
-
-Vérifier :
-
-- que le fichier `.env` existe à la racine du projet ;
-- que les noms des variables sont corrects ;
-- que les clés API sont valides ;
-- que la connexion Internet est disponible.
-
----
-
-## Mots-clés du projet
-
-```txt
-Java, JavaFX, Maven, MySQL, JDBC, FXML, CSS, MVC, CRUD, Back Office,
-Front Office, SessionManager, BCrypt, API REST, JSON, dotenv, Groq,
-Spoonacular, Workout API, Brevo, PDF, iText, Dashboard, Gestion scolaire,
-Objectif santé, Suivi bien-être, Coaching IA, Classe connectée.
-```
-
----
-
-## Équipe
-
-Projet réalisé dans le cadre du PIDEV 3A.
-
-| Membre | Module / contribution |
-|---|---|
-| Adem Mannoubi | Objectifs santé, suivis bien-être, coaching IA, recettes, exercices, archivage PDF |
-| Membre 2 | Gestion des classes / matières / salles / séances |
-| Membre 3 | Gestion des tâches / alertes |
-| Membre 4 | Gestion des groupes / propositions de réunion |
-| Membre 5 | Utilisateurs / dashboard / intégration générale |
-
-> À modifier selon la répartition exacte de l’équipe.
-
----
-
-## Captures d’écran
-
-Ajouter les captures dans un dossier `docs/screenshots/` puis les intégrer ici :
-
-```md
-![Login](docs/screenshots/login.png)
-![Dashboard](docs/screenshots/dashboard.png)
-![Objectifs Santé](docs/screenshots/objectifs.png)
-![Tâches](docs/screenshots/taches.png)
-![Classes](docs/screenshots/classes.png)
-```
-
----
-
-## Licence
-
-Ce projet est réalisé dans un cadre académique à **Esprit School of Engineering**.
-
----
-
-## Conclusion
-
-**Esprit Flow JavaFX** est une application desktop complète qui combine gestion scolaire, organisation personnelle, suivi santé, intelligence artificielle et intégration d’API externes. Grâce à son architecture séparée en contrôleurs, services, entités et vues FXML, le projet reste maintenable, évolutif et adapté à une démonstration académique professionnelle.
+- **Tableau de bord** personnel avec aperçu des tâches, du calendrier et des notifications.  
+- **Profil** : affichage et édition des informations personnelles.  
+- **Emploi du temps** : affichage des séances planifiées.  
+- **Tâches** : création, modification et suivi des tâches ; prédiction de réussite grâce à un modèle ML local.  
+- **Groupes** : rejoindre/créer des groupes, publier des posts et planifier des réunions.  
+- **Objectifs et suivi santé** : définir des objectifs (hydratation, sommeil, sport), suivre ses progrès et recevoir des conseils via IA.  
+- **Recettes & Exercices** : suggestions de recettes via Spoonacular et exercices via WorkoutAPI.  
+- **Assistant de cours** : recherche de cours en ligne via l’API Udemy et système de streaks/achievements.  
+- **Chatbot** : conversation en langage naturel avec un modèle GPT via RapidAPI.  
+- **Abonnement** : achat de packs premium via Stripe Checkout et suivi de l’abonnement dans l’application.
+
+### Modules santé et bien‑être
+
+Ce module propose : 
+
+- **Objectifs personnalisés** (eau, sommeil, activité physique, alimentation).  
+- **Suivi des objectifs** avec graphiques et génération automatique de PDF via iText.  
+- **Coaching IA** : le service `CoachingPriveService` appelle l’API Groq pour générer des conseils personnalisés (sport, alimentation, organisation).  
+- **Recettes nutritives** : requêtes à l’API Spoonacular pour rechercher des recettes santé.  
+- **Exercices sportifs** : utilisation de l’API WorkoutAPI pour obtenir des exercices filtrés par muscle, équipement et niveau.  
+- **Conseils météo** : `WeatherAiService` interroge OpenWeatherMap pour récupérer la météo et génère des recommandations d’habillement et de planning d’étude via un appel Groq.
+
+### Smart Assistant (cours et recommandations)
+
+Le module Smart Assistant permet aux étudiants de rechercher des cours en ligne, de s’inscrire et de suivre leur progression :
+
+- **Recherche de cours** : `CourseService` interroge l’API Udemy (via RapidAPI) pour trouver des cours selon un mot‑clé.  
+- **Gestion des inscriptions** : `UserCourseService` gère l’inscription et l’avancement dans les cours.  
+- **Streaks & Achievements** : `StreakService` et `AchievementService` motivent l’utilisateur avec des séries d’actions continues et des trophées.  
+- **Limitation de débit** : `RateLimitService` protège l’API contre un trop grand nombre de requêtes.  
+- **Recommandations personnalisées** : `RecommendationService` et `StudentIntelligenceProfileService` suggèrent des cours en se basant sur le style d’apprentissage de l’étudiant.
+
+### Analyses et prédictions
+
+- **Analyse de comportement** : `BehaviorAnalysisService` calcule des statistiques sur les tâches (durée moyenne, deadlines, avancement) et interroge l’API Groq pour générer un rapport et des conseils.  
+- **Prédiction de tâche** : `TaskPredictionService` appelle un serveur Flask local qui retourne la probabilité de réussite d’une tâche (modèle ML).  
+- **Notification des délais** : `NotifsService` envoie des rappels et des notifications par e‑mail (Brevo) pour les tâches en retard ou à venir.  
+- **Face Recognition** : `FaceRecognitionService` compare les visages à partir d’images pour vérifier l’identité.  
+- **Weather AI** : `WeatherAiService` combine la météo d’OpenWeatherMap et un modèle Groq pour proposer une tenue et un planning d’étude en fonction de la météo du jour.
+
+### Chatbot & notifications
+
+- **Chat en langage naturel** : `AcademicChatService` utilise RapidAPI pour envoyer les messages de l’étudiant à un modèle GPT‑4 et afficher les réponses.  
+- **Notifications en temps réel** : ajout de notifications dans l’application (rappels, invitations, nouveaux messages) et envoi d’e‑mails via `BrevoEmailService`.
+
+### Abonnements & paiements
+
+- **Packs d’abonnement** : chargement des packs depuis la base de données (gratuit, premium).  
+- **Paiement Stripe** : `StripeCheckoutService` crée une session de paiement Stripe et redirige l’utilisateur vers une page sécurisée.  Le processus s’appuie sur la création d’une *Checkout Session* et sur une page hébergée par Stripe où l’utilisateur saisit ses informations de paiement et est renvoyé ensuite vers l’application.  
+- **Suivi et renouvellement** : enregistrement de l’abonnement et date d’expiration dans la base de données et rappels automatiques.
+
+### Autres services intégrés
+
+- **Reconnaissance faciale** : comparaison des visages pour la validation d’identité.  
+- **Profils d’intelligence de l’étudiant** : le service `StudentIntelligenceProfileService` analyse les préférences d’apprentissage pour proposer des recommandations adaptées.  
+- **Archivage PDF** : génération de rapports et d’archives PDF avec `PdfArchiveObjectifService` (iText).  
+- **Gestion des posts de groupe et des commentaires** : création, modification et suppression avec notifications.  
+- **Module quiz** : création de questionnaires, gestion des questions et évaluation.
+
+## Services API externes utilisés
+
+| API / service | Utilisation dans l’application | Commentaire |
+|--------------|--------------------------------|-------------|
+| **Groq** | Génération de texte pour le coaching privé et les analyses de comportement. Les requêtes sont envoyées à l’endpoint `POST https://api.groq.com/openai/v1/chat/completions`. | Nécessite `GROQ_API_KEY` et sélection d’un modèle (par ex. `llama‑3‑8b`). |
+| **OpenWeatherMap** | Récupération de la météo actuelle via l’endpoint `api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}`:contentReference[oaicite:1]{index=1} pour générer des conseils d’habillement et d’étude. | Variables `OPENWEATHER_API_KEY`, `OPENWEATHER_CITY`. |
+| **Spoonacular** | Recherche de recettes saines par mot‑clé, calories ou temps de préparation. L’API fournit un moteur de recherche sémantique performant et rapide:contentReference[oaicite:2]{index=2}. | Requiert `SPOONACULAR_API_KEY`. |
+| **Workout API** | Obtention de programmes d’exercices filtrés par muscle, équipement et intensité ; l’API offre une base riche et une intégration simple sans module supplémentaire:contentReference[oaicite:3]{index=3}. | Requiert `WORKOUT_API_KEY`. |
+| **Stripe Checkout** | Paiement sécurisé des abonnements : l’application crée une *Checkout Session*, obtient une URL Stripe, l’utilisateur saisit ses informations sur la page Stripe, puis est redirigé vers l’application:contentReference[oaicite:4]{index=4}. | Variables `STRIPE_PUBLIC_KEY`, `STRIPE_SECRET_KEY`. |
+| **Brevo (ex‑Sendinblue)** | Envoi d’e‑mails : notifications de tâches, réinitialisations de mot de passe, ban/unban, PDF en pièces jointes. | Requiert `BREVO_API_KEY` et configuration SMTP. |
+| **RapidAPI / ChatGPT** | Interface de chat : envoi de messages à un modèle GPT‑4 via RapidAPI. | Requiert `RAPIDAPI_KEY`. |
+| **Google OAuth** | Authentification par compte Google. Nécessite la configuration d’un client OAuth (ID et secret). | Variables `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`. |
+| **Udemy (via RapidAPI)** | Recherche de cours en ligne pour le Smart Assistant. | Requiert `UDEMY_API_KEY` et `RAPIDAPI_KEY`. |
+| **Serveur ML local (Flask)** | Prédiction de réussite des tâches avec un modèle machine learning. | Utilise un endpoint local. |
+
+## Architecture technique
+
+Le projet est construit en **Java 17** et **JavaFX 21**. L’architecture suit un découpage MVC/MVVM :
+
+- **Entities (models)** : classes représentant les tables de la base de données (User, Task, Group, Objective…).
+- **Services** : couches métier responsables des opérations CRUD, des interactions avec la base MySQL (via JDBC) et des appels aux APIs externes.
+- **Controllers** : classes JavaFX qui lient l’interface FXML au code et gèrent les actions utilisateur.
+- **Interfaces FXML** et **styles CSS** : définition des vues et de l’apparence graphique.
+- **Utilities et helpers** : classes utilitaires (validation, cryptage, envoi d’e‑mail, etc.).
+
+Le projet utilise **Maven** pour la gestion des dépendances et s’appuie sur **MySQL** pour persister les données. Le dossier `src/main/java` est organisé en paquets logiques (`controllers`, `entities`, `services`, `api`, `utils`, `mains`). Les vues FXML et les fichiers de ressources (images, CSS) se trouvent dans `src/main/resources`.
+
+## Prérequis et installation
+
+1. **Installer Java 17** et **JavaFX 21**.  
+2. **Cloner** le dépôt : `git clone <url>` et se placer dans le répertoire.  
+3. **Configurer MySQL** : créer une base de données (par ex. `espritflow`), définir l’utilisateur et le mot de passe dans le fichier `.env`. Importer les scripts SQL fournis si nécessaire.  
+4. **Créer le fichier `.env`** à la racine du projet avec les variables suivantes :
+
+   ```env
+   DB_URL=jdbc:mysql://localhost:3306/espritflow
+   DB_USER=utilisateur
+   DB_PASSWORD=motdepasse
+
+   GROQ_API_KEY=XXX
+   GROQ_MODEL=llama-3-8b
+   OPENWEATHER_API_KEY=XXX
+   OPENWEATHER_CITY=Tunis
+   SPOONACULAR_API_KEY=XXX
+   WORKOUT_API_KEY=XXX
+   BREVO_API_KEY=XXX
+   BREVO_SENDER=adresse@email.com
+   RAPIDAPI_KEY=XXX
+   UDEMY_API_KEY=XXX
+   STRIPE_PUBLIC_KEY=XXX
+   STRIPE_SECRET_KEY=XXX
+   GOOGLE_CLIENT_ID=XXX
+   GOOGLE_CLIENT_SECRET=XXX
+   # autres variables (MAIL_USER, MAIL_PASSWORD, etc.)
