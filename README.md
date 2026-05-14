@@ -1,146 +1,370 @@
-# Esprit Flow – Application Desktop JavaFX
+<div align="center">
 
-## Présentation générale
+```
+███████╗███████╗██████╗ ██████╗ ██╗████████╗    ███████╗██╗      ██████╗ ██╗    ██╗
+██╔════╝██╔════╝██╔══██╗██╔══██╗██║╚══██╔══╝    ██╔════╝██║     ██╔═══██╗██║    ██║
+█████╗  ███████╗██████╔╝██████╔╝██║   ██║       █████╗  ██║     ██║   ██║██║ █╗ ██║
+██╔══╝  ╚════██║██╔═══╝ ██╔══██╗██║   ██║       ██╔══╝  ██║     ██║   ██║██║███╗██║
+███████╗███████║██║     ██║  ██║██║   ██║       ██║     ███████╗╚██████╔╝╚███╔███╔╝
+╚══════╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝   ╚═╝       ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝
+```
 
-**Esprit Flow** est une application Java / JavaFX conçue pour gérer et améliorer l’expérience pédagogique au sein d’une école. Elle regroupe un ensemble de modules pour l’administration et les étudiants : gestion des cours et des classes, tâches et notifications, groupes, objectifs de santé, suivi bien‑être, abonnement et paiement, ainsi qu’un assistant intelligent. Le projet s’interface avec plusieurs services web (Groq, OpenWeatherMap, Spoonacular, WorkoutAPI, Stripe, Brevo, RapidAPI, Google OAuth) pour enrichir l’expérience utilisateur et offrir des conseils personnalisés.
+### 🎓 The All-in-One Smart Academic Experience Platform
 
-## Objectifs et principes
+<br/>
 
-Le but d’Esprit Flow est de proposer une application tout‑en‑un où l’administrateur peut gérer l’ensemble des ressources (profils, classes, matières, salles, sessions, tâches, alertes, groupes, abonnements…), et où les étudiants disposent d’un tableau de bord complet : emploi du temps, tâches, groupes, propositions de réunions, objectifs de santé, recettes et exercices suggérés, suivi bien‑être, cours en ligne et chatbot. L’architecture repose sur des services spécialisés, chaque module étant découpé en entités (modèles), services (logique métier et appels API) et contrôleurs (logique UI et interaction avec FXML).
+[![Java](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
+[![JavaFX](https://img.shields.io/badge/JavaFX-21-007396?style=for-the-badge&logo=java&logoColor=white)](https://openjfx.io/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Maven](https://img.shields.io/badge/Maven-3.x-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)](https://maven.apache.org/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![ESPRIT](https://img.shields.io/badge/Made%20at-ESPRIT-E63946?style=for-the-badge)](https://esprit.tn/)
 
-## Fonctionnalités principales
+<br/>
 
-### Authentification et sécurité
+> **Esprit Flow** is a full-featured desktop application built with Java & JavaFX that reimagines the academic experience — combining task management, AI coaching, health tracking, smart course recommendations, and real-time notifications into one sleek, intelligent platform.
 
-- **Inscription & connexion** : gestion des utilisateurs avec hachage de mot de passe (BCrypt) et vérification des rôles (admin, enseignant, étudiant). 
-- **OAuth Google** : intégration du service `GoogleAuthService` pour se connecter via Google. 
-- **Réinitialisation de mot de passe** : envoi d’e‑mails de réinitialisation via Brevo et sécurité par jeton. 
-- **Gestion des sanctions** : `BanNotificationService` envoie des notifications de bannissement/debannissement par e‑mail.
+<br/>
 
-### Back‑office (administration)
+[✨ Features](#-features) · [🏗️ Architecture](#%EF%B8%8F-architecture) · [🔌 Integrations](#-api-integrations) · [⚙️ Setup](#%EF%B8%8F-installation--setup) · [📸 Screenshots](#-screenshots)
 
-L’interface d’administration permet de gérer toutes les données : 
+</div>
 
-- **Utilisateurs, classes, matières, salles et séances**.  
-- **Tâches et préférences d’alerte** (rappels programmés).  
-- **Groupes et propositions de réunion**.  
-- **Objectifs de santé et suivi bien‑être**.  
-- **Abonnements et packs** (avec intégration Stripe pour le paiement).  
-- **Quiz/questions** et **posts de groupes**.  
-- **Dashboard** avec statistiques et filtrage.
+---
 
-### Front‑office (étudiant)
+## 📋 Table of Contents
 
-- **Tableau de bord** personnel avec aperçu des tâches, du calendrier et des notifications.  
-- **Profil** : affichage et édition des informations personnelles.  
-- **Emploi du temps** : affichage des séances planifiées.  
-- **Tâches** : création, modification et suivi des tâches ; prédiction de réussite grâce à un modèle ML local.  
-- **Groupes** : rejoindre/créer des groupes, publier des posts et planifier des réunions.  
-- **Objectifs et suivi santé** : définir des objectifs (hydratation, sommeil, sport), suivre ses progrès et recevoir des conseils via IA.  
-- **Recettes & Exercices** : suggestions de recettes via Spoonacular et exercices via WorkoutAPI.  
-- **Assistant de cours** : recherche de cours en ligne via l’API Udemy et système de streaks/achievements.  
-- **Chatbot** : conversation en langage naturel avec un modèle GPT via RapidAPI.  
-- **Abonnement** : achat de packs premium via Stripe Checkout et suivi de l’abonnement dans l’application.
+- [Overview](#-overview)
+- [Features](#-features)
+- [Architecture](#%EF%B8%8F-architecture)
+- [API Integrations](#-api-integrations)
+- [Installation & Setup](#%EF%B8%8F-installation--setup)
+- [Environment Variables](#-environment-variables)
+- [Project Structure](#-project-structure)
+- [Contributors](#-contributors)
 
-### Modules santé et bien‑être
+---
 
-Ce module propose : 
+## 🌟 Overview
 
-- **Objectifs personnalisés** (eau, sommeil, activité physique, alimentation).  
-- **Suivi des objectifs** avec graphiques et génération automatique de PDF via iText.  
-- **Coaching IA** : le service `CoachingPriveService` appelle l’API Groq pour générer des conseils personnalisés (sport, alimentation, organisation).  
-- **Recettes nutritives** : requêtes à l’API Spoonacular pour rechercher des recettes santé.  
-- **Exercices sportifs** : utilisation de l’API WorkoutAPI pour obtenir des exercices filtrés par muscle, équipement et niveau.  
-- **Conseils météo** : `WeatherAiService` interroge OpenWeatherMap pour récupérer la météo et génère des recommandations d’habillement et de planning d’étude via un appel Groq.
+**Esprit Flow** is built for students and administrators at ESPRIT school. It brings together everything needed for a productive academic life — from scheduling and task tracking to AI-powered health coaching and smart course discovery — all within a single, polished desktop interface.
 
-### Smart Assistant (cours et recommandations)
+The platform serves two distinct user roles:
 
-Le module Smart Assistant permet aux étudiants de rechercher des cours en ligne, de s’inscrire et de suivre leur progression :
+| 👩‍💼 Administrator | 🎓 Student |
+|---|---|
+| Manage users, classes, subjects & rooms | Personal dashboard with tasks & calendar |
+| Schedule sessions & assign tasks | Join/create groups & plan meetings |
+| Monitor subscriptions & payments | AI health coaching & wellness tracking |
+| View analytics & generate reports | Smart course discovery & streaks |
+| Send alerts & manage groups | Premium subscription management |
 
-- **Recherche de cours** : `CourseService` interroge l’API Udemy (via RapidAPI) pour trouver des cours selon un mot‑clé.  
-- **Gestion des inscriptions** : `UserCourseService` gère l’inscription et l’avancement dans les cours.  
-- **Streaks & Achievements** : `StreakService` et `AchievementService` motivent l’utilisateur avec des séries d’actions continues et des trophées.  
-- **Limitation de débit** : `RateLimitService` protège l’API contre un trop grand nombre de requêtes.  
-- **Recommandations personnalisées** : `RecommendationService` et `StudentIntelligenceProfileService` suggèrent des cours en se basant sur le style d’apprentissage de l’étudiant.
+---
 
-### Analyses et prédictions
+## ✨ Features
 
-- **Analyse de comportement** : `BehaviorAnalysisService` calcule des statistiques sur les tâches (durée moyenne, deadlines, avancement) et interroge l’API Groq pour générer un rapport et des conseils.  
-- **Prédiction de tâche** : `TaskPredictionService` appelle un serveur Flask local qui retourne la probabilité de réussite d’une tâche (modèle ML).  
-- **Notification des délais** : `NotifsService` envoie des rappels et des notifications par e‑mail (Brevo) pour les tâches en retard ou à venir.  
-- **Face Recognition** : `FaceRecognitionService` compare les visages à partir d’images pour vérifier l’identité.  
-- **Weather AI** : `WeatherAiService` combine la météo d’OpenWeatherMap et un modèle Groq pour proposer une tenue et un planning d’étude en fonction de la météo du jour.
+### 🔐 Authentication & Security
 
-### Chatbot & notifications
+- **Secure Login & Registration** — BCrypt password hashing, role-based access control (Admin / Teacher / Student)
+- **Google OAuth 2.0** — One-click sign-in via Google account
+- **Password Reset** — Token-secured reset flow with email delivery via Brevo
+- **Face Recognition** — Identity verification using facial comparison
+- **Ban Management** — Automated ban/unban email notifications
 
-- **Chat en langage naturel** : `AcademicChatService` utilise RapidAPI pour envoyer les messages de l’étudiant à un modèle GPT‑4 et afficher les réponses.  
-- **Notifications en temps réel** : ajout de notifications dans l’application (rappels, invitations, nouveaux messages) et envoi d’e‑mails via `BrevoEmailService`.
+---
 
-### Abonnements & paiements
+### 🤖 AI & Smart Features
 
-- **Packs d’abonnement** : chargement des packs depuis la base de données (gratuit, premium).  
-- **Paiement Stripe** : `StripeCheckoutService` crée une session de paiement Stripe et redirige l’utilisateur vers une page sécurisée.  Le processus s’appuie sur la création d’une *Checkout Session* et sur une page hébergée par Stripe où l’utilisateur saisit ses informations de paiement et est renvoyé ensuite vers l’application.  
-- **Suivi et renouvellement** : enregistrement de l’abonnement et date d’expiration dans la base de données et rappels automatiques.
+<table>
+<tr>
+<td width="50%">
 
-### Autres services intégrés
+**🧠 AI Coaching (`CoachingPriveService`)**
+> Powered by **Groq (LLaMA 3)** — generates personalized advice on sport, nutrition, and study organization based on your goals and progress.
 
-- **Reconnaissance faciale** : comparaison des visages pour la validation d’identité.  
-- **Profils d’intelligence de l’étudiant** : le service `StudentIntelligenceProfileService` analyse les préférences d’apprentissage pour proposer des recommandations adaptées.  
-- **Archivage PDF** : génération de rapports et d’archives PDF avec `PdfArchiveObjectifService` (iText).  
-- **Gestion des posts de groupe et des commentaires** : création, modification et suppression avec notifications.  
-- **Module quiz** : création de questionnaires, gestion des questions et évaluation.
+</td>
+<td width="50%">
 
-## Services API externes utilisés
+**📊 Behavior Analysis (`BehaviorAnalysisService`)**
+> Analyzes task patterns (average duration, deadline compliance, completion rate) and generates a detailed AI report with actionable recommendations.
 
-| API / service | Utilisation dans l’application | Commentaire |
-|--------------|--------------------------------|-------------|
-| **Groq** | Génération de texte pour le coaching privé et les analyses de comportement. Les requêtes sont envoyées à l’endpoint `POST https://api.groq.com/openai/v1/chat/completions`. | Nécessite `GROQ_API_KEY` et sélection d’un modèle (par ex. `llama‑3‑8b`). |
-| **OpenWeatherMap** | Récupération de la météo actuelle via l’endpoint `api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}`:contentReference[oaicite:1]{index=1} pour générer des conseils d’habillement et d’étude. | Variables `OPENWEATHER_API_KEY`, `OPENWEATHER_CITY`. |
-| **Spoonacular** | Recherche de recettes saines par mot‑clé, calories ou temps de préparation. L’API fournit un moteur de recherche sémantique performant et rapide:contentReference[oaicite:2]{index=2}. | Requiert `SPOONACULAR_API_KEY`. |
-| **Workout API** | Obtention de programmes d’exercices filtrés par muscle, équipement et intensité ; l’API offre une base riche et une intégration simple sans module supplémentaire:contentReference[oaicite:3]{index=3}. | Requiert `WORKOUT_API_KEY`. |
-| **Stripe Checkout** | Paiement sécurisé des abonnements : l’application crée une *Checkout Session*, obtient une URL Stripe, l’utilisateur saisit ses informations sur la page Stripe, puis est redirigé vers l’application:contentReference[oaicite:4]{index=4}. | Variables `STRIPE_PUBLIC_KEY`, `STRIPE_SECRET_KEY`. |
-| **Brevo (ex‑Sendinblue)** | Envoi d’e‑mails : notifications de tâches, réinitialisations de mot de passe, ban/unban, PDF en pièces jointes. | Requiert `BREVO_API_KEY` et configuration SMTP. |
-| **RapidAPI / ChatGPT** | Interface de chat : envoi de messages à un modèle GPT‑4 via RapidAPI. | Requiert `RAPIDAPI_KEY`. |
-| **Google OAuth** | Authentification par compte Google. Nécessite la configuration d’un client OAuth (ID et secret). | Variables `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`. |
-| **Udemy (via RapidAPI)** | Recherche de cours en ligne pour le Smart Assistant. | Requiert `UDEMY_API_KEY` et `RAPIDAPI_KEY`. |
-| **Serveur ML local (Flask)** | Prédiction de réussite des tâches avec un modèle machine learning. | Utilise un endpoint local. |
+</td>
+</tr>
+<tr>
+<td>
 
-## Architecture technique
+**✅ Task Success Prediction (`TaskPredictionService`)**
+> A local **Flask ML server** returns the probability of successfully completing a task based on historical patterns.
 
-Le projet est construit en **Java 17** et **JavaFX 21**. L’architecture suit un découpage MVC/MVVM :
+</td>
+<td>
 
-- **Entities (models)** : classes représentant les tables de la base de données (User, Task, Group, Objective…).
-- **Services** : couches métier responsables des opérations CRUD, des interactions avec la base MySQL (via JDBC) et des appels aux APIs externes.
-- **Controllers** : classes JavaFX qui lient l’interface FXML au code et gèrent les actions utilisateur.
-- **Interfaces FXML** et **styles CSS** : définition des vues et de l’apparence graphique.
-- **Utilities et helpers** : classes utilitaires (validation, cryptage, envoi d’e‑mail, etc.).
+**🌤️ Weather AI (`WeatherAiService`)**
+> Combines real-time weather from **OpenWeatherMap** with a Groq LLM to suggest outfit choices and an optimized study schedule for the day.
 
-Le projet utilise **Maven** pour la gestion des dépendances et s’appuie sur **MySQL** pour persister les données. Le dossier `src/main/java` est organisé en paquets logiques (`controllers`, `entities`, `services`, `api`, `utils`, `mains`). Les vues FXML et les fichiers de ressources (images, CSS) se trouvent dans `src/main/resources`.
+</td>
+</tr>
+</table>
 
-## Prérequis et installation
+---
 
-1. **Installer Java 17** et **JavaFX 21**.  
-2. **Cloner** le dépôt : `git clone <url>` et se placer dans le répertoire.  
-3. **Configurer MySQL** : créer une base de données (par ex. `espritflow`), définir l’utilisateur et le mot de passe dans le fichier `.env`. Importer les scripts SQL fournis si nécessaire.  
-4. **Créer le fichier `.env`** à la racine du projet avec les variables suivantes :
+### 📚 Smart Assistant — Course Discovery
 
-   ```env
-   DB_URL=jdbc:mysql://localhost:3306/espritflow
-   DB_USER=utilisateur
-   DB_PASSWORD=motdepasse
+> Find, enroll in, and track online courses with intelligent recommendations.
 
-   GROQ_API_KEY=XXX
-   GROQ_MODEL=llama-3-8b
-   OPENWEATHER_API_KEY=XXX
-   OPENWEATHER_CITY=Tunis
-   SPOONACULAR_API_KEY=XXX
-   WORKOUT_API_KEY=XXX
-   BREVO_API_KEY=XXX
-   BREVO_SENDER=adresse@email.com
-   RAPIDAPI_KEY=XXX
-   UDEMY_API_KEY=XXX
-   STRIPE_PUBLIC_KEY=XXX
-   STRIPE_SECRET_KEY=XXX
-   GOOGLE_CLIENT_ID=XXX
-   GOOGLE_CLIENT_SECRET=XXX
-   # autres variables (MAIL_USER, MAIL_PASSWORD, etc.)
+- 🔍 **Udemy Search** — Browse thousands of courses via keyword (powered by RapidAPI)
+- 🎯 **Personalized Recommendations** — `RecommendationService` suggests courses based on your learning style profile (`StudentIntelligenceProfileService`)
+- 🔥 **Streaks & Achievements** — Stay motivated with daily streaks and unlockable trophies
+- 🛡️ **Rate Limiting** — `RateLimitService` ensures stable API usage
+
+---
+
+### 💬 Chatbot
+
+> Ask anything — get smart, context-aware academic support in natural language.
+
+- Powered by **GPT-4** via RapidAPI (`AcademicChatService`)
+- Conversational interface built directly into the student dashboard
+
+---
+
+### 🏃 Health & Wellness Module
+
+> Your complete personal wellness companion.
+
+| Feature | Description |
+|---|---|
+| 🎯 **Personal Goals** | Set targets for hydration, sleep, sport & nutrition |
+| 📈 **Progress Tracking** | Visual charts + automated PDF reports (iText) |
+| 🥗 **Recipe Suggestions** | Healthy recipes from **Spoonacular** by calories, keywords & prep time |
+| 💪 **Workout Plans** | Exercises filtered by muscle, equipment & intensity via **WorkoutAPI** |
+| 🤖 **AI Health Coach** | Groq-powered personalized daily coaching |
+
+---
+
+### 💳 Subscriptions & Payments
+
+> Seamless premium plan management powered by Stripe.
+
+1. Student selects a subscription pack (Free / Premium)
+2. **Stripe Checkout Session** is created server-side
+3. User completes secure payment on Stripe's hosted page
+4. App records subscription & expiry — auto-renew reminders sent via email
+
+---
+
+### 🔔 Notifications & Communication
+
+- **In-app notifications** — Real-time alerts for tasks, meetings & group activity
+- **Email notifications** — Task reminders, deadline warnings, invitations & PDF attachments via **Brevo**
+- **Scheduled reminders** — Smart scheduling based on user alert preferences
+
+---
+
+### 👥 Groups & Collaboration
+
+- Create or join academic groups
+- Publish posts & comments with notification triggers
+- Propose and schedule group meetings
+- Quiz module — create, share & evaluate questionnaires
+
+---
+
+## 🏗️ Architecture
+
+Esprit Flow follows a clean **MVC / MVVM** pattern:
+
+```
+src/main/java/
+├── 🗂️ entities/          → Domain models (User, Task, Group, Objective…)
+├── ⚙️ services/           → Business logic, CRUD operations, API calls
+│   ├── ai/               → Groq, WeatherAI, ChatService
+│   ├── health/           → Coaching, Recipes, Workouts
+│   ├── payments/         → Stripe integration
+│   ├── notifications/    → Brevo email service
+│   └── courses/          → Udemy, Streaks, Achievements
+├── 🖥️ controllers/        → JavaFX controllers bound to FXML views
+├── 🔌 api/               → External API wrappers
+└── 🛠️ utils/             → Helpers (crypto, validation, PDF…)
+
+src/main/resources/
+├── 🎨 views/             → FXML layout files
+├── 💅 styles/            → CSS stylesheets
+└── 🖼️ images/            → Application assets
+```
+
+### Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Language | Java 17 |
+| UI Framework | JavaFX 21 + FXML |
+| Build Tool | Apache Maven |
+| Database | MySQL 8 (via JDBC) |
+| ML Server | Python Flask (local) |
+| PDF Generation | iText |
+| Password Hashing | BCrypt |
+
+---
+
+## 🔌 API Integrations
+
+| Service | Purpose | Endpoint / Notes |
+|---|---|---|
+| ![Groq](https://img.shields.io/badge/Groq-LLaMA_3-F55036?style=flat-square) | AI coaching, behavior analysis, weather advice | `POST https://api.groq.com/openai/v1/chat/completions` |
+| ![OpenWeatherMap](https://img.shields.io/badge/OpenWeatherMap-Weather-EB6E4B?style=flat-square) | Real-time weather for daily planning | `api.openweathermap.org/data/2.5/weather` |
+| ![Spoonacular](https://img.shields.io/badge/Spoonacular-Recipes-43A047?style=flat-square) | Healthy recipe search by keyword, calories & time | REST API |
+| ![WorkoutAPI](https://img.shields.io/badge/WorkoutAPI-Exercises-1565C0?style=flat-square) | Workouts filtered by muscle, equipment & intensity | REST API |
+| ![Stripe](https://img.shields.io/badge/Stripe-Payments-635BFF?style=flat-square) | Secure subscription checkout sessions | Stripe Checkout |
+| ![Brevo](https://img.shields.io/badge/Brevo-Email-0092FF?style=flat-square) | Transactional emails, reminders, PDF attachments | SMTP + API |
+| ![RapidAPI](https://img.shields.io/badge/RapidAPI-ChatGPT_4-2D96FF?style=flat-square) | Student chatbot (GPT-4 via proxy) | RapidAPI Hub |
+| ![Google](https://img.shields.io/badge/Google-OAuth_2.0-4285F4?style=flat-square) | One-click Google sign-in | OAuth 2.0 |
+| ![Udemy](https://img.shields.io/badge/Udemy-Courses-A435F0?style=flat-square) | Online course search for Smart Assistant | via RapidAPI |
+| ![Flask](https://img.shields.io/badge/Flask-ML_Model-000000?style=flat-square) | Task success probability prediction | Local endpoint |
+
+---
+
+## ⚙️ Installation & Setup
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+- ☕ **Java 17+** — [Download here](https://adoptium.net/)
+- 🎨 **JavaFX 21** — [Download here](https://openjfx.io/)
+- 🗄️ **MySQL 8.0+** — [Download here](https://dev.mysql.com/downloads/)
+- 📦 **Apache Maven 3.x** — [Download here](https://maven.apache.org/)
+- 🐍 **Python 3.x + Flask** *(for ML prediction server)*
+
+### Step-by-Step
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/your-username/esprit-flow.git
+cd esprit-flow
+```
+
+**2. Set up the database**
+```sql
+CREATE DATABASE espritflow;
+-- Then import the provided SQL scripts:
+mysql -u root -p espritflow < database/schema.sql
+```
+
+**3. Start the ML prediction server**
+```bash
+cd ml-server
+pip install -r requirements.txt
+python app.py
+```
+
+**4. Create your `.env` file** at the project root (see section below)
+
+**5. Build and run**
+```bash
+mvn clean install
+mvn javafx:run
+```
+
+---
+
+## 🔑 Environment Variables
+
+Create a `.env` file at the project root with the following:
+
+```env
+# ── Database ──────────────────────────────────────────
+DB_URL=jdbc:mysql://localhost:3306/espritflow
+DB_USER=your_mysql_user
+DB_PASSWORD=your_mysql_password
+
+# ── AI / Groq ─────────────────────────────────────────
+GROQ_API_KEY=your_groq_api_key
+GROQ_MODEL=llama-3-8b
+
+# ── Weather ───────────────────────────────────────────
+OPENWEATHER_API_KEY=your_openweathermap_key
+OPENWEATHER_CITY=Tunis
+
+# ── Recipes & Workouts ────────────────────────────────
+SPOONACULAR_API_KEY=your_spoonacular_key
+WORKOUT_API_KEY=your_workout_api_key
+
+# ── Email (Brevo) ─────────────────────────────────────
+BREVO_API_KEY=your_brevo_key
+BREVO_SENDER=noreply@yourdomain.com
+
+# ── Chatbot & Courses (RapidAPI) ──────────────────────
+RAPIDAPI_KEY=your_rapidapi_key
+UDEMY_API_KEY=your_udemy_key
+
+# ── Payments (Stripe) ─────────────────────────────────
+STRIPE_PUBLIC_KEY=pk_test_...
+STRIPE_SECRET_KEY=sk_test_...
+
+# ── Authentication (Google OAuth) ─────────────────────
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# ── Mail (SMTP fallback) ──────────────────────────────
+MAIL_USER=your_email@gmail.com
+MAIL_PASSWORD=your_app_password
+```
+
+> ⚠️ **Never commit your `.env` file to version control.** It is already listed in `.gitignore`.
+
+---
+
+## 📁 Project Structure
+
+```
+esprit-flow/
+├── 📄 pom.xml                    → Maven configuration & dependencies
+├── 🔐 .env                       → Environment variables (git-ignored)
+├── 📂 src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   ├── controllers/      → JavaFX UI controllers
+│   │   │   ├── entities/         → Data models
+│   │   │   ├── services/         → Business logic & API calls
+│   │   │   ├── api/              → External API clients
+│   │   │   ├── utils/            → Utility classes
+│   │   │   └── mains/            → Application entry points
+│   │   └── resources/
+│   │       ├── fxml/             → FXML view files
+│   │       ├── css/              → Stylesheets
+│   │       └── images/           → Assets & icons
+├── 📂 ml-server/                 → Flask ML prediction server
+│   ├── app.py
+│   ├── model.pkl
+│   └── requirements.txt
+└── 📂 database/
+    └── schema.sql                → Database schema
+```
+
+---
+
+## 👥 Contributors
+
+<div align="center">
+
+| Made with ❤️ by the **Esprit Flow Team** at **ESPRIT School of Engineering** |
+|:---:|
+
+</div>
+
+---
+
+<div align="center">
+
+**⭐ If you found this project useful, please consider giving it a star!**
+
+<br/>
+
+[![Stars](https://img.shields.io/github/stars/your-username/esprit-flow?style=social)](https://github.com/your-username/esprit-flow)
+
+<br/>
+
+*Built with Java · JavaFX · MySQL · AI · ☕*
+
+</div>
